@@ -29,7 +29,9 @@ namespace ProjectEpsilon.Combat
             {
                 int count = 0;
 
-                for (int index = 0; index < slots.Count; index++)
+                for (int index = 0;
+                    index < slots.Count;
+                    index++)
                 {
                     if (!slots[index].IsEmpty)
                     {
@@ -87,7 +89,10 @@ namespace ProjectEpsilon.Combat
                 slots[0].IsEmpty &&
                 startingWeapon != null)
             {
-                slots[0].Equip(startingWeapon, 1);
+                slots[0].Equip(
+                    startingWeapon,
+                    1
+                );
             }
 
             Subscribe();
@@ -104,7 +109,9 @@ namespace ProjectEpsilon.Combat
             }
 
             List<SnakeWeaponSlot> previousSlots =
-                new List<SnakeWeaponSlot>(slots);
+                new List<SnakeWeaponSlot>(
+                    slots
+                );
 
             slots.Clear();
 
@@ -115,19 +122,31 @@ namespace ProjectEpsilon.Combat
                 bodyIndex < bodySegments.Count;
                 bodyIndex++)
             {
-                SnakeSegment segment = bodySegments[bodyIndex];
+                SnakeSegment segment =
+                    bodySegments[bodyIndex];
+
                 SnakeWeaponSlot existing =
-                    FindSlot(previousSlots, segment);
+                    FindSlot(
+                        previousSlots,
+                        segment
+                    );
 
                 if (existing != null)
                 {
-                    existing.SetOwner(segment);
-                    slots.Add(existing);
+                    existing.SetOwner(
+                        segment
+                    );
+
+                    slots.Add(
+                        existing
+                    );
                 }
                 else
                 {
                     slots.Add(
-                        new SnakeWeaponSlot(segment)
+                        new SnakeWeaponSlot(
+                            segment
+                        )
                     );
                 }
             }
@@ -145,14 +164,20 @@ namespace ProjectEpsilon.Combat
                 return false;
             }
 
-            for (int index = 0; index < slots.Count; index++)
+            for (int index = 0;
+                index < slots.Count;
+                index++)
             {
                 if (!slots[index].IsEmpty)
                 {
                     continue;
                 }
 
-                slots[index].Equip(weapon, grade);
+                slots[index].Equip(
+                    weapon,
+                    grade
+                );
+
                 SlotsChanged?.Invoke();
                 return true;
             }
@@ -173,7 +198,11 @@ namespace ProjectEpsilon.Combat
                 return false;
             }
 
-            slots[slotIndex].Equip(weapon, grade);
+            slots[slotIndex].Equip(
+                weapon,
+                grade
+            );
+
             SlotsChanged?.Invoke();
             return true;
         }
@@ -183,7 +212,8 @@ namespace ProjectEpsilon.Combat
             int grade = 1
         )
         {
-            if (weapon == null || slots.Count <= 0)
+            if (weapon == null ||
+                slots.Count <= 0)
             {
                 return false;
             }
@@ -208,8 +238,115 @@ namespace ProjectEpsilon.Combat
 
             slots[0].Equip(
                 weapon,
-                Mathf.Clamp(grade, 1, 5)
+                Mathf.Clamp(
+                    grade,
+                    1,
+                    5
+                )
             );
+
+            SlotsChanged?.Invoke();
+            return true;
+        }
+
+        public bool TryMergeSlots(
+            int firstSlotIndex,
+            int secondSlotIndex
+        )
+        {
+            if (firstSlotIndex == secondSlotIndex ||
+                firstSlotIndex < 0 ||
+                secondSlotIndex < 0 ||
+                firstSlotIndex >= slots.Count ||
+                secondSlotIndex >= slots.Count)
+            {
+                return false;
+            }
+
+            SnakeWeaponSlot first =
+                slots[firstSlotIndex];
+
+            SnakeWeaponSlot second =
+                slots[secondSlotIndex];
+
+            if (first == null ||
+                second == null ||
+                first.IsEmpty ||
+                second.IsEmpty ||
+                first.Weapon != second.Weapon ||
+                first.Grade != second.Grade ||
+                first.Grade >= 5 ||
+                first.Grade >= first.Weapon.MaxGrade)
+            {
+                return false;
+            }
+
+            WeaponData resultWeapon =
+                first.Weapon;
+
+            int resultGrade =
+                Mathf.Clamp(
+                    first.Grade + 1,
+                    1,
+                    5
+                );
+
+            List<WeaponLoadoutEntry> remaining =
+                new List<WeaponLoadoutEntry>();
+
+            for (int index = 0;
+                index < slots.Count;
+                index++)
+            {
+                if (index == firstSlotIndex ||
+                    index == secondSlotIndex)
+                {
+                    continue;
+                }
+
+                SnakeWeaponSlot slot =
+                    slots[index];
+
+                if (slot == null ||
+                    slot.IsEmpty)
+                {
+                    continue;
+                }
+
+                remaining.Add(
+                    new WeaponLoadoutEntry(
+                        slot.Weapon,
+                        slot.Grade
+                    )
+                );
+            }
+
+            for (int index = 0;
+                index < slots.Count;
+                index++)
+            {
+                slots[index].Clear();
+            }
+
+            slots[0].Equip(
+                resultWeapon,
+                resultGrade
+            );
+
+            int writeIndex = 1;
+
+            for (int index = 0;
+                index < remaining.Count &&
+                writeIndex < slots.Count;
+                index++)
+            {
+                slots[writeIndex].Equip(
+                    remaining[index].Weapon,
+                    remaining[index].Grade
+                );
+
+                writeIndex++;
+            }
 
             SlotsChanged?.Invoke();
             return true;
@@ -224,7 +361,9 @@ namespace ProjectEpsilon.Combat
                 return false;
             }
 
-            for (int index = 0; index < slots.Count; index++)
+            for (int index = 0;
+                index < slots.Count;
+                index++)
             {
                 SnakeWeaponSlot slot =
                     slots[index];
@@ -266,32 +405,47 @@ namespace ProjectEpsilon.Combat
                 return;
             }
 
-            slots[0].Equip(startingWeapon, 1);
+            slots[0].Equip(
+                startingWeapon,
+                1
+            );
+
             SlotsChanged?.Invoke();
         }
 
         private void TickAutoAttack()
         {
-            float currentTime = Time.time;
+            float currentTime =
+                Time.time;
 
-            for (int index = 0; index < slots.Count; index++)
+            for (int index = 0;
+                index < slots.Count;
+                index++)
             {
-                SnakeWeaponSlot slot = slots[index];
+                SnakeWeaponSlot slot =
+                    slots[index];
 
                 if (slot == null ||
                     slot.IsEmpty ||
                     slot.Origin == null ||
-                    !slot.IsReady(currentTime))
+                    !slot.IsReady(
+                        currentTime
+                    ))
                 {
                     continue;
                 }
 
-                if (!TryAttack(slot, slot.Weapon))
+                if (!TryAttack(
+                    slot,
+                    slot.Weapon
+                ))
                 {
                     continue;
                 }
 
-                slot.StartCooldown(currentTime);
+                slot.StartCooldown(
+                    currentTime
+                );
             }
         }
 
@@ -345,7 +499,9 @@ namespace ProjectEpsilon.Combat
             }
 
             target.TakeDamage(
-                weapon.BaseDamage
+                CalculateSlotDamage(
+                    slot
+                )
             );
 
             SpawnAttackPulse(
@@ -400,7 +556,9 @@ namespace ProjectEpsilon.Combat
                 WeaponTarget.DamageAllInRange(
                     origin,
                     weapon.Range,
-                    weapon.BaseDamage
+                    CalculateSlotDamage(
+                        slot
+                    )
                 );
 
             if (hitCount <= 0)
@@ -436,7 +594,8 @@ namespace ProjectEpsilon.Combat
                 target.transform.position -
                 origin;
 
-            if (direction.sqrMagnitude <= 0.0001f)
+            if (direction.sqrMagnitude <=
+                0.0001f)
             {
                 direction =
                     slot.Origin.up;
@@ -455,10 +614,28 @@ namespace ProjectEpsilon.Combat
 
             projectile.Configure(
                 direction,
-                weapon.BaseDamage,
+                CalculateSlotDamage(
+                    slot
+                ),
                 weapon.ProjectileSpeed,
                 weapon.ProjectileLifetime,
                 projectileSprite
+            );
+        }
+
+        private float CalculateSlotDamage(
+            SnakeWeaponSlot slot
+        )
+        {
+            if (slot == null ||
+                slot.IsEmpty)
+            {
+                return 0f;
+            }
+
+            return WeaponGradeRules.CalculateDamage(
+                slot.Weapon.BaseDamage,
+                slot.Grade
             );
         }
 
@@ -490,7 +667,9 @@ namespace ProjectEpsilon.Combat
 
         private int FindFirstEmptySlotIndex()
         {
-            for (int index = 0; index < slots.Count; index++)
+            for (int index = 0;
+                index < slots.Count;
+                index++)
             {
                 if (slots[index].IsEmpty)
                 {
@@ -529,7 +708,9 @@ namespace ProjectEpsilon.Combat
             SnakeSegment owner
         )
         {
-            for (int index = 0; index < source.Count; index++)
+            for (int index = 0;
+                index < source.Count;
+                index++)
             {
                 SnakeWeaponSlot slot =
                     source[index];
@@ -571,6 +752,21 @@ namespace ProjectEpsilon.Combat
                 HandleBodyCountChanged;
 
             subscribed = false;
+        }
+
+        private readonly struct WeaponLoadoutEntry
+        {
+            public WeaponData Weapon { get; }
+            public int Grade { get; }
+
+            public WeaponLoadoutEntry(
+                WeaponData weapon,
+                int grade
+            )
+            {
+                Weapon = weapon;
+                Grade = grade;
+            }
         }
     }
 }

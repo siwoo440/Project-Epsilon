@@ -16,6 +16,9 @@ namespace ProjectEpsilon.Player
         [SerializeField] private float recoveryPerSecond = 20f;
         [SerializeField] private float recoveryDelay = 1f;
 
+        [Header("External State")]
+        [SerializeField] private bool boostBlocked;
+
         private float recoveryBlockedUntil;
         private bool exhaustedUntilRelease;
         private bool isBoosting;
@@ -26,13 +29,19 @@ namespace ProjectEpsilon.Player
         public float CurrentStamina => currentStamina;
         public float MaximumStamina => maximumStamina;
         public bool IsBoosting => isBoosting;
-        public float CurrentSpeedMultiplier => isBoosting ? boostMultiplier : 1f;
+        public bool IsBoostBlocked => boostBlocked;
+
+        public float CurrentSpeedMultiplier =>
+            isBoosting
+                ? boostMultiplier
+                : 1f;
 
         private void Awake()
         {
             if (inputReader == null)
             {
-                inputReader = GetComponent<PlayerInputReader>();
+                inputReader =
+                    GetComponent<PlayerInputReader>();
             }
 
             NormalizeValues();
@@ -46,13 +55,23 @@ namespace ProjectEpsilon.Player
 
         private void Update()
         {
-            if (GameManager.Instance != null && !GameManager.Instance.IsPlaying)
+            if (GameManager.Instance != null &&
+                !GameManager.Instance.IsPlaying)
             {
                 SetBoosting(false);
                 return;
             }
 
-            bool boostHeld = inputReader != null && inputReader.BoostPressed;
+            if (boostBlocked)
+            {
+                SetBoosting(false);
+                TickRecovery();
+                return;
+            }
+
+            bool boostHeld =
+                inputReader != null &&
+                inputReader.BoostPressed;
 
             if (!boostHeld)
             {
@@ -96,25 +115,49 @@ namespace ProjectEpsilon.Player
         public void ResetStamina()
         {
             NormalizeValues();
+
             currentStamina = maximumStamina;
             recoveryBlockedUntil = 0f;
             exhaustedUntilRelease = false;
+            boostBlocked = false;
+
             SetBoosting(false);
             NotifyStaminaChanged();
+        }
+
+        public void SetBoostBlocked(bool blocked)
+        {
+            boostBlocked = blocked;
+
+            if (boostBlocked)
+            {
+                SetBoosting(false);
+            }
         }
 
         private void TickBoost()
         {
             SetBoosting(true);
-            recoveryBlockedUntil = Time.time + recoveryDelay;
 
-            float previous = currentStamina;
-            currentStamina = Mathf.Max(
-                0f,
-                currentStamina - (drainPerSecond * Time.deltaTime)
-            );
+            recoveryBlockedUntil =
+                Time.time +
+                recoveryDelay;
 
-            if (!Mathf.Approximately(previous, currentStamina))
+            float previous =
+                currentStamina;
+
+            currentStamina =
+                Mathf.Max(
+                    0f,
+                    currentStamina -
+                    (drainPerSecond *
+                    Time.deltaTime)
+                );
+
+            if (!Mathf.Approximately(
+                previous,
+                currentStamina
+            ))
             {
                 NotifyStaminaChanged();
             }
@@ -123,6 +166,7 @@ namespace ProjectEpsilon.Player
             {
                 currentStamina = 0f;
                 exhaustedUntilRelease = true;
+
                 SetBoosting(false);
                 NotifyStaminaChanged();
             }
@@ -130,23 +174,33 @@ namespace ProjectEpsilon.Player
 
         private void TickRecovery()
         {
-            if (Time.time < recoveryBlockedUntil)
+            if (Time.time <
+                recoveryBlockedUntil)
             {
                 return;
             }
 
-            if (currentStamina >= maximumStamina || recoveryPerSecond <= 0f)
+            if (currentStamina >= maximumStamina ||
+                recoveryPerSecond <= 0f)
             {
                 return;
             }
 
-            float previous = currentStamina;
-            currentStamina = Mathf.Min(
-                maximumStamina,
-                currentStamina + (recoveryPerSecond * Time.deltaTime)
-            );
+            float previous =
+                currentStamina;
 
-            if (!Mathf.Approximately(previous, currentStamina))
+            currentStamina =
+                Mathf.Min(
+                    maximumStamina,
+                    currentStamina +
+                    (recoveryPerSecond *
+                    Time.deltaTime)
+                );
+
+            if (!Mathf.Approximately(
+                previous,
+                currentStamina
+            ))
             {
                 NotifyStaminaChanged();
             }
@@ -154,16 +208,42 @@ namespace ProjectEpsilon.Player
 
         private void NormalizeValues()
         {
-            maximumStamina = Mathf.Max(1f, maximumStamina);
-            currentStamina = Mathf.Clamp(
-                currentStamina,
-                0f,
-                maximumStamina
-            );
-            boostMultiplier = Mathf.Max(1f, boostMultiplier);
-            drainPerSecond = Mathf.Max(0.01f, drainPerSecond);
-            recoveryPerSecond = Mathf.Max(0f, recoveryPerSecond);
-            recoveryDelay = Mathf.Max(0f, recoveryDelay);
+            maximumStamina =
+                Mathf.Max(
+                    1f,
+                    maximumStamina
+                );
+
+            currentStamina =
+                Mathf.Clamp(
+                    currentStamina,
+                    0f,
+                    maximumStamina
+                );
+
+            boostMultiplier =
+                Mathf.Max(
+                    1f,
+                    boostMultiplier
+                );
+
+            drainPerSecond =
+                Mathf.Max(
+                    0.01f,
+                    drainPerSecond
+                );
+
+            recoveryPerSecond =
+                Mathf.Max(
+                    0f,
+                    recoveryPerSecond
+                );
+
+            recoveryDelay =
+                Mathf.Max(
+                    0f,
+                    recoveryDelay
+                );
         }
 
         private void SetBoosting(bool value)
@@ -174,14 +254,21 @@ namespace ProjectEpsilon.Player
             }
 
             isBoosting = value;
-            BoostStateChanged?.Invoke(isBoosting);
+
+            BoostStateChanged?.Invoke(
+                isBoosting
+            );
         }
 
         private void NotifyStaminaChanged()
         {
             StaminaChanged?.Invoke(
-                Mathf.RoundToInt(currentStamina),
-                Mathf.RoundToInt(maximumStamina)
+                Mathf.RoundToInt(
+                    currentStamina
+                ),
+                Mathf.RoundToInt(
+                    maximumStamina
+                )
             );
         }
     }
