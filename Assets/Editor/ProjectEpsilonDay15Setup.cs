@@ -13,19 +13,20 @@ using UnityEngine.UI; // UI Text 사용
 namespace ProjectEpsilon.Editor // 편집기 영역
 { // 네임스페이스 시작
     [InitializeOnLoad] // 스크립트 로드 시 실행
-    public static class ProjectEpsilonDay14Setup // Day14 자동 구성기
+    public static class ProjectEpsilonDay15Setup // Day15 자동 구성기
     { // 클래스 시작
         private const string GameScenePath = "Assets/Scenes/Game.unity"; // 게임 장면 경로
-        private const string LegacySetupPath = "Assets/Editor/ProjectEpsilonDay13Setup.cs"; // 이전 Setup 경로
+        private const string LegacySetupPath = "Assets/Editor/ProjectEpsilonDay14Setup.cs"; // 이전 Setup 경로
         private const string PhysicalWeaponPath = "Assets/Data/Weapons/Day14/DebugPhysical.asset"; // 물리 무기 경로
         private const string FireWeaponPath = "Assets/Data/Weapons/Day14/DebugFire.asset"; // 화염 무기 경로
+        private const string PulseSpritePath = "Assets/Art/Sprites/DebugSnakeBody.png"; // 명중 Pulse 이미지 경로
 
-        static ProjectEpsilonDay14Setup() // 정적 생성자
+        static ProjectEpsilonDay15Setup() // 정적 생성자
         { // 생성자 시작
             EditorApplication.delayCall += RunAutoSetup; // 자동 구성 예약
         } // 생성자 끝
 
-        [MenuItem("Project Epsilon/Day 14/Run Setup")] // 수동 실행 메뉴
+        [MenuItem("Project Epsilon/Day 15/Run Setup")] // 수동 실행 메뉴
         public static void RunSetupFromMenu() // 메뉴 실행 처리
         { // 메서드 시작
             RunSetup(true); // 강제 구성 실행
@@ -42,17 +43,17 @@ namespace ProjectEpsilon.Editor // 편집기 영역
             RunSetup(false); // 일반 구성 실행
         } // 메서드 끝
 
-        private static void RunSetup(bool force) // Day14 전체 구성
+        private static void RunSetup(bool force) // Day15 전체 구성
         { // 메서드 시작
             if (!File.Exists(GameScenePath)) // 게임 장면 존재 확인
             { // 조건 시작
-                Debug.LogWarning("[Project Epsilon] Game Scene이 없어 Day 14 자동 구성을 건너뜁니다."); // 장면 누락 경고
+                Debug.LogWarning("[Project Epsilon] Game Scene이 없어 Day 15 자동 구성을 건너뜁니다."); // 장면 누락 경고
                 return; // 구성 중단
             } // 조건 끝
 
             Scene scene = EditorSceneManager.OpenScene(GameScenePath, OpenSceneMode.Single); // 게임 장면 열기
 
-            if (!force && IsDay14Configured()) // 기존 구성 확인
+            if (!force && IsDay15Configured()) // 기존 구성 확인
             { // 조건 시작
                 CleanupLegacySetup(); // 검증 완료된 이전 Setup 정리
                 return; // 중복 구성 방지
@@ -63,7 +64,7 @@ namespace ProjectEpsilon.Editor // 편집기 영역
 
             if (gameplayRoot == null || uiRoot == null) // 필수 Root 확인
             { // 조건 시작
-                Debug.LogError("[Project Epsilon] Gameplay 또는 UI Root를 찾지 못해 Day 14 구성을 중단합니다."); // Root 누락 오류
+                Debug.LogError("[Project Epsilon] Gameplay 또는 UI Root를 찾지 못해 Day 15 구성을 중단합니다."); // Root 누락 오류
                 return; // 구성 중단
             } // 조건 끝
 
@@ -73,7 +74,7 @@ namespace ProjectEpsilon.Editor // 편집기 영역
 
             if (player == null || snakeBody == null || hudCanvas == null) // 필수 오브젝트 확인
             { // 조건 시작
-                Debug.LogError("[Project Epsilon] Player, SnakeBody 또는 HUDCanvas를 찾지 못해 Day 14 구성을 중단합니다."); // 오브젝트 누락 오류
+                Debug.LogError("[Project Epsilon] Player, SnakeBody 또는 HUDCanvas를 찾지 못해 Day 15 구성을 중단합니다."); // 오브젝트 누락 오류
                 return; // 구성 중단
             } // 조건 끝
 
@@ -83,7 +84,7 @@ namespace ProjectEpsilon.Editor // 편집기 영역
 
             if (bodyManager == null || weaponManager == null) // 핵심 관리자 확인
             { // 조건 시작
-                Debug.LogError("[Project Epsilon] Body 또는 Weapon Manager를 찾지 못해 Day 14 구성을 중단합니다."); // 관리자 누락 오류
+                Debug.LogError("[Project Epsilon] Body 또는 Weapon Manager를 찾지 못해 Day 15 구성을 중단합니다."); // 관리자 누락 오류
                 return; // 구성 중단
             } // 조건 끝
 
@@ -92,6 +93,11 @@ namespace ProjectEpsilon.Editor // 편집기 영역
 
             WeaponAttributeEffectHooks attributeHooks = EnsureComponent<WeaponAttributeEffectHooks>(snakeBody.gameObject); // 속성 Hook 확보
             attributeHooks.Configure(gradeHooks, synergyManager); // 등급 Hook과 시너지 연결
+
+            WeaponAttributeCombatEffects combatEffects = EnsureComponent<WeaponAttributeCombatEffects>(snakeBody.gameObject); // 속성 전투 효과 확보
+            Sprite pulseSprite = AssetDatabase.LoadAssetAtPath<Sprite>(PulseSpritePath); // 명중 Pulse 이미지 로드
+            combatEffects.Configure(synergyManager, attributeHooks, pulseSprite); // 전투 효과 참조 연결
+            weaponManager.BindAttributeCombatEffects(combatEffects); // 무기 관리자 명중 효과 연결
 
             WeaponAttributeHUDPresenter hudPresenter = EnsureAttributeHud(hudCanvas, synergyManager); // 속성 HUD 구성
             WeaponData fireWeapon = AssetDatabase.LoadAssetAtPath<WeaponData>(FireWeaponPath); // 화염 무기 로드
@@ -108,26 +114,28 @@ namespace ProjectEpsilon.Editor // 편집기 영역
 
             EditorUtility.SetDirty(synergyManager); // 시너지 관리자 변경 표시
             EditorUtility.SetDirty(attributeHooks); // 속성 Hook 변경 표시
+            EditorUtility.SetDirty(combatEffects); // 전투 효과 변경 표시
+            EditorUtility.SetDirty(weaponManager); // 무기 관리자 변경 표시
             EditorUtility.SetDirty(hudPresenter); // HUD 표시기 변경 표시
             EditorUtility.SetDirty(debugControls); // 디버그 입력 변경 표시
             EditorSceneManager.MarkSceneDirty(scene); // 장면 변경 표시
             bool sceneSaved = EditorSceneManager.SaveScene(scene, GameScenePath); // 장면 저장 결과
-            bool configurationValid = sceneSaved && IsDay14Configured(); // 저장 후 연결 검증
+            bool configurationValid = sceneSaved && IsDay15Configured(); // 저장 후 연결 검증
 
-            if (!ProjectEpsilonDay14SetupRules.CanCleanupLegacySetup(sceneSaved, configurationValid)) // 완료 조건 확인
+            if (!ProjectEpsilonDay15SetupRules.CanCleanupLegacySetup(sceneSaved, configurationValid)) // 완료 조건 확인
             { // 조건 시작
-                Debug.LogError("[Project Epsilon] Day 14 장면 저장 또는 참조 검증에 실패해 Day13 Setup을 유지합니다."); // 검증 실패 오류
+                Debug.LogError("[Project Epsilon] Day 15 장면 저장 또는 참조 검증에 실패해 Day14 Setup을 유지합니다."); // 검증 실패 오류
                 return; // 삭제와 완료 처리 중단
             } // 조건 끝
 
-            CleanupLegacySetup(); // 검증 성공 후 Day13 Setup 삭제
+            CleanupLegacySetup(); // 검증 성공 후 Day14 Setup 삭제
             AssetDatabase.SaveAssets(); // 에셋 저장
             AssetDatabase.Refresh(); // 에셋 목록 갱신
             Selection.activeGameObject = snakeBody.gameObject; // 구성 대상 선택
-            Debug.Log("[Project Epsilon] Day 14 attribute synergy setup complete."); // 완료 로그 출력
+            Debug.Log("[Project Epsilon] Day 15 Physical and Fire combat effects setup complete."); // 완료 로그 출력
         } // 메서드 끝
 
-        private static bool IsDay14Configured() // 기존 구성 검사
+        private static bool IsDay15Configured() // 기존 구성 검사
         { // 메서드 시작
             GameObject gameplayRoot = GameObject.Find("===Gameplay==="); // Gameplay Root 탐색
             GameObject uiRoot = GameObject.Find("===UI==="); // UI Root 탐색
@@ -152,17 +160,19 @@ namespace ProjectEpsilon.Editor // 편집기 영역
             WeaponGradeEffectHooks gradeHooks = snakeBody.GetComponent<WeaponGradeEffectHooks>(); // 등급 Hook 조회
             WeaponAttributeSynergyManager synergyManager = snakeBody.GetComponent<WeaponAttributeSynergyManager>(); // 시너지 관리자 조회
             WeaponAttributeEffectHooks attributeHooks = snakeBody.GetComponent<WeaponAttributeEffectHooks>(); // 속성 Hook 조회
+            WeaponAttributeCombatEffects combatEffects = snakeBody.GetComponent<WeaponAttributeCombatEffects>(); // 속성 전투 효과 조회
             WeaponAttributeDebugControls debugControls = player.GetComponent<WeaponAttributeDebugControls>(); // 디버그 입력 조회
             WeaponAttributeHUDPresenter hudPresenter = hud == null ? null : hud.GetComponent<WeaponAttributeHUDPresenter>(); // HUD 표시기 조회
             Text hudText = hud == null ? null : hud.GetComponent<Text>(); // HUD Text 조회
             WeaponData fireWeapon = AssetDatabase.LoadAssetAtPath<WeaponData>(FireWeaponPath); // 화염 무기 조회
             WeaponData physicalWeapon = AssetDatabase.LoadAssetAtPath<WeaponData>(PhysicalWeaponPath); // 물리 무기 조회
-            bool managerMatches = synergyManager != null && ProjectEpsilonDay14SetupRules.AreSameReference(weaponManager, synergyManager.WeaponManager); // 무기 관리자 연결 검증
-            bool hooksMatch = attributeHooks != null && ProjectEpsilonDay14SetupRules.AreSameReference(gradeHooks, attributeHooks.GradeEffectHooks) && ProjectEpsilonDay14SetupRules.AreSameReference(synergyManager, attributeHooks.SynergyManager); // Hook 연결 검증
-            bool hudMatches = hudPresenter != null && ProjectEpsilonDay14SetupRules.AreSameReference(synergyManager, hudPresenter.SynergyManager) && ProjectEpsilonDay14SetupRules.AreSameReference(hudText, hudPresenter.AttributeText); // HUD 연결 검증
-            bool debugMatches = debugControls != null && ProjectEpsilonDay14SetupRules.AreSameReference(bodyManager, debugControls.BodyManager) && ProjectEpsilonDay14SetupRules.AreSameReference(weaponManager, debugControls.WeaponManager) && ProjectEpsilonDay14SetupRules.AreSameReference(fireWeapon, debugControls.FireWeapon) && ProjectEpsilonDay14SetupRules.AreSameReference(physicalWeapon, debugControls.FallbackWeapon); // 디버그 연결 검증
+            bool managerMatches = synergyManager != null && ProjectEpsilonDay15SetupRules.AreSameReference(weaponManager, synergyManager.WeaponManager); // 무기 관리자 연결 검증
+            bool hooksMatch = attributeHooks != null && ProjectEpsilonDay15SetupRules.AreSameReference(gradeHooks, attributeHooks.GradeEffectHooks) && ProjectEpsilonDay15SetupRules.AreSameReference(synergyManager, attributeHooks.SynergyManager); // Hook 연결 검증
+            bool combatMatches = combatEffects != null && ProjectEpsilonDay15SetupRules.AreSameReference(synergyManager, combatEffects.SynergyManager) && ProjectEpsilonDay15SetupRules.AreSameReference(attributeHooks, combatEffects.EffectHooks) && ProjectEpsilonDay15SetupRules.AreSameReference(combatEffects, weaponManager.AttributeCombatEffects); // 전투 효과 연결 검증
+            bool hudMatches = hudPresenter != null && ProjectEpsilonDay15SetupRules.AreSameReference(synergyManager, hudPresenter.SynergyManager) && ProjectEpsilonDay15SetupRules.AreSameReference(hudText, hudPresenter.AttributeText); // HUD 연결 검증
+            bool debugMatches = debugControls != null && ProjectEpsilonDay15SetupRules.AreSameReference(bodyManager, debugControls.BodyManager) && ProjectEpsilonDay15SetupRules.AreSameReference(weaponManager, debugControls.WeaponManager) && ProjectEpsilonDay15SetupRules.AreSameReference(fireWeapon, debugControls.FireWeapon) && ProjectEpsilonDay15SetupRules.AreSameReference(physicalWeapon, debugControls.FallbackWeapon); // 디버그 연결 검증
 
-            return managerMatches && hooksMatch && hudMatches && debugMatches; // 정확한 참조 구성 상태 반환
+            return managerMatches && hooksMatch && combatMatches && hudMatches && debugMatches; // 정확한 참조 구성 상태 반환
         } // 메서드 끝
 
         private static WeaponAttributeHUDPresenter EnsureAttributeHud(Transform hudCanvas, WeaponAttributeSynergyManager synergyManager) // 속성 HUD 확보
@@ -232,7 +242,7 @@ namespace ProjectEpsilon.Editor // 편집기 영역
                 return; // 삭제 생략
             } // 조건 끝
 
-            AssetDatabase.DeleteAsset(LegacySetupPath); // Day13 Setup 삭제
+            AssetDatabase.DeleteAsset(LegacySetupPath); // Day14 Setup 삭제
         } // 메서드 끝
     } // 클래스 끝
 } // 네임스페이스 끝

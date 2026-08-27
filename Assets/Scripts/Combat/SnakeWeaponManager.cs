@@ -16,6 +16,7 @@ namespace ProjectEpsilon.Combat
 
         [Header("Grade Effects")]
         [SerializeField] private WeaponGradeEffectHooks gradeEffectHooks;
+        [SerializeField] private WeaponAttributeCombatEffects attributeCombatEffects; // 속성 전투 효과 참조
 
         [SerializeField] private List<SnakeWeaponSlot> slots =
             new List<SnakeWeaponSlot>();
@@ -26,6 +27,7 @@ namespace ProjectEpsilon.Combat
 
         public IReadOnlyList<SnakeWeaponSlot> Slots => slots;
         public int SlotCount => slots.Count;
+        public WeaponAttributeCombatEffects AttributeCombatEffects => attributeCombatEffects; // 속성 효과 반환
 
         public int OccupiedSlotCount
         {
@@ -54,6 +56,11 @@ namespace ProjectEpsilon.Combat
                 gradeEffectHooks =
                     GetComponent<WeaponGradeEffectHooks>();
             }
+
+            if (attributeCombatEffects == null) // 속성 효과 없음 확인
+            { // 조건 시작
+                attributeCombatEffects = GetComponent<WeaponAttributeCombatEffects>(); // 같은 오브젝트 효과 조회
+            } // 조건 끝
         }
 
         private void OnEnable()
@@ -118,6 +125,11 @@ namespace ProjectEpsilon.Combat
         {
             gradeEffectHooks = hooks;
         }
+
+        public void BindAttributeCombatEffects(WeaponAttributeCombatEffects effects) // 속성 효과 연결
+        { // 메서드 시작
+            attributeCombatEffects = effects; // 속성 효과 저장
+        } // 메서드 끝
 
         public void SynchronizeSlots()
         {
@@ -535,11 +547,8 @@ namespace ProjectEpsilon.Combat
                 return false;
             }
 
-            target.TakeDamage(
-                CalculateSlotDamage(
-                    slot
-                )
-            );
+            WeaponAttributeAttackSnapshot attack = CreateAttackSnapshot(slot, origin); // 공격 정보 생성
+            ApplyWeaponHit(attack, target, target.transform.position); // 통합 명중 적용
 
             SpawnAttackPulse(
                 origin,
@@ -589,14 +598,12 @@ namespace ProjectEpsilon.Combat
             Vector3 origin =
                 slot.Origin.position;
 
-            int hitCount =
-                WeaponTarget.DamageAllInRange(
-                    origin,
-                    weapon.Range,
-                    CalculateSlotDamage(
-                        slot
-                    )
-                );
+            WeaponAttributeAttackSnapshot attack = CreateAttackSnapshot(slot, origin); // 범위 공격 정보 생성
+            int hitCount = WeaponTarget.VisitAllInRange( // 범위 대상 방문
+                origin, // 공격 중심 전달
+                weapon.Range, // 공격 범위 전달
+                target => ApplyWeaponHit(attack, target, target.transform.position) // 대상별 명중 적용
+            ); // 방문 종료
 
             if (hitCount <= 0)
             {
@@ -649,16 +656,40 @@ namespace ProjectEpsilon.Combat
             StraightProjectile projectile =
                 projectileObject.AddComponent<StraightProjectile>();
 
+            WeaponAttributeAttackSnapshot attack = CreateAttackSnapshot(slot, origin); // 발사 시점 정보 생성
+
             projectile.Configure(
                 direction,
-                CalculateSlotDamage(
-                    slot
-                ),
+                attack, // 공격 정보 전달
+                attributeCombatEffects, // 속성 효과 전달
                 weapon.ProjectileSpeed,
                 weapon.ProjectileLifetime,
                 projectileSprite
             );
         }
+
+        private WeaponAttributeAttackSnapshot CreateAttackSnapshot(SnakeWeaponSlot slot, Vector3 origin) // 공격 정보 생성
+        { // 메서드 시작
+            float gradeDamage = CalculateSlotDamage(slot); // 등급 피해 계산
+
+            if (attributeCombatEffects != null) // 속성 효과 연결 확인
+            { // 조건 시작
+                return attributeCombatEffects.CreateAttackSnapshot(slot.Weapon, slot.Grade, origin, gradeDamage); // 시너지 공격 정보 반환
+            } // 조건 끝
+
+            return new WeaponAttributeAttackSnapshot(slot.Weapon, slot.Weapon.Attribute, 0, 0, slot.Grade, origin, gradeDamage); // 기본 공격 정보 반환
+        } // 메서드 끝
+
+        private void ApplyWeaponHit(WeaponAttributeAttackSnapshot attack, WeaponTarget target, Vector3 hitPosition) // 대상 명중 적용
+        { // 메서드 시작
+            if (attributeCombatEffects != null) // 속성 효과 연결 확인
+            { // 조건 시작
+                attributeCombatEffects.ApplyHit(attack, target, hitPosition); // 통합 속성 명중 적용
+                return; // 대체 피해 방지
+            } // 조건 끝
+
+            target?.TakeDamage(attack.DirectDamage); // 기본 직접 피해 적용
+        } // 메서드 끝
 
         private float CalculateSlotDamage(
             SnakeWeaponSlot slot

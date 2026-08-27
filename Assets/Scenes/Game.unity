@@ -6984,6 +6984,7 @@ GameObject:
   - component: {fileID: 2088063717}
   - component: {fileID: 2088063719}
   - component: {fileID: 2088063718}
+  - component: {fileID: 2088063720}
   m_Layer: 0
   m_Name: SnakeBody
   m_TagString: Untagged
@@ -7082,6 +7083,7 @@ MonoBehaviour:
   startingWeapon: {fileID: 11400000, guid: dbd234de925b0504ea1df71a51d5f2fb, type: 2}
   projectileSprite: {fileID: 1434238494030181667, guid: 0a4df3fa57e52bc469da7185f6109d59, type: 3}
   gradeEffectHooks: {fileID: 2088063717}
+  attributeCombatEffects: {fileID: 2088063720}
   slots:
   - owner: {fileID: 37962707}
     weapon: {fileID: 11400000, guid: 267b5f63f7994c24091e6effd8a230f1, type: 2}
@@ -7132,6 +7134,21 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::ProjectEpsilon.Combat.WeaponAttributeSynergyManager
   weaponManager: {fileID: 2088063716}
   attributeCounts: 0300000000000000000000000000000000000000000000000000000000000000
+--- !u!114 &2088063720
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2088063711}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a15d4a6a0dd54ad485d6a15a00000003, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::ProjectEpsilon.Combat.WeaponAttributeCombatEffects
+  synergyManager: {fileID: 2088063719}
+  effectHooks: {fileID: 2088063718}
+  pulseSprite: {fileID: 1434238494030181667, guid: 0a4df3fa57e52bc469da7185f6109d59, type: 3}
 --- !u!1 &2095993294
 GameObject:
   m_ObjectHideFlags: 0

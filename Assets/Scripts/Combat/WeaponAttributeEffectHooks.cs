@@ -34,6 +34,7 @@ namespace ProjectEpsilon.Combat // 전투 영역
         private bool subscribed; // 구독 상태
 
         public event Action<WeaponAttributeEffectContext> AttackTriggered; // 속성 공격 알림
+        public event Action<WeaponAttributeHitContext> HitTriggered; // 속성 명중 알림
 
         public bool IsConfigured // 연결 완료 상태
         { // 속성 시작
@@ -75,6 +76,16 @@ namespace ProjectEpsilon.Combat // 전투 영역
             gradeEffectHooks = gradeHooks; // 등급 Hook 저장
             synergyManager = manager; // 시너지 관리자 저장
             Subscribe(); // 새 연결 구독
+        } // 메서드 끝
+
+        public void NotifyHit(WeaponAttributeHitContext context) // 실제 명중 알림 전달
+        { // 메서드 시작
+            if (context.Target == null || context.Attack.Weapon == null) // 명중 정보 유효성 확인
+            { // 조건 시작
+                return; // 알림 생략
+            } // 조건 끝
+
+            HitTriggered?.Invoke(context); // 명중 이벤트 전달
         } // 메서드 끝
 
         private void HandleEffectTriggered(WeaponGradeEffectContext context) // 기존 효과 알림 처리

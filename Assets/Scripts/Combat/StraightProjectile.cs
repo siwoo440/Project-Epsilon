@@ -9,7 +9,8 @@ namespace ProjectEpsilon.Combat
     public sealed class StraightProjectile : MonoBehaviour
     {
         private Vector2 direction = Vector2.up;
-        private float damage = 10f;
+        private WeaponAttributeAttackSnapshot attackSnapshot; // 공격 시점 속성 정보
+        private WeaponAttributeCombatEffects attributeEffects; // 속성 효과 관리자
         private float speed = 8f;
         private float remainingLifetime = 3f;
 
@@ -27,7 +28,8 @@ namespace ProjectEpsilon.Combat
 
         public void Configure(
             Vector2 moveDirection,
-            float projectileDamage,
+            WeaponAttributeAttackSnapshot snapshot, // 공격 정보
+            WeaponAttributeCombatEffects effects, // 속성 효과 관리자
             float projectileSpeed,
             float lifetime,
             Sprite visual
@@ -37,7 +39,8 @@ namespace ProjectEpsilon.Combat
                 ? Vector2.up
                 : moveDirection.normalized;
 
-            damage = Mathf.Max(0f, projectileDamage);
+            attackSnapshot = snapshot; // 공격 정보 저장
+            attributeEffects = effects; // 효과 관리자 저장
             speed = Mathf.Max(0.01f, projectileSpeed);
             remainingLifetime = Mathf.Max(0.1f, lifetime);
 
@@ -81,7 +84,15 @@ namespace ProjectEpsilon.Combat
                 return;
             }
 
-            target.TakeDamage(damage);
+            if (attributeEffects != null) // 속성 효과 연결 확인
+            { // 조건 시작
+                attributeEffects.ApplyHit(attackSnapshot, target, transform.position); // 통합 명중 적용
+            } // 조건 끝
+            else // 효과 관리자 없음
+            { // 대안 시작
+                target.TakeDamage(attackSnapshot.DirectDamage); // 직접 피해 대체 적용
+            } // 대안 끝
+
             Destroy(gameObject);
         }
     }
