@@ -18,6 +18,7 @@ namespace ProjectEpsilon.Player
         [SerializeField] private Vector3 tailScale = new Vector3(0.48f, 0.48f, 1f);
         [SerializeField] private Color bodyColor = new Color(0.62f, 0.48f, 1f, 1f);
         [SerializeField] private Color tailColor = new Color(0.42f, 0.32f, 0.78f, 1f);
+        [SerializeField] private float bodyColliderRadius = 0.36f;
 
         private readonly List<SnakeSegment> bodySegments = new List<SnakeSegment>();
         private SnakeSegment tailSegment;
@@ -109,25 +110,37 @@ namespace ProjectEpsilon.Player
 
         public bool TryRemoveBody()
         {
+            return RemoveBodies(1) > 0;
+        }
+
+        public int RemoveBodies(int count)
+        {
             EnsureInitialized();
 
-            if (bodySegments.Count <= 0)
+            int requestedCount = Mathf.Max(0, count);
+            int removedCount = Mathf.Min(requestedCount, bodySegments.Count);
+
+            if (removedCount <= 0)
             {
-                return false;
+                return 0;
             }
 
-            int lastIndex = bodySegments.Count - 1;
-            SnakeSegment segment = bodySegments[lastIndex];
-            bodySegments.RemoveAt(lastIndex);
-
-            if (segment != null)
+            for (int removed = 0; removed < removedCount; removed++)
             {
-                DestroySegmentObject(segment.gameObject);
+                int lastIndex = bodySegments.Count - 1;
+                SnakeSegment segment = bodySegments[lastIndex];
+                bodySegments.RemoveAt(lastIndex);
+
+                if (segment != null)
+                {
+                    DestroySegmentObject(segment.gameObject);
+                }
             }
 
+            ReindexBodySegments();
             RefreshFollower();
             NotifyBodyCountChanged();
-            return true;
+            return removedCount;
         }
 
         public void ResetBody()
@@ -270,6 +283,7 @@ namespace ProjectEpsilon.Player
 
             SnakeSegment segment = segmentObject.AddComponent<SnakeSegment>();
             segment.Configure(SnakeSegmentType.Body, index);
+            EnsureBodyCollider(segmentObject);
             bodySegments.Add(segment);
 
             return segment;
@@ -332,7 +346,21 @@ namespace ProjectEpsilon.Player
                 }
 
                 segment.transform.localScale = bodyScale;
+                EnsureBodyCollider(segment.gameObject);
             }
+        }
+
+        private void EnsureBodyCollider(GameObject target)
+        {
+            CircleCollider2D collider = target.GetComponent<CircleCollider2D>();
+
+            if (collider == null)
+            {
+                collider = target.AddComponent<CircleCollider2D>();
+            }
+
+            collider.isTrigger = true;
+            collider.radius = Mathf.Max(0.05f, bodyColliderRadius);
         }
 
         private static SnakeSegment GetOrAddSegment(GameObject target)

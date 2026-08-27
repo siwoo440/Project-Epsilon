@@ -9,24 +9,24 @@ using UnityEngine.SceneManagement;
 namespace ProjectEpsilon.Editor
 {
     [InitializeOnLoad]
-    public static class ProjectEpsilonDay5Setup
+    public static class ProjectEpsilonDay6Setup
     {
         private const string GameScenePath = "Assets/Scenes/Game.unity";
         private const string BodySpritePath = "Assets/Art/Sprites/DebugSnakeBody.png";
-        private const string SessionKey = "ProjectEpsilon.Day5.AutoSetup";
+        private const string SessionKey = "ProjectEpsilon.Day6.AutoSetup";
 
         private static readonly string[] LegacyAssets =
         {
-            "Assets/Editor/ProjectEpsilonDay4Setup.cs",
-            "Assets/Editor/ProjectEpsilonDay4Setup.cs.meta"
+            "Assets/Editor/ProjectEpsilonDay5Setup.cs",
+            "Assets/Editor/ProjectEpsilonDay5Setup.cs.meta"
         };
 
-        static ProjectEpsilonDay5Setup()
+        static ProjectEpsilonDay6Setup()
         {
             EditorApplication.delayCall += RunAutoSetup;
         }
 
-        [MenuItem("Project Epsilon/Day 5/Run Setup")]
+        [MenuItem("Project Epsilon/Day 6/Run Setup")]
         public static void RunSetupFromMenu()
         {
             RunSetup(true);
@@ -52,13 +52,13 @@ namespace ProjectEpsilon.Editor
         {
             if (!File.Exists(GameScenePath))
             {
-                Debug.LogWarning("[Project Epsilon] Game Scene이 없어 Day 5 자동 구성을 건너뜁니다.");
+                Debug.LogWarning("[Project Epsilon] Game Scene이 없어 Day 6 자동 구성을 건너뜁니다.");
                 return;
             }
 
             Scene scene = EditorSceneManager.OpenScene(GameScenePath, OpenSceneMode.Single);
 
-            if (!force && IsDay5Configured())
+            if (!force && IsDay6Configured())
             {
                 CleanupLegacyAssets();
                 return;
@@ -72,7 +72,16 @@ namespace ProjectEpsilon.Editor
             recorder.ResetHistory();
 
             SnakeBodyManager bodyManager = EnsureSnakeBody(gameplayRoot.transform, recorder);
-            EnsureHUDBinding(uiRoot.transform, bodyManager);
+            SnakeInvulnerability invulnerability = EnsureInvulnerability(player);
+            SnakeHealth health = EnsureHealth(player, bodyManager, invulnerability);
+            SnakeSelfCollision selfCollision = EnsureSelfCollision(
+                player,
+                bodyManager,
+                invulnerability
+            );
+
+            EnsureDamageDebugControls(player, health, selfCollision);
+            EnsureHUDBinding(uiRoot.transform, bodyManager, health);
 
             EditorSceneManager.MarkSceneDirty(scene);
             EditorSceneManager.SaveScene(scene, GameScenePath);
@@ -81,11 +90,11 @@ namespace ProjectEpsilon.Editor
             AssetDatabase.SaveAssets();
             AssetDatabase.Refresh();
 
-            Selection.activeGameObject = bodyManager.gameObject;
-            Debug.Log("[Project Epsilon] Day 5 dynamic body management setup complete.");
+            Selection.activeGameObject = player;
+            Debug.Log("[Project Epsilon] Day 6 shared HP + self collision setup complete.");
         }
 
-        private static bool IsDay5Configured()
+        private static bool IsDay6Configured()
         {
             GameObject gameplayRoot = GameObject.Find("===Gameplay===");
             GameObject uiRoot = GameObject.Find("===UI===");
@@ -95,24 +104,23 @@ namespace ProjectEpsilon.Editor
                 return false;
             }
 
+            Transform player = gameplayRoot.transform.Find("Player");
             Transform bodyRoot = gameplayRoot.transform.Find("SnakeBody");
             Transform hudCanvas = uiRoot.transform.Find("HUDCanvas");
 
-            if (bodyRoot == null || hudCanvas == null)
+            if (player == null || bodyRoot == null || hudCanvas == null)
             {
                 return false;
             }
 
-            SnakeBodyManager manager = bodyRoot.GetComponent<SnakeBodyManager>();
-            SnakeBodyFollower follower = bodyRoot.GetComponent<SnakeBodyFollower>();
-            SnakeBodyHUDPresenter presenter = hudCanvas.GetComponent<SnakeBodyHUDPresenter>();
-
-            return manager != null &&
-                follower != null &&
-                presenter != null &&
-                manager.CurrentBodyCount == 3 &&
-                manager.MaximumBodyCount == 20 &&
-                manager.TailSegment != null;
+            return player.GetComponent<SnakeHealth>() != null &&
+                player.GetComponent<SnakeInvulnerability>() != null &&
+                player.GetComponent<SnakeSelfCollision>() != null &&
+                player.GetComponent<SnakeDamageDebugControls>() != null &&
+                player.GetComponent<CircleCollider2D>() != null &&
+                player.GetComponent<Rigidbody2D>() != null &&
+                bodyRoot.GetComponent<SnakeBodyManager>() != null &&
+                hudCanvas.GetComponent<SnakeHealthHUDPresenter>() != null;
         }
 
         private static GameObject EnsureRoot(string rootName)
@@ -159,6 +167,27 @@ namespace ProjectEpsilon.Editor
             {
                 player.AddComponent<SnakePathRecorder>();
             }
+
+            CircleCollider2D headCollider = player.GetComponent<CircleCollider2D>();
+
+            if (headCollider == null)
+            {
+                headCollider = player.AddComponent<CircleCollider2D>();
+            }
+
+            headCollider.isTrigger = true;
+            headCollider.radius = 0.32f;
+
+            Rigidbody2D rigidbody = player.GetComponent<Rigidbody2D>();
+
+            if (rigidbody == null)
+            {
+                rigidbody = player.AddComponent<Rigidbody2D>();
+            }
+
+            rigidbody.bodyType = RigidbodyType2D.Kinematic;
+            rigidbody.gravityScale = 0f;
+            rigidbody.constraints = RigidbodyConstraints2D.FreezeRotation;
 
             return player;
         }
@@ -207,13 +236,83 @@ namespace ProjectEpsilon.Editor
             return manager;
         }
 
-        private static void EnsureHUDBinding(Transform uiRoot, SnakeBodyManager bodyManager)
+        private static SnakeInvulnerability EnsureInvulnerability(GameObject player)
+        {
+            SnakeInvulnerability invulnerability =
+                player.GetComponent<SnakeInvulnerability>();
+
+            if (invulnerability == null)
+            {
+                invulnerability = player.AddComponent<SnakeInvulnerability>();
+            }
+
+            invulnerability.ClearInvulnerability();
+            return invulnerability;
+        }
+
+        private static SnakeHealth EnsureHealth(
+            GameObject player,
+            SnakeBodyManager bodyManager,
+            SnakeInvulnerability invulnerability
+        )
+        {
+            SnakeHealth health = player.GetComponent<SnakeHealth>();
+
+            if (health == null)
+            {
+                health = player.AddComponent<SnakeHealth>();
+            }
+
+            health.Configure(bodyManager, invulnerability, 100);
+            return health;
+        }
+
+        private static SnakeSelfCollision EnsureSelfCollision(
+            GameObject player,
+            SnakeBodyManager bodyManager,
+            SnakeInvulnerability invulnerability
+        )
+        {
+            SnakeSelfCollision selfCollision =
+                player.GetComponent<SnakeSelfCollision>();
+
+            if (selfCollision == null)
+            {
+                selfCollision = player.AddComponent<SnakeSelfCollision>();
+            }
+
+            selfCollision.Bind(bodyManager, invulnerability, 2, 2f);
+            return selfCollision;
+        }
+
+        private static void EnsureDamageDebugControls(
+            GameObject player,
+            SnakeHealth health,
+            SnakeSelfCollision selfCollision
+        )
+        {
+            SnakeDamageDebugControls controls =
+                player.GetComponent<SnakeDamageDebugControls>();
+
+            if (controls == null)
+            {
+                controls = player.AddComponent<SnakeDamageDebugControls>();
+            }
+
+            controls.Bind(health, selfCollision);
+        }
+
+        private static void EnsureHUDBinding(
+            Transform uiRoot,
+            SnakeBodyManager bodyManager,
+            SnakeHealth health
+        )
         {
             Transform hudCanvas = uiRoot.Find("HUDCanvas");
 
             if (hudCanvas == null)
             {
-                Debug.LogWarning("[Project Epsilon] HUDCanvas가 없어 BodyCount HUD 연결을 건너뜁니다.");
+                Debug.LogWarning("[Project Epsilon] HUDCanvas가 없어 Day 6 HUD 연결을 건너뜁니다.");
                 return;
             }
 
@@ -221,18 +320,29 @@ namespace ProjectEpsilon.Editor
 
             if (hudController == null)
             {
-                Debug.LogWarning("[Project Epsilon] HUDController가 없어 BodyCount HUD 연결을 건너뜁니다.");
+                Debug.LogWarning("[Project Epsilon] HUDController가 없어 Day 6 HUD 연결을 건너뜁니다.");
                 return;
             }
 
-            SnakeBodyHUDPresenter presenter = hudCanvas.GetComponent<SnakeBodyHUDPresenter>();
+            SnakeBodyHUDPresenter bodyPresenter =
+                hudCanvas.GetComponent<SnakeBodyHUDPresenter>();
 
-            if (presenter == null)
+            if (bodyPresenter == null)
             {
-                presenter = hudCanvas.gameObject.AddComponent<SnakeBodyHUDPresenter>();
+                bodyPresenter = hudCanvas.gameObject.AddComponent<SnakeBodyHUDPresenter>();
             }
 
-            presenter.Bind(bodyManager, hudController);
+            bodyPresenter.Bind(bodyManager, hudController);
+
+            SnakeHealthHUDPresenter healthPresenter =
+                hudCanvas.GetComponent<SnakeHealthHUDPresenter>();
+
+            if (healthPresenter == null)
+            {
+                healthPresenter = hudCanvas.gameObject.AddComponent<SnakeHealthHUDPresenter>();
+            }
+
+            healthPresenter.Bind(health, hudController);
         }
 
         private static void CleanupLegacyAssets()
