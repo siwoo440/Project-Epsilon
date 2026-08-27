@@ -58,6 +58,9 @@ namespace ProjectEpsilon.UI
             experience.ExperienceChanged +=
                 HandleExperienceChanged;
 
+            experience.LevelChanged +=
+                HandleLevelChanged;
+
             subscribed = true;
         }
 
@@ -72,6 +75,9 @@ namespace ProjectEpsilon.UI
             experience.ExperienceChanged -=
                 HandleExperienceChanged;
 
+            experience.LevelChanged -=
+                HandleLevelChanged;
+
             subscribed = false;
         }
 
@@ -84,7 +90,11 @@ namespace ProjectEpsilon.UI
 
             hudController.SetExperience(
                 experience.CurrentExperience,
-                experience.PreviewRequiredExperience
+                experience.RequiredExperience
+            );
+
+            hudController.SetLevel(
+                experience.CurrentLevel
             );
         }
 
@@ -95,7 +105,18 @@ namespace ProjectEpsilon.UI
         {
             if (hudController != null)
             {
-                hudController.SetExperience(current, required);
+                hudController.SetExperience(
+                    current,
+                    required
+                );
+            }
+        }
+
+        private void HandleLevelChanged(int level)
+        {
+            if (hudController != null)
+            {
+                hudController.SetLevel(level);
             }
         }
     }
