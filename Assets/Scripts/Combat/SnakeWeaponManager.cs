@@ -158,6 +158,24 @@ namespace ProjectEpsilon.Combat
             return false;
         }
 
+        public bool TryEquipAt(
+            int slotIndex,
+            WeaponData weapon,
+            int grade = 1
+        )
+        {
+            if (weapon == null ||
+                slotIndex < 0 ||
+                slotIndex >= slots.Count)
+            {
+                return false;
+            }
+
+            slots[slotIndex].Equip(weapon, grade);
+            SlotsChanged?.Invoke();
+            return true;
+        }
+
         private void HandleBodyCountChanged(
             int current,
             int maximum
@@ -198,33 +216,112 @@ namespace ProjectEpsilon.Combat
                     continue;
                 }
 
-                WeaponData weapon = slot.Weapon;
-
-                if (weapon.AttackType !=
-                    WeaponAttackType.StraightProjectile)
+                if (!TryAttack(slot, slot.Weapon))
                 {
                     continue;
                 }
-
-                WeaponTarget target =
-                    WeaponTarget.FindClosest(
-                        slot.Origin.position,
-                        weapon.Range
-                    );
-
-                if (target == null)
-                {
-                    continue;
-                }
-
-                FireStraightProjectile(
-                    slot,
-                    weapon,
-                    target
-                );
 
                 slot.StartCooldown(currentTime);
             }
+        }
+
+        private bool TryAttack(
+            SnakeWeaponSlot slot,
+            WeaponData weapon
+        )
+        {
+            switch (weapon.AttackType)
+            {
+                case WeaponAttackType.Melee:
+                    return TryMeleeAttack(slot, weapon);
+
+                case WeaponAttackType.StraightProjectile:
+                    return TryStraightProjectileAttack(slot, weapon);
+
+                case WeaponAttackType.Area:
+                    return TryAreaAttack(slot, weapon);
+
+                default:
+                    return false;
+            }
+        }
+
+        private bool TryMeleeAttack(
+            SnakeWeaponSlot slot,
+            WeaponData weapon
+        )
+        {
+            Vector3 origin = slot.Origin.position;
+            WeaponTarget target =
+                WeaponTarget.FindClosest(origin, weapon.Range);
+
+            if (target == null)
+            {
+                return false;
+            }
+
+            target.TakeDamage(weapon.BaseDamage);
+
+            SpawnAttackPulse(
+                origin,
+                weapon.Range,
+                new Color(1f, 0.65f, 0.25f, 0.75f),
+                0.12f
+            );
+
+            return true;
+        }
+
+        private bool TryStraightProjectileAttack(
+            SnakeWeaponSlot slot,
+            WeaponData weapon
+        )
+        {
+            WeaponTarget target =
+                WeaponTarget.FindClosest(
+                    slot.Origin.position,
+                    weapon.Range
+                );
+
+            if (target == null)
+            {
+                return false;
+            }
+
+            FireStraightProjectile(
+                slot,
+                weapon,
+                target
+            );
+
+            return true;
+        }
+
+        private bool TryAreaAttack(
+            SnakeWeaponSlot slot,
+            WeaponData weapon
+        )
+        {
+            Vector3 origin = slot.Origin.position;
+            int hitCount = WeaponTarget.DamageAllInRange(
+                origin,
+                weapon.Range,
+                weapon.BaseDamage
+            );
+
+            if (hitCount <= 0)
+            {
+                return false;
+            }
+
+            SpawnAttackPulse(
+                origin,
+                weapon.Range,
+                new Color(0.45f, 0.8f, 1f, 0.65f),
+                0.2f
+            );
+
+            return true;
         }
 
         private void FireStraightProjectile(
@@ -258,6 +355,29 @@ namespace ProjectEpsilon.Combat
                 weapon.ProjectileSpeed,
                 weapon.ProjectileLifetime,
                 projectileSprite
+            );
+        }
+
+        private void SpawnAttackPulse(
+            Vector3 origin,
+            float radius,
+            Color color,
+            float duration
+        )
+        {
+            GameObject pulseObject =
+                new GameObject("Weapon_AttackPulse");
+
+            pulseObject.transform.position = origin;
+
+            WeaponAttackPulse pulse =
+                pulseObject.AddComponent<WeaponAttackPulse>();
+
+            pulse.Configure(
+                projectileSprite,
+                radius,
+                color,
+                duration
             );
         }
 
