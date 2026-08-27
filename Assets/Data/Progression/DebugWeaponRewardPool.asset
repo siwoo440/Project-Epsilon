@@ -1,0 +1,27 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b0eb5fd0aca14fbaae7b6550870891e4, type: 3}
+  m_Name: DebugWeaponRewardPool
+  m_EditorClassIdentifier: Assembly-CSharp::ProjectEpsilon.Progression.WeaponRewardPool
+  entries:
+  - weapon: {fileID: 11400000, guid: 267b5f63f7994c24091e6effd8a230f1, type: 2}
+    unlocked: 1
+  - weapon: {fileID: 11400000, guid: dbd234de925b0504ea1df71a51d5f2fb, type: 2}
+    unlocked: 1
+  - weapon: {fileID: 11400000, guid: ae78df5c8d898404b8eec67152f29f5c, type: 2}
+    unlocked: 1
+  - weapon: {fileID: 11400000, guid: 1787dabb089811e48b515a68e735031e, type: 2}
+    unlocked: 1
+  - weapon: {fileID: 11400000, guid: f1ad0b1887727e2448184b120a26b108, type: 2}
+    unlocked: 1
+  - weapon: {fileID: 11400000, guid: f3262d3476cd8cb4a9b65c07ce65b2a3, type: 2}
+    unlocked: 1

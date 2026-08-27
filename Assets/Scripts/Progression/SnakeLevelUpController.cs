@@ -1,3 +1,5 @@
+using System.Collections.Generic;
+using ProjectEpsilon.Combat;
 using ProjectEpsilon.Core;
 using ProjectEpsilon.Player;
 using ProjectEpsilon.UI;
@@ -11,7 +13,12 @@ namespace ProjectEpsilon.Progression
         [SerializeField] private SnakeExperience experience;
         [SerializeField] private SnakeBodyManager bodyManager;
         [SerializeField] private SnakeHealth health;
+        [SerializeField] private SnakeWeaponManager weaponManager;
+        [SerializeField] private WeaponRewardPool rewardPool;
         [SerializeField] private LevelUpPanelController levelUpPanel;
+
+        private readonly List<WeaponRewardCandidate> currentCandidates =
+            new List<WeaponRewardCandidate>();
 
         private bool subscribed;
         private bool presentingLevelUp;
@@ -19,6 +26,10 @@ namespace ProjectEpsilon.Progression
 
         public bool IsPresentingLevelUp =>
             presentingLevelUp;
+
+        public IReadOnlyList<WeaponRewardCandidate>
+            CurrentCandidates =>
+                currentCandidates;
 
         private void OnEnable()
         {
@@ -51,12 +62,15 @@ namespace ProjectEpsilon.Progression
 
             ownsGamePause = false;
             presentingLevelUp = false;
+            currentCandidates.Clear();
         }
 
         public void Configure(
             SnakeExperience experienceSource,
             SnakeBodyManager manager,
             SnakeHealth snakeHealth,
+            SnakeWeaponManager weapons,
+            WeaponRewardPool pool,
             LevelUpPanelController panel
         )
         {
@@ -65,6 +79,8 @@ namespace ProjectEpsilon.Progression
             experience = experienceSource;
             bodyManager = manager;
             health = snakeHealth;
+            weaponManager = weapons;
+            rewardPool = pool;
             levelUpPanel = panel;
 
             if (Application.isPlaying)
@@ -85,8 +101,8 @@ namespace ProjectEpsilon.Progression
             experience.LevelUpRequested +=
                 HandleLevelUpRequested;
 
-            levelUpPanel.ContinueRequested +=
-                HandleContinueRequested;
+            levelUpPanel.CandidateSelected +=
+                HandleCandidateSelected;
 
             subscribed = true;
         }
@@ -106,8 +122,8 @@ namespace ProjectEpsilon.Progression
 
             if (levelUpPanel != null)
             {
-                levelUpPanel.ContinueRequested -=
-                    HandleContinueRequested;
+                levelUpPanel.CandidateSelected -=
+                    HandleCandidateSelected;
             }
 
             subscribed = false;
@@ -125,6 +141,19 @@ namespace ProjectEpsilon.Progression
                 out bool healthRestored
             );
 
+            BuildCurrentCandidates(level);
+
+            if (currentCandidates.Count <= 0)
+            {
+                Debug.LogWarning(
+                    "[Project Epsilon] 사용 가능한 무기 후보가 없어 레벨업 보상을 건너뜁니다."
+                );
+
+                experience?.CompletePendingLevelUp();
+                ResumeIfFinished();
+                return;
+            }
+
             presentingLevelUp = true;
 
             GameManager gameManager =
@@ -138,14 +167,6 @@ namespace ProjectEpsilon.Progression
                 gameManager.PauseGame();
             }
 
-            if (levelUpPanel == null)
-            {
-                presentingLevelUp = false;
-                experience?.CompletePendingLevelUp();
-                ResumeIfFinished();
-                return;
-            }
-
             levelUpPanel.Show(
                 level,
                 bodyGrew,
@@ -155,18 +176,48 @@ namespace ProjectEpsilon.Progression
                 bodyManager == null
                     ? 20
                     : bodyManager.MaximumBodyCount,
-                healthRestored
+                healthRestored,
+                currentCandidates
             );
         }
 
-        private void HandleContinueRequested()
+        private void HandleCandidateSelected(
+            int candidateIndex
+        )
         {
-            if (!presentingLevelUp)
+            if (!presentingLevelUp ||
+                candidateIndex < 0 ||
+                candidateIndex >= currentCandidates.Count)
             {
                 return;
             }
 
+            WeaponRewardCandidate candidate =
+                currentCandidates[candidateIndex];
+
+            if (!candidate.IsValid ||
+                weaponManager == null)
+            {
+                return;
+            }
+
+            bool acquired =
+                weaponManager.AcquireWeapon(
+                    candidate.Weapon,
+                    candidate.Grade
+                );
+
+            if (!acquired)
+            {
+                Debug.LogWarning(
+                    "[Project Epsilon] 선택한 무기를 장착하지 못했습니다."
+                );
+
+                return;
+            }
+
             presentingLevelUp = false;
+            currentCandidates.Clear();
 
             if (levelUpPanel != null)
             {
@@ -175,9 +226,30 @@ namespace ProjectEpsilon.Progression
 
             experience?.CompletePendingLevelUp();
 
-            // 초과 XP로 다음 레벨업이 즉시 요청되면
-            // 이벤트 처리 중 presentingLevelUp이 다시 true가 된다.
             ResumeIfFinished();
+        }
+
+        private void BuildCurrentCandidates(
+            int level
+        )
+        {
+            currentCandidates.Clear();
+
+            if (rewardPool == null)
+            {
+                return;
+            }
+
+            List<WeaponRewardCandidate> generated =
+                rewardPool.BuildCandidates(
+                    level,
+                    weaponManager,
+                    3
+                );
+
+            currentCandidates.AddRange(
+                generated
+            );
         }
 
         private void ApplyLevelGrowth(

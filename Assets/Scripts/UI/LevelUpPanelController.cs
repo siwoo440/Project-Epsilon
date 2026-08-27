@@ -1,4 +1,6 @@
 using System;
+using System.Collections.Generic;
+using ProjectEpsilon.Progression;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -9,49 +11,70 @@ namespace ProjectEpsilon.UI
         [SerializeField] private Text titleText;
         [SerializeField] private Text levelText;
         [SerializeField] private Text growthText;
-        [SerializeField] private Button continueButton;
 
-        private bool buttonBound;
+        [Header("Weapon Candidates")]
+        [SerializeField] private Button candidateButton01;
+        [SerializeField] private Button candidateButton02;
+        [SerializeField] private Button candidateButton03;
 
-        public event Action ContinueRequested;
+        [SerializeField] private Text candidateLabel01;
+        [SerializeField] private Text candidateLabel02;
+        [SerializeField] private Text candidateLabel03;
+
+        private bool buttonsBound;
+
+        public event Action<int> CandidateSelected;
 
         private void Awake()
         {
-            BindButton();
+            BindButtons();
         }
 
         private void OnEnable()
         {
-            BindButton();
+            BindButtons();
         }
 
         private void OnDisable()
         {
-            UnbindButton();
+            UnbindButtons();
         }
 
         private void OnDestroy()
         {
-            UnbindButton();
+            UnbindButtons();
         }
 
         public void Configure(
             Text title,
             Text level,
             Text growth,
-            Button continueControl
+            Button button01,
+            Text label01,
+            Button button02,
+            Text label02,
+            Button button03,
+            Text label03
         )
         {
-            UnbindButton();
+            UnbindButtons();
 
             titleText = title;
             levelText = level;
             growthText = growth;
-            continueButton = continueControl;
+
+            candidateButton01 = button01;
+            candidateLabel01 = label01;
+
+            candidateButton02 = button02;
+            candidateLabel02 = label02;
+
+            candidateButton03 = button03;
+            candidateLabel03 = label03;
 
             if (Application.isPlaying)
             {
-                BindButton();
+                BindButtons();
             }
         }
 
@@ -60,7 +83,8 @@ namespace ProjectEpsilon.UI
             bool bodyGrew,
             int currentBodyCount,
             int maximumBodyCount,
-            bool healthRestored
+            bool healthRestored,
+            IReadOnlyList<WeaponRewardCandidate> candidates
         )
         {
             gameObject.SetActive(true);
@@ -78,15 +102,37 @@ namespace ProjectEpsilon.UI
 
             if (growthText != null)
             {
-                growthText.text = BuildGrowthText(
-                    bodyGrew,
-                    currentBodyCount,
-                    maximumBodyCount,
-                    healthRestored
-                );
+                growthText.text =
+                    BuildGrowthText(
+                        bodyGrew,
+                        currentBodyCount,
+                        maximumBodyCount,
+                        healthRestored
+                    );
             }
 
-            BindButton();
+            ConfigureCandidate(
+                0,
+                candidateButton01,
+                candidateLabel01,
+                candidates
+            );
+
+            ConfigureCandidate(
+                1,
+                candidateButton02,
+                candidateLabel02,
+                candidates
+            );
+
+            ConfigureCandidate(
+                2,
+                candidateButton03,
+                candidateLabel03,
+                candidates
+            );
+
+            BindButtons();
         }
 
         public void Hide()
@@ -97,38 +143,143 @@ namespace ProjectEpsilon.UI
             }
         }
 
-        private void HandleContinueClicked()
+        private void HandleCandidate01()
         {
-            ContinueRequested?.Invoke();
+            CandidateSelected?.Invoke(0);
         }
 
-        private void BindButton()
+        private void HandleCandidate02()
         {
-            if (buttonBound || continueButton == null)
+            CandidateSelected?.Invoke(1);
+        }
+
+        private void HandleCandidate03()
+        {
+            CandidateSelected?.Invoke(2);
+        }
+
+        private void BindButtons()
+        {
+            if (buttonsBound)
             {
                 return;
             }
 
-            continueButton.onClick.AddListener(
-                HandleContinueClicked
-            );
+            if (candidateButton01 != null)
+            {
+                candidateButton01.onClick.AddListener(
+                    HandleCandidate01
+                );
+            }
 
-            buttonBound = true;
+            if (candidateButton02 != null)
+            {
+                candidateButton02.onClick.AddListener(
+                    HandleCandidate02
+                );
+            }
+
+            if (candidateButton03 != null)
+            {
+                candidateButton03.onClick.AddListener(
+                    HandleCandidate03
+                );
+            }
+
+            buttonsBound = true;
         }
 
-        private void UnbindButton()
+        private void UnbindButtons()
         {
-            if (!buttonBound || continueButton == null)
+            if (!buttonsBound)
             {
-                buttonBound = false;
                 return;
             }
 
-            continueButton.onClick.RemoveListener(
-                HandleContinueClicked
-            );
+            if (candidateButton01 != null)
+            {
+                candidateButton01.onClick.RemoveListener(
+                    HandleCandidate01
+                );
+            }
 
-            buttonBound = false;
+            if (candidateButton02 != null)
+            {
+                candidateButton02.onClick.RemoveListener(
+                    HandleCandidate02
+                );
+            }
+
+            if (candidateButton03 != null)
+            {
+                candidateButton03.onClick.RemoveListener(
+                    HandleCandidate03
+                );
+            }
+
+            buttonsBound = false;
+        }
+
+        private static void ConfigureCandidate(
+            int candidateIndex,
+            Button button,
+            Text label,
+            IReadOnlyList<WeaponRewardCandidate> candidates
+        )
+        {
+            bool hasCandidate =
+                candidates != null &&
+                candidateIndex >= 0 &&
+                candidateIndex < candidates.Count &&
+                candidates[candidateIndex].IsValid;
+
+            if (button != null)
+            {
+                button.gameObject.SetActive(
+                    hasCandidate
+                );
+
+                button.interactable =
+                    hasCandidate;
+            }
+
+            if (!hasCandidate || label == null)
+            {
+                return;
+            }
+
+            WeaponRewardCandidate candidate =
+                candidates[candidateIndex];
+
+            label.text =
+                BuildCandidateLabel(
+                    candidate
+                );
+        }
+
+        private static string BuildCandidateLabel(
+            WeaponRewardCandidate candidate
+        )
+        {
+            if (!candidate.IsValid)
+            {
+                return "-";
+            }
+
+            string stars =
+                new string(
+                    '★',
+                    Mathf.Clamp(
+                        candidate.Grade,
+                        1,
+                        5
+                    )
+                );
+
+            return
+                $"{candidate.Weapon.DisplayName} {stars}\n" +
+                $"{candidate.Weapon.AttackType}\n" +
+                $"DMG {candidate.Weapon.BaseDamage:0.#}";
         }
 
         private static string BuildGrowthText(
@@ -139,30 +290,39 @@ namespace ProjectEpsilon.UI
         )
         {
             int safeCurrent =
-                Mathf.Max(0, currentBodyCount);
+                Mathf.Max(
+                    0,
+                    currentBodyCount
+                );
 
             int safeMaximum =
-                Mathf.Max(1, maximumBodyCount);
+                Mathf.Max(
+                    1,
+                    maximumBodyCount
+                );
 
             if (bodyGrew)
             {
                 int previous =
-                    Mathf.Max(0, safeCurrent - 1);
+                    Mathf.Max(
+                        0,
+                        safeCurrent - 1
+                    );
 
                 return
-                    $"Body {previous} → {safeCurrent}\n" +
-                    "Empty Weapon Slot +1";
+                    $"Body {previous} → {safeCurrent} / {safeMaximum}\n" +
+                    "Choose 1 Weapon";
             }
 
             if (healthRestored)
             {
                 return
-                    $"Body MAX {safeMaximum}\n" +
-                    "HP FULL RESTORE";
+                    $"Body MAX {safeMaximum} / {safeMaximum}\n" +
+                    "HP FULL RESTORE + Choose 1 Weapon";
             }
 
             return
-                $"Body MAX {safeMaximum}";
+                $"Choose 1 Weapon";
         }
     }
 }
