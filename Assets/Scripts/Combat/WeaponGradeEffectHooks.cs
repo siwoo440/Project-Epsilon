@@ -37,6 +37,8 @@ namespace ProjectEpsilon.Combat
 
     public sealed class WeaponGradeEffectHooks : MonoBehaviour
     {
+        public event Action<WeaponGradeEffectContext> EffectTriggered; // 모든 등급 효과 알림
+
         public event Action<WeaponGradeEffectContext>
             GradeThreeTriggered;
 
@@ -51,6 +53,8 @@ namespace ProjectEpsilon.Combat
             {
                 return;
             }
+
+            EffectTriggered?.Invoke(context); // 공통 효과 알림 전달
 
             if (context.Grade >= 3)
             {
@@ -68,3 +72,4 @@ namespace ProjectEpsilon.Combat
         }
     }
 }
+

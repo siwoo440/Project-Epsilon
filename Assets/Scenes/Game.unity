@@ -1724,6 +1724,7 @@ RectTransform:
   - {fileID: 512227219}
   - {fileID: 974765843}
   - {fileID: 1453903728}
+  - {fileID: 1976758219}
   m_Father: {fileID: 768395453}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
@@ -2197,6 +2198,7 @@ GameObject:
   - component: {fileID: 587332128}
   - component: {fileID: 587332127}
   - component: {fileID: 587332129}
+  - component: {fileID: 587332130}
   m_Layer: 0
   m_Name: Player
   m_TagString: Untagged
@@ -2583,6 +2585,22 @@ MonoBehaviour:
   weaponManager: {fileID: 2088063716}
   debugWeapon: {fileID: 11400000, guid: 267b5f63f7994c24091e6effd8a230f1, type: 2}
   pickupSprite: {fileID: 2506003341352157630, guid: 432c814e2a4ba094bb6c3f806335148d, type: 3}
+--- !u!114 &587332130
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 587332110}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9753751e87028214bac15d970d811f77, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::ProjectEpsilon.Debugging.WeaponAttributeDebugControls
+  bodyManager: {fileID: 2088063715}
+  weaponManager: {fileID: 2088063716}
+  fireWeapon: {fileID: 11400000, guid: 061d187a935b8fe44814c8571800cce8, type: 2}
+  fallbackWeapon: {fileID: 11400000, guid: 9cd567097ef34374d89a8a6f09439a90, type: 2}
 --- !u!1 &691704637
 GameObject:
   m_ObjectHideFlags: 0
@@ -6823,6 +6841,101 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1965273716}
   m_CullTransparentMesh: 1
+--- !u!1 &1976758218
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1976758219}
+  - component: {fileID: 1976758222}
+  - component: {fileID: 1976758221}
+  - component: {fileID: 1976758220}
+  m_Layer: 0
+  m_Name: AttributeSynergyHUD
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!224 &1976758219
+RectTransform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1976758218}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 431694689}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_AnchorMin: {x: 1, y: 1}
+  m_AnchorMax: {x: 1, y: 1}
+  m_AnchoredPosition: {x: -24, y: -150}
+  m_SizeDelta: {x: 280, y: 250}
+  m_Pivot: {x: 1, y: 1}
+--- !u!114 &1976758220
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1976758218}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7925f1a61f895744f9113884b7a74b26, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::ProjectEpsilon.UI.WeaponAttributeHUDPresenter
+  synergyManager: {fileID: 2088063719}
+  attributeText: {fileID: 1976758221}
+--- !u!114 &1976758221
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1976758218}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5f7201a12d95ffc409449d95f23cf332, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: UnityEngine.UI::UnityEngine.UI.Text
+  m_Material: {fileID: 0}
+  m_Color: {r: 0.9, g: 0.95, b: 1, a: 1}
+  m_RaycastTarget: 0
+  m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
+  m_Maskable: 1
+  m_OnCullStateChanged:
+    m_PersistentCalls:
+      m_Calls: []
+  m_FontData:
+    m_Font: {fileID: 10102, guid: 0000000000000000e000000000000000, type: 0}
+    m_FontSize: 18
+    m_FontStyle: 0
+    m_BestFit: 0
+    m_MinSize: 10
+    m_MaxSize: 40
+    m_Alignment: 0
+    m_AlignByGeometry: 0
+    m_RichText: 1
+    m_HorizontalOverflow: 0
+    m_VerticalOverflow: 0
+    m_LineSpacing: 1
+  m_Text: "ATTRIBUTES\r\nPhysical 3 \xD72\r\nFire 0\r\nCold 0\r\nElectric 0\r\nPoison
+    0\r\nExplosion 0\r\nHoly 0\r\nDark 0"
+--- !u!222 &1976758222
+CanvasRenderer:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1976758218}
+  m_CullTransparentMesh: 1
 --- !u!1 &2019429564
 GameObject:
   m_ObjectHideFlags: 0
@@ -6869,6 +6982,8 @@ GameObject:
   - component: {fileID: 2088063714}
   - component: {fileID: 2088063716}
   - component: {fileID: 2088063717}
+  - component: {fileID: 2088063719}
+  - component: {fileID: 2088063718}
   m_Layer: 0
   m_Name: SnakeBody
   m_TagString: Untagged
@@ -6989,6 +7104,34 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e3a77b2c4c8e449c9bf56d618f70b381, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::ProjectEpsilon.Combat.WeaponGradeEffectHooks
+--- !u!114 &2088063718
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2088063711}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 990426d938ea2894f80f37792e6bcdaa, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::ProjectEpsilon.Combat.WeaponAttributeEffectHooks
+  gradeEffectHooks: {fileID: 2088063717}
+  synergyManager: {fileID: 2088063719}
+--- !u!114 &2088063719
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2088063711}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 130993ab292df1b49b7d6947f3d29c97, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::ProjectEpsilon.Combat.WeaponAttributeSynergyManager
+  weaponManager: {fileID: 2088063716}
+  attributeCounts: 0300000000000000000000000000000000000000000000000000000000000000
 --- !u!1 &2095993294
 GameObject:
   m_ObjectHideFlags: 0

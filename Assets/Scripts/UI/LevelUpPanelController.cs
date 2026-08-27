@@ -278,6 +278,7 @@ namespace ProjectEpsilon.UI
 
             return
                 $"{candidate.Weapon.DisplayName} {stars}\n" +
+                $"Attribute: {candidate.Weapon.Attribute}\n" + // 무기 속성 표시
                 $"{candidate.Weapon.AttackType}\n" +
                 $"DMG {candidate.Weapon.BaseDamage:0.#}";
         }
@@ -326,3 +327,4 @@ namespace ProjectEpsilon.UI
         }
     }
 }
+
