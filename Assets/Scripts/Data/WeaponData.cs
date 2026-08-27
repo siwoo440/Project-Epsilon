@@ -19,6 +19,10 @@ namespace ProjectEpsilon.Data
         [Min(0f)] [SerializeField] private float range = 5f;
         [Range(1, 5)] [SerializeField] private int maxGrade = 5;
 
+        [Header("Projectile")]
+        [Min(0.01f)] [SerializeField] private float projectileSpeed = 8f;
+        [Min(0.1f)] [SerializeField] private float projectileLifetime = 3f;
+
         public string Id => id;
         public string DisplayName => displayName;
         public WeaponAttribute Attribute => attribute;
@@ -27,5 +31,7 @@ namespace ProjectEpsilon.Data
         public float AttackInterval => attackInterval;
         public float Range => range;
         public int MaxGrade => maxGrade;
+        public float ProjectileSpeed => projectileSpeed;
+        public float ProjectileLifetime => projectileLifetime;
     }
 }
