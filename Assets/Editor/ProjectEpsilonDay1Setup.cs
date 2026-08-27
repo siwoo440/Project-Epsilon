@@ -132,10 +132,8 @@ namespace ProjectEpsilon.Editor
             CreateRoot("===Environment===");
             CreateRoot("===UI===");
 
-            // 게임 관리자 생성
-            GameObject gameManagerObject = new GameObject("GameManager");
-            gameManagerObject.transform.SetParent(managers.transform);
-            gameManagerObject.AddComponent<GameManager>();
+            // 루트 관리자에 게임 관리자 연결
+            managers.AddComponent<GameManager>();
 
             // 2D 테스트 카메라 생성
             GameObject cameraObject = new GameObject("Main Camera");
