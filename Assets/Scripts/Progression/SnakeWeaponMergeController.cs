@@ -17,6 +17,10 @@ namespace ProjectEpsilon.Progression
         [SerializeField] private SnakeStamina stamina;
         [SerializeField] private WeaponMergePanelController mergePanel;
 
+        [Header("UI Priority")]
+        [SerializeField] private SnakeExperience experience;
+        [SerializeField] private SnakeLevelUpController levelUpController;
+
         [Range(0.1f, 1f)]
         [SerializeField] private float mergeMoveMultiplier = 0.7f;
 
@@ -71,6 +75,16 @@ namespace ProjectEpsilon.Progression
 
         private void Update()
         {
+            if (IsLevelUpBlocking())
+            {
+                if (mergeOpen)
+                {
+                    CloseMergePanel();
+                }
+
+                return;
+            }
+
             if (GameManager.Instance != null &&
                 !GameManager.Instance.IsPlaying)
             {
@@ -105,6 +119,8 @@ namespace ProjectEpsilon.Progression
             SnakeMovement movementController,
             SnakeStamina staminaController,
             WeaponMergePanelController panel,
+            SnakeExperience experienceSource,
+            SnakeLevelUpController levelController,
             float moveMultiplier
         )
         {
@@ -114,6 +130,9 @@ namespace ProjectEpsilon.Progression
             movement = movementController;
             stamina = staminaController;
             mergePanel = panel;
+            experience = experienceSource;
+            levelUpController = levelController;
+
             mergeMoveMultiplier =
                 Mathf.Clamp(
                     moveMultiplier,
@@ -129,6 +148,11 @@ namespace ProjectEpsilon.Progression
 
         public bool OpenMergePanel()
         {
+            if (IsLevelUpBlocking())
+            {
+                return false;
+            }
+
             BuildMergeCandidates();
 
             if (currentCandidates.Count <= 0 ||
@@ -171,14 +195,17 @@ namespace ProjectEpsilon.Progression
         {
             if (!mergeOpen ||
                 candidateIndex < 0 ||
-                candidateIndex >= currentCandidates.Count ||
+                candidateIndex >=
+                    currentCandidates.Count ||
                 weaponManager == null)
             {
                 return;
             }
 
             WeaponMergeCandidate candidate =
-                currentCandidates[candidateIndex];
+                currentCandidates[
+                    candidateIndex
+                ];
 
             if (!candidate.IsValid)
             {
@@ -216,6 +243,25 @@ namespace ProjectEpsilon.Progression
             CloseMergePanel();
         }
 
+        private void HandleLevelUpRequested(
+            int level
+        )
+        {
+            if (mergeOpen)
+            {
+                CloseMergePanel();
+            }
+        }
+
+        private bool IsLevelUpBlocking()
+        {
+            return
+                (experience != null &&
+                experience.IsLevelUpPending) ||
+                (levelUpController != null &&
+                levelUpController.IsPresentingLevelUp);
+        }
+
         private void BuildMergeCandidates()
         {
             currentCandidates.Clear();
@@ -237,7 +283,8 @@ namespace ProjectEpsilon.Progression
 
             for (int firstIndex = 0;
                 firstIndex < slots.Count &&
-                currentCandidates.Count < candidateLimit;
+                currentCandidates.Count <
+                    candidateLimit;
                 firstIndex++)
             {
                 SnakeWeaponSlot first =
@@ -294,8 +341,10 @@ namespace ProjectEpsilon.Progression
                 WeaponMergeCandidate candidate =
                     currentCandidates[index];
 
-                if (candidate.Weapon == weapon &&
-                    candidate.CurrentGrade == grade)
+                if (candidate.Weapon ==
+                    weapon &&
+                    candidate.CurrentGrade ==
+                    grade)
                 {
                     return true;
                 }
@@ -326,8 +375,10 @@ namespace ProjectEpsilon.Progression
             return
                 CanMergeSlot(first) &&
                 CanMergeSlot(second) &&
-                first.Weapon == second.Weapon &&
-                first.Grade == second.Grade;
+                first.Weapon ==
+                    second.Weapon &&
+                first.Grade ==
+                    second.Grade;
         }
 
         private void ApplyMergeMovementState(
@@ -364,6 +415,12 @@ namespace ProjectEpsilon.Progression
             mergePanel.CloseRequested +=
                 HandleCloseRequested;
 
+            if (experience != null)
+            {
+                experience.LevelUpRequested +=
+                    HandleLevelUpRequested;
+            }
+
             subscribed = true;
         }
 
@@ -381,6 +438,12 @@ namespace ProjectEpsilon.Progression
 
                 mergePanel.CloseRequested -=
                     HandleCloseRequested;
+            }
+
+            if (experience != null)
+            {
+                experience.LevelUpRequested -=
+                    HandleLevelUpRequested;
             }
 
             subscribed = false;

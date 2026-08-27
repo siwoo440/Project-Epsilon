@@ -1091,7 +1091,7 @@ GameObject:
   - component: {fileID: 227528768}
   - component: {fileID: 227528767}
   - component: {fileID: 227528766}
-  - component: {fileID: 227528765}
+  - component: {fileID: 227528769}
   m_Layer: 0
   m_Name: Target_XP01_A
   m_TagString: Untagged
@@ -1114,21 +1114,6 @@ Transform:
   m_Children: []
   m_Father: {fileID: 691704638}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &227528765
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 227528763}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 3f50c48e3bc944bc9f5a65837a23babc, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::ProjectEpsilon.Progression.ExperienceDropper
-  target: {fileID: 227528766}
-  experienceValue: 1
-  pickupSprite: {fileID: 1434238494030181667, guid: 0a4df3fa57e52bc469da7185f6109d59, type: 3}
 --- !u!114 &227528766
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1238,6 +1223,24 @@ SpriteRenderer:
   m_SpriteTileMode: 0
   m_WasSpriteAssigned: 1
   m_SpriteSortPoint: 0
+--- !u!114 &227528769
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 227528763}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d62bc3752c444b0b80f2b373132deb27, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::ProjectEpsilon.Progression.EnemyDropController
+  target: {fileID: 227528766}
+  experienceValue: 1
+  healDropChance: 0.2
+  bodyRepairDropChance: 0.06
+  healAmount: 15
+  pickupSprite: {fileID: 1434238494030181667, guid: 0a4df3fa57e52bc469da7185f6109d59, type: 3}
 --- !u!1 &240405096
 GameObject:
   m_ObjectHideFlags: 0
@@ -1720,6 +1723,7 @@ RectTransform:
   - {fileID: 1637736540}
   - {fileID: 512227219}
   - {fileID: 974765843}
+  - {fileID: 1453903728}
   m_Father: {fileID: 768395453}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
@@ -2192,6 +2196,7 @@ GameObject:
   - component: {fileID: 587332125}
   - component: {fileID: 587332128}
   - component: {fileID: 587332127}
+  - component: {fileID: 587332129}
   m_Layer: 0
   m_Name: Player
   m_TagString: Untagged
@@ -2557,8 +2562,27 @@ MonoBehaviour:
   movement: {fileID: 587332113}
   stamina: {fileID: 587332123}
   mergePanel: {fileID: 512227218}
+  experience: {fileID: 587332124}
+  levelUpController: {fileID: 587332126}
   mergeMoveMultiplier: 0.7
   maximumDisplayedCandidates: 3
+--- !u!114 &587332129
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 587332110}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c5f3b64277824bf3a505a9c6b79357a6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::ProjectEpsilon.Progression.SnakePrototypeDebugControls
+  health: {fileID: 587332118}
+  bodyManager: {fileID: 2088063715}
+  weaponManager: {fileID: 2088063716}
+  debugWeapon: {fileID: 11400000, guid: 267b5f63f7994c24091e6effd8a230f1, type: 2}
+  pickupSprite: {fileID: 2506003341352157630, guid: 432c814e2a4ba094bb6c3f806335148d, type: 3}
 --- !u!1 &691704637
 GameObject:
   m_ObjectHideFlags: 0
@@ -3120,7 +3144,7 @@ GameObject:
   - component: {fileID: 833720583}
   - component: {fileID: 833720582}
   - component: {fileID: 833720581}
-  - component: {fileID: 833720580}
+  - component: {fileID: 833720584}
   m_Layer: 0
   m_Name: Target_Close_Right
   m_TagString: Untagged
@@ -3143,21 +3167,6 @@ Transform:
   m_Children: []
   m_Father: {fileID: 691704638}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &833720580
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 833720578}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 3f50c48e3bc944bc9f5a65837a23babc, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::ProjectEpsilon.Progression.ExperienceDropper
-  target: {fileID: 833720581}
-  experienceValue: 1
-  pickupSprite: {fileID: 1434238494030181667, guid: 0a4df3fa57e52bc469da7185f6109d59, type: 3}
 --- !u!114 &833720581
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -3267,6 +3276,24 @@ SpriteRenderer:
   m_SpriteTileMode: 0
   m_WasSpriteAssigned: 1
   m_SpriteSortPoint: 0
+--- !u!114 &833720584
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 833720578}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d62bc3752c444b0b80f2b373132deb27, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::ProjectEpsilon.Progression.EnemyDropController
+  target: {fileID: 833720581}
+  experienceValue: 1
+  healDropChance: 0.2
+  bodyRepairDropChance: 0.06
+  healAmount: 15
+  pickupSprite: {fileID: 1434238494030181667, guid: 0a4df3fa57e52bc469da7185f6109d59, type: 3}
 --- !u!1 &862929761
 GameObject:
   m_ObjectHideFlags: 0
@@ -4496,7 +4523,7 @@ GameObject:
   - component: {fileID: 1220996926}
   - component: {fileID: 1220996925}
   - component: {fileID: 1220996924}
-  - component: {fileID: 1220996923}
+  - component: {fileID: 1220996927}
   m_Layer: 0
   m_Name: Target_Close_Left
   m_TagString: Untagged
@@ -4519,21 +4546,6 @@ Transform:
   m_Children: []
   m_Father: {fileID: 691704638}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &1220996923
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1220996921}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 3f50c48e3bc944bc9f5a65837a23babc, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::ProjectEpsilon.Progression.ExperienceDropper
-  target: {fileID: 1220996924}
-  experienceValue: 1
-  pickupSprite: {fileID: 1434238494030181667, guid: 0a4df3fa57e52bc469da7185f6109d59, type: 3}
 --- !u!114 &1220996924
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -4643,6 +4655,24 @@ SpriteRenderer:
   m_SpriteTileMode: 0
   m_WasSpriteAssigned: 1
   m_SpriteSortPoint: 0
+--- !u!114 &1220996927
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1220996921}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d62bc3752c444b0b80f2b373132deb27, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::ProjectEpsilon.Progression.EnemyDropController
+  target: {fileID: 1220996924}
+  experienceValue: 1
+  healDropChance: 0.2
+  bodyRepairDropChance: 0.06
+  healAmount: 15
+  pickupSprite: {fileID: 1434238494030181667, guid: 0a4df3fa57e52bc469da7185f6109d59, type: 3}
 --- !u!1 &1287088116
 GameObject:
   m_ObjectHideFlags: 0
@@ -4734,7 +4764,7 @@ GameObject:
   - component: {fileID: 1330378507}
   - component: {fileID: 1330378506}
   - component: {fileID: 1330378505}
-  - component: {fileID: 1330378504}
+  - component: {fileID: 1330378508}
   m_Layer: 0
   m_Name: Target_XP05
   m_TagString: Untagged
@@ -4757,21 +4787,6 @@ Transform:
   m_Children: []
   m_Father: {fileID: 691704638}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &1330378504
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1330378502}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 3f50c48e3bc944bc9f5a65837a23babc, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::ProjectEpsilon.Progression.ExperienceDropper
-  target: {fileID: 1330378505}
-  experienceValue: 5
-  pickupSprite: {fileID: 1434238494030181667, guid: 0a4df3fa57e52bc469da7185f6109d59, type: 3}
 --- !u!114 &1330378505
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -4881,6 +4896,24 @@ SpriteRenderer:
   m_SpriteTileMode: 0
   m_WasSpriteAssigned: 1
   m_SpriteSortPoint: 0
+--- !u!114 &1330378508
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1330378502}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d62bc3752c444b0b80f2b373132deb27, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::ProjectEpsilon.Progression.EnemyDropController
+  target: {fileID: 1330378505}
+  experienceValue: 5
+  healDropChance: 0.3
+  bodyRepairDropChance: 0.12
+  healAmount: 15
+  pickupSprite: {fileID: 1434238494030181667, guid: 0a4df3fa57e52bc469da7185f6109d59, type: 3}
 --- !u!1 &1358431527
 GameObject:
   m_ObjectHideFlags: 0
@@ -5118,6 +5151,86 @@ MonoBehaviour:
     m_VerticalOverflow: 0
     m_LineSpacing: 1
   m_Text: Weapon Candidate
+--- !u!1 &1453903727
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1453903728}
+  - component: {fileID: 1453903730}
+  - component: {fileID: 1453903729}
+  m_Layer: 0
+  m_Name: PrototypeHintText
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!224 &1453903728
+RectTransform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1453903727}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 431694689}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_AnchorMin: {x: 0.5, y: 0.5}
+  m_AnchorMax: {x: 0.5, y: 0.5}
+  m_AnchoredPosition: {x: 0, y: -245}
+  m_SizeDelta: {x: 760, y: 30}
+  m_Pivot: {x: 0.5, y: 0.5}
+--- !u!114 &1453903729
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1453903727}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5f7201a12d95ffc409449d95f23cf332, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: UnityEngine.UI::UnityEngine.UI.Text
+  m_Material: {fileID: 0}
+  m_Color: {r: 0.82, g: 0.93, b: 1, a: 1}
+  m_RaycastTarget: 0
+  m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
+  m_Maskable: 1
+  m_OnCullStateChanged:
+    m_PersistentCalls:
+      m_Calls: []
+  m_FontData:
+    m_Font: {fileID: 10102, guid: 0000000000000000e000000000000000, type: 0}
+    m_FontSize: 15
+    m_FontStyle: 0
+    m_BestFit: 0
+    m_MinSize: 10
+    m_MaxSize: 40
+    m_Alignment: 4
+    m_AlignByGeometry: 0
+    m_RichText: 1
+    m_HorizontalOverflow: 0
+    m_VerticalOverflow: 0
+    m_LineSpacing: 1
+  m_Text: 'P: Damage  [: Lose Body  H: Heal Pickup  J: Repair Pickup  3/5: Grade
+    Test'
+--- !u!222 &1453903730
+CanvasRenderer:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1453903727}
+  m_CullTransparentMesh: 1
 --- !u!1 &1465266896
 GameObject:
   m_ObjectHideFlags: 0
@@ -5237,7 +5350,7 @@ GameObject:
   - component: {fileID: 1468953577}
   - component: {fileID: 1468953576}
   - component: {fileID: 1468953575}
-  - component: {fileID: 1468953574}
+  - component: {fileID: 1468953578}
   m_Layer: 0
   m_Name: Target_XP20
   m_TagString: Untagged
@@ -5260,21 +5373,6 @@ Transform:
   m_Children: []
   m_Father: {fileID: 691704638}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &1468953574
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1468953572}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 3f50c48e3bc944bc9f5a65837a23babc, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::ProjectEpsilon.Progression.ExperienceDropper
-  target: {fileID: 1468953575}
-  experienceValue: 20
-  pickupSprite: {fileID: 1434238494030181667, guid: 0a4df3fa57e52bc469da7185f6109d59, type: 3}
 --- !u!114 &1468953575
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -5384,6 +5482,24 @@ SpriteRenderer:
   m_SpriteTileMode: 0
   m_WasSpriteAssigned: 1
   m_SpriteSortPoint: 0
+--- !u!114 &1468953578
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1468953572}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d62bc3752c444b0b80f2b373132deb27, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::ProjectEpsilon.Progression.EnemyDropController
+  target: {fileID: 1468953575}
+  experienceValue: 20
+  healDropChance: 0.45
+  bodyRepairDropChance: 0.24
+  healAmount: 15
+  pickupSprite: {fileID: 1434238494030181667, guid: 0a4df3fa57e52bc469da7185f6109d59, type: 3}
 --- !u!1 &1564377466
 GameObject:
   m_ObjectHideFlags: 0
@@ -6436,7 +6552,7 @@ GameObject:
   - component: {fileID: 1917798001}
   - component: {fileID: 1917798000}
   - component: {fileID: 1917797999}
-  - component: {fileID: 1917797998}
+  - component: {fileID: 1917798002}
   m_Layer: 0
   m_Name: Target_XP01_B
   m_TagString: Untagged
@@ -6459,21 +6575,6 @@ Transform:
   m_Children: []
   m_Father: {fileID: 691704638}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &1917797998
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1917797996}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 3f50c48e3bc944bc9f5a65837a23babc, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::ProjectEpsilon.Progression.ExperienceDropper
-  target: {fileID: 1917797999}
-  experienceValue: 1
-  pickupSprite: {fileID: 1434238494030181667, guid: 0a4df3fa57e52bc469da7185f6109d59, type: 3}
 --- !u!114 &1917797999
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -6583,6 +6684,24 @@ SpriteRenderer:
   m_SpriteTileMode: 0
   m_WasSpriteAssigned: 1
   m_SpriteSortPoint: 0
+--- !u!114 &1917798002
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1917797996}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d62bc3752c444b0b80f2b373132deb27, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::ProjectEpsilon.Progression.EnemyDropController
+  target: {fileID: 1917797999}
+  experienceValue: 1
+  healDropChance: 0.2
+  bodyRepairDropChance: 0.06
+  healAmount: 15
+  pickupSprite: {fileID: 1434238494030181667, guid: 0a4df3fa57e52bc469da7185f6109d59, type: 3}
 --- !u!1 &1965273716
 GameObject:
   m_ObjectHideFlags: 0
@@ -6749,6 +6868,7 @@ GameObject:
   - component: {fileID: 2088063715}
   - component: {fileID: 2088063714}
   - component: {fileID: 2088063716}
+  - component: {fileID: 2088063717}
   m_Layer: 0
   m_Name: SnakeBody
   m_TagString: Untagged
@@ -6824,6 +6944,7 @@ MonoBehaviour:
   bodySprite: {fileID: 1434238494030181667, guid: 0a4df3fa57e52bc469da7185f6109d59, type: 3}
   startingBodyCount: 3
   maximumBodyCount: 20
+  earnedBodyCount: 3
   segmentSpacing: 0.58
   bodyScale: {x: 0.62, y: 0.62, z: 1}
   tailScale: {x: 0.48, y: 0.48, z: 1}
@@ -6845,6 +6966,7 @@ MonoBehaviour:
   bodyManager: {fileID: 2088063715}
   startingWeapon: {fileID: 11400000, guid: dbd234de925b0504ea1df71a51d5f2fb, type: 2}
   projectileSprite: {fileID: 1434238494030181667, guid: 0a4df3fa57e52bc469da7185f6109d59, type: 3}
+  gradeEffectHooks: {fileID: 2088063717}
   slots:
   - owner: {fileID: 37962707}
     weapon: {fileID: 11400000, guid: 267b5f63f7994c24091e6effd8a230f1, type: 2}
@@ -6855,6 +6977,18 @@ MonoBehaviour:
   - owner: {fileID: 880393966}
     weapon: {fileID: 11400000, guid: ae78df5c8d898404b8eec67152f29f5c, type: 2}
     grade: 1
+--- !u!114 &2088063717
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2088063711}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e3a77b2c4c8e449c9bf56d618f70b381, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::ProjectEpsilon.Combat.WeaponGradeEffectHooks
 --- !u!1 &2095993294
 GameObject:
   m_ObjectHideFlags: 0

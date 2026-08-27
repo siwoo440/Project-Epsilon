@@ -129,7 +129,9 @@ namespace ProjectEpsilon.Progression
             subscribed = false;
         }
 
-        private void HandleLevelUpRequested(int level)
+        private void HandleLevelUpRequested(
+            int level
+        )
         {
             if (presentingLevelUp)
             {
@@ -141,7 +143,9 @@ namespace ProjectEpsilon.Progression
                 out bool healthRestored
             );
 
-            BuildCurrentCandidates(level);
+            BuildCurrentCandidates(
+                level
+            );
 
             if (currentCandidates.Count <= 0)
             {
@@ -187,13 +191,16 @@ namespace ProjectEpsilon.Progression
         {
             if (!presentingLevelUp ||
                 candidateIndex < 0 ||
-                candidateIndex >= currentCandidates.Count)
+                candidateIndex >=
+                    currentCandidates.Count)
             {
                 return;
             }
 
             WeaponRewardCandidate candidate =
-                currentCandidates[candidateIndex];
+                currentCandidates[
+                    candidateIndex
+                ];
 
             if (!candidate.IsValid ||
                 weaponManager == null)
@@ -225,7 +232,6 @@ namespace ProjectEpsilon.Progression
             }
 
             experience?.CompletePendingLevelUp();
-
             ResumeIfFinished();
         }
 
@@ -269,7 +275,7 @@ namespace ProjectEpsilon.Progression
                 bodyManager.MaximumBodyCount)
             {
                 bodyGrew =
-                    bodyManager.TryAddBody();
+                    bodyManager.TryGainBodyFromLevelUp();
 
                 return;
             }

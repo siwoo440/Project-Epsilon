@@ -17,8 +17,10 @@ namespace ProjectEpsilon.Player
 
         public int CurrentHealth => currentHealth;
         public int MaximumHealth => maximumHealth;
+
         public bool IsInvulnerable =>
-            invulnerability != null && invulnerability.IsInvulnerable;
+            invulnerability != null &&
+            invulnerability.IsInvulnerable;
 
         private void OnEnable()
         {
@@ -46,9 +48,17 @@ namespace ProjectEpsilon.Player
             Unsubscribe();
 
             bodyManager = manager;
-            invulnerability = invulnerabilityController;
-            maximumHealth = Mathf.Max(1, healthPerBody);
-            currentHealth = maximumHealth;
+            invulnerability =
+                invulnerabilityController;
+
+            maximumHealth =
+                Mathf.Max(
+                    1,
+                    healthPerBody
+                );
+
+            currentHealth =
+                maximumHealth;
 
             Subscribe();
             NotifyHealthChanged();
@@ -56,42 +66,84 @@ namespace ProjectEpsilon.Player
 
         public bool TakeDamage(int damage)
         {
-            int remainingDamage = Mathf.Max(0, damage);
+            int remainingDamage =
+                Mathf.Max(
+                    0,
+                    damage
+                );
 
-            if (remainingDamage <= 0 || IsInvulnerable)
+            if (remainingDamage <= 0 ||
+                IsInvulnerable)
             {
                 return false;
             }
 
-            if (bodyManager == null || bodyManager.CurrentBodyCount <= 0)
+            if (bodyManager == null ||
+                bodyManager.CurrentBodyCount <= 0)
             {
                 SetHealth(0);
                 return false;
             }
 
-            while (remainingDamage > 0 && bodyManager.CurrentBodyCount > 0)
+            while (remainingDamage > 0 &&
+                bodyManager.CurrentBodyCount > 0)
             {
-                if (remainingDamage < currentHealth)
+                if (remainingDamage <
+                    currentHealth)
                 {
-                    SetHealth(currentHealth - remainingDamage);
+                    SetHealth(
+                        currentHealth -
+                        remainingDamage
+                    );
+
                     remainingDamage = 0;
                     break;
                 }
 
-                remainingDamage -= currentHealth;
+                remainingDamage -=
+                    currentHealth;
+
                 SetHealth(0);
 
-                int removed = bodyManager.RemoveBodies(1);
+                int removed =
+                    bodyManager.RemoveBodies(1);
 
-                if (removed <= 0 || bodyManager.CurrentBodyCount <= 0)
+                if (removed <= 0 ||
+                    bodyManager.CurrentBodyCount <= 0)
                 {
                     SetHealth(0);
                     BodyDepleted?.Invoke();
                     break;
                 }
 
-                SetHealth(maximumHealth);
+                SetHealth(
+                    maximumHealth
+                );
             }
+
+            return true;
+        }
+
+        public bool Heal(int amount)
+        {
+            int safeAmount =
+                Mathf.Max(
+                    0,
+                    amount
+                );
+
+            if (safeAmount <= 0 ||
+                currentHealth >= maximumHealth ||
+                bodyManager == null ||
+                bodyManager.CurrentBodyCount <= 0)
+            {
+                return false;
+            }
+
+            SetHealth(
+                currentHealth +
+                safeAmount
+            );
 
             return true;
         }
@@ -99,15 +151,20 @@ namespace ProjectEpsilon.Player
         public void ResetHealth()
         {
             SetHealth(
-                bodyManager != null && bodyManager.CurrentBodyCount <= 0
+                bodyManager != null &&
+                bodyManager.CurrentBodyCount <= 0
                     ? 0
                     : maximumHealth
             );
         }
 
-        private void HandleBodyCountChanged(int current, int maximum)
+        private void HandleBodyCountChanged(
+            int current,
+            int maximum
+        )
         {
-            if (current > 0 || currentHealth == 0)
+            if (current > 0 ||
+                currentHealth == 0)
             {
                 return;
             }
@@ -118,49 +175,76 @@ namespace ProjectEpsilon.Player
 
         private void Subscribe()
         {
-            if (subscribed || bodyManager == null)
+            if (subscribed ||
+                bodyManager == null)
             {
                 return;
             }
 
-            bodyManager.BodyCountChanged += HandleBodyCountChanged;
+            bodyManager.BodyCountChanged +=
+                HandleBodyCountChanged;
+
             subscribed = true;
         }
 
         private void Unsubscribe()
         {
-            if (!subscribed || bodyManager == null)
+            if (!subscribed ||
+                bodyManager == null)
             {
                 subscribed = false;
                 return;
             }
 
-            bodyManager.BodyCountChanged -= HandleBodyCountChanged;
+            bodyManager.BodyCountChanged -=
+                HandleBodyCountChanged;
+
             subscribed = false;
         }
 
         private void NormalizeHealth()
         {
-            maximumHealth = Mathf.Max(1, maximumHealth);
-            currentHealth = Mathf.Clamp(currentHealth, 0, maximumHealth);
+            maximumHealth =
+                Mathf.Max(
+                    1,
+                    maximumHealth
+                );
+
+            currentHealth =
+                Mathf.Clamp(
+                    currentHealth,
+                    0,
+                    maximumHealth
+                );
         }
 
         private void SetHealth(int value)
         {
-            int nextHealth = Mathf.Clamp(value, 0, maximumHealth);
+            int nextHealth =
+                Mathf.Clamp(
+                    value,
+                    0,
+                    maximumHealth
+                );
 
-            if (currentHealth == nextHealth)
+            if (currentHealth ==
+                nextHealth)
             {
                 return;
             }
 
-            currentHealth = nextHealth;
+            currentHealth =
+                nextHealth;
+
             NotifyHealthChanged();
         }
 
         private void NotifyHealthChanged()
         {
-            HealthChanged?.Invoke(currentHealth, maximumHealth);
+            HealthChanged?.Invoke(
+                currentHealth,
+                maximumHealth
+            );
         }
     }
 }

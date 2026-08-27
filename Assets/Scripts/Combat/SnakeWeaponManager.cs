@@ -13,6 +13,10 @@ namespace ProjectEpsilon.Combat
         [SerializeField] private SnakeBodyManager bodyManager;
         [SerializeField] private WeaponData startingWeapon;
         [SerializeField] private Sprite projectileSprite;
+
+        [Header("Grade Effects")]
+        [SerializeField] private WeaponGradeEffectHooks gradeEffectHooks;
+
         [SerializeField] private List<SnakeWeaponSlot> slots =
             new List<SnakeWeaponSlot>();
 
@@ -40,6 +44,15 @@ namespace ProjectEpsilon.Combat
                 }
 
                 return count;
+            }
+        }
+
+        private void Awake()
+        {
+            if (gradeEffectHooks == null)
+            {
+                gradeEffectHooks =
+                    GetComponent<WeaponGradeEffectHooks>();
             }
         }
 
@@ -99,6 +112,13 @@ namespace ProjectEpsilon.Combat
             SlotsChanged?.Invoke();
         }
 
+        public void BindGradeEffectHooks(
+            WeaponGradeEffectHooks hooks
+        )
+        {
+            gradeEffectHooks = hooks;
+        }
+
         public void SynchronizeSlots()
         {
             if (bodyManager == null)
@@ -137,9 +157,7 @@ namespace ProjectEpsilon.Combat
                         segment
                     );
 
-                    slots.Add(
-                        existing
-                    );
+                    slots.Add(existing);
                 }
                 else
                 {
@@ -245,6 +263,11 @@ namespace ProjectEpsilon.Combat
                 )
             );
 
+            NotifyGradeEffect(
+                slots[0],
+                WeaponGradeEffectTrigger.Acquired
+            );
+
             SlotsChanged?.Invoke();
             return true;
         }
@@ -254,11 +277,14 @@ namespace ProjectEpsilon.Combat
             int secondSlotIndex
         )
         {
-            if (firstSlotIndex == secondSlotIndex ||
+            if (firstSlotIndex ==
+                    secondSlotIndex ||
                 firstSlotIndex < 0 ||
                 secondSlotIndex < 0 ||
-                firstSlotIndex >= slots.Count ||
-                secondSlotIndex >= slots.Count)
+                firstSlotIndex >=
+                    slots.Count ||
+                secondSlotIndex >=
+                    slots.Count)
             {
                 return false;
             }
@@ -276,7 +302,8 @@ namespace ProjectEpsilon.Combat
                 first.Weapon != second.Weapon ||
                 first.Grade != second.Grade ||
                 first.Grade >= 5 ||
-                first.Grade >= first.Weapon.MaxGrade)
+                first.Grade >=
+                    first.Weapon.MaxGrade)
             {
                 return false;
             }
@@ -347,6 +374,11 @@ namespace ProjectEpsilon.Combat
 
                 writeIndex++;
             }
+
+            NotifyGradeEffect(
+                slots[0],
+                WeaponGradeEffectTrigger.Merged
+            );
 
             SlotsChanged?.Invoke();
             return true;
@@ -442,6 +474,11 @@ namespace ProjectEpsilon.Combat
                 {
                     continue;
                 }
+
+                NotifyGradeEffect(
+                    slot,
+                    WeaponGradeEffectTrigger.Attack
+                );
 
                 slot.StartCooldown(
                     currentTime
@@ -636,6 +673,36 @@ namespace ProjectEpsilon.Combat
             return WeaponGradeRules.CalculateDamage(
                 slot.Weapon.BaseDamage,
                 slot.Grade
+            );
+        }
+
+        private void NotifyGradeEffect(
+            SnakeWeaponSlot slot,
+            WeaponGradeEffectTrigger trigger
+        )
+        {
+            if (gradeEffectHooks == null ||
+                slot == null ||
+                slot.IsEmpty)
+            {
+                return;
+            }
+
+            Vector3 origin =
+                slot.Origin == null
+                    ? transform.position
+                    : slot.Origin.position;
+
+            gradeEffectHooks.Notify(
+                new WeaponGradeEffectContext(
+                    slot.Weapon,
+                    slot.Grade,
+                    origin,
+                    CalculateSlotDamage(
+                        slot
+                    ),
+                    trigger
+                )
             );
         }
 
