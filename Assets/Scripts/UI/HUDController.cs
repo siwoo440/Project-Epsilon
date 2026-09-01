@@ -41,6 +41,14 @@ namespace ProjectEpsilon.UI
             }
         }
 
+        public void SetHealth(int current, int maximum, int shield) // 보호막 포함 체력 표시
+        { // 메서드 시작
+            if (healthText != null) // 체력 Text 확인
+            { // 조건 시작
+                healthText.text = HUDTextFormatter.FormatHealth(current, maximum, shield); // 체력과 보호막 갱신
+            } // 조건 끝
+        } // 메서드 끝
+
         public void SetBodyCount(int current, int maximum)
         {
             if (bodyCountText != null)

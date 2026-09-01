@@ -168,7 +168,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: fe87c0e1cc204ed48ad3b37840f39efc, type: 3}
-  m_Name: 
+  m_Name:
   m_EditorClassIdentifier: UnityEngine.UI::UnityEngine.UI.Image
   m_Material: {fileID: 0}
   m_Color: {r: 0.2, g: 0.34, b: 0.31, a: 1}
@@ -206,7 +206,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 4e29b1a8efbd4b44bb3f3716e73f07ff, type: 3}
-  m_Name: 
+  m_Name:
   m_EditorClassIdentifier: UnityEngine.UI::UnityEngine.UI.Button
   m_Navigation:
     m_Mode: 3
@@ -310,7 +310,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: HP 100 / 100
+  m_Text: HP 100 / 100  Shield 0
 --- !u!222 &35757454
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -1973,6 +1973,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::ProjectEpsilon.UI.SnakeHealthHUDPresenter
   health: {fileID: 587332118}
   hudController: {fileID: 431694692}
+  shieldController: {fileID: 2088063722}
 --- !u!114 &431694698
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2467,6 +2468,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::ProjectEpsilon.Player.SnakeHealth
   bodyManager: {fileID: 2088063715}
   invulnerability: {fileID: 587332119}
+  shieldController: {fileID: 2088063722}
   maximumHealth: 100
   currentHealth: 100
 --- !u!114 &587332119
@@ -2703,6 +2705,8 @@ MonoBehaviour:
   electricWeapon: {fileID: 11400000, guid: ee78b1d350e992a498b9870b0be7fcf5, type: 2}
   poisonWeapon: {fileID: 11400000, guid: 2c804a1879e5cf145ac91af0048e44ed, type: 2}
   explosionWeapon: {fileID: 11400000, guid: 20136d040f2a7254e8366741aaf00f88, type: 2}
+  holyWeapon: {fileID: 11400000, guid: 9058c8bface59404c8645d4ef78e122c, type: 2}
+  darkWeapon: {fileID: 11400000, guid: 65be4ab6f0390cc458b03a72740558fd, type: 2}
 --- !u!114 &587332131
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -7586,6 +7590,8 @@ GameObject:
   - component: {fileID: 2088063719}
   - component: {fileID: 2088063718}
   - component: {fileID: 2088063720}
+  - component: {fileID: 2088063722}
+  - component: {fileID: 2088063721}
   m_Layer: 0
   m_Name: SnakeBody
   m_TagString: Untagged
@@ -7749,7 +7755,40 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::ProjectEpsilon.Combat.WeaponAttributeCombatEffects
   synergyManager: {fileID: 2088063719}
   effectHooks: {fileID: 2088063718}
+  playerEffects: {fileID: 2088063721}
   pulseSprite: {fileID: 1434238494030181667, guid: 0a4df3fa57e52bc469da7185f6109d59, type: 3}
+--- !u!114 &2088063721
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2088063711}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5a956c6cf4a37a54498b900dc4ddfefe, type: 3}
+  m_Name:
+  m_EditorClassIdentifier: Assembly-CSharp::ProjectEpsilon.Combat.WeaponAttributePlayerEffects
+  snakeHealth: {fileID: 587332118}
+  shieldController: {fileID: 2088063722}
+  effectHooks: {fileID: 2088063718}
+  effectOrigin: {fileID: 587332111}
+--- !u!114 &2088063722
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2088063711}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a12ba45fa553e4444bfa4921c1d44119, type: 3}
+  m_Name:
+  m_EditorClassIdentifier: Assembly-CSharp::ProjectEpsilon.Player.SnakeShieldController
+  currentShield: 0
+  remainingDuration: 0
+  sourceStage: 0
+  sourceDamage: 0
 --- !u!1 &2095993294
 GameObject:
   m_ObjectHideFlags: 0

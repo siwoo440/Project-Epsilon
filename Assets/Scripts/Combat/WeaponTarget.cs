@@ -55,9 +55,14 @@ namespace ProjectEpsilon.Combat // 전투 영역
 
         public void TakeDamage(float damage) // 피해 적용
         {
+            TakeDamageAndReport(damage); // 피해 적용과 결과 무시
+        }
+
+        public float TakeDamageAndReport(float damage) // 실제 피해량 반환 적용
+        {
             if (!IsAlive) // 생존 상태 확인
             {
-                return; // 피해 생략
+                return 0f; // 피해 없음 반환
             }
 
             float safeDamage = Mathf.Max(0f, damage); // 음수 피해 제거
@@ -65,15 +70,19 @@ namespace ProjectEpsilon.Combat // 전투 영역
 
             if (finalDamage <= 0f) // 유효 피해 확인
             {
-                return; // 피해 생략
+                return 0f; // 피해 없음 반환
             }
 
+            float previousHealth = currentHealth; // 피해 전 체력 저장
             currentHealth = Mathf.Max(0f, currentHealth - finalDamage); // 체력 감소
+            float dealtDamage = previousHealth - currentHealth; // 실제 피해량 계산
 
             if (currentHealth <= 0f) // 사망 체력 확인
             {
                 Die(); // 사망 처리
             }
+
+            return dealtDamage; // 실제 피해량 반환
         }
 
         private void Die() // 사망 처리

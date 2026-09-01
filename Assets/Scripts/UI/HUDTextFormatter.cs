@@ -9,6 +9,11 @@ namespace ProjectEpsilon.UI
             return $"HP {Mathf.Max(0, current)} / {Mathf.Max(0, maximum)}";
         }
 
+        public static string FormatHealth(int current, int maximum, int shield) // 보호막 포함 체력 문구 생성
+        { // 메서드 시작
+            return $"HP {Mathf.Max(0, current)} / {Mathf.Max(0, maximum)}  Shield {Mathf.Max(0, shield)}"; // 체력과 보호막 반환
+        } // 메서드 끝
+
         public static string FormatBodyCount(int current, int maximum)
         {
             return $"Body {Mathf.Max(0, current)} / {Mathf.Max(0, maximum)}";

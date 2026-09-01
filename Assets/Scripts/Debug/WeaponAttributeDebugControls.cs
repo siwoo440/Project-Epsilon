@@ -17,10 +17,13 @@ namespace ProjectEpsilon.Debugging // 디버그 영역
         [SerializeField] private WeaponData electricWeapon; // 전기 테스트 무기
         [SerializeField] private WeaponData poisonWeapon; // 독 테스트 무기
         [SerializeField] private WeaponData explosionWeapon; // 폭발 테스트 무기
+        [SerializeField] private WeaponData holyWeapon; // 신성 테스트 무기
+        [SerializeField] private WeaponData darkWeapon; // 암흑 테스트 무기
 
         public bool IsConfigured => bodyManager != null && weaponManager != null && fireWeapon != null && fallbackWeapon != null; // Day15 필수 연결 상태
         public bool IsDay16Configured => IsConfigured && coldWeapon != null && electricWeapon != null; // Day16 추가 연결 상태
         public bool IsDay17Configured => IsDay16Configured && poisonWeapon != null && explosionWeapon != null; // Day17 추가 연결 상태
+        public bool IsDay18Configured => IsDay17Configured && holyWeapon != null && darkWeapon != null; // Day18 추가 연결 상태
         public SnakeBodyManager BodyManager => bodyManager; // Body 관리자 반환
         public SnakeWeaponManager WeaponManager => weaponManager; // 무기 관리자 반환
         public WeaponData FireWeapon => fireWeapon; // 화염 무기 반환
@@ -29,6 +32,8 @@ namespace ProjectEpsilon.Debugging // 디버그 영역
         public WeaponData ElectricWeapon => electricWeapon; // 전기 무기 반환
         public WeaponData PoisonWeapon => poisonWeapon; // 독 무기 반환
         public WeaponData ExplosionWeapon => explosionWeapon; // 폭발 무기 반환
+        public WeaponData HolyWeapon => holyWeapon; // 신성 무기 반환
+        public WeaponData DarkWeapon => darkWeapon; // 암흑 무기 반환
 
         public void Configure(SnakeBodyManager body, SnakeWeaponManager weapons, WeaponData fire, WeaponData fallback) // Day15 연결 구성
         {
@@ -51,6 +56,13 @@ namespace ProjectEpsilon.Debugging // 디버그 영역
             poisonWeapon = poison; // 독 무기 저장
             explosionWeapon = explosion; // 폭발 무기 저장
         }
+
+        public void Configure(SnakeBodyManager body, SnakeWeaponManager weapons, WeaponData fire, WeaponData fallback, WeaponData cold, WeaponData electric, WeaponData poison, WeaponData explosion, WeaponData holy, WeaponData dark) // Day18 연결 구성
+        { // 메서드 시작
+            Configure(body, weapons, fire, fallback, cold, electric, poison, explosion); // 기존 Day17 연결 유지
+            holyWeapon = holy; // 신성 무기 저장
+            darkWeapon = dark; // 암흑 무기 저장
+        } // 메서드 끝
 
         private void Update() // 매 프레임 입력 처리
         {
@@ -92,33 +104,42 @@ namespace ProjectEpsilon.Debugging // 디버그 영역
 
             bool shiftPressed = keyboard.leftShiftKey.isPressed || keyboard.rightShiftKey.isPressed; // Shift 입력 상태 계산
             bool controlPressed = keyboard.leftCtrlKey.isPressed || keyboard.rightCtrlKey.isPressed; // Ctrl 입력 상태 계산
+            bool altPressed = keyboard.leftAltKey.isPressed || keyboard.rightAltKey.isPressed; // Alt 입력 상태 계산
 
             if (keyboard.f8Key.wasPressedThisFrame) // F8 입력 확인
             {
-                ApplyExtendedAttributeCount(controlPressed, shiftPressed, 2); // Day16 또는 Day17 속성 2개 구성
+                ApplyExtendedAttributeCount(controlPressed, shiftPressed, altPressed, 2); // Day16부터 Day18 속성 2개 구성
                 return; // 중복 입력 방지
             }
 
             if (keyboard.f9Key.wasPressedThisFrame) // F9 입력 확인
             {
-                ApplyExtendedAttributeCount(controlPressed, shiftPressed, 4); // Day16 또는 Day17 속성 4개 구성
+                ApplyExtendedAttributeCount(controlPressed, shiftPressed, altPressed, 4); // Day16부터 Day18 속성 4개 구성
                 return; // 중복 입력 방지
             }
 
             if (keyboard.f10Key.wasPressedThisFrame) // F10 입력 확인
             {
-                ApplyExtendedAttributeCount(controlPressed, shiftPressed, 6); // Day16 또는 Day17 속성 6개 구성
+                ApplyExtendedAttributeCount(controlPressed, shiftPressed, altPressed, 6); // Day16부터 Day18 속성 6개 구성
                 return; // 중복 입력 방지
             }
 
             if (keyboard.f11Key.wasPressedThisFrame) // F11 입력 확인
             {
-                ApplyExtendedAttributeCount(controlPressed, shiftPressed, 8); // Day16 또는 Day17 속성 8개 구성
+                ApplyExtendedAttributeCount(controlPressed, shiftPressed, altPressed, 8); // Day16부터 Day18 속성 8개 구성
             }
         }
 
-        private void ApplyExtendedAttributeCount(bool controlPressed, bool shiftPressed, int requestedCount) // Day16·Day17 속성 선택
+        private void ApplyExtendedAttributeCount(bool controlPressed, bool shiftPressed, bool altPressed, int requestedCount) // Day16부터 Day18 속성 선택
         {
+            if (altPressed) // Day18 조합 확인
+            { // 조건 시작
+                WeaponData selectedWeapon = shiftPressed ? darkWeapon : holyWeapon; // 신성 또는 암흑 선택
+                string label = shiftPressed ? "Dark" : "Holy"; // Day18 로그 이름 선택
+                ApplyAttributeCount(selectedWeapon, label, requestedCount); // Day18 속성 개수 구성
+                return; // 이전 일차 처리 방지
+            } // 조건 끝
+
             if (controlPressed) // Day17 조합 확인
             {
                 WeaponData selectedWeapon = shiftPressed ? explosionWeapon : poisonWeapon; // 독 또는 폭발 선택

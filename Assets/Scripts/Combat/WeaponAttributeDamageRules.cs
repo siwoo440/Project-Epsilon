@@ -8,6 +8,11 @@ namespace ProjectEpsilon.Combat // 전투 영역
         { // 메서드 시작
             float safeDamage = gradeDamage < 0f ? 0f : gradeDamage; // 음수 피해 제거
 
+            if (attribute == WeaponAttribute.Holy) // 신성 속성 여부 확인
+            { // 조건 시작
+                return WeaponAttributeHolyRules.CalculateDirectDamage(safeDamage, synergyStage); // 신성 증폭 피해 반환
+            } // 조건 끝
+
             if (attribute != WeaponAttribute.Physical) // 물리 속성 여부 확인
             { // 조건 시작
                 return safeDamage; // 원래 피해 반환

@@ -7,6 +7,7 @@ namespace ProjectEpsilon.Player
     {
         [SerializeField] private SnakeBodyManager bodyManager;
         [SerializeField] private SnakeInvulnerability invulnerability;
+        [SerializeField] private SnakeShieldController shieldController; // 공유 보호막 참조
         [SerializeField] private int maximumHealth = 100;
         [SerializeField] private int currentHealth = 100;
 
@@ -17,6 +18,7 @@ namespace ProjectEpsilon.Player
 
         public int CurrentHealth => currentHealth;
         public int MaximumHealth => maximumHealth;
+        public SnakeShieldController ShieldController => shieldController; // 공유 보호막 반환
 
         public bool IsInvulnerable =>
             invulnerability != null &&
@@ -78,10 +80,22 @@ namespace ProjectEpsilon.Player
                 return false;
             }
 
+            if (shieldController != null) // 보호막 연결 확인
+            { // 조건 시작
+                remainingDamage = shieldController.Absorb(remainingDamage); // 보호막 우선 흡수
+
+                if (remainingDamage <= 0) // 완전 흡수 확인
+                { // 조건 시작
+                    shieldController.CompleteDamageResolution(); // 보호막 종료 효과 완료
+                    return true; // 피해 처리 성공
+                } // 조건 끝
+            } // 조건 끝
+
             if (bodyManager == null ||
                 bodyManager.CurrentBodyCount <= 0)
             {
                 SetHealth(0);
+                shieldController?.CompleteDamageResolution(); // 체력 처리 뒤 보호막 종료 완료
                 return false;
             }
 
@@ -121,8 +135,14 @@ namespace ProjectEpsilon.Player
                 );
             }
 
+            shieldController?.CompleteDamageResolution(); // 체력 처리 뒤 보호막 종료 완료
             return true;
         }
+
+        public void BindShield(SnakeShieldController shield) // 보호막 참조 연결
+        { // 메서드 시작
+            shieldController = shield; // 보호막 저장
+        } // 메서드 끝
 
         public bool Heal(int amount)
         {
