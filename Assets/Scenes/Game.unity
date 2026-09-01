@@ -1096,6 +1096,7 @@ GameObject:
   - component: {fileID: 227528772}
   - component: {fileID: 227528771}
   - component: {fileID: 227528770}
+  - component: {fileID: 227528774}
   m_Layer: 0
   m_Name: Target_XP01_A
   m_TagString: Untagged
@@ -1261,6 +1262,7 @@ MonoBehaviour:
   chaseTarget: {fileID: 587332111}
   statusController: {fileID: 227528773}
   movementBody: {fileID: 227528772}
+  knockbackController: {fileID: 227528774}
   fallbackMoveSpeed: 1
   stopDistance: 0.05
 --- !u!114 &227528771
@@ -1320,6 +1322,22 @@ MonoBehaviour:
   slowRemaining: 0
   stopPriority: 0
   stopRemaining: 0
+--- !u!114 &227528774
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 227528763}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d17e0000000000000000000000000004, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::ProjectEpsilon.Combat.WeaponTargetKnockbackController
+  knockbackImmune: 0
+  direction: {x: 0, y: 0}
+  remainingDistance: 0
+  remainingDuration: 0
 --- !u!1 &240405096
 GameObject:
   m_ObjectHideFlags: 0
@@ -2683,6 +2701,8 @@ MonoBehaviour:
   fallbackWeapon: {fileID: 11400000, guid: 9cd567097ef34374d89a8a6f09439a90, type: 2}
   coldWeapon: {fileID: 11400000, guid: 232c95914963f2d469b734ff4d2350a7, type: 2}
   electricWeapon: {fileID: 11400000, guid: ee78b1d350e992a498b9870b0be7fcf5, type: 2}
+  poisonWeapon: {fileID: 11400000, guid: 2c804a1879e5cf145ac91af0048e44ed, type: 2}
+  explosionWeapon: {fileID: 11400000, guid: 20136d040f2a7254e8366741aaf00f88, type: 2}
 --- !u!114 &587332131
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -3263,6 +3283,7 @@ GameObject:
   - component: {fileID: 833720587}
   - component: {fileID: 833720586}
   - component: {fileID: 833720585}
+  - component: {fileID: 833720589}
   m_Layer: 0
   m_Name: Target_Close_Right
   m_TagString: Untagged
@@ -3428,6 +3449,7 @@ MonoBehaviour:
   chaseTarget: {fileID: 587332111}
   statusController: {fileID: 833720588}
   movementBody: {fileID: 833720587}
+  knockbackController: {fileID: 833720589}
   fallbackMoveSpeed: 1
   stopDistance: 0.05
 --- !u!114 &833720586
@@ -3487,6 +3509,22 @@ MonoBehaviour:
   slowRemaining: 0
   stopPriority: 0
   stopRemaining: 0
+--- !u!114 &833720589
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 833720578}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d17e0000000000000000000000000004, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::ProjectEpsilon.Combat.WeaponTargetKnockbackController
+  knockbackImmune: 0
+  direction: {x: 0, y: 0}
+  remainingDistance: 0
+  remainingDuration: 0
 --- !u!1 &862929761
 GameObject:
   m_ObjectHideFlags: 0
@@ -4721,6 +4759,7 @@ GameObject:
   - component: {fileID: 1220996930}
   - component: {fileID: 1220996929}
   - component: {fileID: 1220996928}
+  - component: {fileID: 1220996932}
   m_Layer: 0
   m_Name: Target_Close_Left
   m_TagString: Untagged
@@ -4886,6 +4925,7 @@ MonoBehaviour:
   chaseTarget: {fileID: 587332111}
   statusController: {fileID: 1220996931}
   movementBody: {fileID: 1220996930}
+  knockbackController: {fileID: 1220996932}
   fallbackMoveSpeed: 1
   stopDistance: 0.05
 --- !u!114 &1220996929
@@ -4945,6 +4985,22 @@ MonoBehaviour:
   slowRemaining: 0
   stopPriority: 0
   stopRemaining: 0
+--- !u!114 &1220996932
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1220996921}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d17e0000000000000000000000000004, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::ProjectEpsilon.Combat.WeaponTargetKnockbackController
+  knockbackImmune: 0
+  direction: {x: 0, y: 0}
+  remainingDistance: 0
+  remainingDuration: 0
 --- !u!1 &1287088116
 GameObject:
   m_ObjectHideFlags: 0
@@ -5041,6 +5097,7 @@ GameObject:
   - component: {fileID: 1330378511}
   - component: {fileID: 1330378510}
   - component: {fileID: 1330378509}
+  - component: {fileID: 1330378513}
   m_Layer: 0
   m_Name: Target_XP05
   m_TagString: Untagged
@@ -5206,6 +5263,7 @@ MonoBehaviour:
   chaseTarget: {fileID: 587332111}
   statusController: {fileID: 1330378512}
   movementBody: {fileID: 1330378511}
+  knockbackController: {fileID: 1330378513}
   fallbackMoveSpeed: 1
   stopDistance: 0.05
 --- !u!114 &1330378510
@@ -5265,6 +5323,22 @@ MonoBehaviour:
   slowRemaining: 0
   stopPriority: 0
   stopRemaining: 0
+--- !u!114 &1330378513
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1330378502}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d17e0000000000000000000000000004, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::ProjectEpsilon.Combat.WeaponTargetKnockbackController
+  knockbackImmune: 0
+  direction: {x: 0, y: 0}
+  remainingDistance: 0
+  remainingDuration: 0
 --- !u!1 &1358431527
 GameObject:
   m_ObjectHideFlags: 0
@@ -5706,6 +5780,7 @@ GameObject:
   - component: {fileID: 1468953581}
   - component: {fileID: 1468953580}
   - component: {fileID: 1468953579}
+  - component: {fileID: 1468953583}
   m_Layer: 0
   m_Name: Target_XP20
   m_TagString: Untagged
@@ -5871,6 +5946,7 @@ MonoBehaviour:
   chaseTarget: {fileID: 587332111}
   statusController: {fileID: 1468953582}
   movementBody: {fileID: 1468953581}
+  knockbackController: {fileID: 1468953583}
   fallbackMoveSpeed: 1
   stopDistance: 0.05
 --- !u!114 &1468953580
@@ -5930,6 +6006,22 @@ MonoBehaviour:
   slowRemaining: 0
   stopPriority: 0
   stopRemaining: 0
+--- !u!114 &1468953583
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1468953572}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d17e0000000000000000000000000004, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::ProjectEpsilon.Combat.WeaponTargetKnockbackController
+  knockbackImmune: 0
+  direction: {x: 0, y: 0}
+  remainingDistance: 0
+  remainingDuration: 0
 --- !u!1 &1564377466
 GameObject:
   m_ObjectHideFlags: 0
@@ -6987,6 +7079,7 @@ GameObject:
   - component: {fileID: 1917798005}
   - component: {fileID: 1917798004}
   - component: {fileID: 1917798003}
+  - component: {fileID: 1917798007}
   m_Layer: 0
   m_Name: Target_XP01_B
   m_TagString: Untagged
@@ -7152,6 +7245,7 @@ MonoBehaviour:
   chaseTarget: {fileID: 587332111}
   statusController: {fileID: 1917798006}
   movementBody: {fileID: 1917798005}
+  knockbackController: {fileID: 1917798007}
   fallbackMoveSpeed: 1
   stopDistance: 0.05
 --- !u!114 &1917798004
@@ -7211,6 +7305,22 @@ MonoBehaviour:
   slowRemaining: 0
   stopPriority: 0
   stopRemaining: 0
+--- !u!114 &1917798007
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1917797996}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d17e0000000000000000000000000004, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::ProjectEpsilon.Combat.WeaponTargetKnockbackController
+  knockbackImmune: 0
+  direction: {x: 0, y: 0}
+  remainingDistance: 0
+  remainingDuration: 0
 --- !u!1 &1965273716
 GameObject:
   m_ObjectHideFlags: 0

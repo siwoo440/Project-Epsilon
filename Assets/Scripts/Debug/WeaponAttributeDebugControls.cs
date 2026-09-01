@@ -15,15 +15,20 @@ namespace ProjectEpsilon.Debugging // 디버그 영역
         [SerializeField] private WeaponData fallbackWeapon; // 물리 채움 무기
         [SerializeField] private WeaponData coldWeapon; // 냉기 테스트 무기
         [SerializeField] private WeaponData electricWeapon; // 전기 테스트 무기
+        [SerializeField] private WeaponData poisonWeapon; // 독 테스트 무기
+        [SerializeField] private WeaponData explosionWeapon; // 폭발 테스트 무기
 
         public bool IsConfigured => bodyManager != null && weaponManager != null && fireWeapon != null && fallbackWeapon != null; // Day15 필수 연결 상태
         public bool IsDay16Configured => IsConfigured && coldWeapon != null && electricWeapon != null; // Day16 추가 연결 상태
+        public bool IsDay17Configured => IsDay16Configured && poisonWeapon != null && explosionWeapon != null; // Day17 추가 연결 상태
         public SnakeBodyManager BodyManager => bodyManager; // Body 관리자 반환
         public SnakeWeaponManager WeaponManager => weaponManager; // 무기 관리자 반환
         public WeaponData FireWeapon => fireWeapon; // 화염 무기 반환
         public WeaponData FallbackWeapon => fallbackWeapon; // 물리 무기 반환
         public WeaponData ColdWeapon => coldWeapon; // 냉기 무기 반환
         public WeaponData ElectricWeapon => electricWeapon; // 전기 무기 반환
+        public WeaponData PoisonWeapon => poisonWeapon; // 독 무기 반환
+        public WeaponData ExplosionWeapon => explosionWeapon; // 폭발 무기 반환
 
         public void Configure(SnakeBodyManager body, SnakeWeaponManager weapons, WeaponData fire, WeaponData fallback) // Day15 연결 구성
         {
@@ -38,6 +43,13 @@ namespace ProjectEpsilon.Debugging // 디버그 영역
             Configure(body, weapons, fire, fallback); // 기존 Day15 연결 유지
             coldWeapon = cold; // 냉기 무기 저장
             electricWeapon = electric; // 전기 무기 저장
+        }
+
+        public void Configure(SnakeBodyManager body, SnakeWeaponManager weapons, WeaponData fire, WeaponData fallback, WeaponData cold, WeaponData electric, WeaponData poison, WeaponData explosion) // Day17 연결 구성
+        {
+            Configure(body, weapons, fire, fallback, cold, electric); // 기존 Day16 연결 유지
+            poisonWeapon = poison; // 독 무기 저장
+            explosionWeapon = explosion; // 폭발 무기 저장
         }
 
         private void Update() // 매 프레임 입력 처리
@@ -79,36 +91,45 @@ namespace ProjectEpsilon.Debugging // 디버그 영역
             }
 
             bool shiftPressed = keyboard.leftShiftKey.isPressed || keyboard.rightShiftKey.isPressed; // Shift 입력 상태 계산
+            bool controlPressed = keyboard.leftCtrlKey.isPressed || keyboard.rightCtrlKey.isPressed; // Ctrl 입력 상태 계산
 
             if (keyboard.f8Key.wasPressedThisFrame) // F8 입력 확인
             {
-                ApplyDay16AttributeCount(shiftPressed, 2); // Cold 또는 Electric 2개 구성
+                ApplyExtendedAttributeCount(controlPressed, shiftPressed, 2); // Day16 또는 Day17 속성 2개 구성
                 return; // 중복 입력 방지
             }
 
             if (keyboard.f9Key.wasPressedThisFrame) // F9 입력 확인
             {
-                ApplyDay16AttributeCount(shiftPressed, 4); // Cold 또는 Electric 4개 구성
+                ApplyExtendedAttributeCount(controlPressed, shiftPressed, 4); // Day16 또는 Day17 속성 4개 구성
                 return; // 중복 입력 방지
             }
 
             if (keyboard.f10Key.wasPressedThisFrame) // F10 입력 확인
             {
-                ApplyDay16AttributeCount(shiftPressed, 6); // Cold 또는 Electric 6개 구성
+                ApplyExtendedAttributeCount(controlPressed, shiftPressed, 6); // Day16 또는 Day17 속성 6개 구성
                 return; // 중복 입력 방지
             }
 
             if (keyboard.f11Key.wasPressedThisFrame) // F11 입력 확인
             {
-                ApplyDay16AttributeCount(shiftPressed, 8); // Cold 또는 Electric 8개 구성
+                ApplyExtendedAttributeCount(controlPressed, shiftPressed, 8); // Day16 또는 Day17 속성 8개 구성
             }
         }
 
-        private void ApplyDay16AttributeCount(bool electricMode, int requestedCount) // Day16 속성 구성
+        private void ApplyExtendedAttributeCount(bool controlPressed, bool shiftPressed, int requestedCount) // Day16·Day17 속성 선택
         {
-            WeaponData selectedWeapon = electricMode ? electricWeapon : coldWeapon; // 테스트 속성 선택
-            string label = electricMode ? "Electric" : "Cold"; // 로그 이름 선택
-            ApplyAttributeCount(selectedWeapon, label, requestedCount); // 선택 속성 개수 구성
+            if (controlPressed) // Day17 조합 확인
+            {
+                WeaponData selectedWeapon = shiftPressed ? explosionWeapon : poisonWeapon; // 독 또는 폭발 선택
+                string label = shiftPressed ? "Explosion" : "Poison"; // Day17 로그 이름 선택
+                ApplyAttributeCount(selectedWeapon, label, requestedCount); // Day17 속성 개수 구성
+                return; // Day16 처리 방지
+            }
+
+            WeaponData day16Weapon = shiftPressed ? electricWeapon : coldWeapon; // 냉기 또는 전기 선택
+            string day16Label = shiftPressed ? "Electric" : "Cold"; // Day16 로그 이름 선택
+            ApplyAttributeCount(day16Weapon, day16Label, requestedCount); // Day16 속성 개수 구성
         }
 
         private void ApplyAttributeCount(WeaponData selectedWeapon, string label, int requestedCount) // 속성 무기 개수 구성
