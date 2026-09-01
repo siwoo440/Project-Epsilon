@@ -1092,6 +1092,10 @@ GameObject:
   - component: {fileID: 227528767}
   - component: {fileID: 227528766}
   - component: {fileID: 227528769}
+  - component: {fileID: 227528773}
+  - component: {fileID: 227528772}
+  - component: {fileID: 227528771}
+  - component: {fileID: 227528770}
   m_Layer: 0
   m_Name: Target_XP01_A
   m_TagString: Untagged
@@ -1241,6 +1245,81 @@ MonoBehaviour:
   bodyRepairDropChance: 0.06
   healAmount: 15
   pickupSprite: {fileID: 1434238494030181667, guid: 0a4df3fa57e52bc469da7185f6109d59, type: 3}
+--- !u!114 &227528770
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 227528763}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d16e0000000000000000000000000004, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::ProjectEpsilon.Enemies.EnemyMovementController
+  enemyData: {fileID: 11400000, guid: d16e0000000000000000000000000007, type: 2}
+  chaseTarget: {fileID: 587332111}
+  statusController: {fileID: 227528773}
+  movementBody: {fileID: 227528772}
+  fallbackMoveSpeed: 1
+  stopDistance: 0.05
+--- !u!114 &227528771
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 227528763}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1600083acf094b90adb78ff3f3edda0b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::ProjectEpsilon.Player.SnakeContactHazard
+  hazardType: 0
+--- !u!50 &227528772
+Rigidbody2D:
+  serializedVersion: 5
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 227528763}
+  m_BodyType: 1
+  m_Simulated: 1
+  m_UseFullKinematicContacts: 0
+  m_UseAutoMass: 0
+  m_Mass: 1
+  m_LinearDamping: 0
+  m_AngularDamping: 0.05
+  m_GravityScale: 0
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_Interpolate: 0
+  m_SleepingMode: 1
+  m_CollisionDetection: 0
+  m_Constraints: 4
+--- !u!114 &227528773
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 227528763}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d16e0000000000000000000000000003, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::ProjectEpsilon.Combat.WeaponTargetStatusController
+  slowPriority: 0
+  slowMultiplier: 1
+  slowRemaining: 0
+  stopPriority: 0
+  stopRemaining: 0
 --- !u!1 &240405096
 GameObject:
   m_ObjectHideFlags: 0
@@ -2199,6 +2278,7 @@ GameObject:
   - component: {fileID: 587332127}
   - component: {fileID: 587332129}
   - component: {fileID: 587332130}
+  - component: {fileID: 587332131}
   m_Layer: 0
   m_Name: Player
   m_TagString: Untagged
@@ -2601,6 +2681,22 @@ MonoBehaviour:
   weaponManager: {fileID: 2088063716}
   fireWeapon: {fileID: 11400000, guid: 061d187a935b8fe44814c8571800cce8, type: 2}
   fallbackWeapon: {fileID: 11400000, guid: 9cd567097ef34374d89a8a6f09439a90, type: 2}
+  coldWeapon: {fileID: 11400000, guid: 232c95914963f2d469b734ff4d2350a7, type: 2}
+  electricWeapon: {fileID: 11400000, guid: ee78b1d350e992a498b9870b0be7fcf5, type: 2}
+--- !u!114 &587332131
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 587332110}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d16e0000000000000000000000000005, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::ProjectEpsilon.Debugging.EnemyStatusDebugControls
+  searchOrigin: {fileID: 587332111}
+  searchRange: 100
 --- !u!1 &691704637
 GameObject:
   m_ObjectHideFlags: 0
@@ -3163,6 +3259,10 @@ GameObject:
   - component: {fileID: 833720582}
   - component: {fileID: 833720581}
   - component: {fileID: 833720584}
+  - component: {fileID: 833720588}
+  - component: {fileID: 833720587}
+  - component: {fileID: 833720586}
+  - component: {fileID: 833720585}
   m_Layer: 0
   m_Name: Target_Close_Right
   m_TagString: Untagged
@@ -3312,6 +3412,81 @@ MonoBehaviour:
   bodyRepairDropChance: 0.06
   healAmount: 15
   pickupSprite: {fileID: 1434238494030181667, guid: 0a4df3fa57e52bc469da7185f6109d59, type: 3}
+--- !u!114 &833720585
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 833720578}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d16e0000000000000000000000000004, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::ProjectEpsilon.Enemies.EnemyMovementController
+  enemyData: {fileID: 11400000, guid: d16e0000000000000000000000000007, type: 2}
+  chaseTarget: {fileID: 587332111}
+  statusController: {fileID: 833720588}
+  movementBody: {fileID: 833720587}
+  fallbackMoveSpeed: 1
+  stopDistance: 0.05
+--- !u!114 &833720586
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 833720578}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1600083acf094b90adb78ff3f3edda0b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::ProjectEpsilon.Player.SnakeContactHazard
+  hazardType: 0
+--- !u!50 &833720587
+Rigidbody2D:
+  serializedVersion: 5
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 833720578}
+  m_BodyType: 1
+  m_Simulated: 1
+  m_UseFullKinematicContacts: 0
+  m_UseAutoMass: 0
+  m_Mass: 1
+  m_LinearDamping: 0
+  m_AngularDamping: 0.05
+  m_GravityScale: 0
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_Interpolate: 0
+  m_SleepingMode: 1
+  m_CollisionDetection: 0
+  m_Constraints: 4
+--- !u!114 &833720588
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 833720578}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d16e0000000000000000000000000003, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::ProjectEpsilon.Combat.WeaponTargetStatusController
+  slowPriority: 0
+  slowMultiplier: 1
+  slowRemaining: 0
+  stopPriority: 0
+  stopRemaining: 0
 --- !u!1 &862929761
 GameObject:
   m_ObjectHideFlags: 0
@@ -4542,6 +4717,10 @@ GameObject:
   - component: {fileID: 1220996925}
   - component: {fileID: 1220996924}
   - component: {fileID: 1220996927}
+  - component: {fileID: 1220996931}
+  - component: {fileID: 1220996930}
+  - component: {fileID: 1220996929}
+  - component: {fileID: 1220996928}
   m_Layer: 0
   m_Name: Target_Close_Left
   m_TagString: Untagged
@@ -4691,6 +4870,81 @@ MonoBehaviour:
   bodyRepairDropChance: 0.06
   healAmount: 15
   pickupSprite: {fileID: 1434238494030181667, guid: 0a4df3fa57e52bc469da7185f6109d59, type: 3}
+--- !u!114 &1220996928
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1220996921}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d16e0000000000000000000000000004, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::ProjectEpsilon.Enemies.EnemyMovementController
+  enemyData: {fileID: 11400000, guid: d16e0000000000000000000000000007, type: 2}
+  chaseTarget: {fileID: 587332111}
+  statusController: {fileID: 1220996931}
+  movementBody: {fileID: 1220996930}
+  fallbackMoveSpeed: 1
+  stopDistance: 0.05
+--- !u!114 &1220996929
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1220996921}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1600083acf094b90adb78ff3f3edda0b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::ProjectEpsilon.Player.SnakeContactHazard
+  hazardType: 0
+--- !u!50 &1220996930
+Rigidbody2D:
+  serializedVersion: 5
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1220996921}
+  m_BodyType: 1
+  m_Simulated: 1
+  m_UseFullKinematicContacts: 0
+  m_UseAutoMass: 0
+  m_Mass: 1
+  m_LinearDamping: 0
+  m_AngularDamping: 0.05
+  m_GravityScale: 0
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_Interpolate: 0
+  m_SleepingMode: 1
+  m_CollisionDetection: 0
+  m_Constraints: 4
+--- !u!114 &1220996931
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1220996921}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d16e0000000000000000000000000003, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::ProjectEpsilon.Combat.WeaponTargetStatusController
+  slowPriority: 0
+  slowMultiplier: 1
+  slowRemaining: 0
+  stopPriority: 0
+  stopRemaining: 0
 --- !u!1 &1287088116
 GameObject:
   m_ObjectHideFlags: 0
@@ -4783,6 +5037,10 @@ GameObject:
   - component: {fileID: 1330378506}
   - component: {fileID: 1330378505}
   - component: {fileID: 1330378508}
+  - component: {fileID: 1330378512}
+  - component: {fileID: 1330378511}
+  - component: {fileID: 1330378510}
+  - component: {fileID: 1330378509}
   m_Layer: 0
   m_Name: Target_XP05
   m_TagString: Untagged
@@ -4932,6 +5190,81 @@ MonoBehaviour:
   bodyRepairDropChance: 0.12
   healAmount: 15
   pickupSprite: {fileID: 1434238494030181667, guid: 0a4df3fa57e52bc469da7185f6109d59, type: 3}
+--- !u!114 &1330378509
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1330378502}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d16e0000000000000000000000000004, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::ProjectEpsilon.Enemies.EnemyMovementController
+  enemyData: {fileID: 11400000, guid: d16e0000000000000000000000000007, type: 2}
+  chaseTarget: {fileID: 587332111}
+  statusController: {fileID: 1330378512}
+  movementBody: {fileID: 1330378511}
+  fallbackMoveSpeed: 1
+  stopDistance: 0.05
+--- !u!114 &1330378510
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1330378502}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1600083acf094b90adb78ff3f3edda0b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::ProjectEpsilon.Player.SnakeContactHazard
+  hazardType: 0
+--- !u!50 &1330378511
+Rigidbody2D:
+  serializedVersion: 5
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1330378502}
+  m_BodyType: 1
+  m_Simulated: 1
+  m_UseFullKinematicContacts: 0
+  m_UseAutoMass: 0
+  m_Mass: 1
+  m_LinearDamping: 0
+  m_AngularDamping: 0.05
+  m_GravityScale: 0
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_Interpolate: 0
+  m_SleepingMode: 1
+  m_CollisionDetection: 0
+  m_Constraints: 4
+--- !u!114 &1330378512
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1330378502}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d16e0000000000000000000000000003, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::ProjectEpsilon.Combat.WeaponTargetStatusController
+  slowPriority: 0
+  slowMultiplier: 1
+  slowRemaining: 0
+  stopPriority: 0
+  stopRemaining: 0
 --- !u!1 &1358431527
 GameObject:
   m_ObjectHideFlags: 0
@@ -5369,6 +5702,10 @@ GameObject:
   - component: {fileID: 1468953576}
   - component: {fileID: 1468953575}
   - component: {fileID: 1468953578}
+  - component: {fileID: 1468953582}
+  - component: {fileID: 1468953581}
+  - component: {fileID: 1468953580}
+  - component: {fileID: 1468953579}
   m_Layer: 0
   m_Name: Target_XP20
   m_TagString: Untagged
@@ -5518,6 +5855,81 @@ MonoBehaviour:
   bodyRepairDropChance: 0.24
   healAmount: 15
   pickupSprite: {fileID: 1434238494030181667, guid: 0a4df3fa57e52bc469da7185f6109d59, type: 3}
+--- !u!114 &1468953579
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1468953572}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d16e0000000000000000000000000004, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::ProjectEpsilon.Enemies.EnemyMovementController
+  enemyData: {fileID: 11400000, guid: d16e0000000000000000000000000007, type: 2}
+  chaseTarget: {fileID: 587332111}
+  statusController: {fileID: 1468953582}
+  movementBody: {fileID: 1468953581}
+  fallbackMoveSpeed: 1
+  stopDistance: 0.05
+--- !u!114 &1468953580
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1468953572}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1600083acf094b90adb78ff3f3edda0b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::ProjectEpsilon.Player.SnakeContactHazard
+  hazardType: 0
+--- !u!50 &1468953581
+Rigidbody2D:
+  serializedVersion: 5
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1468953572}
+  m_BodyType: 1
+  m_Simulated: 1
+  m_UseFullKinematicContacts: 0
+  m_UseAutoMass: 0
+  m_Mass: 1
+  m_LinearDamping: 0
+  m_AngularDamping: 0.05
+  m_GravityScale: 0
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_Interpolate: 0
+  m_SleepingMode: 1
+  m_CollisionDetection: 0
+  m_Constraints: 4
+--- !u!114 &1468953582
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1468953572}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d16e0000000000000000000000000003, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::ProjectEpsilon.Combat.WeaponTargetStatusController
+  slowPriority: 0
+  slowMultiplier: 1
+  slowRemaining: 0
+  stopPriority: 0
+  stopRemaining: 0
 --- !u!1 &1564377466
 GameObject:
   m_ObjectHideFlags: 0
@@ -6571,6 +6983,10 @@ GameObject:
   - component: {fileID: 1917798000}
   - component: {fileID: 1917797999}
   - component: {fileID: 1917798002}
+  - component: {fileID: 1917798006}
+  - component: {fileID: 1917798005}
+  - component: {fileID: 1917798004}
+  - component: {fileID: 1917798003}
   m_Layer: 0
   m_Name: Target_XP01_B
   m_TagString: Untagged
@@ -6720,6 +7136,81 @@ MonoBehaviour:
   bodyRepairDropChance: 0.06
   healAmount: 15
   pickupSprite: {fileID: 1434238494030181667, guid: 0a4df3fa57e52bc469da7185f6109d59, type: 3}
+--- !u!114 &1917798003
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1917797996}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d16e0000000000000000000000000004, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::ProjectEpsilon.Enemies.EnemyMovementController
+  enemyData: {fileID: 11400000, guid: d16e0000000000000000000000000007, type: 2}
+  chaseTarget: {fileID: 587332111}
+  statusController: {fileID: 1917798006}
+  movementBody: {fileID: 1917798005}
+  fallbackMoveSpeed: 1
+  stopDistance: 0.05
+--- !u!114 &1917798004
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1917797996}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1600083acf094b90adb78ff3f3edda0b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::ProjectEpsilon.Player.SnakeContactHazard
+  hazardType: 0
+--- !u!50 &1917798005
+Rigidbody2D:
+  serializedVersion: 5
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1917797996}
+  m_BodyType: 1
+  m_Simulated: 1
+  m_UseFullKinematicContacts: 0
+  m_UseAutoMass: 0
+  m_Mass: 1
+  m_LinearDamping: 0
+  m_AngularDamping: 0.05
+  m_GravityScale: 0
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_Interpolate: 0
+  m_SleepingMode: 1
+  m_CollisionDetection: 0
+  m_Constraints: 4
+--- !u!114 &1917798006
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1917797996}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d16e0000000000000000000000000003, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::ProjectEpsilon.Combat.WeaponTargetStatusController
+  slowPriority: 0
+  slowMultiplier: 1
+  slowRemaining: 0
+  stopPriority: 0
+  stopRemaining: 0
 --- !u!1 &1965273716
 GameObject:
   m_ObjectHideFlags: 0
