@@ -76,7 +76,8 @@ namespace ProjectEpsilon.Editor // 편집기 영역
                 targets.Add(target); // 시험 대상 등록
                 WeaponTarget survivorTarget = survivor.AddComponent<WeaponTarget>(); // 생존 적 대상 생성
                 targets.Add(survivorTarget); // 생존 적 등록
-                typeof(EarlyEnemyWaveSpawner).GetField("eliteTarget", flags).SetValue(spawner, target); // 엘리트 대상 설정
+                HashSet<WeaponTarget> eliteTargets = (HashSet<WeaponTarget>)typeof(EarlyEnemyWaveSpawner).GetField("eliteTargets", flags).GetValue(spawner); // 엘리트 대상 집합
+                eliteTargets.Add(target); // 시험 엘리트 등록
                 typeof(EarlyEnemyWaveSpawner).GetField("activeEnemies", flags).SetValue(spawner, 2); // 시험 적 수 설정
                 MethodInfo death = typeof(EarlyEnemyWaveSpawner).GetMethod("HandleEnemyDied", flags); // 사망 처리 조회
                 int previous = controller.PendingRewardCount; // 기존 보상 수

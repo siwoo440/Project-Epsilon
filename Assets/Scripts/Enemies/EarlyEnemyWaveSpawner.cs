@@ -41,6 +41,8 @@ namespace ProjectEpsilon.Enemies // 적 영역
         [SerializeField] private float eliteWarningDuration = 1f; // 엘리트 예고 시간 가정값
         [SerializeField] private float eliteChargeDuration = 0.6f; // 엘리트 돌진 시간 가정값
         [SerializeField] private float eliteChargeMultiplier = 3f; // 엘리트 돌진 속도 가정값
+        [SerializeField] private float[] laterEliteAppearanceTimes = { 480f, 720f, 960f }; // 후속 엘리트 출현 시각
+        [SerializeField] private float secondEliteConcurrentTime = 720f; // 엘리트 동시 두 마리 허용 시각
         [SerializeField] private int healAmount = 15; // 회복량 임시값
         [SerializeField] private float healDropChance = 0.25f; // 회복 보상 확률 임시값
         [SerializeField] private float bodyRepairDropChance = 0.1f; // 몸통 복구 확률 임시값
@@ -100,8 +102,9 @@ namespace ProjectEpsilon.Enemies // 적 영역
         private float nextSpawn; // 다음 출현 시각
         private int activeEnemies; // 생존 적 수
         private readonly List<WeaponTarget> targets = new List<WeaponTarget>(); // 생존 적 추적
-        private WeaponTarget eliteTarget; // 정리 제외 엘리트
-        private bool eliteSpawned; // 엘리트 출현 여부
+        private readonly HashSet<WeaponTarget> eliteTargets = new HashSet<WeaponTarget>(); // 생존 엘리트 집합
+        private readonly Queue<int> pendingEliteRounds = new Queue<int>(); // 출현 대기 회차
+        private int nextEliteRound; // 다음 일정 회차
         public int ActiveEnemies => activeEnemies; // 생존 적 수 조회
         private void Start() // 플레이 시작 처리
         { // 메서드 시작
@@ -122,12 +125,8 @@ namespace ProjectEpsilon.Enemies // 적 영역
             } // 조건 끝
             elapsed += Time.deltaTime; // 전투 시간 누적
             CleanupDistantEnemies(); // 먼 일반 적 정리
-            if (!eliteSpawned && enemies.Length > 3 && enemies[3] != null && elapsed >= enemies[3].firstAppearance) // 엘리트 출현 조건
-            { // 조건 시작
-                ReserveEliteSlot(); // 엘리트 출현 자리 확보
-                Spawn(enemies[3]); // 엘리트 출현
-                eliteSpawned = true; // 단회 출현 저장
-            } // 조건 끝
+            ProcessEliteSchedule(); // 엘리트 일정과 대기 출현 처리
+
             if (elapsed < nextSpawn || activeEnemies >= Mathf.Max(1, maximumEnemies)) // 일반 출현 대기 조건
             { // 조건 시작
                 return; // 일반 출현 중지
@@ -193,7 +192,7 @@ namespace ProjectEpsilon.Enemies // 적 영역
             targets.Add(target); // 생존 적 목록 추가
             if (setting.kind == EarlyEnemyKind.Elite) // 엘리트 확인
             { // 조건 시작
-                eliteTarget = target; // 정리 제외 대상 저장
+                eliteTargets.Add(target); // 정리 제외 대상 등록
             } // 조건 끝
             target.Died += HandleEnemyDied; // 처치 시 수량 갱신 연결
         } // 메서드 끝
@@ -241,9 +240,8 @@ namespace ProjectEpsilon.Enemies // 적 영역
             { // 조건 시작
                 return; // 중복 사망 무시
             } // 조건 끝
-            if (target != null && target == eliteTarget) // 엘리트 처치 확인
+            if (eliteTargets.Remove(target)) // 엘리트 개별 처치 확인
             { // 조건 시작
-                eliteTarget = null; // 중복 보상 차단
                 eliteRewards?.QueueReward(); // 선택 보상 대기열 추가
             } // 조건 끝
             activeEnemies = Mathf.Max(0, activeEnemies - 1); // 생존 적 감소
@@ -261,17 +259,19 @@ namespace ProjectEpsilon.Enemies // 적 영역
                 WeaponTarget target = targets[index]; // 현재 적 조회
                 if (target == null) // 외부 제거 적 확인
                 { // 조건 시작
+                    eliteTargets.Remove(target); // 외부 제거 엘리트 정리
                     targets.RemoveAt(index); // 빈 대상 제거
                     activeEnemies = Mathf.Max(0, activeEnemies - 1); // 생존 수 보정
                     continue; // 다음 적 확인
                 } // 조건 끝
-                if (!ShouldDespawn(target.transform.position, player.transform.position, cleanupDistance, target == eliteTarget)) // 정리 조건 확인
+                if (!ShouldDespawn(target.transform.position, player.transform.position, cleanupDistance, eliteTargets.Contains(target))) // 정리 조건 확인
                 { // 조건 시작
                     continue; // 유지 대상 건너뛰기
                 } // 조건 끝
                 target.Died -= HandleEnemyDied; // 처치 수량 연결 해제
                 targets.RemoveAt(index); // 생존 목록 제거
                 activeEnemies = Mathf.Max(0, activeEnemies - 1); // 생존 수 감소
+                target.gameObject.SetActive(false); // 지연 파괴 전 보상과 공격 대상 해제
                 Destroy(target.gameObject); // 보상 없이 적 제거
             } // 반복 끝
         } // 메서드 끝
@@ -291,17 +291,42 @@ namespace ProjectEpsilon.Enemies // 적 영역
             float screenDistance = offset.magnitude + cornerDistance + 0.1f; // 화면 밖 생성 보존 거리
             return Mathf.Max(safeDistance, screenDistance); // 현재 화면을 포함한 정리 거리
         } // 메서드 끝
-        private void ReserveEliteSlot() // 엘리트 출현 자리 확보
+        private void ProcessEliteSchedule() // 엘리트 일정과 동시 상한
+        { // 메서드 시작
+            if (enemies == null || enemies.Length <= 3 || enemies[3] == null) // 엘리트 설정 확인
+            { // 조건 시작
+                return; // 설정 부재 시 일정 유지
+            } // 조건 끝
+            int laterCount = laterEliteAppearanceTimes == null ? 0 : laterEliteAppearanceTimes.Length; // 후속 회차 수
+            while (nextEliteRound <= laterCount) // 남은 일정 순회
+            { // 반복 시작
+                float appearance = nextEliteRound == 0 ? enemies[3].firstAppearance : laterEliteAppearanceTimes[nextEliteRound - 1]; // 현재 회차의 출현 시각
+                if (elapsed < appearance) // 다음 회차 시각 확인
+                { // 조건 시작
+                    break; // 미래 일정 대기
+                } // 조건 끝
+                pendingEliteRounds.Enqueue(nextEliteRound); // 도달한 회차 보류
+                nextEliteRound++; // 다음 회차 선택
+            } // 반복 끝
+            int concurrentLimit = elapsed >= secondEliteConcurrentTime ? 2 : 1; // 임시 시점별 동시 상한
+            if (pendingEliteRounds.Count == 0 || eliteTargets.Count >= concurrentLimit || !ReserveEliteSlot()) // 대기 회차와 출현 자리 확인
+            { // 조건 시작
+                return; // 자리 확보 전 대기
+            } // 조건 끝
+            pendingEliteRounds.Dequeue(); // 가장 오래된 회차 소비
+            Spawn(enemies[3]); // 동일 시험용 엘리트 출현
+        } // 메서드 끝
+        private bool ReserveEliteSlot() // 엘리트 출현 자리 확보
         { // 메서드 시작
             if (activeEnemies < Mathf.Max(1, maximumEnemies)) // 빈 자리 확인
             { // 조건 시작
-                return; // 자리 확보 생략
+                return true; // 출현 자리 확보
             } // 조건 끝
             WeaponTarget farthest = null; // 가장 먼 적 초기화
             float farthestDistance = -1f; // 가장 먼 거리 초기화
             foreach (WeaponTarget target in targets) // 생존 적 순회
             { // 반복 시작
-                if (target == null) // 제거된 적 확인
+                if (target == null || eliteTargets.Contains(target)) // 제거 대상과 기존 엘리트 확인
                 { // 조건 시작
                     continue; // 다음 적 이동
                 } // 조건 끝
@@ -312,12 +337,16 @@ namespace ProjectEpsilon.Enemies // 적 영역
                     farthestDistance = distance; // 가장 먼 거리 저장
                 } // 조건 끝
             } // 반복 끝
-            if (farthest != null) // 제거 후보 확인
+            if (farthest == null) // 제거할 일반 적 확인
             { // 조건 시작
-                targets.Remove(farthest); // 생존 적 목록 제거
-                activeEnemies = Mathf.Max(0, activeEnemies - 1); // 생존 적 수 감소
-                Destroy(farthest.gameObject); // 먼 적 제거
+                return false; // 엘리트만 남은 경우 출현 보류
             } // 조건 끝
+            farthest.Died -= HandleEnemyDied; // 제거 대상 사망 연결 해제
+            targets.Remove(farthest); // 생존 적 목록 제거
+            activeEnemies = Mathf.Max(0, activeEnemies - 1); // 생존 적 수 감소
+            farthest.gameObject.SetActive(false); // 지연 파괴 전 보상과 공격 대상 해제
+            Destroy(farthest.gameObject); // 먼 일반 적 무보상 제거
+            return true; // 출현 자리 확보
         } // 메서드 끝
     } // 클래스 끝
 } // 영역 끝

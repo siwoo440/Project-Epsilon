@@ -7074,6 +7074,11 @@ MonoBehaviour:
   eliteWarningDuration: 1
   eliteChargeDuration: 0.6
   eliteChargeMultiplier: 3
+  laterEliteAppearanceTimes:
+  - 480
+  - 720
+  - 960
+  secondEliteConcurrentTime: 720
   healAmount: 15
   healDropChance: 0.25
   bodyRepairDropChance: 0.1

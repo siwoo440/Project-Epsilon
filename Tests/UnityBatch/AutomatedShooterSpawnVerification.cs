@@ -390,7 +390,7 @@ namespace ProjectEpsilon.Editor // 편집기 영역
             ConfigureCamera(new Vector2(-7f, 4f)); // 실제 다른 위치의 초광폭 카메라
             SetSpawnerField("elapsed", 240f); // 시험용 엘리트 경계 시간 주입
             SetSpawnerField("nextSpawn", float.MaxValue); // 일반 출현만 잠시 보류
-            SetSpawnerField("eliteSpawned", false); // 시험용 첫 엘리트 상태
+            SetSpawnerField("nextEliteRound", 0); // 시험용 첫 엘리트 회차
             UnityEngine.Random.InitState(3299); // 엘리트 출현 방향 재현 시드
             spawner.enabled = true; // 실제 출현 Update 활성화
             yield return null; // 실제 엘리트 출현 Update

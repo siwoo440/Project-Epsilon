@@ -32,6 +32,7 @@ namespace UnityEngine // Unity 대체
         public GameObject(string value) { name = value; transform = new Transform { gameObject = this }; Objects.Add(this); } // 객체 생성
         public T AddComponent<T>() where T : Component, new() { T value = new T { gameObject = this }; Components.Add(value); return value; } // 구성 추가
         public T GetComponent<T>() where T : class => Components.OfType<T>().FirstOrDefault(); // 구성 조회
+        public void SetActive(bool value) { activeInHierarchy = value; } // 객체 활성 상태 변경
     } // 클래스 끝
     public sealed class Transform : Component // 위치와 크기
     { // 클래스 시작
