@@ -27,11 +27,13 @@ namespace ProjectEpsilon.Enemies // 적 영역
         public float firstAppearance; // 최초 출현 시간
         public Color color = Color.white; // 구분 색상
     } // 클래스 끝
+    [DefaultExecutionOrder(100)] // 카메라 이동 이후 실행
     public sealed class EarlyEnemyWaveSpawner : MonoBehaviour // 초반 적 출현기
     { // 클래스 시작
         [SerializeField] private float spawnInterval = 1.5f; // 임시 출현 간격
         [SerializeField] private int maximumEnemies = 40; // 동시 적 상한
         [SerializeField] private float spawnDistance = 9f; // 출현 거리
+        [SerializeField] private float spawnViewportMargin = 0.5f; // 화면 밖 출현 여유 임시값
         [SerializeField] private float despawnDistance = 22f; // 일반 적 정리 거리 임시값
         [SerializeField] private float shooterDistance = 4f; // 사수 유지 거리 임시값
         [SerializeField] private float projectileSpeed = 5f; // 투사체 속도 임시값
@@ -112,7 +114,7 @@ namespace ProjectEpsilon.Enemies // 적 영역
                 visual = renderer == null ? null : renderer.sprite; // 대체 스프라이트 저장
             } // 조건 끝
         } // 메서드 끝
-        private void Update() // 출현 시간 갱신
+        private void LateUpdate() // 카메라 이동 후 출현 시간 갱신
         { // 메서드 시작
             if (player == null || GameManager.Instance == null || !GameManager.Instance.IsPlaying) // 전투 가능 여부
             { // 조건 시작
@@ -165,7 +167,7 @@ namespace ProjectEpsilon.Enemies // 적 영역
                 direction = Vector2.right; // 대체 방향 설정
             } // 조건 끝
             GameObject enemy = new GameObject("EarlyEnemy_" + setting.kind); // 적 오브젝트 생성
-            enemy.transform.position = player.transform.position + (Vector3)(direction * Mathf.Max(2f, spawnDistance)); // 플레이어 주변 배치
+            enemy.transform.position = player.transform.position + (Vector3)(direction * ResolveSpawnDistance(direction)); // 화면 밖 출현 위치
             SpriteRenderer renderer = enemy.AddComponent<SpriteRenderer>(); // 적 렌더러 생성
             renderer.sprite = visual; // 시각 자료 적용
             renderer.color = setting.color; // 적 구분 색상 적용
@@ -195,6 +197,44 @@ namespace ProjectEpsilon.Enemies // 적 영역
             } // 조건 끝
             target.Died += HandleEnemyDied; // 처치 시 수량 갱신 연결
         } // 메서드 끝
+        private float ResolveSpawnDistance(Vector2 direction) // 화면 밖 출현 거리
+        { // 메서드 시작
+            float minimum = Mathf.Max(2f, spawnDistance); // 기존 최소 출현 거리
+            Camera camera = Camera.main; // 현재 주 카메라 조회
+            if (camera == null || !camera.orthographic || camera.orthographicSize <= 0f || camera.aspect <= 0f) // 직교 카메라 유효성 확인
+            { // 조건 시작
+                return minimum; // 카메라 부재 시 기존 거리
+            } // 조건 끝
+            float margin = Mathf.Max(0f, spawnViewportMargin); // 화면 밖 여유 거리
+            float horizontal = margin / (2f * camera.orthographicSize * camera.aspect); // 가로 뷰포트 여유
+            float vertical = margin / (2f * camera.orthographicSize); // 세로 뷰포트 여유
+            Vector3 origin = camera.WorldToViewportPoint(player.transform.position); // 플레이어 화면 위치
+            Vector3 step = camera.WorldToViewportPoint(player.transform.position + (Vector3)direction) - origin; // 단위 방향 화면 변화
+            float xExit = float.PositiveInfinity; // 가로 경계 거리 초기화
+            float yExit = float.PositiveInfinity; // 세로 경계 거리 초기화
+            if (step.x > 0.000001f) // 오른쪽 경계 방향 확인
+            { // 조건 시작
+                xExit = (1f + horizontal - origin.x) / step.x; // 오른쪽 화면 경계 거리
+            } // 조건 끝
+            else if (step.x < -0.000001f) // 왼쪽 경계 방향 확인
+            { // 조건 시작
+                xExit = (-horizontal - origin.x) / step.x; // 왼쪽 화면 경계 거리
+            } // 조건 끝
+            if (step.y > 0.000001f) // 위쪽 경계 방향 확인
+            { // 조건 시작
+                yExit = (1f + vertical - origin.y) / step.y; // 위쪽 화면 경계 거리
+            } // 조건 끝
+            else if (step.y < -0.000001f) // 아래쪽 경계 방향 확인
+            { // 조건 시작
+                yExit = (-vertical - origin.y) / step.y; // 아래쪽 화면 경계 거리
+            } // 조건 끝
+            float exit = Mathf.Min(xExit, yExit); // 가장 먼저 벗어나는 경계 거리
+            if (float.IsInfinity(exit) || float.IsNaN(exit)) // 비정상 투영 확인
+            { // 조건 시작
+                return minimum; // 기존 거리 대체
+            } // 조건 끝
+            return Mathf.Max(minimum, Mathf.Max(0f, exit) + 0.01f); // 최소 거리와 화면 밖 여유 적용
+        } // 메서드 끝
         private void HandleEnemyDied(WeaponTarget target) // 적 처치 처리
         { // 메서드 시작
             if (target == null || !targets.Remove(target)) // 등록 대상과 중복 사망 확인
@@ -215,6 +255,7 @@ namespace ProjectEpsilon.Enemies // 적 영역
         } // 메서드 끝
         private void CleanupDistantEnemies() // 먼 일반 적 정리
         { // 메서드 시작
+            float cleanupDistance = ResolveCleanupDistance(); // 현재 화면의 안전 정리 거리
             for (int index = targets.Count - 1; index >= 0; index--) // 생존 적 역순 확인
             { // 반복 시작
                 WeaponTarget target = targets[index]; // 현재 적 조회
@@ -224,7 +265,7 @@ namespace ProjectEpsilon.Enemies // 적 영역
                     activeEnemies = Mathf.Max(0, activeEnemies - 1); // 생존 수 보정
                     continue; // 다음 적 확인
                 } // 조건 끝
-                if (!ShouldDespawn(target.transform.position, player.transform.position, despawnDistance, target == eliteTarget)) // 정리 조건 확인
+                if (!ShouldDespawn(target.transform.position, player.transform.position, cleanupDistance, target == eliteTarget)) // 정리 조건 확인
                 { // 조건 시작
                     continue; // 유지 대상 건너뛰기
                 } // 조건 끝
@@ -233,6 +274,22 @@ namespace ProjectEpsilon.Enemies // 적 영역
                 activeEnemies = Mathf.Max(0, activeEnemies - 1); // 생존 수 감소
                 Destroy(target.gameObject); // 보상 없이 적 제거
             } // 반복 끝
+        } // 메서드 끝
+        private float ResolveCleanupDistance() // 생성 직후 정리 방지 거리
+        { // 메서드 시작
+            float safeDistance = Mathf.Max(despawnDistance, Mathf.Max(2f, spawnDistance) + 0.1f); // 기존 정리 및 출현 거리
+            Camera camera = Camera.main; // 현재 주 카메라 조회
+            if (camera == null || !camera.orthographic || camera.orthographicSize <= 0f || camera.aspect <= 0f) // 직교 카메라 유효성 확인
+            { // 조건 시작
+                return safeDistance; // 카메라 부재 시 기본 거리
+            } // 조건 끝
+            Vector2 offset = camera.transform.position - player.transform.position; // 플레이어와 카메라 거리
+            float margin = Mathf.Max(0f, spawnViewportMargin); // 화면 밖 여유 거리
+            float halfHeight = camera.orthographicSize + margin; // 여유를 포함한 세로 반폭
+            float halfWidth = camera.orthographicSize * camera.aspect + margin; // 여유를 포함한 가로 반폭
+            float cornerDistance = Mathf.Sqrt(halfWidth * halfWidth + halfHeight * halfHeight); // 여유 경계의 최장 거리
+            float screenDistance = offset.magnitude + cornerDistance + 0.1f; // 화면 밖 생성 보존 거리
+            return Mathf.Max(safeDistance, screenDistance); // 현재 화면을 포함한 정리 거리
         } // 메서드 끝
         private void ReserveEliteSlot() // 엘리트 출현 자리 확보
         { // 메서드 시작

@@ -67,7 +67,7 @@ namespace ProjectEpsilon.Enemies // 적 영역
             { // 조건 시작
                 if (Time.time >= nextAttack) // 사격 주기 확인
                 { // 조건 시작
-                    FireProjectile(offset); // 투사체 발사
+                    FireProjectile(ShooterTargetPosition() - movementBody.position); // 몸통 방향 투사체 발사
                     nextAttack = Time.time + Mathf.Max(0.1f, settings.attackInterval); // 다음 사격 시각
                 } // 조건 끝
                 if (offset.magnitude < shooterDistance * 0.8f) // 근접 거리 확인
@@ -103,6 +103,32 @@ namespace ProjectEpsilon.Enemies // 적 영역
                 return target; // 최근접 몸통 반환
             } // 조건 끝
             return player.transform.position; // 머리 위치 반환
+        } // 메서드 끝
+        private Vector2 ShooterTargetPosition() // 사수 발사 목표
+        { // 메서드 시작
+            Vector2 fallback = player.transform.position; // 몸통 부재 시 머리 목표
+            if (body == null) // 몸통 관리자 확인
+            { // 조건 시작
+                return fallback; // 머리 목표 반환
+            } // 조건 끝
+            float best = float.MaxValue; // 최근접 거리 초기화
+            Vector2 selected = fallback; // 기본 발사 목표
+            foreach (SnakeSegment segment in body.BodySegments) // 몸통 목록 순회
+            { // 반복 시작
+                if (segment == null || !segment.gameObject.activeInHierarchy) // 유효 몸통 확인
+                { // 조건 시작
+                    continue; // 다음 몸통 확인
+                } // 조건 끝
+                Vector2 position = segment.transform.position; // 몸통 위치
+                float distance = (position - movementBody.position).sqrMagnitude; // 몸통까지 거리 제곱
+                if (distance < 0.001f || distance >= best) // 발사 방향과 최근접 여부 확인
+                { // 조건 시작
+                    continue; // 유효하지 않은 목표 제외
+                } // 조건 끝
+                best = distance; // 최근접 거리 갱신
+                selected = position; // 발사 목표 갱신
+            } // 반복 끝
+            return selected; // 최종 발사 목표 반환
         } // 메서드 끝
         private void Move(Vector2 direction, float multiplier) // 물리 이동
         { // 메서드 시작

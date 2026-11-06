@@ -7063,6 +7063,7 @@ MonoBehaviour:
   spawnInterval: 1.5
   maximumEnemies: 40
   spawnDistance: 9
+  spawnViewportMargin: 0.5
   despawnDistance: 22
   elapsed: 0
   visual: {fileID: 0}
