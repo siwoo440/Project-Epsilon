@@ -35,8 +35,14 @@ namespace ProjectEpsilon.Progression
         private bool subscribed;
         private bool mergeOpen;
         private bool pauseOwnedByInput; // 직접 일시정지 상태
-        private bool selectingUpgrade; // 강화 선택 단계
         private WeaponMergeCandidate selectedMerge; // 미확정 합성 대상
+        private readonly List<int> selectableSlots = new List<int>(); // 선택 가능 슬롯
+        private int selectionStage; // 재료 및 강화 단계
+        private int selectionCursor; // 현재 슬롯 위치
+        private int firstMaterialIndex; // 첫 재료 위치
+        private int secondMaterialIndex; // 둘째 재료 위치
+        private bool inheritSecond; // 둘째 강화 계승 여부
+        private bool mergeCommitting; // 합성 확정 진행 여부
 
         public bool IsMergeOpen => mergeOpen;
         public event Action<bool> MergeClosed; // 합성 완료 또는 취소 알림
@@ -93,7 +99,6 @@ namespace ProjectEpsilon.Progression
 
             bool wasOpen = mergeOpen; // 열려 있던 합성 상태
             mergeOpen = false;
-            selectingUpgrade = false; // 미확정 강화 취소
             currentCandidates.Clear();
 
             ApplyMergeMovementState(
@@ -242,15 +247,15 @@ namespace ProjectEpsilon.Progression
             }
 
             mergeOpen = true;
-            selectingUpgrade = false; // 강화 선택 초기화
+            selectionStage = 0; // 첫 재료 단계
+            selectionCursor = 0; // 첫 슬롯 선택
+            RebuildSelectableSlots(); // 첫 재료 목록 구성
 
             ApplyMergeMovementState(
                 true
             );
 
-            mergePanel.Show(
-                currentCandidates
-            );
+            ShowSelectedSlot(); // 첫 재료 화면 표시
 
             return true;
         }
@@ -259,7 +264,6 @@ namespace ProjectEpsilon.Progression
         {
             bool wasOpen = mergeOpen; // 종료 전 화면 상태
             mergeOpen = false;
-            selectingUpgrade = false; // 미확정 강화 취소
             currentCandidates.Clear();
 
             if (mergePanel != null)
@@ -276,49 +280,166 @@ namespace ProjectEpsilon.Progression
             } // 조건 끝
         }
 
-        private void HandleCandidateSelected(int candidateIndex) // 합성 대상 및 강화 선택
+        private void HandleCandidateSelected(int candidateIndex) // 재료 및 강화 선택
         { // 메서드 시작
-            if (!mergeOpen || weaponManager == null || (GameManager.Instance != null && !GameManager.Instance.IsPlaying)) // 열린 화면과 플레이 상태 확인
+            if (!mergeOpen || weaponManager == null || (GameManager.Instance != null && !GameManager.Instance.IsPlaying)) // 선택 가능 상태 확인
             { // 조건 시작
                 return; // 선택 무시
             } // 조건 끝
-            if (!selectingUpgrade) // 합성 대상 선택 단계
+            if (selectionStage < 2) // 재료 선택 단계 확인
             { // 조건 시작
-                if (candidateIndex < 0 || candidateIndex >= currentCandidates.Count) // 후보 범위 확인
+                if (!RefreshSelectedSlots()) // 재료 목록 유효성 확인
                 { // 조건 시작
-                    return; // 잘못된 후보 무시
+                    CloseMergePanel(); // 재료 변경 시 취소
+                    return; // 선택 종료
                 } // 조건 끝
-                selectedMerge = currentCandidates[candidateIndex]; // 미확정 대상 저장
-                if (!selectedMerge.IsValid) // 후보 유효성 확인
+                if (candidateIndex == 0 || candidateIndex == 2) // 이전 및 다음 선택
                 { // 조건 시작
-                    return; // 잘못된 대상 무시
+                    selectionCursor = (selectionCursor + (candidateIndex == 0 ? selectableSlots.Count - 1 : 1)) % selectableSlots.Count; // 선택 위치 순환
+                    ShowSelectedSlot(); // 선택 위치 표시
+                    return; // 재료 확정 대기
                 } // 조건 끝
-                selectingUpgrade = true; // 강화 선택 단계 진입
-                mergePanel.ShowUpgradeSelection(selectedMerge); // 공통 강화 후보 표시
-                return; // 합성 확정 대기
+                if (candidateIndex != 1) // 확정 버튼 확인
+                { // 조건 시작
+                    return; // 잘못된 선택 무시
+                } // 조건 끝
+                if (selectionStage == 0) // 첫 재료 단계 확인
+                { // 조건 시작
+                    firstMaterialIndex = selectableSlots[selectionCursor]; // 첫 재료 저장
+                    selectionStage = 1; // 둘째 재료 단계
+                    selectionCursor = 0; // 둘째 선택 초기화
+                    RebuildSelectableSlots(); // 둘째 후보 구성
+                    ShowSelectedSlot(); // 둘째 재료 화면
+                    return; // 다음 선택 대기
+                } // 조건 끝
+                secondMaterialIndex = selectableSlots[selectionCursor]; // 둘째 재료 저장
+                selectionStage = 2; // 계승 선택 단계
+                ShowInheritanceSelection(); // 강화 내역 표시
+                return; // 계승 선택 대기
+            } // 조건 끝
+            if (!MaterialsStillValid()) // 선택 재료 유효성 확인
+            { // 조건 시작
+                CloseMergePanel(); // 변경된 재료 취소
+                return; // 선택 종료
+            } // 조건 끝
+            if (selectionStage == 2) // 강화 계승 단계 확인
+            { // 조건 시작
+                if (candidateIndex < 0 || candidateIndex > 1) // 계승 대상 범위 확인
+                { // 조건 시작
+                    return; // 잘못된 선택 무시
+                } // 조건 끝
+                inheritSecond = candidateIndex == 1; // 선택 강화 기록
+                SnakeWeaponSlot first = weaponManager.Slots[firstMaterialIndex]; // 첫 재료 확인
+                selectedMerge = new WeaponMergeCandidate(first.Weapon, first.Grade, firstMaterialIndex, secondMaterialIndex); // 선택 재료 보관
+                selectionStage = 3; // 공통 강화 단계
+                mergePanel.ShowUpgradeSelection(selectedMerge); // 공통 강화 화면
+                ShowSynergyPreview(first); // 속성 변화 미리보기
+                return; // 강화 확정 대기
             } // 조건 끝
             if (candidateIndex < 0 || candidateIndex > 2) // 강화 후보 범위 확인
             { // 조건 시작
-                return; // 잘못된 강화 무시
+                return; // 잘못된 선택 무시
             } // 조건 끝
-            IReadOnlyList<SnakeWeaponSlot> slots = weaponManager.Slots; // 현재 슬롯 목록 조회
-            if (selectedMerge.FirstSlotIndex >= slots.Count || selectedMerge.SecondSlotIndex >= slots.Count || // 슬롯 존재 확인
-                slots[selectedMerge.FirstSlotIndex].Weapon != selectedMerge.Weapon || // 첫 무기 변경 확인
-                slots[selectedMerge.SecondSlotIndex].Weapon != selectedMerge.Weapon || // 둘째 무기 변경 확인
-                slots[selectedMerge.FirstSlotIndex].Grade != selectedMerge.CurrentGrade || // 첫 등급 변경 확인
-                slots[selectedMerge.SecondSlotIndex].Grade != selectedMerge.CurrentGrade) // 둘째 등급 변경 확인
-            { // 조건 시작
-                CloseMergePanel(); // 대상 변경 시 합성 취소
-                return; // 잘못된 합성 방지
-            } // 조건 끝
+            int kept = inheritSecond ? secondMaterialIndex : firstMaterialIndex; // 계승 재료 위치
+            int consumed = inheritSecond ? firstMaterialIndex : secondMaterialIndex; // 소모 재료 위치
             WeaponMergeUpgrade upgrade = (WeaponMergeUpgrade)(candidateIndex + 1); // 선택 강화 변환
-            bool merged = weaponManager.TryMergeSlots(selectedMerge.FirstSlotIndex, selectedMerge.SecondSlotIndex, upgrade); // 합성과 강화 확정
-            if (!merged) // 합성 실패 확인
+            bool merged; // 합성 성공 여부
+            mergeCommitting = true; // 확정 중 슬롯 변경 허용
+            try // 합성 시도
+            { // 시도 시작
+                merged = weaponManager.TryMergeSlots(kept, consumed, upgrade); // 합성 및 강화 확정
+            } // 시도 끝
+            finally // 확정 상태 정리
+            { // 정리 시작
+                mergeCommitting = false; // 외부 변경 감시 복구
+            } // 정리 끝
+            CloseMergePanel(merged); // 결과에 따른 화면 종료
+        } // 메서드 끝
+
+        private void RebuildSelectableSlots() // 선택 가능한 재료 갱신
+        { // 메서드 시작
+            selectableSlots.Clear(); // 기존 후보 제거
+            IReadOnlyList<SnakeWeaponSlot> slots = weaponManager.Slots; // 전체 슬롯 조회
+            for (int index = 0; index < slots.Count; index++) // 재료 슬롯 순회
+            { // 반복 시작
+                if (selectionStage == 1) // 둘째 재료 단계 확인
+                { // 조건 시작
+                    if (index != firstMaterialIndex && firstMaterialIndex < slots.Count && CanMergePair(slots[firstMaterialIndex], slots[index])) // 호환 재료 확인
+                    { // 조건 시작
+                        selectableSlots.Add(index); // 둘째 후보 추가
+                    } // 조건 끝
+                    continue; // 다음 슬롯 확인
+                } // 조건 끝
+                for (int other = 0; other < slots.Count; other++) // 짝 슬롯 순회
+                { // 반복 시작
+                    if (other != index && CanMergePair(slots[index], slots[other])) // 합성 가능 여부 확인
+                    { // 조건 시작
+                        selectableSlots.Add(index); // 첫 재료 후보 추가
+                        break; // 중복 추가 방지
+                    } // 조건 끝
+                } // 반복 끝
+            } // 반복 끝
+        } // 메서드 끝
+
+        private bool RefreshSelectedSlots() // 슬롯 변경 확인
+        { // 메서드 시작
+            if (selectableSlots.Count == 0 || selectionCursor >= selectableSlots.Count) // 이전 후보 확인
             { // 조건 시작
-                CloseMergePanel(); // 미확정 합성 취소
-                return; // 실패 처리 종료
+                return false; // 빈 후보 취소
             } // 조건 끝
-            CloseMergePanel(true); // 합성 성공 및 화면 닫기
+            int previousSlot = selectableSlots[selectionCursor]; // 현재 위치 보존
+            RebuildSelectableSlots(); // 현재 후보 갱신
+            selectionCursor = selectableSlots.IndexOf(previousSlot); // 이전 위치 검색
+            return selectionCursor >= 0; // 기존 선택 유효 여부
+        } // 메서드 끝
+
+        private bool MaterialsStillValid() // 선택된 재료 검사
+        { // 메서드 시작
+            IReadOnlyList<SnakeWeaponSlot> slots = weaponManager.Slots; // 전체 슬롯 조회
+            return firstMaterialIndex >= 0 && secondMaterialIndex >= 0 && firstMaterialIndex < slots.Count && secondMaterialIndex < slots.Count && firstMaterialIndex != secondMaterialIndex && CanMergePair(slots[firstMaterialIndex], slots[secondMaterialIndex]); // 재료 호환 확인
+        } // 메서드 끝
+
+        private void ShowSelectedSlot() // 재료 화면 표시
+        { // 메서드 시작
+            if (selectableSlots.Count > 0 && selectionCursor >= 0 && selectionCursor < selectableSlots.Count) // 선택 위치 확인
+            { // 조건 시작
+                int index = selectableSlots[selectionCursor]; // 선택된 슬롯
+                mergePanel.ShowSlotSelection(weaponManager.Slots[index], index, selectionCursor, selectableSlots.Count, selectionStage == 0); // 슬롯 화면 표시
+                ShowSynergyPreview(weaponManager.Slots[index]); // 속성 변화 미리보기
+            } // 조건 끝
+        } // 메서드 끝
+
+        private void ShowInheritanceSelection() // 강화 계승 화면 표시
+        { // 메서드 시작
+            mergePanel.ShowInheritanceSelection(weaponManager.Slots[firstMaterialIndex], firstMaterialIndex, weaponManager.Slots[secondMaterialIndex], secondMaterialIndex); // 양쪽 강화 표시
+            ShowSynergyPreview(weaponManager.Slots[firstMaterialIndex]); // 속성 변화 미리보기
+        } // 메서드 끝
+
+        private void ShowSynergyPreview(SnakeWeaponSlot selected) // 속성 변화 계산
+        { // 메서드 시작
+            WeaponAttribute attribute = selected.Weapon.Attribute; // 선택 무기 속성
+            int count = 0; // 현재 속성 무기 수
+            IReadOnlyList<SnakeWeaponSlot> slots = weaponManager.Slots; // 현재 무기 슬롯
+            for (int index = 0; index < slots.Count; index++) // 슬롯 순회
+            { // 반복 시작
+                SnakeWeaponSlot slot = slots[index]; // 현재 슬롯 조회
+                if (slot != null && !slot.IsEmpty && slot.Weapon.Attribute == attribute) // 동일 속성 확인
+                { // 조건 시작
+                    count++; // 속성 무기 집계
+                } // 조건 끝
+            } // 반복 끝
+            int resultCount = Mathf.Max(0, count - 1); // 합성 후 무기 수
+            int stage = WeaponAttributeSynergyRules.ResolveStage(count); // 현재 시너지 단계
+            int resultStage = WeaponAttributeSynergyRules.ResolveStage(resultCount); // 합성 후 시너지 단계
+            mergePanel.ShowSynergyPreview(attribute, count, resultCount, stage, resultStage); // 단계 변화 표시
+        } // 메서드 끝
+
+        private void HandleSlotsChanged() // 외부 슬롯 변경 처리
+        { // 메서드 시작
+            if (mergeOpen && !mergeCommitting) // 합성 화면 및 외부 변경 확인
+            { // 조건 시작
+                CloseMergePanel(); // 바뀐 재료 선택 취소
+            } // 조건 끝
         } // 메서드 끝
 
         private void HandleCloseRequested()
@@ -497,6 +618,11 @@ namespace ProjectEpsilon.Progression
                 return;
             }
 
+            if (weaponManager != null) // 무기 관리자 확인
+            { // 조건 시작
+                weaponManager.SlotsChanged += HandleSlotsChanged; // 외부 슬롯 변경 감시
+            } // 조건 끝
+
             mergePanel.CandidateSelected +=
                 HandleCandidateSelected;
 
@@ -518,6 +644,11 @@ namespace ProjectEpsilon.Progression
             {
                 return;
             }
+
+            if (weaponManager != null) // 무기 관리자 확인
+            { // 조건 시작
+                weaponManager.SlotsChanged -= HandleSlotsChanged; // 슬롯 변경 감시 해제
+            } // 조건 끝
 
             if (mergePanel != null)
             {

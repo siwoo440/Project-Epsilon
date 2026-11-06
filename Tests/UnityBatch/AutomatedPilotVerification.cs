@@ -415,14 +415,14 @@ namespace ProjectEpsilon.Editor // 편집기 영역
             } // 반복 끝
         } // 메서드 끝
 
-        private static void ClickFirstAvailableMergeButton() // 사용 가능한 첫 합성 선택
+        private static void ClickFirstAvailableMergeButton() // 합성 재료 및 강화 선택
         { // 메서드 시작
             WeaponMergePanelController panel = UnityEngine.Object.FindFirstObjectByType<WeaponMergePanelController>(FindObjectsInactive.Include); // 합성 화면 조회
             if (panel == null) // 화면 부재 확인
             { // 조건 시작
                 return; // 선택 생략
             } // 조건 끝
-            string[] names = { "candidateButton01", "candidateButton02", "candidateButton03" }; // 버튼 필드 이름
+            string[] names = { "candidateButton02", "candidateButton01", "candidateButton03" }; // 재료 확정 우선 버튼 순서
             foreach (string name in names) // 후보 버튼 순회
             { // 반복 시작
                 Button button = (Button)typeof(WeaponMergePanelController).GetField(name, PrivateInstance).GetValue(panel); // 버튼 조회

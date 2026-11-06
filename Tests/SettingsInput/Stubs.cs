@@ -36,6 +36,7 @@ namespace UnityEngine // 유니티 대체 형식
     public static class Mathf // 수학 도구
     { // 클래스 시작
         public static int Clamp(int value, int min, int max) => Math.Clamp(value, min, max); // 정수 범위 제한
+        public static int Max(int first, int second) => Math.Max(first, second); // 정수 최댓값
         public static float Clamp(float value, float min, float max) => Math.Clamp(value, min, max); // 실수 범위 제한
     } // 클래스 끝
 } // 영역 끝
@@ -90,14 +91,23 @@ namespace ProjectEpsilon.Core // 게임 상태 대체 형식
 
 namespace ProjectEpsilon.Data // 무기 데이터 대체
 { // 영역 시작
+    public enum WeaponAttribute // 무기 속성
+    { // 열거 시작
+        Physical // 물리 속성
+    } // 열거 끝
     public sealed class WeaponData // 무기 정보
     { // 클래스 시작
         public int MaxGrade = 5; // 최대 등급
+        public WeaponAttribute Attribute; // 무기 속성
     } // 클래스 끝
 } // 영역 끝
 
 namespace ProjectEpsilon.Combat // 무기 대체 형식
 { // 영역 시작
+    public static class WeaponAttributeSynergyRules // 속성 단계 규칙
+    { // 클래스 시작
+        public static int ResolveStage(int count) => count >= 2 ? 2 : 0; // 시험용 단계 계산
+    } // 클래스 끝
     public enum WeaponMergeUpgrade // 합성 강화 종류
     { // 열거 시작
         None, // 강화 없음
@@ -114,6 +124,7 @@ namespace ProjectEpsilon.Combat // 무기 대체 형식
     public sealed class SnakeWeaponManager // 무기 관리자
     { // 클래스 시작
         public readonly List<SnakeWeaponSlot> Slots = new List<SnakeWeaponSlot>(); // 슬롯 목록
+        public event Action SlotsChanged; // 슬롯 변경 이벤트
         public bool TryMergeSlots(int first, int second, WeaponMergeUpgrade upgrade) => true; // 합성 결과
     } // 클래스 끝
 } // 영역 끝
@@ -175,6 +186,15 @@ namespace ProjectEpsilon.UI // 화면 대체 형식
         public event Action<int> CandidateSelected; // 후보 선택 이벤트
         public event Action CloseRequested; // 닫기 이벤트
         public void Show(IReadOnlyList<ProjectEpsilon.Progression.WeaponMergeCandidate> candidates) // 후보 표시
+        { // 메서드 시작
+        } // 메서드 끝
+        public void ShowSlotSelection(ProjectEpsilon.Combat.SnakeWeaponSlot slot, int index, int cursor, int count, bool first) // 재료 화면
+        { // 메서드 시작
+        } // 메서드 끝
+        public void ShowInheritanceSelection(ProjectEpsilon.Combat.SnakeWeaponSlot first, int firstIndex, ProjectEpsilon.Combat.SnakeWeaponSlot second, int secondIndex) // 계승 화면
+        { // 메서드 시작
+        } // 메서드 끝
+        public void ShowSynergyPreview(ProjectEpsilon.Data.WeaponAttribute attribute, int count, int resultCount, int stage, int resultStage) // 속성 변화 표시
         { // 메서드 시작
         } // 메서드 끝
         public void ShowUpgradeSelection(ProjectEpsilon.Progression.WeaponMergeCandidate candidate) // 강화 표시
