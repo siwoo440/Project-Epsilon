@@ -3,7 +3,7 @@ using UnityEngine;
 
 namespace ProjectEpsilon.Player
 {
-    [DefaultExecutionOrder(100)]
+    [DefaultExecutionOrder(40)] // 몸통 생성 전 경로 준비
     public sealed class SnakePathRecorder : MonoBehaviour
     {
         [SerializeField] private float minimumPointDistance = 0.04f;

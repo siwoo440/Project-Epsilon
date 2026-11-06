@@ -19,6 +19,11 @@ namespace ProjectEpsilon.UI
             return $"Body {Mathf.Max(0, current)} / {Mathf.Max(0, maximum)}";
         }
 
+        public static string FormatBodyCount(int current, int earned, int maximum) // 몸통 현재 수와 두 상한 표시
+        { // 메서드 시작
+            return $"Body {Mathf.Max(0, current)} / {Mathf.Max(0, earned)} (max {Mathf.Max(0, maximum)})"; // 현재 수와 상한 문구
+        } // 메서드 끝
+
         public static string FormatExperience(int current, int required)
         {
             return $"XP {Mathf.Max(0, current)} / {Mathf.Max(0, required)}";

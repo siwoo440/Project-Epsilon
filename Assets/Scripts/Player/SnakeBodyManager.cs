@@ -205,6 +205,7 @@ namespace ProjectEpsilon.Player
         public void InitializeEarnedBodyCountFromCurrent()
         {
             EnsureInitialized();
+            int previousEarnedBodyCount = earnedBodyCount; // 기존 성장 최대 수
 
             earnedBodyCount = Mathf.Clamp(
                 Mathf.Max(
@@ -214,6 +215,10 @@ namespace ProjectEpsilon.Player
                 0,
                 maximumBodyCount
             );
+            if (earnedBodyCount != previousEarnedBodyCount) // 성장 최대 변경 확인
+            { // 조건 시작
+                NotifyBodyCountChanged(); // 몸통 상태 변경 알림
+            } // 조건 끝
         }
 
         public bool TryRemoveBody()

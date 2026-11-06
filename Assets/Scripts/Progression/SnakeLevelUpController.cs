@@ -17,6 +17,7 @@ namespace ProjectEpsilon.Progression
         [SerializeField] private SnakeWeaponManager weaponManager;
         [SerializeField] private WeaponRewardPool rewardPool;
         [SerializeField] private LevelUpPanelController levelUpPanel;
+        [SerializeField] private SettingsMenuController settingsMenu; // 설정 화면 참조
 
         private readonly List<WeaponRewardCandidate> currentCandidates =
             new List<WeaponRewardCandidate>();
@@ -74,7 +75,7 @@ namespace ProjectEpsilon.Progression
         private void Update() // 레벨업 키보드 입력
         { // 메서드 시작
             Keyboard keyboard = Keyboard.current; // 현재 키보드 조회
-            if (!presentingLevelUp || keyboard == null) // 선택 상태와 입력 장치 확인
+            if (!presentingLevelUp || keyboard == null || IsInputBlocked()) // 선택 상태와 입력 차단 확인
             { // 조건 시작
                 return; // 입력 처리 종료
             } // 조건 끝
@@ -96,6 +97,19 @@ namespace ProjectEpsilon.Progression
             { // 조건 시작
                 HandleCandidateSelected(2); // 셋째 버튼 선택
             } // 조건 끝
+        } // 메서드 끝
+
+        private bool IsInputBlocked() // 설정 화면 및 키 재설정 확인
+        { // 메서드 시작
+            if (InputBindingManager.Instance != null && InputBindingManager.Instance.IsRebinding) // 키 재설정 상태 확인
+            { // 조건 시작
+                return true; // 보상 입력 차단
+            } // 조건 끝
+            if (settingsMenu == null) // 설정 화면 연결 확인
+            { // 조건 시작
+                settingsMenu = FindFirstObjectByType<SettingsMenuController>(); // 설정 화면 검색
+            } // 조건 끝
+            return settingsMenu != null && settingsMenu.IsOpen; // 설정 화면 표시 여부
         } // 메서드 끝
 
         public void Configure(
@@ -226,7 +240,7 @@ namespace ProjectEpsilon.Progression
 
         private void HandleCandidateSelected(int candidateIndex) // 보상 및 교체 선택 처리
         { // 메서드 시작
-            if (!presentingLevelUp || weaponManager == null) // 레벨업 상태 확인
+            if (!presentingLevelUp || weaponManager == null || IsInputBlocked()) // 레벨업 및 입력 상태 확인
             { // 조건 시작
                 return; // 잘못된 선택 무시
             } // 조건 끝

@@ -21,6 +21,7 @@ namespace ProjectEpsilon.Progression
         [Header("UI Priority")]
         [SerializeField] private SnakeExperience experience;
         [SerializeField] private SnakeLevelUpController levelUpController;
+        [SerializeField] private SettingsMenuController settingsMenu; // 설정 화면 참조
 
         [Range(0.1f, 1f)]
         [SerializeField] private float mergeMoveMultiplier = 0.7f;
@@ -127,6 +128,14 @@ namespace ProjectEpsilon.Progression
             if (InputBindingManager.Instance != null && InputBindingManager.Instance.IsRebinding) // 키 재설정 중 확인
             { // 조건 시작
                 return; // 재설정 입력 우선
+            } // 조건 끝
+            if (settingsMenu == null) // 설정 화면 연결 확인
+            { // 조건 시작
+                settingsMenu = FindFirstObjectByType<SettingsMenuController>(); // 설정 화면 검색
+            } // 조건 끝
+            if (settingsMenu != null && settingsMenu.IsOpen) // 설정 화면 표시 확인
+            { // 조건 시작
+                return; // 설정 중 게임 입력 차단
             } // 조건 끝
             if (keyboard.escapeKey.wasPressedThisFrame) // ESC 입력 확인
             { // 조건 시작

@@ -57,6 +57,14 @@ namespace ProjectEpsilon.UI
             }
         }
 
+        public void SetBodyCount(int current, int earned, int maximum) // 몸통 현재 수와 두 상한 갱신
+        { // 메서드 시작
+            if (bodyCountText != null) // 몸통 텍스트 연결 확인
+            { // 조건 시작
+                bodyCountText.text = HUDTextFormatter.FormatBodyCount(current, earned, maximum); // 몸통 상태 표시
+            } // 조건 끝
+        } // 메서드 끝
+
         public void SetExperience(int current, int required)
         {
             if (experienceText != null)

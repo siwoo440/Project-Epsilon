@@ -16,6 +16,7 @@ namespace ProjectEpsilon.UI
             if (Application.isPlaying)
             {
                 Subscribe();
+                Refresh(); // 재활성화 시 현재 몸통 반영
             }
         }
 
@@ -76,15 +77,16 @@ namespace ProjectEpsilon.UI
 
             hudController.SetBodyCount(
                 bodyManager.CurrentBodyCount,
+                bodyManager.EarnedBodyCount, // 성장 최대 몸통 수
                 bodyManager.MaximumBodyCount
             );
         }
 
         private void HandleBodyCountChanged(int current, int maximum)
         {
-            if (hudController != null)
+            if (hudController != null && bodyManager != null) // 표시 및 몸통 연결 확인
             {
-                hudController.SetBodyCount(current, maximum);
+                hudController.SetBodyCount(current, bodyManager.EarnedBodyCount, maximum); // 현재 수와 두 상한 표시
             }
         }
     }
