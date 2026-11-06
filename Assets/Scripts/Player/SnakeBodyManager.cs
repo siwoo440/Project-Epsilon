@@ -120,7 +120,7 @@ namespace ProjectEpsilon.Player
             pathRecorder = recorder;
             bodyFollower = follower;
             bodySprite = segmentSprite;
-            maximumBodyCount = Mathf.Max(1, maximumCount);
+            maximumBodyCount = Mathf.Clamp(maximumCount, 1, 20); // 절대 몸통 상한 적용
             startingBodyCount = Mathf.Clamp(
                 startingCount,
                 0,
@@ -347,6 +347,9 @@ namespace ProjectEpsilon.Player
 
         private void EnsureInitialized()
         {
+            maximumBodyCount = Mathf.Clamp(maximumBodyCount, 1, 20); // 직렬화 상한 제한
+            startingBodyCount = Mathf.Clamp(startingBodyCount, 0, maximumBodyCount); // 시작 몸통 범위 제한
+
             if (initialized)
             {
                 return;

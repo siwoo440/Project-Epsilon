@@ -197,7 +197,7 @@ namespace ProjectEpsilon.Progression
 
             return Mathf.Max(
                 1,
-                Mathf.CeilToInt((float)calculated)
+                Mathf.RoundToInt((float)calculated) // 기획 기준 반올림
             );
         }
     }
