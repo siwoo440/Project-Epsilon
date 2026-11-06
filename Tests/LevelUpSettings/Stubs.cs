@@ -82,6 +82,7 @@ namespace ProjectEpsilon.Data // 무기 데이터 대체
 { // 영역 시작
     public sealed class WeaponData // 무기 정보
     { // 클래스 시작
+        public int MaxGrade = 5; // 최대 등급
     } // 클래스 끝
 } // 영역 끝
 
@@ -89,6 +90,9 @@ namespace ProjectEpsilon.Combat // 무기 대체 형식
 { // 영역 시작
     public sealed class SnakeWeaponSlot // 무기 슬롯
     { // 클래스 시작
+        public ProjectEpsilon.Data.WeaponData Weapon; // 장착 무기
+        public int Grade = 1; // 장착 등급
+        public bool IsEmpty => Weapon == null; // 빈 슬롯 여부
     } // 클래스 끝
     public sealed class SnakeWeaponManager // 무기 관리자
     { // 클래스 시작
@@ -115,6 +119,8 @@ namespace ProjectEpsilon.Player // 플레이어 대체 형식
     } // 클래스 끝
     public sealed class SnakeHealth // 체력 관리자
     { // 클래스 시작
+        public event Action BodyDepleted; // 몸통 소진 알림
+        public void Deplete() => BodyDepleted?.Invoke(); // 소진 이벤트 발생
         public void ResetHealth() // 체력 복원
         { // 메서드 시작
         } // 메서드 끝
@@ -123,6 +129,16 @@ namespace ProjectEpsilon.Player // 플레이어 대체 형식
 
 namespace ProjectEpsilon.Progression // 진행 대체 형식
 { // 영역 시작
+    public sealed class SnakeWeaponMergeController // 보상 합성 대체
+    { // 클래스 시작
+        public event Action<bool> MergeClosed; // 합성 종료 알림
+        public bool IsMergeOpen; // 합성 진행 여부
+        public bool isActiveAndEnabled = true; // 합성 활성 상태
+        public bool OpenRewardMerge(WeaponRewardCandidate reward) => false; // 합성 시작 결과
+        public void CloseMergePanel(bool merged = false) // 합성 취소
+        { // 메서드 시작
+        } // 메서드 끝
+    } // 클래스 끝
     public sealed class EliteRewardController // 엘리트 보상 상태
     { // 클래스 시작
         public bool YieldPauseToLevelUp() => false; // 정지 인계 부재
@@ -178,6 +194,9 @@ namespace ProjectEpsilon.UI // 화면 대체 형식
             CandidateSelected?.Invoke(index); // 선택 이벤트 전달
         } // 메서드 끝
         public void Show(int level, bool grew, int current, int maximum, bool restored, IReadOnlyList<ProjectEpsilon.Progression.WeaponRewardCandidate> candidates) // 후보 표시
+        { // 메서드 시작
+        } // 메서드 끝
+        public void ShowRewardAction(ProjectEpsilon.Progression.WeaponRewardCandidate candidate, bool canMerge) // 보상 방식 표시
         { // 메서드 시작
         } // 메서드 끝
         public void ShowReplacementSelection(IReadOnlyList<ProjectEpsilon.Combat.SnakeWeaponSlot> slots, ProjectEpsilon.Progression.WeaponRewardCandidate candidate, int index) // 교체 화면 표시

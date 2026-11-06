@@ -164,6 +164,39 @@ namespace ProjectEpsilon.UI
             return $"BODY {slotIndex + 1}: {slot.Weapon.DisplayName} ★{slot.Grade}\nDMG +{slot.DamageUpgrades * 5}%  SPD +{slot.SpeedUpgrades * 5}%  RNG +{slot.RangeUpgrades * 5}%"; // 슬롯 및 강화 요약
         } // 메서드 끝
 
+        public void ShowRewardInheritanceSelection(WeaponData reward, int grade, SnakeWeaponSlot equipped, int equippedIndex) // 보상 및 장착 강화 선택
+        { // 메서드 시작
+            if (titleText != null) // 제목 연결 확인
+            { // 조건 시작
+                titleText.text = "CHOOSE ENHANCEMENTS"; // 계승 단계 안내
+            } // 조건 끝
+            if (stateText != null) // 상태 문구 연결 확인
+            { // 조건 시작
+                stateText.text = "CHOOSE MATERIAL | ESC: CANCEL"; // 계승 및 취소 안내
+            } // 조건 끝
+            ConfigureUpgradeButton(candidateButton01, candidateLabel01, $"REWARD: {reward.DisplayName} ★{grade}\nDMG +0%  SPD +0%  RNG +0%"); // 미장착 보상 강화 표시
+            ConfigureUpgradeButton(candidateButton02, candidateLabel02, FormatSlot(equipped, equippedIndex)); // 장착 무기 강화 표시
+            if (candidateButton03 != null) // 남는 버튼 확인
+            { // 조건 시작
+                candidateButton03.gameObject.SetActive(false); // 남는 버튼 숨김
+            } // 조건 끝
+        } // 메서드 끝
+
+        public void ShowRewardUpgradeSelection(WeaponData weapon) // 보상 합성 강화 화면
+        { // 메서드 시작
+            if (titleText != null) // 제목 연결 확인
+            { // 조건 시작
+                titleText.text = "SELECT MERGE UPGRADE"; // 강화 선택 제목
+            } // 조건 끝
+            if (stateText != null) // 상태 문구 연결 확인
+            { // 조건 시작
+                stateText.text = "ESC: CANCEL"; // 취소 안내
+            } // 조건 끝
+            ConfigureUpgradeButton(candidateButton01, candidateLabel01, "DAMAGE +5%"); // 공격력 선택 표시
+            ConfigureUpgradeButton(candidateButton02, candidateLabel02, "ATTACK SPEED +5%"); // 공격 속도 선택 표시
+            ConfigureUpgradeButton(candidateButton03, candidateLabel03, "RANGE / AREA +5%"); // 사거리 선택 표시
+        } // 메서드 끝
+
         public void ShowSynergyPreview(WeaponAttribute attribute, int count, int resultCount, int stage, int resultStage) // 시너지 변화 표시
         { // 메서드 시작
             if (stateText == null) // 상태 문구 연결 확인

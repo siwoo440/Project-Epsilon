@@ -6,6 +6,7 @@ namespace UnityEngine // 유니티 대체 형식
 { // 영역 시작
     public class MonoBehaviour // 컴포넌트 대체
     { // 클래스 시작
+        public bool isActiveAndEnabled = true; // 활성 상태
         public static T FindFirstObjectByType<T>() where T : class => SettingsMenuController.Active as T; // 설정 화면 검색
     } // 클래스 끝
     public sealed class SerializeField : Attribute // 직렬화 표시
@@ -28,6 +29,10 @@ namespace UnityEngine // 유니티 대체 형식
         public RangeAttribute(float min, float max) // 범위 지정
         { // 생성자 시작
         } // 생성자 끝
+    } // 클래스 끝
+    public static class Time // 프레임 상태
+    { // 클래스 시작
+        public static int frameCount; // 현재 프레임
     } // 클래스 끝
     public static class Application // 실행 환경
     { // 클래스 시작
@@ -125,6 +130,19 @@ namespace ProjectEpsilon.Combat // 무기 대체 형식
         public int FirstIndex = -1; // 계승 재료 위치
         public int SecondIndex = -1; // 소모 재료 위치
         public WeaponMergeUpgrade ChosenUpgrade; // 선택 강화
+        public int RewardMergeCount; // 보상 합성 횟수
+        public int RewardSlot; // 보상 합성 슬롯
+        public bool InheritEquipped; // 장착 강화 계승 여부
+        public WeaponMergeUpgrade RewardUpgrade; // 보상 합성 강화
+        public bool TryMergeReward(int slot, ProjectEpsilon.Data.WeaponData reward, int grade, bool inherit, WeaponMergeUpgrade upgrade) // 보상 합성 기록
+        { // 메서드 시작
+            RewardMergeCount++; // 합성 횟수 증가
+            RewardSlot = slot; // 장착 재료 위치 기록
+            InheritEquipped = inherit; // 강화 계승 기록
+            RewardUpgrade = upgrade; // 공통 강화 기록
+            SlotsChanged?.Invoke(); // 합성 변경 알림
+            return true; // 합성 성공
+        } // 메서드 끝
         public bool TryMergeSlots(int first, int second, WeaponMergeUpgrade upgrade) // 합성 기록
         { // 메서드 시작
             MergeCount++; // 합성 횟수 증가
@@ -163,8 +181,20 @@ namespace ProjectEpsilon.Progression // 진행 대체 형식
     public sealed class SnakeLevelUpController // 레벨업 제어기
     { // 클래스 시작
         public bool IsPresentingLevelUp; // 레벨업 화면 상태
+        public bool IsAwaitingRewardMerge; // 보상 합성 대기
         public bool ConsumedEscapeThisFrame; // 취소 입력 소비 상태
     } // 클래스 끝
+    public readonly struct WeaponRewardCandidate // 미장착 보상
+    { // 구조체 시작
+        public readonly ProjectEpsilon.Data.WeaponData Weapon; // 보상 무기
+        public readonly int Grade; // 보상 등급
+        public bool IsValid => Weapon != null; // 보상 유효성
+        public WeaponRewardCandidate(ProjectEpsilon.Data.WeaponData weapon, int grade) // 보상 구성
+        { // 생성자 시작
+            Weapon = weapon; // 무기 저장
+            Grade = grade; // 등급 저장
+        } // 생성자 끝
+    } // 구조체 끝
     public readonly struct WeaponMergeCandidate // 합성 후보
     { // 구조체 시작
         public readonly ProjectEpsilon.Data.WeaponData Weapon; // 무기 정보
@@ -193,6 +223,7 @@ namespace ProjectEpsilon.UI // 화면 대체 형식
     { // 클래스 시작
         public event Action<int> CandidateSelected; // 후보 선택 이벤트
         public event Action CloseRequested; // 닫기 이벤트
+        public bool Visible; // 화면 표시 여부
         public static int PreviewCount = -1; // 현재 속성 수
         public static int PreviewResultCount = -1; // 합성 후 속성 수
         public static int PreviewStage = -1; // 현재 시너지 단계
@@ -209,8 +240,15 @@ namespace ProjectEpsilon.UI // 화면 대체 형식
         } // 메서드 끝
         public void ShowSlotSelection(ProjectEpsilon.Combat.SnakeWeaponSlot slot, int index, int cursor, int count, bool first) // 재료 화면
         { // 메서드 시작
+            Visible = true; // 화면 표시
         } // 메서드 끝
         public void ShowInheritanceSelection(ProjectEpsilon.Combat.SnakeWeaponSlot first, int firstIndex, ProjectEpsilon.Combat.SnakeWeaponSlot second, int secondIndex) // 계승 화면
+        { // 메서드 시작
+        } // 메서드 끝
+        public void ShowRewardInheritanceSelection(ProjectEpsilon.Data.WeaponData reward, int grade, ProjectEpsilon.Combat.SnakeWeaponSlot equipped, int index) // 보상 계승 화면
+        { // 메서드 시작
+        } // 메서드 끝
+        public void ShowRewardUpgradeSelection(ProjectEpsilon.Data.WeaponData weapon) // 보상 강화 화면
         { // 메서드 시작
         } // 메서드 끝
         public void ShowUpgradeSelection(ProjectEpsilon.Progression.WeaponMergeCandidate candidate) // 강화 표시
@@ -218,6 +256,7 @@ namespace ProjectEpsilon.UI // 화면 대체 형식
         } // 메서드 끝
         public void Hide() // 화면 숨김
         { // 메서드 시작
+            Visible = false; // 화면 숨김
         } // 메서드 끝
     } // 클래스 끝
 } // 영역 끝

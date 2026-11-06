@@ -43,6 +43,9 @@ namespace ProjectEpsilon.Progression
         private int secondMaterialIndex; // 둘째 재료 위치
         private bool inheritSecond; // 둘째 강화 계승 여부
         private bool mergeCommitting; // 합성 확정 진행 여부
+        private bool rewardMergeOpen; // 미장착 보상 합성 여부
+        private int openedFrame = -1; // 합성 화면 진입 프레임
+        private WeaponRewardCandidate pendingReward; // 합성할 미장착 보상
 
         public bool IsMergeOpen => mergeOpen;
         public event Action<bool> MergeClosed; // 합성 완료 또는 취소 알림
@@ -99,7 +102,12 @@ namespace ProjectEpsilon.Progression
 
             bool wasOpen = mergeOpen; // 열려 있던 합성 상태
             mergeOpen = false;
+            rewardMergeOpen = false; // 보상 합성 상태 해제
             currentCandidates.Clear();
+            if (mergePanel != null) // 합성 화면 객체 확인
+            { // 조건 시작
+                mergePanel.Hide(); // 합성 화면 숨김
+            } // 조건 끝
 
             ApplyMergeMovementState(
                 false
@@ -141,6 +149,10 @@ namespace ProjectEpsilon.Progression
             if (settingsMenu != null && settingsMenu.IsOpen) // 설정 화면 표시 확인
             { // 조건 시작
                 return; // 설정 중 게임 입력 차단
+            } // 조건 끝
+            if (mergeOpen && Time.frameCount == openedFrame) // 화면 진입 프레임 확인
+            { // 조건 시작
+                return; // 진입 키 중복 선택 방지
             } // 조건 끝
             if (keyboard.escapeKey.wasPressedThisFrame) // ESC 입력 확인
             { // 조건 시작
@@ -247,6 +259,8 @@ namespace ProjectEpsilon.Progression
             }
 
             mergeOpen = true;
+            openedFrame = Time.frameCount; // 합성 화면 진입 기록
+            rewardMergeOpen = false; // 일반 장착 무기 합성
             selectionStage = 0; // 첫 재료 단계
             selectionCursor = 0; // 첫 슬롯 선택
             RebuildSelectableSlots(); // 첫 재료 목록 구성
@@ -260,10 +274,35 @@ namespace ProjectEpsilon.Progression
             return true;
         }
 
+        public bool OpenRewardMerge(WeaponRewardCandidate reward) // 미장착 보상 합성 열기
+        { // 메서드 시작
+            GameManager manager = GameManager.Instance; // 현재 게임 상태
+            if (!isActiveAndEnabled || mergeOpen || weaponManager == null || mergePanel == null || levelUpController == null || !levelUpController.IsAwaitingRewardMerge || manager == null || !manager.IsPlaying || !reward.IsValid) // 보상 합성 진입 조건
+            { // 조건 시작
+                return false; // 진입 거절
+            } // 조건 끝
+            pendingReward = reward; // 미장착 보상 저장
+            rewardMergeOpen = true; // 보상 합성 모드
+            selectionStage = 1; // 장착 재료 선택 단계
+            selectionCursor = 0; // 첫 후보 선택
+            RebuildSelectableSlots(); // 호환 장착 무기 검색
+            if (selectableSlots.Count == 0) // 호환 재료 부재 확인
+            { // 조건 시작
+                rewardMergeOpen = false; // 보상 합성 취소
+                return false; // 진입 실패
+            } // 조건 끝
+            mergeOpen = true; // 합성 화면 열기
+            openedFrame = Time.frameCount; // 합성 화면 진입 기록
+            ApplyMergeMovementState(true); // 직진 및 감속 적용
+            ShowSelectedSlot(); // 장착 재료 표시
+            return true; // 진입 성공
+        } // 메서드 끝
+
         public void CloseMergePanel(bool merged = false) // 합성 화면 종료
         {
             bool wasOpen = mergeOpen; // 종료 전 화면 상태
             mergeOpen = false;
+            rewardMergeOpen = false; // 보상 합성 상태 해제
             currentCandidates.Clear();
 
             if (mergePanel != null)
@@ -329,11 +368,18 @@ namespace ProjectEpsilon.Progression
                     return; // 잘못된 선택 무시
                 } // 조건 끝
                 inheritSecond = candidateIndex == 1; // 선택 강화 기록
-                SnakeWeaponSlot first = weaponManager.Slots[firstMaterialIndex]; // 첫 재료 확인
-                selectedMerge = new WeaponMergeCandidate(first.Weapon, first.Grade, firstMaterialIndex, secondMaterialIndex); // 선택 재료 보관
+                SnakeWeaponSlot equipped = weaponManager.Slots[rewardMergeOpen ? secondMaterialIndex : firstMaterialIndex]; // 기준 장착 무기 확인
                 selectionStage = 3; // 공통 강화 단계
-                mergePanel.ShowUpgradeSelection(selectedMerge); // 공통 강화 화면
-                ShowSynergyPreview(first); // 속성 변화 미리보기
+                if (rewardMergeOpen) // 미장착 보상 합성 확인
+                { // 조건 시작
+                    mergePanel.ShowRewardUpgradeSelection(pendingReward.Weapon); // 보상 무기 강화 화면
+                } // 조건 끝
+                else // 일반 무기 합성 확인
+                { // 대안 시작
+                    selectedMerge = new WeaponMergeCandidate(equipped.Weapon, equipped.Grade, firstMaterialIndex, secondMaterialIndex); // 선택 재료 보관
+                    mergePanel.ShowUpgradeSelection(selectedMerge); // 공통 강화 화면
+                } // 대안 끝
+                ShowSynergyPreview(equipped); // 속성 변화 미리보기
                 return; // 강화 확정 대기
             } // 조건 끝
             if (candidateIndex < 0 || candidateIndex > 2) // 강화 후보 범위 확인
@@ -347,7 +393,9 @@ namespace ProjectEpsilon.Progression
             mergeCommitting = true; // 확정 중 슬롯 변경 허용
             try // 합성 시도
             { // 시도 시작
-                merged = weaponManager.TryMergeSlots(kept, consumed, upgrade); // 합성 및 강화 확정
+                merged = rewardMergeOpen // 합성 방식 확인
+                    ? weaponManager.TryMergeReward(secondMaterialIndex, pendingReward.Weapon, pendingReward.Grade, inheritSecond, upgrade) // 미장착 보상 합성
+                    : weaponManager.TryMergeSlots(kept, consumed, upgrade); // 기존 장착 무기 합성
             } // 시도 끝
             finally // 확정 상태 정리
             { // 정리 시작
@@ -362,6 +410,15 @@ namespace ProjectEpsilon.Progression
             IReadOnlyList<SnakeWeaponSlot> slots = weaponManager.Slots; // 전체 슬롯 조회
             for (int index = 0; index < slots.Count; index++) // 재료 슬롯 순회
             { // 반복 시작
+                if (rewardMergeOpen) // 미장착 보상 합성 확인
+                { // 조건 시작
+                    SnakeWeaponSlot candidate = slots[index]; // 장착 재료 조회
+                    if (CanMergeSlot(candidate) && candidate.Weapon == pendingReward.Weapon && candidate.Grade == pendingReward.Grade) // 같은 보상 무기 및 등급 확인
+                    { // 조건 시작
+                        selectableSlots.Add(index); // 장착 재료 후보 추가
+                    } // 조건 끝
+                    continue; // 다음 슬롯 확인
+                } // 조건 끝
                 if (selectionStage == 1) // 둘째 재료 단계 확인
                 { // 조건 시작
                     if (index != firstMaterialIndex && firstMaterialIndex < slots.Count && CanMergePair(slots[firstMaterialIndex], slots[index])) // 호환 재료 확인
@@ -396,6 +453,10 @@ namespace ProjectEpsilon.Progression
         private bool MaterialsStillValid() // 선택된 재료 검사
         { // 메서드 시작
             IReadOnlyList<SnakeWeaponSlot> slots = weaponManager.Slots; // 전체 슬롯 조회
+            if (rewardMergeOpen) // 미장착 보상 합성 확인
+            { // 조건 시작
+                return secondMaterialIndex >= 0 && secondMaterialIndex < slots.Count && CanMergeSlot(slots[secondMaterialIndex]) && slots[secondMaterialIndex].Weapon == pendingReward.Weapon && slots[secondMaterialIndex].Grade == pendingReward.Grade; // 장착 재료 유효성
+            } // 조건 끝
             return firstMaterialIndex >= 0 && secondMaterialIndex >= 0 && firstMaterialIndex < slots.Count && secondMaterialIndex < slots.Count && firstMaterialIndex != secondMaterialIndex && CanMergePair(slots[firstMaterialIndex], slots[secondMaterialIndex]); // 재료 호환 확인
         } // 메서드 끝
 
@@ -411,6 +472,12 @@ namespace ProjectEpsilon.Progression
 
         private void ShowInheritanceSelection() // 강화 계승 화면 표시
         { // 메서드 시작
+            if (rewardMergeOpen) // 미장착 보상 합성 확인
+            { // 조건 시작
+                mergePanel.ShowRewardInheritanceSelection(pendingReward.Weapon, pendingReward.Grade, weaponManager.Slots[secondMaterialIndex], secondMaterialIndex); // 보상 및 장착 강화 표시
+                ShowSynergyPreview(weaponManager.Slots[secondMaterialIndex]); // 보상 합성 시너지 표시
+                return; // 일반 합성 표시 방지
+            } // 조건 끝
             mergePanel.ShowInheritanceSelection(weaponManager.Slots[firstMaterialIndex], firstMaterialIndex, weaponManager.Slots[secondMaterialIndex], secondMaterialIndex); // 양쪽 강화 표시
             ShowSynergyPreview(weaponManager.Slots[firstMaterialIndex]); // 속성 변화 미리보기
         } // 메서드 끝
@@ -428,7 +495,7 @@ namespace ProjectEpsilon.Progression
                     count++; // 속성 무기 집계
                 } // 조건 끝
             } // 반복 끝
-            int resultCount = Mathf.Max(0, count - 1); // 합성 후 무기 수
+            int resultCount = rewardMergeOpen ? count : Mathf.Max(0, count - 1); // 합성 후 무기 수
             int stage = WeaponAttributeSynergyRules.ResolveStage(count); // 현재 시너지 단계
             int resultStage = WeaponAttributeSynergyRules.ResolveStage(resultCount); // 합성 후 시너지 단계
             mergePanel.ShowSynergyPreview(attribute, count, resultCount, stage, resultStage); // 단계 변화 표시
@@ -459,6 +526,10 @@ namespace ProjectEpsilon.Progression
 
         private bool IsLevelUpBlocking()
         {
+            if (rewardMergeOpen && levelUpController != null && levelUpController.IsAwaitingRewardMerge) // 레벨업 보상 합성 허용
+            { // 조건 시작
+                return false; // 보상 합성 진행
+            } // 조건 끝
             return
                 (experience != null &&
                 experience.IsLevelUpPending) ||

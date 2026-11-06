@@ -1,9 +1,12 @@
 using System; // 기본 형식
 using System.Reflection; // 비공개 선택 호출
 using ProjectEpsilon.Combat; // 무기 슬롯
+using ProjectEpsilon.Core; // 게임 상태
 using ProjectEpsilon.Data; // 무기 데이터
 using ProjectEpsilon.Progression; // 합성 제어기
 using ProjectEpsilon.UI; // 합성 화면
+using UnityEngine; // 프레임 상태
+using UnityEngine.InputSystem; // 키 입력
 
 internal static class Program // 재료 선택 시험
 { // 클래스 시작
@@ -18,6 +21,9 @@ internal static class Program // 재료 선택 시험
         Check("외부 슬롯 변경 시 취소", VerifyExternalSlotChange); // 외부 변경 검증
         Check("재료 선택 중 취소", VerifyCancellation); // 취소 보존 검증
         Check("시너지 미리보기 경계", VerifySynergyPreview); // 시너지 단계 검증
+        Check("미장착 보상 합성", VerifyRewardMerge); // 보상 재료 검사
+        Check("합성 제어기 비활성 화면 정리", VerifyMergeDisable); // 비활성 화면 검사
+        Check("합성 진입 프레임 입력 소비", VerifyOpeningFrameInput); // 같은 프레임 입력 검사
         Console.WriteLine(failures == 0 ? "PASS" : $"FAIL: {failures}"); // 최종 결과
         return failures == 0 ? 0 : 1; // 종료 코드
     } // 메서드 끝
@@ -127,6 +133,74 @@ internal static class Program // 재료 선택 시험
         Require(fixture.weapons.MergeCount == 0 && fixture.weapons.Slots.Count == 4, "미리보기 취소로 무기 변경"); // 취소 보존 확인
         fixture = Create(2); // 두 속성 무기 준비
         Require(WeaponMergePanelController.PreviewStage == 2 && WeaponMergePanelController.PreviewResultStage == 0, "시너지 비활성 경계 오류"); // 비활성 경계 확인
+    } // 메서드 끝
+
+    private static void VerifyRewardMerge() // 미장착 보상과 장착 무기 합성
+    { // 메서드 시작
+        GameManager.Instance = new GameManager(); // 진행 중 게임 생성
+        WeaponData weapon = new WeaponData(); // 공통 무기 생성
+        SnakeWeaponManager weapons = new SnakeWeaponManager(); // 무기 관리자 생성
+        for (int index = 0; index < 3; index++) // 장착 슬롯 생성
+        { // 반복 시작
+            weapons.Slots.Add(new SnakeWeaponSlot { Weapon = weapon, Grade = 1 }); // 같은 무기 장착
+        } // 반복 끝
+        SnakeExperience experience = new SnakeExperience { IsLevelUpPending = true }; // 레벨업 보상 대기
+        SnakeLevelUpController level = new SnakeLevelUpController { IsPresentingLevelUp = true, IsAwaitingRewardMerge = true }; // 보상 합성 대기
+        SnakeWeaponMergeController merge = new SnakeWeaponMergeController(); // 실제 합성 제어기
+        merge.Configure(weapons, null, null, new WeaponMergePanelController(), experience, level, 0.7f); // 구성 연결
+        bool? closed = null; // 합성 결과 기록
+        merge.MergeClosed += merged => closed = merged; // 결과 이벤트 구독
+        Require(merge.OpenRewardMerge(new WeaponRewardCandidate(weapon, 1)), "보상 합성 열기 실패"); // 합성 화면 확인
+        Require(WeaponMergePanelController.PreviewCount == 3 && WeaponMergePanelController.PreviewResultCount == 3, "보상 합성 시너지 예측 오류"); // 장착 수 유지 예측
+        Select(merge, 2); // 두 번째 장착 재료
+        Select(merge, 2); // 세 번째 장착 재료
+        Select(merge, 1); // 세 번째 재료 확정
+        Select(merge, 1); // 장착 무기 강화 계승
+        Select(merge, 0); // 공격력 공통 강화
+        Require(weapons.RewardMergeCount == 1 && weapons.RewardSlot == 2 && weapons.InheritEquipped, "보상 재료 또는 강화 계승 오류"); // 장착 재료 확인
+        Require(weapons.RewardUpgrade == WeaponMergeUpgrade.Damage && closed == true, "보상 강화 또는 성공 알림 오류"); // 결과 확인
+        GameManager.Instance = null; // 현재 게임 해제
+    } // 메서드 끝
+
+    private static void VerifyOpeningFrameInput() // 보상 합성 개시 프레임 입력
+    { // 메서드 시작
+        GameManager.Instance = new GameManager(); // 진행 중 게임 생성
+        WeaponData weapon = new WeaponData(); // 공통 무기 생성
+        SnakeWeaponManager weapons = new SnakeWeaponManager(); // 무기 관리자 생성
+        weapons.Slots.Add(new SnakeWeaponSlot { Weapon = weapon, Grade = 1 }); // 첫 장착 재료
+        weapons.Slots.Add(new SnakeWeaponSlot { Weapon = weapon, Grade = 1 }); // 둘째 장착 재료
+        SnakeLevelUpController level = new SnakeLevelUpController { IsAwaitingRewardMerge = true }; // 보상 합성 대기
+        SnakeWeaponMergeController merge = new SnakeWeaponMergeController(); // 실제 합성 제어기
+        merge.Configure(weapons, null, null, new WeaponMergePanelController(), new SnakeExperience { IsLevelUpPending = true }, level, 0.7f); // 합성 구성 연결
+        Time.frameCount = 50; // 합성 진입 프레임
+        Keyboard.current = new Keyboard(); // 가상 키보드 생성
+        Keyboard.current.digit2Key.wasPressedThisFrame = true; // 보상 합성 선택 키
+        Require(merge.OpenRewardMerge(new WeaponRewardCandidate(weapon, 1)), "보상 합성 열기 실패"); // 합성 진입 확인
+        typeof(SnakeWeaponMergeController).GetMethod("Update", BindingFlags.Instance | BindingFlags.NonPublic).Invoke(merge, null); // 같은 프레임 입력 처리
+        int stage = (int)typeof(SnakeWeaponMergeController).GetField("selectionStage", BindingFlags.Instance | BindingFlags.NonPublic).GetValue(merge); // 선택 단계 조회
+        Require(stage == 1, "보상 합성 선택 키가 재료까지 자동 확정"); // 같은 프레임 입력 차단
+        Time.frameCount++; // 다음 프레임 진행
+        typeof(SnakeWeaponMergeController).GetMethod("Update", BindingFlags.Instance | BindingFlags.NonPublic).Invoke(merge, null); // 다음 프레임 입력 처리
+        stage = (int)typeof(SnakeWeaponMergeController).GetField("selectionStage", BindingFlags.Instance | BindingFlags.NonPublic).GetValue(merge); // 선택 단계 재조회
+        Require(stage == 2, "다음 프레임 재료 선택 차단"); // 정상 입력 복구
+        Keyboard.current = null; // 가상 키보드 해제
+        GameManager.Instance = null; // 게임 관리자 해제
+    } // 메서드 끝
+
+    private static void VerifyMergeDisable() // 합성 제어기 비활성 처리
+    { // 메서드 시작
+        WeaponData weapon = new WeaponData(); // 합성 무기 생성
+        SnakeWeaponManager weapons = new SnakeWeaponManager(); // 무기 관리자 생성
+        weapons.Slots.Add(new SnakeWeaponSlot { Weapon = weapon, Grade = 1 }); // 첫 재료
+        weapons.Slots.Add(new SnakeWeaponSlot { Weapon = weapon, Grade = 1 }); // 둘째 재료
+        WeaponMergePanelController panel = new WeaponMergePanelController(); // 합성 화면
+        SnakeWeaponMergeController merge = new SnakeWeaponMergeController(); // 실제 합성 제어기
+        merge.Configure(weapons, null, null, panel, null, null, 0.7f); // 구성 연결
+        bool? result = null; // 종료 결과 기록
+        merge.MergeClosed += merged => result = merged; // 종료 알림 연결
+        Require(merge.OpenMergePanel() && panel.Visible, "합성 화면 열기 실패"); // 최초 화면 확인
+        typeof(SnakeWeaponMergeController).GetMethod("OnDisable", BindingFlags.Instance | BindingFlags.NonPublic).Invoke(merge, null); // 합성 제어기 비활성
+        Require(!merge.IsMergeOpen && !panel.Visible && result == false, "비활성 시 합성 화면 또는 취소 알림 오류"); // 화면 종료 및 알림 확인
     } // 메서드 끝
 
     private static void VerifyCancellation() // 단계별 취소 보존

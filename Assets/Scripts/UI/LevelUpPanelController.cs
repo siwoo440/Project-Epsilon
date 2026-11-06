@@ -171,8 +171,34 @@ namespace ProjectEpsilon.UI
             } // 조건 끝
         } // 메서드 끝
 
+        public void ShowRewardAction(WeaponRewardCandidate candidate, bool canMerge) // 보상 처리 방식 선택
+        { // 메서드 시작
+            gameObject.SetActive(true); // 레벨업 화면 표시
+            if (titleText != null) // 제목 연결 확인
+            { // 조건 시작
+                titleText.text = "CHOOSE WEAPON ACTION"; // 처리 방식 제목
+            } // 조건 끝
+            if (levelText != null) // 무기 문구 연결 확인
+            { // 조건 시작
+                levelText.text = $"{candidate.Weapon.DisplayName} ★{candidate.Grade}"; // 선택한 보상 무기
+            } // 조건 끝
+            if (growthText != null) // 안내 문구 연결 확인
+            { // 조건 시작
+                growthText.text = "1 / 2 / 3: SELECT"; // 선택 키 안내
+            } // 조건 끝
+            SetReplacementButton(candidateButton01, candidateLabel01, "EQUIP / REPLACE"); // 장착 및 교체 선택
+            SetReplacementButton(candidateButton02, candidateLabel02, canMerge ? "MERGE REWARD" : "MERGE (NO MATERIAL)"); // 합성 가능 상태 안내
+            if (candidateButton02 != null) // 합성 버튼 연결 확인
+            { // 조건 시작
+                candidateButton02.interactable = canMerge; // 재료가 있을 때만 합성 허용
+            } // 조건 끝
+            SetReplacementButton(candidateButton03, candidateLabel03, "BACK"); // 기존 후보 재선택
+            BindButtons(); // 버튼 이벤트 연결
+        } // 메서드 끝
+
         public void ShowReplacementSelection(IReadOnlyList<SnakeWeaponSlot> slots, WeaponRewardCandidate candidate, int index) // 교체 슬롯 화면 표시
         { // 메서드 시작
+            gameObject.SetActive(true); // 교체 화면 표시
             if (titleText != null) // 제목 연결 확인
             { // 조건 시작
                 titleText.text = "CHOOSE SLOT TO REPLACE"; // 교체 선택 제목
@@ -189,6 +215,7 @@ namespace ProjectEpsilon.UI
             SetReplacementButton(candidateButton01, candidateLabel01, "< PREV"); // 이전 항목 버튼
             SetReplacementButton(candidateButton02, candidateLabel02, selected); // 선택 항목 버튼
             SetReplacementButton(candidateButton03, candidateLabel03, "NEXT >"); // 다음 항목 버튼
+            BindButtons(); // 버튼 입력 연결
         } // 메서드 끝
 
         private static void SetReplacementButton(Button button, Text label, string caption) // 슬롯 선택 버튼 설정
