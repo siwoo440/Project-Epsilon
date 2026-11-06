@@ -1,5 +1,6 @@
 using System.Collections.Generic; // 명중 대상 목록
 using ProjectEpsilon.Core;
+using ProjectEpsilon.Data; // 무기 전달 설정
 using UnityEngine;
 
 namespace ProjectEpsilon.Combat
@@ -16,6 +17,10 @@ namespace ProjectEpsilon.Combat
         private float remainingLifetime = 3f;
         private readonly HashSet<WeaponTarget> hitTargets = new HashSet<WeaponTarget>(); // 중복 명중 방지 목록
         private int remainingHits = 1; // 남은 명중 횟수
+        private bool transferAttempted; // 추가 전달 처리 여부
+        private float transferRange; // 발사 시점 전달 반경
+        private float transferDamageMultiplier; // 발사 시점 전달 피해 배율
+        private int configurationVersion; // 발사 구성 세대
 
         private void Awake()
         {
@@ -42,8 +47,12 @@ namespace ProjectEpsilon.Combat
                 ? Vector2.up
                 : moveDirection.normalized;
 
+            configurationVersion++; // 새로운 발사 세대 기록
             attackSnapshot = snapshot; // 공격 정보 저장
+            transferRange = snapshot.Weapon == null ? 0f : snapshot.Weapon.GradeThreeTransferRange; // 발사 시점 전달 반경 저장
+            transferDamageMultiplier = snapshot.Weapon == null ? 0f : snapshot.Weapon.GradeThreeTransferDamageMultiplier; // 발사 시점 전달 배율 저장
             hitTargets.Clear(); // 이전 명중 기록 초기화
+            transferAttempted = false; // 이전 전달 상태 초기화
             remainingHits = snapshot.Weapon == null ? 1 : snapshot.Weapon.ProjectileHitLimit; // 무기별 명중 수 적용
             attributeEffects = effects; // 효과 관리자 저장
             speed = Mathf.Max(0.01f, projectileSpeed);
@@ -80,29 +89,50 @@ namespace ProjectEpsilon.Combat
             }
         }
 
-        private void OnTriggerEnter2D(Collider2D other)
-        {
-            WeaponTarget target = other.GetComponent<WeaponTarget>();
+        private void OnTriggerEnter2D(Collider2D other) // 투사체 명중 처리
+        { // 메서드 시작
+            WeaponTarget target = other.GetComponent<WeaponTarget>(); // 최초 명중 대상
+            if (!isActiveAndEnabled || remainingHits <= 0 || target == null || !target.isActiveAndEnabled || !target.IsAlive || !hitTargets.Add(target)) // 활성 상태와 명중 한도 확인
+            { // 조건 시작
+                return; // 잘못된 명중 무시
+            } // 조건 끝
+            int hitVersion = configurationVersion; // 현재 발사 세대 보관
+            remainingHits--; // 동기 재진입 전 명중 횟수 확정
+            WeaponTarget transfer = null; // 추가 전달 대상 초기화
+            WeaponData weapon = attackSnapshot.Weapon; // 발사한 무기 데이터
+            if (!transferAttempted && attackSnapshot.Grade >= 3 && weapon != null && transferRange > 0f) // 삼 등급 추가 전달 확인
+            { // 조건 시작
+                transferAttempted = true; // 투사체당 한 번 전달 시도
+                transfer = WeaponTarget.FindClosest(target.transform.position, transferRange, target); // 최초 적 주변의 다른 최근접 적
+            } // 조건 끝
+            ApplyProjectileHit(attackSnapshot, target, transform.position); // 최초 대상 속성 명중
+            if (!isActiveAndEnabled || configurationVersion != hitVersion) // 비활성 또는 재설정 확인
+            { // 조건 시작
+                return; // 이전 발사의 후속 처리 차단
+            } // 조건 끝
+            if (transfer != null && transfer.isActiveAndEnabled && transfer.IsAlive && hitTargets.Add(transfer)) // 유효한 미명중 전달 대상 확인
+            { // 조건 시작
+                WeaponAttributeAttackSnapshot additional = new WeaponAttributeAttackSnapshot(attackSnapshot.Weapon, attackSnapshot.Attribute, attackSnapshot.AttributeCount, attackSnapshot.SynergyStage, attackSnapshot.Grade, attackSnapshot.Origin, attackSnapshot.DirectDamage * transferDamageMultiplier); // 발사 정보와 전달 피해 배율
+                ApplyProjectileHit(additional, transfer, transfer.transform.position); // 추가 대상 속성 명중
+                if (!isActiveAndEnabled || configurationVersion != hitVersion) // 추가 명중 중 수명 변경 확인
+                { // 조건 시작
+                    return; // 이전 발사의 파괴 차단
+                } // 조건 끝
+            } // 조건 끝
+            if (remainingHits <= 0) // 관통 횟수 소진 확인
+            { // 조건 시작
+                Destroy(gameObject); // 투사체 제거
+            } // 조건 끝
+        } // 메서드 끝
 
-            if (remainingHits <= 0 || target == null || !target.IsAlive || !hitTargets.Add(target)) // 명중 한도와 중복 대상 확인
-            {
-                return;
-            }
-
+        private void ApplyProjectileHit(WeaponAttributeAttackSnapshot attack, WeaponTarget target, Vector3 position) // 투사체 속성 명중 적용
+        { // 메서드 시작
             if (attributeEffects != null) // 속성 효과 연결 확인
             { // 조건 시작
-                attributeEffects.ApplyHit(attackSnapshot, target, transform.position); // 통합 명중 적용
+                attributeEffects.ApplyHit(attack, target, position); // 기존 통합 명중 적용
+                return; // 기본 피해 중복 방지
             } // 조건 끝
-            else // 효과 관리자 없음
-            { // 대안 시작
-                target.TakeDamage(attackSnapshot.DirectDamage); // 직접 피해 대체 적용
-            } // 대안 끝
-
-            remainingHits--; // 남은 명중 횟수 감소
-            if (remainingHits <= 0) // 관통 횟수 소진 확인
-            { // 소멸 조건 시작
-                Destroy(gameObject); // 투사체 제거
-            } // 소멸 조건 끝
-        }
-    }
-}
+            target.TakeDamage(attack.DirectDamage); // 효과 관리자 없는 기본 피해
+        } // 메서드 끝
+    } // 클래스 끝
+} // 영역 끝

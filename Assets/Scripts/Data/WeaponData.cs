@@ -24,6 +24,8 @@ namespace ProjectEpsilon.Data
         [Min(0.01f)] [SerializeField] private float projectileSpeed = 8f;
         [Min(0.1f)] [SerializeField] private float projectileLifetime = 3f;
         [Min(1)] [SerializeField] private int projectileHitLimit = 1; // 투사체 최대 명중 수
+        [Min(0f)] [SerializeField] private float gradeThreeTransferRange = 0f; // 삼 등급 추가 전달 반경 임시값
+        [Min(0f)] [SerializeField] private float gradeThreeTransferDamageMultiplier = 1f; // 추가 전달 피해 배율 임시값
         [Min(0f)] [SerializeField] private float burnDuration = 3f; // 기본 화상 지속 시간
         [Min(0f)] [SerializeField] private float burnDamagePerSecond = 1f; // 기본 화상 초당 피해
 
@@ -39,6 +41,8 @@ namespace ProjectEpsilon.Data
         public float ProjectileSpeed => projectileSpeed;
         public float ProjectileLifetime => projectileLifetime;
         public int ProjectileHitLimit => Mathf.Max(1, projectileHitLimit); // 안전한 최대 명중 수
+        public float GradeThreeTransferRange => Mathf.Max(0f, gradeThreeTransferRange); // 안전한 추가 전달 반경
+        public float GradeThreeTransferDamageMultiplier => Mathf.Max(0f, gradeThreeTransferDamageMultiplier); // 안전한 추가 전달 피해 배율
         public float BurnDuration => Mathf.Max(0f, burnDuration); // 화상 지속 시간 반환
         public float BurnDamagePerSecond => Mathf.Max(0f, burnDamagePerSecond); // 화상 초당 피해 반환
     }
