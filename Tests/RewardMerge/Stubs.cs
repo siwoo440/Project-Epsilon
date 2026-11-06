@@ -96,6 +96,7 @@ namespace ProjectEpsilon.Data // 무기 정보 대체
         public WeaponAttackType AttackType; // 공격 종류
         public string DisplayName = "Test"; // 이름
         public int MaxGrade = 5; // 최대 등급
+        public int GetMeleeTargetLimit(int grade) => 1; // 시험용 근접 대상 수
         public float BaseDamage = 1f; // 기본 피해
         public float Range = 1f; // 사거리
         public float AttackInterval = 1f; // 공격 주기
@@ -154,7 +155,10 @@ namespace ProjectEpsilon.Combat // 전투 대체
     public sealed class WeaponTarget // 공격 대상
     { // 클래스 시작
         public UnityEngine.Transform transform = new UnityEngine.Transform(); // 대상 위치
+        public bool isActiveAndEnabled = true; // 활성 상태
+        public bool IsAlive = true; // 생존 상태
         public static WeaponTarget FindClosest(UnityEngine.Vector3 origin, float range) => null; // 가까운 대상
+        public static WeaponTarget FindClosest(UnityEngine.Vector3 origin, float range, WeaponTarget excluded) => null; // 제외 대상 탐색
         public static int VisitAllInRange(UnityEngine.Vector3 origin, float range, Action<WeaponTarget> visit) => 0; // 범위 대상 방문
         public void TakeDamage(float value) // 피해 적용
         { // 본문 시작

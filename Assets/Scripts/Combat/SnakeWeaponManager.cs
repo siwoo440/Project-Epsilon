@@ -548,8 +548,17 @@ namespace ProjectEpsilon.Combat
                 return false;
             }
 
-            WeaponAttributeAttackSnapshot attack = CreateAttackSnapshot(slot, origin); // 공격 정보 생성
-            ApplyWeaponHit(attack, target, target.transform.position); // 통합 명중 적용
+            WeaponTarget second = null; // 추가 공격 대상 초기화
+            if (weapon.GetMeleeTargetLimit(slot.Grade) >= 2) // 무기 등급별 두 대상 공격 확인
+            { // 조건 시작
+                second = WeaponTarget.FindClosest(origin, slot.EffectiveRange, target); // 첫 대상을 제외한 최근접 적
+            } // 조건 끝
+            WeaponAttributeAttackSnapshot attack = CreateAttackSnapshot(slot, origin); // 몸통 원점 공격 정보
+            ApplyWeaponHit(attack, target, target.transform.position); // 첫 대상 속성 명중
+            if (second != null && second.isActiveAndEnabled && second.IsAlive) // 첫 명중 후 추가 대상 유효성 확인
+            { // 조건 시작
+                ApplyWeaponHit(attack, second, second.transform.position); // 둘째 대상 속성 명중
+            } // 조건 끝
 
             SpawnAttackPulse(
                 origin,
