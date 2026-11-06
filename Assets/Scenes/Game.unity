@@ -2299,6 +2299,7 @@ GameObject:
   - component: {fileID: 587332130}
   - component: {fileID: 587332131}
   - component: {fileID: 587332132}
+  - component: {fileID: 587332133}
   m_Layer: 0
   m_Name: Player
   m_TagString: Untagged
@@ -2306,6 +2307,22 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
+--- !u!114 &587332133
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 587332110}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8c1faf2ca5884c7593f13cc72c84b245, type: 3}
+  m_Name:
+  m_EditorClassIdentifier: Assembly-CSharp::ProjectEpsilon.Progression.StartingWeaponSelection
+  weaponManager: {fileID: 2088063716}
+  panel: {fileID: 1637736539}
+  options: {fileID: 11400000, guid: f15387971c764c9e8146429508cd4dd0, type: 2}
+  settingsMenu: {fileID: 0}
 --- !u!4 &587332111
 Transform:
   m_ObjectHideFlags: 0

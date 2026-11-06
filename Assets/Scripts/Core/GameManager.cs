@@ -1,5 +1,6 @@
 using UnityEngine;
 using ProjectEpsilon.Player; // 플레이어 체력 참조
+using ProjectEpsilon.Progression; // 시작 무기 선택 참조
 
 namespace ProjectEpsilon.Core
 {
@@ -39,10 +40,14 @@ namespace ProjectEpsilon.Core
                 playerHealth.BodyDepleted += HandleBodyDepleted; // 몸통 소진 연결
             } // 조건 끝
             // 초기 플레이 상태 진입
-            if (currentState == GameState.Starting)
-            {
-                StartGame();
-            }
+            if (currentState == GameState.Starting) // 시작 상태 확인
+            { // 조건 시작
+                StartingWeaponSelection selection = FindFirstObjectByType<StartingWeaponSelection>(FindObjectsInactive.Include); // 비활성 선택기를 포함한 조회
+                if (selection == null) // 선택기 없는 기존 씬 확인
+                { // 조건 시작
+                    StartGame(); // 기존 씬 자동 시작
+                } // 조건 끝
+            } // 조건 끝
         }
 
         private void OnDestroy()
@@ -112,7 +117,7 @@ namespace ProjectEpsilon.Core
         private void ApplyTimeScale()
         {
             // 일시정지 시간 배율 적용
-            Time.timeScale = currentState == GameState.Paused || currentState == GameState.Defeated ? 0f : gameplayTimeScale; // 상태별 시간 배율
+            Time.timeScale = currentState == GameState.Starting || currentState == GameState.Paused || currentState == GameState.Defeated ? 0f : gameplayTimeScale; // 시작 및 정지 상태 시간 배율
         }
     }
 }

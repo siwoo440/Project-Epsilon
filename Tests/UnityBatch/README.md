@@ -4,12 +4,14 @@
 
 이 폴더에는 실제로 실행한 Unity 에디터 배치 검증 스크립트를 보관한다. 제품 씬이나 런타임 스크립트가 아니며, 반드시 **별도 프로젝트 사본**에서 실행한다. 테스트는 끝나면 편집기 프로세스를 종료한다.
 
+27일차 시작 무기 선택을 추가하면서 기존 배치에 공용 선택 헬퍼를 연결했다. 아래 과거 결과는 변경 전 스크립트와 해당 일차 제품의 실행 결과이며, 헬퍼를 연결한 현재 버전의 전체 Unity 회귀는 아직 완료되지 않았다.
+
 ---
 
 ## 준비와 실행
 
 1. `Assets`, `Packages`, `ProjectSettings`를 포함한 Unity 프로젝트 사본을 별도 폴더에 준비한다. 원본 프로젝트나 다른 작업 중인 프로젝트를 사용하지 않는다.
-2. 이 폴더의 검증 스크립트를 사본의 `Assets/Editor`에 복사한다. 원본 프로젝트의 `Assets`에는 복사하지 않는다.
+2. 선택한 검증 스크립트와 `StartingWeaponBatchHelper.cs`를 사본의 `Assets/Editor`에 복사한다. 공용 헬퍼는 실제 시작 무기 첫 후보 버튼을 선택한 뒤 각 검증을 진행한다. 시작 무기 선택 자체를 검사하는 전용 스크립트에는 헬퍼를 적용하지 않는다. 원본 프로젝트의 `Assets`에는 복사하지 않는다.
 3. 프로젝트 버전인 Unity **6000.3.21f1**의 `Unity.exe`를 사용한다. `-batchmode`, `-nographics`, 사본을 가리키는 `-projectPath`, 아래 표의 `-executeMethod`, 별도 `-logFile`을 지정한다. `-quit`은 플레이 모드 진입 전에 종료될 수 있으므로 사용하지 않는다.
 4. 프로세스가 종료된 뒤 로그의 테스트 접두사와 종료 코드를 확인한다. Unity 초기 에셋 가져오기와 컴파일 시간은 플레이 시간과 별개다.
 
@@ -19,6 +21,8 @@
 | `AutomatedEliteRewardVerification.cs` | `ProjectEpsilon.Editor.AutomatedEliteRewardVerification.Run` | 출현기 시간을 240초로 설정하고 엘리트를 강제 처치. XP 보석과 보상 일시정지, 실제 UI 버튼 이벤트, 장착·재개 확인 |
 | `AutomatedBodyHudVerification.cs` | `ProjectEpsilon.Editor.AutomatedBodyHudVerification.Run` | 초기 물리 단계 뒤 게임을 일시정지하고 성장·손실·복구 API를 직접 호출. 세 수치, 이벤트, HUD 텍스트와 너비 확인 |
 | `AutomatedCombatProgressionVerification.cs` | `ProjectEpsilon.Editor.AutomatedCombatProgressionVerification.Run` | 플레이어 이동과 자연 스폰을 끄고 충돌체 없는 정지 표적을 배치. 실제 몸통 무기 공격, 보석, 레벨업과 UI 버튼 이벤트 확인 |
+| `AutomatedEarlyWeaponVerification.cs` | `ProjectEpsilon.Editor.AutomatedEarlyWeaponVerification.Run` | 이동·몸통 추적·자연 스폰을 끄고 세 번째 몸통과 정지 표적을 배치. 실제 시험 무기 6종의 자동 공격과 실제 출현기로 통제 생성·강제 처치한 일반 적 3종의 경험치 확인 |
+| `AutomatedStartingWeaponVerification.cs` | `ProjectEpsilon.Editor.AutomatedStartingWeaponVerification.Run` | 공용 헬퍼 없이 세 번의 새 플레이에서 실제 시작 후보 UI, 가상 숫자 입력, 시작 전 정지와 첫 몸통 장착 확인. `RunDisabledBeforeStart`는 선택기 비활성·재구성 경계를 별도로 확인 |
 | `AutomatedSettingsPriorityVerification.cs` | `ProjectEpsilon.Editor.AutomatedSettingsPriorityVerification.Run` | XP 주입과 만석 슬롯을 강제하고 가상 ESC·숫자 입력 및 실제 UI 버튼 이벤트 사용. 배치 포커스를 위해 입력 설정의 저장되지 않는 메모리 사본 사용 |
 | `AutomatedCollisionPriorityVerification.cs` | `ProjectEpsilon.Editor.AutomatedCollisionPriorityVerification.Run` | 플레이어 이동과 자연 스폰을 끄고 충돌체를 제어. 실제 2D 물리 접촉과 별도의 인위 콜백 순서·수명주기 시험 사용 |
 | `AutomatedMergeSelectionVerification.cs` | `ProjectEpsilon.Editor.AutomatedMergeSelectionVerification.Run` | 실제 게임 씬에서 자연 출현과 충돌을 끄고 몸통 20칸과 무기를 강제 구성. 가상 E·ESC·이동 입력과 실제 UI 버튼 이벤트로 합성 선택, 시너지 미리보기와 우선순위 확인 |
@@ -29,6 +33,7 @@
 | `NaturalBalanced/AutomatedNaturalCombatVerification.cs` | `ProjectEpsilon.Editor.AutomatedNaturalCombatVerification.Run` | 24일차 합성 구현 사본에서 공격 거리 선호를 높이고 실제 무기 거리와 적 피해를 기록한 네 번째 시험 |
 | `NaturalFocus/AutomatedNaturalCombatVerification.cs` | `ProjectEpsilon.Editor.AutomatedNaturalCombatVerification.Run` | 자연 적 한 명의 체력·거리를 추적하면서 연속 공격과 안전 이동을 시험한 다섯 번째 시험 |
 | `NaturalDiagnostics/AutomatedNaturalCombatVerification.cs` | `ProjectEpsilon.Editor.AutomatedNaturalCombatVerification.Run` | 동일 조종 정책에서 실제 위치 변화·추적 적 속도·조향 후보 점수를 기록하는 최대 60초 진단 |
+| `NaturalCurve/AutomatedNaturalCombatVerification.cs` | `ProjectEpsilon.Editor.AutomatedNaturalCombatVerification.Run` | 부상 적을 향한 곡선 재접근 후보를 비교한 자연 전투 시험 |
 
 자연 전투 스크립트는 같은 클래스 이름을 사용하므로 실행할 버전 하나만 사본의 `Assets/Editor/AutomatedNaturalCombatVerification.cs`로 복사한다. 여러 파일을 동시에 복사하면 중복 클래스로 컴파일할 수 없다.
 
@@ -50,12 +55,16 @@
 - 네 번째 시도는 정상 속도와 자연 출현, 무적·능력치·경험치 주입 없이 조종하고 UI 선택을 자동화했다. 게임 시간 300.0초, 실제 플레이 시간 302.9초에 몸통 3칸·HP 64로 생존했고 A/D·Space 입력과 실제 회전·가속, 네 차례의 적 체력 감소를 기록했다. 처치 0, XP 0, 레벨 1, 보상 선택 0으로 성장 조건에 실패해 종료 코드 1이었다. Unity 편집기 SearchDatabase 시작 색인 예외가 1회 발생했다. 재현 코드는 `NaturalBalanced` 하위 폴더에 있다.
 - 자연 전투 다섯 번째 시도는 24일차 `8cafb51`의 `Assets`, `Packages`, `ProjectSettings` 추적 파일 427개에 25일차 `SnakeWeaponManager.cs`만 추가 반영한 사본에서 실행했다. 해당 무기 관리자 SHA-256은 `9E731853B3AAE04710DD1935761C7FE4CE117C8EC3756003B9F25029D593E2F1`이다. 정상 속도·자연 출현·가상 입력을 사용하고 무적·능력치·XP·적 출현을 조작하지 않았다. UI 선택은 자동화했다.
 - 다섯 번째 시도는 두 추적자의 체력이 각각 25→15→5로 감소했지만 처치와 XP는 없었다. 게임 시간 300.0초, 실제 플레이 시간 300.1초에 몸통 3칸·HP 100으로 생존했고 실제 A/D·Space 입력과 회전·가속을 확인했다. 처치 0, XP 0, 레벨 1, 보상 선택 0으로 성장 조건에 실패해 종료 코드 1이었다. Unity 편집기 SearchDatabase 시작 색인 예외가 1회 발생했다. 재현 코드는 `NaturalFocus` 하위 폴더에 있다.
-- 별도의 무작위 출현 실행에서 단일 적 추적 조종의 이동 진단을 진행하다 26일차 Unity 검증을 위해 게임 시간 13.53초에 중단했다. 13.02초의 0.5초 표본에서 플레이어 평균 이동 속도는 3.00, 적은 2.40이었고, 적은 전진 방향 뒤쪽에 있었다. 당시 직진 후보 점수는 5.93, 우회전 6.73, 좌회전 169.42였으며 직진이 선택됐다. 10.52초 가속 중 플레이어 평균 속도는 4.50, 적은 2.40이었다. 이는 관찰 구간에서 거리 증가에 기여할 수 있는 근거이나 다섯 번째 시도와는 다른 무작위 실행이므로 그 시험의 거리 정체 원인을 확정하지 못한다. 실행 셸은 중단되어 코드 1로 끝났으며 예정된 60초 진단은 완료되지 않았다. 재현 코드는 `NaturalDiagnostics` 하위 폴더에 있다.
+- 별도의 무작위 출현 실행에서 단일 적 추적 조종의 이동 진단을 진행하다 26일차 Unity 검증을 위해 중단했다. 마지막 로그는 게임 시간 18.03초다. 13.02초의 0.5초 표본에서 플레이어 평균 이동 속도는 3.00, 적은 2.40이었고, 적은 전진 방향 뒤쪽에 있었다. 당시 직진 후보 점수는 5.93, 우회전 6.73, 좌회전 169.42였으며 직진이 선택됐다. 10.52초 가속 중 플레이어 평균 속도는 4.50, 적은 2.40이었다. 이는 관찰 구간에서 거리 증가에 기여할 수 있는 근거이나 다섯 번째 시도와는 다른 무작위 실행이므로 그 시험의 거리 정체 원인을 확정하지 못한다. 실행 셸은 중단되어 코드 1로 끝났으며 예정된 60초 진단은 완료되지 않았다. 재현 코드는 `NaturalDiagnostics` 하위 폴더에 있다.
+- 곡선 재접근 시도는 25일차 `d8a7b8c` 기준에 26일차 `SnakeLevelUpController.cs`, `SnakeWeaponMergeController.cs`, `LevelUpPanelController.cs`, `WeaponMergePanelController.cs` 네 파일을 동기화한 사본을 사용했다. 인계 후 제품 파일은 추가 동기화하지 않았다. 네 파일의 SHA-256은 순서대로 `0D1F929775CC5EBB33BD627D7781A92192368F2FD0F09D17BA1251DBE93685E6`, `3506A88FF4F4DCDB3366F0E820C7174A05355E888BC3705BFE1A5DF9AB3AB35A`, `3913E859FD46006A1663A360DC12C36E7F7A615BA91C581B6CB9472168F141D5`, `2F7CA9D705A18388308F9275819785E0F0DE0A6B261B1FEECB15CA4449BF2592`이다. 이 해시는 해당 파일만 식별한다.
+- 곡선 재접근 시도는 정상 속도와 자연 출현, 무적·능력치·경험치 주입 없이 조종하고 UI 선택을 자동화했다. 게임 시간 300.0초, 실제 플레이 시간 300.3초에 몸통 3칸·HP 100으로 생존했고 실제 A/D·Space 입력과 회전·가속을 확인했다. 추적자 한 명에게 25→15, 다른 한 명에게 25→15→5의 피해를 주었으나 처치 0, XP 0, 레벨 1, 보상 선택 0으로 성장 조건에 실패해 종료 코드 1이었다. Unity 편집기 SearchDatabase 시작 색인 예외가 1회 발생했다. 재현 코드는 `NaturalCurve` 하위 폴더에 있다.
 - 강제 출현·처치와 통제 표적 시험은 자연 출현 순서, 적 충돌, 난이도 또는 5분 생존의 대체 근거가 아니다.
+- 26일차 `11f4a25`의 추적 자산·설정 427개 해시가 일치하는 사본에서 시험 무기 6종의 공격 원점·직접 피해·공격 주기를 확인한 배치는 종료 코드 0이었다. 실제 세 번째 몸통을 머리에서 멀리 고정해 공격했고, 강철 창의 2명 관통, 철퇴의 3명과 화염 고리의 2명 범위 적중 및 화염 무기의 기본 화상도 확인했다. 실제 출현기 설정으로 일반 적을 통제 생성·강제 처치한 뒤 추적자·포식자·사수의 소형 보석 1/2/2개와 흡수 경험치 1/2/2를 확인했다. 자연 전투나 사람이 조작한 플레이 결과는 아니다.
 - 충돌 시험의 실제 동시 접촉 순서는 로그에서 따로 확인한다. 인위적으로 호출한 양쪽 콜백 순서와 수명주기 초기화는 실제 물리 콜백이나 씬 전환을 재현한 결과와 구분한다.
 - 합성 시험은 24일차 제품 코드에서 Unity 6000.3.21f1 배치 종료 코드 0으로 통과했다. 네 단계 ESC 취소, 20번 몸통 선택, 양쪽 강화 계승, 속성 수와 단계 즉시 갱신, 몸통 손실·레벨업·엘리트 보상 우선순위를 확인했다. 실제 시간 0.400초에 게임 시간 0.280초가 진행됐으며, 회전과 가속 입력 중 방향을 유지하고 직진했다. 이 결과는 통제된 장비와 가상 입력에 대한 검증이다.
 - 같은 합성 배치에서 시너지 미리보기 추가 후 속성 무기 수 2~9의 단계 하락 경계와 유지 구간을 네 선택 화면에서 확인하고, 다른 속성으로 선택을 옮겼을 때의 표시, ESC 취소 시 보존, 4→3 합성 후 실제 단계와 예상의 일치도 확인했다. 대표 상태 문구의 필요 크기는 최대 462.46×15.59, 영역 크기는 620×32였으며 20번 몸통과 강화 선택 버튼 문구의 높이도 확인했다. Unity 배치 종료 코드는 0이다.
 - 미장착 보상 합성의 같은 실제 씬 배치는 24일차 `8cafb51` 기준에서 해당 API가 없어 종료 코드 1을 기록했고, 25일차 API 반영 후 종료 코드 0으로 통과했다. 빈 슬롯과 만석, 두 강화 계승, 부적합 요청 시 무변경, 무기 수·시너지 유지, 기존 장착 무기 2→1 합성을 확인했다. 조작한 장비와 강화를 사용하는 낮은 수준 API 시험이며 보상 UI 검증은 포함하지 않는다.
 - 레벨업 보상 합성의 26일차 초기 Unity 배치는 실제 2D 접촉 후 직접 주입한 초과 피해로 패배할 때 보상 패널이 남아 종료 코드 1을 기록했다. 별도 경계 시험에서는 숫자 2 중복 적용, 제어기 비활성 후 화면·후보 복구, 마지막 호환 몸통 손실 후 합성 버튼 상태를 각각 확인해 실패를 기록했다. 수정 후 `RunAll`은 가상 입력, 실제 버튼 이벤트, 통제된 충돌과 직접 치명 피해로 이 경계와 빈 슬롯·만석·연속 레벨업·엘리트 대기 흐름을 확인해 종료 코드 0으로 통과했다. 시험 사례 사이에 테스트 코드가 상태를 초기화하므로 자연 전투 결과와 구분한다.
+- 시작 무기 선택의 비활성 `Configure` 수정 직전 실제 씬 배치는 새 플레이 세 번에서 임시 후보 강철 검·강철 창·화염 고리의 첫 몸통 장착, 버튼과 가상 숫자 입력, 선택 전 시간·이동·출현 정지 및 선택 후 재개를 확인해 종료 코드 0이었다. 이후 비활성 선택기의 `Configure` 화면 복구 문제를 수정하고 별도 실제 씬 배치에서 비활성 유지와 첫 후보 선택을 확인해 종료 코드 0이었다. 최종 수정본으로 세 후보와 공용 헬퍼가 적용된 기존 배치를 다시 실행하려 했으나 Unity 초기화가 정체해 중단했고, 독립 사본의 캐시 복사도 미완료이므로 최종 전체 회귀는 확인되지 않았다.
 - HUD 시험의 텍스트 너비 비교는 배치 환경에서 측정 가능한 경우에만 유효하다. 실제 화면에서의 가독성은 별도로 확인한다.
 - 실행 환경에 따라 Unity Editor의 SearchDatabase 시작 인덱싱 예외가 발생할 수 있다. 게임 스크립트 예외와 구분하고 로그에서 실제 발생 여부를 확인한다.

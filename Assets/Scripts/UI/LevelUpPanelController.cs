@@ -136,6 +136,27 @@ namespace ProjectEpsilon.UI
             BindButtons();
         }
 
+        public void ShowStartingWeapons(IReadOnlyList<WeaponRewardCandidate> candidates) // 시작 무기 후보 표시
+        { // 메서드 시작
+            gameObject.SetActive(true); // 시작 후보 화면 표시
+            if (titleText != null) // 제목 연결 확인
+            { // 조건 시작
+                titleText.text = "CHOOSE STARTING WEAPON"; // 시작 무기 선택 제목
+            } // 조건 끝
+            if (levelText != null) // 부제 연결 확인
+            { // 조건 시작
+                levelText.text = "CHOOSE ONE BEFORE THE RUN"; // 시작 전 선택 안내
+            } // 조건 끝
+            if (growthText != null) // 조작 안내 연결 확인
+            { // 조건 시작
+                growthText.text = "1 / 2 / 3: SELECT"; // 선택 키 안내
+            } // 조건 끝
+            ConfigureCandidate(0, candidateButton01, candidateLabel01, candidates); // 첫 후보 표시
+            ConfigureCandidate(1, candidateButton02, candidateLabel02, candidates); // 둘째 후보 표시
+            ConfigureCandidate(2, candidateButton03, candidateLabel03, candidates); // 셋째 후보 표시
+            BindButtons(); // 후보 버튼 연결
+        } // 메서드 끝
+
         public void ShowEliteRewards(string[] labels, bool[] available) // 엘리트 보상 후보 표시
         { // 메서드 시작
             gameObject.SetActive(true); // 선택 화면 표시

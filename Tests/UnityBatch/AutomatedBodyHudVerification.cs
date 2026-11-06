@@ -39,6 +39,10 @@ namespace ProjectEpsilon.Editor // 편집기 영역
             { // 조건 시작
                 return; // 플레이 진입 대기
             } // 조건 끝
+            if (StartingWeaponBatchHelper.HandleStartingSelection()) // 시작 무기 화면 처리
+            { // 조건 시작
+                return; // 전투 시작 대기
+            } // 조건 끝
             if (startWallTime == 0d) // 최초 갱신 확인
             { // 조건 시작
                 startWallTime = EditorApplication.timeSinceStartup; // 실제 시작 시각 저장
