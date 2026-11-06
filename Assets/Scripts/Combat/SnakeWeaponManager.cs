@@ -337,94 +337,65 @@ namespace ProjectEpsilon.Combat
                 return false;
             }
 
-            WeaponData resultWeapon =
-                first.Weapon;
+            return CompleteMerge(first, firstSlotIndex, secondSlotIndex, upgrade, true); // 공통 합성 처리
+        } // 메서드 끝
 
-            int resultGrade =
-                Mathf.Clamp(
-                    first.Grade + 1,
-                    1,
-                    5
-                );
+        public bool TryMergeReward(int slotIndex, WeaponData reward, int grade, bool inheritEquipped, WeaponMergeUpgrade upgrade) // 미장착 보상 합성 및 기본 강화 0회
+        { // 메서드 시작
+            if (reward == null || slotIndex < 0 || slotIndex >= slots.Count || grade < 1 || grade >= 5 || grade >= reward.MaxGrade) // 보상 및 범위 검사
+            { // 조건 시작
+                return false; // 잘못된 재료 거절
+            } // 조건 끝
+            SnakeWeaponSlot equipped = slots[slotIndex]; // 장착 재료 조회
+            if (equipped == null || equipped.IsEmpty || equipped.Weapon != reward || equipped.Grade != grade) // 같은 무기 및 등급 검사
+            { // 조건 시작
+                return false; // 불일치 재료 거절
+            } // 조건 끝
+            if (upgrade < WeaponMergeUpgrade.Damage || upgrade > WeaponMergeUpgrade.Range) // 강화 선택 범위 검사
+            { // 조건 시작
+                return false; // 잘못된 강화 거절
+            } // 조건 끝
+            return CompleteMerge(equipped, slotIndex, -1, upgrade, inheritEquipped); // 보상 합성 처리
+        } // 메서드 끝
 
-            int damageBonus = first.DamageUpgrades; // 첫 무기 공격력 강화 보존
-            int speedBonus = first.SpeedUpgrades; // 첫 무기 공격 속도 강화 보존
-            int rangeBonus = first.RangeUpgrades; // 첫 무기 사거리 강화 보존
-            List<WeaponLoadoutEntry> remaining =
-                new List<WeaponLoadoutEntry>();
-
-            for (int index = 0;
-                index < slots.Count;
-                index++)
-            {
-                if (index == firstSlotIndex ||
-                    index == secondSlotIndex)
-                {
-                    continue;
-                }
-
-                SnakeWeaponSlot slot =
-                    slots[index];
-
-                if (slot == null ||
-                    slot.IsEmpty)
-                {
-                    continue;
-                }
-
-                remaining.Add(
-                    new WeaponLoadoutEntry(
-                        slot.Weapon,
-                        slot.Grade,
-                        slot.DamageUpgrades, // 공격력 강화 보존
-                        slot.SpeedUpgrades, // 공격 속도 강화 보존
-                        slot.RangeUpgrades // 사거리 강화 보존
-                    )
-                );
-            }
-
-            for (int index = 0;
-                index < slots.Count;
-                index++)
-            {
-                slots[index].Clear();
-            }
-
-            slots[0].Equip(
-                resultWeapon,
-                resultGrade,
-                damageBonus, // 기존 공격력 강화
-                speedBonus, // 기존 공격 속도 강화
-                rangeBonus // 기존 사거리 강화
-            );
-            slots[0].ApplyUpgrade(upgrade); // 선택 강화 적용
-
-            int writeIndex = 1;
-
-            for (int index = 0;
-                index < remaining.Count &&
-                writeIndex < slots.Count;
-                index++)
-            {
-                slots[writeIndex].Equip(
-                    remaining[index].Weapon,
-                    remaining[index].Grade,
-                    remaining[index].DamageUpgrades, // 공격력 강화 복원
-                    remaining[index].SpeedUpgrades, // 공격 속도 강화 복원
-                    remaining[index].RangeUpgrades // 사거리 강화 복원
-                );
-
-                writeIndex++;
-            }
-
-            NotifyGradeEffect(
-                slots[0],
-                WeaponGradeEffectTrigger.Merged
-            );
-
-            SlotsChanged?.Invoke();
-            return true;
-        }
+        private bool CompleteMerge(SnakeWeaponSlot first, int firstSlotIndex, int secondSlotIndex, WeaponMergeUpgrade upgrade, bool inheritEquipped) // 공통 합성 결과 처리
+        { // 메서드 시작
+            WeaponData resultWeapon = first.Weapon; // 합성 결과 무기
+            int resultGrade = Mathf.Clamp(first.Grade + 1, 1, 5); // 상위 등급 계산
+            int damageBonus = inheritEquipped ? first.DamageUpgrades : 0; // 계승 공격력 강화
+            int speedBonus = inheritEquipped ? first.SpeedUpgrades : 0; // 계승 공격 속도 강화
+            int rangeBonus = inheritEquipped ? first.RangeUpgrades : 0; // 계승 사거리 강화
+            List<WeaponLoadoutEntry> remaining = new List<WeaponLoadoutEntry>(); // 남은 무기 목록
+            for (int index = 0; index < slots.Count; index++) // 모든 슬롯 순회
+            { // 반복 시작
+                if (index == firstSlotIndex || index == secondSlotIndex) // 합성 재료 위치 확인
+                { // 조건 시작
+                    continue; // 재료 보존 제외
+                } // 조건 끝
+                SnakeWeaponSlot slot = slots[index]; // 현재 슬롯 조회
+                if (slot == null || slot.IsEmpty) // 빈 슬롯 확인
+                { // 조건 시작
+                    continue; // 빈 슬롯 제외
+                } // 조건 끝
+                remaining.Add(new WeaponLoadoutEntry(slot.Weapon, slot.Grade, slot.DamageUpgrades, slot.SpeedUpgrades, slot.RangeUpgrades)); // 나머지 무기와 강화 보존
+            } // 반복 끝
+            for (int index = 0; index < slots.Count; index++) // 슬롯 초기화 순회
+            { // 반복 시작
+                slots[index].Clear(); // 기존 장착 정보 제거
+            } // 반복 끝
+            slots[0].Equip(resultWeapon, resultGrade, damageBonus, speedBonus, rangeBonus); // 합성 무기와 계승 강화 장착
+            slots[0].ApplyUpgrade(upgrade); // 선택한 공통 강화 적용
+            int writeIndex = 1; // 나머지 무기 배치 위치
+            for (int index = 0; index < remaining.Count && writeIndex < slots.Count; index++) // 보존 무기 순회
+            { // 반복 시작
+                WeaponLoadoutEntry entry = remaining[index]; // 보존 무기 조회
+                slots[writeIndex].Equip(entry.Weapon, entry.Grade, entry.DamageUpgrades, entry.SpeedUpgrades, entry.RangeUpgrades); // 무기와 강화 복원
+                writeIndex++; // 다음 슬롯 이동
+            } // 반복 끝
+            NotifyGradeEffect(slots[0], WeaponGradeEffectTrigger.Merged); // 합성 등급 효과 알림
+            SlotsChanged?.Invoke(); // 무기 및 시너지 갱신 알림
+            return true; // 합성 성공
+        } // 메서드 끝
 
         public bool HasCompletedGradeFive(
             WeaponData weapon

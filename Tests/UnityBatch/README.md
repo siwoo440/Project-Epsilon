@@ -22,6 +22,7 @@
 | `AutomatedSettingsPriorityVerification.cs` | `ProjectEpsilon.Editor.AutomatedSettingsPriorityVerification.Run` | XP 주입과 만석 슬롯을 강제하고 가상 ESC·숫자 입력 및 실제 UI 버튼 이벤트 사용. 배치 포커스를 위해 입력 설정의 저장되지 않는 메모리 사본 사용 |
 | `AutomatedCollisionPriorityVerification.cs` | `ProjectEpsilon.Editor.AutomatedCollisionPriorityVerification.Run` | 플레이어 이동과 자연 스폰을 끄고 충돌체를 제어. 실제 2D 물리 접촉과 별도의 인위 콜백 순서·수명주기 시험 사용 |
 | `AutomatedMergeSelectionVerification.cs` | `ProjectEpsilon.Editor.AutomatedMergeSelectionVerification.Run` | 실제 게임 씬에서 자연 출현과 충돌을 끄고 몸통 20칸과 무기를 강제 구성. 가상 E·ESC·이동 입력과 실제 UI 버튼 이벤트로 합성 선택, 시너지 미리보기와 우선순위 확인 |
+| `AutomatedRewardMergeVerification.cs` | `ProjectEpsilon.Editor.AutomatedRewardMergeVerification.Run` | 실제 게임 씬에서 이동과 자연 출현을 끄고 장착 무기·강화와 미장착 보상 값을 제어. UI 없이 실제 무기 관리자의 보상 합성 API와 시너지 확인 |
 | `AutomatedNaturalCombatVerification.cs` | `ProjectEpsilon.Editor.AutomatedNaturalCombatVerification.Run` | 정상 속도, 자연 적 출현·무기 공격·보석 획득과 가상 A/D·Space 조종. 능력치와 경험치 주입 없음, 선택 화면은 자동 선택 |
 | `NaturalTrajectory/AutomatedNaturalCombatVerification.cs` | `ProjectEpsilon.Editor.AutomatedNaturalCombatVerification.Run` | 정상 속도와 자연 출현을 유지하고, 조종기가 가속·회전 경로와 몸통 접촉 위험을 비교한 세 번째 시험 |
 | `NaturalBalanced/AutomatedNaturalCombatVerification.cs` | `ProjectEpsilon.Editor.AutomatedNaturalCombatVerification.Run` | 24일차 합성 구현 사본에서 공격 거리 선호를 높이고 실제 무기 거리와 적 피해를 기록한 네 번째 시험 |
@@ -48,5 +49,6 @@
 - 충돌 시험의 실제 동시 접촉 순서는 로그에서 따로 확인한다. 인위적으로 호출한 양쪽 콜백 순서와 수명주기 초기화는 실제 물리 콜백이나 씬 전환을 재현한 결과와 구분한다.
 - 합성 시험은 24일차 제품 코드에서 Unity 6000.3.21f1 배치 종료 코드 0으로 통과했다. 네 단계 ESC 취소, 20번 몸통 선택, 양쪽 강화 계승, 속성 수와 단계 즉시 갱신, 몸통 손실·레벨업·엘리트 보상 우선순위를 확인했다. 실제 시간 0.400초에 게임 시간 0.280초가 진행됐으며, 회전과 가속 입력 중 방향을 유지하고 직진했다. 이 결과는 통제된 장비와 가상 입력에 대한 검증이다.
 - 같은 합성 배치에서 시너지 미리보기 추가 후 속성 무기 수 2~9의 단계 하락 경계와 유지 구간을 네 선택 화면에서 확인하고, 다른 속성으로 선택을 옮겼을 때의 표시, ESC 취소 시 보존, 4→3 합성 후 실제 단계와 예상의 일치도 확인했다. 대표 상태 문구의 필요 크기는 최대 462.46×15.59, 영역 크기는 620×32였으며 20번 몸통과 강화 선택 버튼 문구의 높이도 확인했다. Unity 배치 종료 코드는 0이다.
+- 미장착 보상 합성의 같은 실제 씬 배치는 24일차 `8cafb51` 기준에서 해당 API가 없어 종료 코드 1을 기록했고, 25일차 API 반영 후 종료 코드 0으로 통과했다. 빈 슬롯과 만석, 두 강화 계승, 부적합 요청 시 무변경, 무기 수·시너지 유지, 기존 장착 무기 2→1 합성을 확인했다. 조작한 장비와 강화를 사용하는 낮은 수준 API 시험이며 보상 UI 검증은 포함하지 않는다.
 - HUD 시험의 텍스트 너비 비교는 배치 환경에서 측정 가능한 경우에만 유효하다. 실제 화면에서의 가독성은 별도로 확인한다.
 - 실행 환경에 따라 Unity Editor의 SearchDatabase 시작 인덱싱 예외가 발생할 수 있다. 게임 스크립트 예외와 구분하고 로그에서 실제 발생 여부를 확인한다.
