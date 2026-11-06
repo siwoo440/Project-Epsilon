@@ -52,7 +52,7 @@ namespace ProjectEpsilon.Enemies // 적 영역
         } // 메서드 끝
         private void OnTriggerEnter2D(Collider2D other) // 투사체 명중 처리
         { // 메서드 시작
-            if (hitConsumed || player == null || health == null) // 중복 명중과 플레이어 참조 확인
+            if (!isActiveAndEnabled || hitConsumed || player == null || health == null) // 활성 상태와 중복 명중 확인
             { // 조건 시작
                 return; // 명중 처리 생략
             } // 조건 끝

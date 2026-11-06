@@ -166,7 +166,7 @@ namespace ProjectEpsilon.Enemies // 적 영역
         } // 메서드 끝
         private void OnTriggerStay2D(Collider2D other) // 적 접촉 지속 처리
         { // 메서드 시작
-            if (settings == null || player == null || health == null || GameManager.Instance == null || !GameManager.Instance.IsPlaying || !IsPlayerPart(other)) // 유효 접촉 확인
+            if (!isActiveAndEnabled || settings == null || player == null || health == null || GameManager.Instance == null || !GameManager.Instance.IsPlaying || !IsPlayerPart(other)) // 활성 상태와 유효 접촉 확인
             { // 조건 시작
                 return; // 접촉 처리 생략
             } // 조건 끝

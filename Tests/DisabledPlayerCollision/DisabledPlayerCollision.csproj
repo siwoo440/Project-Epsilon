@@ -1,0 +1,10 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <TargetFramework>net10.0</TargetFramework>
+  </PropertyGroup>
+  <ItemGroup>
+    <Compile Include="../../Assets/Scripts/Player/SnakeExternalCollision.cs" Link="SnakeExternalCollision.cs" />
+    <Compile Include="../../Assets/Scripts/Player/SnakeSelfCollision.cs" Link="SnakeSelfCollision.cs" />
+  </ItemGroup>
+</Project>

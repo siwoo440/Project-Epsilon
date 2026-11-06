@@ -27,6 +27,11 @@ namespace ProjectEpsilon.Player
 
         private void OnTriggerEnter2D(Collider2D other)
         {
+            if (!isActiveAndEnabled) // 충돌 처리기 활성 확인
+            { // 조건 시작
+                return; // 비활성 충돌 무시
+            } // 조건 끝
+
             SnakeSegment segment = other.GetComponent<SnakeSegment>();
 
             if (segment == null || !segment.IsBody)
