@@ -14,9 +14,11 @@ namespace ProjectEpsilon.Enemies // 적 영역
         private SnakeBodyManager body; // 몸통 관리자 참조
         private SnakeMovement player; // 머리 참조
         private Rigidbody2D movementBody; // 투사체 물리체
+        private bool hitConsumed; // 동일 투사체 중복 명중 방지
         public void Configure(Vector2 moveDirection, float moveSpeed, float duration, int hitDamage, SnakeHealth sharedHealth, SnakeBodyManager segments, SnakeMovement head, Sprite visual) // 투사체 설정
         { // 메서드 시작
             direction = moveDirection.normalized; // 이동 방향 저장
+            hitConsumed = false; // 재사용 투사체 명중 상태 초기화
             speed = Mathf.Max(0f, moveSpeed); // 이동 속도 저장
             lifetime = Mathf.Max(0.1f, duration); // 수명 저장
             damage = Mathf.Max(0, hitDamage); // 피해량 저장
@@ -50,7 +52,7 @@ namespace ProjectEpsilon.Enemies // 적 영역
         } // 메서드 끝
         private void OnTriggerEnter2D(Collider2D other) // 투사체 명중 처리
         { // 메서드 시작
-            if (player == null || health == null) // 플레이어 참조 확인
+            if (hitConsumed || player == null || health == null) // 중복 명중과 플레이어 참조 확인
             { // 조건 시작
                 return; // 명중 처리 생략
             } // 조건 끝
@@ -61,7 +63,17 @@ namespace ProjectEpsilon.Enemies // 적 영역
             { // 조건 시작
                 return; // 다른 충돌 무시
             } // 조건 끝
-            health.TakeDamage(damage); // 공용 체력 피해
+            hitConsumed = true; // 파괴 전 중복 명중 차단
+            SnakeExternalCollision resolver = player.GetComponent<SnakeExternalCollision>(); // 물리 스텝 충돌 처리기 조회
+            if (resolver != null && resolver.isActiveAndEnabled) // 충돌 처리기 연결 확인
+            { // 조건 시작
+                resolver.QueueHealthDamage(health, damage); // 파괴 전 대상과 피해량 값 예약
+            } // 조건 끝
+            else // 충돌 처리기 부재
+            { // 대안 시작
+                Debug.LogError("[Project Epsilon] 투사체 충돌 처리기가 없어 충돌 우선순위가 보장되지 않습니다."); // 구성 누락 알림
+                health.TakeDamage(damage); // 기존 즉시 피해 대체
+            } // 대안 끝
             Destroy(gameObject); // 명중 투사체 제거
         } // 메서드 끝
     } // 클래스 끝

@@ -25,6 +25,8 @@ namespace ProjectEpsilon.Enemies // 적 영역
         private float chargePhaseEnd; // 돌진 단계 종료 시각
         private int chargePhase; // 대기 예고 돌진 단계
         private bool chargeCut; // 돌진 중 절단 여부
+        private bool chargeCutPending; // 돌진 절단 결과 대기
+        private bool reportedMissingResolver; // 충돌 처리기 누락 기록
         private Vector2 chargeDirection; // 예고된 돌진 방향
         private LineRenderer warning; // 돌진 예고선
         public void Configure(EarlyEnemySettings data, SnakeMovement target, SnakeBodyManager segments, SnakeHealth sharedHealth, Sprite sprite, float keepDistance, float shotSpeed, float shotLifetime, float warningDuration, float chargeDuration, float chargeMultiplier) // 행동 연결
@@ -123,6 +125,7 @@ namespace ProjectEpsilon.Enemies // 적 영역
                 { // 조건 시작
                     chargePhase = 2; // 돌진 단계 진입
                     chargeCut = false; // 돌진 절단 초기화
+                    chargeCutPending = false; // 이전 절단 대기 초기화
                     chargePhaseEnd = Time.time + Mathf.Max(0.1f, eliteChargeDuration); // 돌진 종료 시각
                     if (warning != null) // 예고선 존재 확인
                     { // 조건 시작
@@ -167,10 +170,18 @@ namespace ProjectEpsilon.Enemies // 적 영역
             { // 조건 시작
                 return; // 접촉 처리 생략
             } // 조건 끝
-            if (chargePhase == 2 && !chargeCut) // 예고 돌진 절단 확인
+            if (chargePhase == 2 && !chargeCut && !chargeCutPending) // 예고 돌진 절단 확인
             { // 조건 시작
                 SnakeExternalCollision collision = player.GetComponent<SnakeExternalCollision>(); // 직접 충돌 판정 조회
-                chargeCut = collision != null && collision.TryApplyEliteCut(); // 예고 돌진 절단 적용
+                if (collision != null && collision.isActiveAndEnabled) // 물리 스텝 처리기 확인
+                { // 조건 시작
+                    chargeCutPending = true; // 중복 절단 예약 방지
+                    collision.QueueEliteCut(HandleEliteCutResolved); // 절단과 결과 예약
+                } // 조건 끝
+                else // 처리기 부재 확인
+                { // 대안 시작
+                    ReportMissingResolver(); // 구성 누락 알림
+                } // 대안 끝
             } // 조건 끝
             if (settings.kind == EarlyEnemyKind.Shooter || Time.time < nextAttack) // 근접 공격 가능 여부
             { // 조건 시작
@@ -178,8 +189,32 @@ namespace ProjectEpsilon.Enemies // 적 영역
             } // 조건 끝
             WeaponTarget target = GetComponent<WeaponTarget>(); // 적 전투 대상 조회
             float damageMultiplier = target == null ? 1f : target.OutgoingDamageMultiplier; // 적 피해 상태 배율
-            health.TakeDamage(Mathf.CeilToInt(settings.damage * damageMultiplier)); // 공용 체력 피해
+            int damage = Mathf.CeilToInt(settings.damage * damageMultiplier); // 현재 적 피해량 확정
+            SnakeExternalCollision resolver = player.GetComponent<SnakeExternalCollision>(); // 물리 스텝 처리기 조회
+            if (resolver != null && resolver.isActiveAndEnabled) // 충돌 처리기 연결 확인
+            { // 조건 시작
+                resolver.QueueHealthDamage(health, damage); // 피해 대상과 확정 피해량 예약
+            } // 조건 끝
+            else // 충돌 처리기 부재
+            { // 대안 시작
+                ReportMissingResolver(); // 구성 누락 알림
+                health.TakeDamage(damage); // 기존 즉시 피해 대체
+            } // 대안 끝
             nextAttack = Time.time + Mathf.Max(0.1f, settings.attackInterval); // 다음 근접 공격 시각
+        } // 메서드 끝
+        private void HandleEliteCutResolved(bool applied) // 엘리트 절단 결과 처리
+        { // 메서드 시작
+            chargeCutPending = false; // 절단 결과 대기 해제
+            chargeCut |= applied; // 성공한 절단 기록
+        } // 메서드 끝
+        private void ReportMissingResolver() // 물리 충돌 처리기 누락 알림
+        { // 메서드 시작
+            if (reportedMissingResolver) // 오류 중복 기록 확인
+            { // 조건 시작
+                return; // 중복 기록 방지
+            } // 조건 끝
+            reportedMissingResolver = true; // 오류 기록 상태 저장
+            Debug.LogError("[Project Epsilon] 적 충돌 처리기가 없어 충돌 우선순위가 보장되지 않습니다."); // 구성 누락 알림
         } // 메서드 끝
         private bool IsPlayerPart(Collider2D other) // 플레이어 접촉 확인
         { // 메서드 시작

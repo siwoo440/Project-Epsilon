@@ -10,6 +10,7 @@ namespace ProjectEpsilon.Player
         [SerializeField] private SnakeInvulnerability invulnerability;
         [SerializeField] private int bodyLoss = 2;
         [SerializeField] private float invulnerabilityDuration = 2f;
+        private bool reportedMissingResolver; // 충돌 처리기 누락 기록
 
         public void Bind(
             SnakeBodyManager manager,
@@ -33,7 +34,18 @@ namespace ProjectEpsilon.Player
                 return;
             }
 
-            TryApplySelfCollisionPenalty();
+            SnakeExternalCollision resolver = GetComponent<SnakeExternalCollision>(); // 물리 스텝 충돌 처리기 조회
+            if (resolver == null || !resolver.isActiveAndEnabled) // 충돌 처리기 연결 확인
+            { // 조건 시작
+                if (!reportedMissingResolver) // 누락 오류 중복 확인
+                { // 조건 시작
+                    reportedMissingResolver = true; // 누락 오류 기록 상태
+                    Debug.LogError("[Project Epsilon] 자기 충돌 처리기가 없어 충돌 우선순위가 보장되지 않습니다."); // 구성 누락 알림
+                } // 조건 끝
+                TryApplySelfCollisionPenalty(); // 기존 즉시 판정
+                return; // 예약 종료
+            } // 조건 끝
+            resolver.QueueSelfCollision(this); // 같은 물리 스텝에 충돌 예약
         }
 
         public bool TryApplySelfCollisionPenalty()
