@@ -166,6 +166,11 @@ namespace ProjectEpsilon.Progression
             int level
         )
         {
+            EliteRewardController elite = GetComponent<EliteRewardController>(); // 엘리트 보상 상태 조회
+            if (elite != null && elite.YieldPauseToLevelUp()) // 보상 정지 인계 확인
+            { // 조건 시작
+                ownsGamePause = true; // 레벨업 종료까지 정지 소유
+            } // 조건 끝
             if (presentingLevelUp)
             {
                 return;

@@ -44,6 +44,7 @@ namespace ProjectEpsilon.Enemies // 적 영역
         [SerializeField] private float bodyRepairDropChance = 0.1f; // 몸통 복구 확률 임시값
         [SerializeField] private float elapsed; // 전투 경과 시간
         [SerializeField] private Sprite visual; // 적과 보석 시각 자료
+        [SerializeField] private EliteRewardController eliteRewards; // 엘리트 보상 대기열
         [SerializeField] private EarlyEnemySettings[] enemies = // 시험용 적 설정
         { // 설정 목록 시작
             new EarlyEnemySettings // 추적자 임시값
@@ -196,8 +197,16 @@ namespace ProjectEpsilon.Enemies // 적 영역
         } // 메서드 끝
         private void HandleEnemyDied(WeaponTarget target) // 적 처치 처리
         { // 메서드 시작
+            if (target == null || !targets.Remove(target)) // 등록 대상과 중복 사망 확인
+            { // 조건 시작
+                return; // 중복 사망 무시
+            } // 조건 끝
+            if (target != null && target == eliteTarget) // 엘리트 처치 확인
+            { // 조건 시작
+                eliteTarget = null; // 중복 보상 차단
+                eliteRewards?.QueueReward(); // 선택 보상 대기열 추가
+            } // 조건 끝
             activeEnemies = Mathf.Max(0, activeEnemies - 1); // 생존 적 감소
-            targets.Remove(target); // 생존 적 목록 제거
         } // 메서드 끝
         public static bool ShouldDespawn(Vector3 position, Vector3 playerPosition, float distance, bool elite) // 거리 정리 조건
         { // 메서드 시작

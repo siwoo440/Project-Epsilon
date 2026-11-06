@@ -1,3 +1,4 @@
+using System; // 합성 결과 이벤트
 using System.Collections.Generic;
 using ProjectEpsilon.Combat;
 using ProjectEpsilon.Core;
@@ -37,6 +38,27 @@ namespace ProjectEpsilon.Progression
         private WeaponMergeCandidate selectedMerge; // 미확정 합성 대상
 
         public bool IsMergeOpen => mergeOpen;
+        public event Action<bool> MergeClosed; // 합성 완료 또는 취소 알림
+
+        public bool HasMergeCandidates() // 합성 가능한 쌍 확인
+        { // 메서드 시작
+            if (weaponManager == null || mergePanel == null) // 구성 확인
+            { // 조건 시작
+                return false; // 합성 불가
+            } // 조건 끝
+            IReadOnlyList<SnakeWeaponSlot> slots = weaponManager.Slots; // 현재 무기 슬롯
+            for (int first = 0; first < slots.Count; first++) // 첫 무기 순회
+            { // 반복 시작
+                for (int second = first + 1; second < slots.Count; second++) // 둘째 무기 순회
+                { // 반복 시작
+                    if (CanMergePair(slots[first], slots[second])) // 같은 무기와 등급 확인
+                    { // 조건 시작
+                        return true; // 합성 가능
+                    } // 조건 끝
+                } // 반복 끝
+            } // 반복 끝
+            return false; // 합성 쌍 부재
+        } // 메서드 끝
 
         public IReadOnlyList<WeaponMergeCandidate>
             CurrentCandidates =>
@@ -68,6 +90,7 @@ namespace ProjectEpsilon.Progression
         {
             Unsubscribe();
 
+            bool wasOpen = mergeOpen; // 열려 있던 합성 상태
             mergeOpen = false;
             selectingUpgrade = false; // 미확정 강화 취소
             currentCandidates.Clear();
@@ -75,6 +98,10 @@ namespace ProjectEpsilon.Progression
             ApplyMergeMovementState(
                 false
             );
+            if (wasOpen) // 진행 중 합성 확인
+            { // 조건 시작
+                MergeClosed?.Invoke(false); // 종료로 인한 취소 알림
+            } // 조건 끝
         }
 
         private void Update() // 합성 및 일시정지 입력 처리
@@ -219,8 +246,9 @@ namespace ProjectEpsilon.Progression
             return true;
         }
 
-        public void CloseMergePanel()
+        public void CloseMergePanel(bool merged = false) // 합성 화면 종료
         {
+            bool wasOpen = mergeOpen; // 종료 전 화면 상태
             mergeOpen = false;
             selectingUpgrade = false; // 미확정 강화 취소
             currentCandidates.Clear();
@@ -233,6 +261,10 @@ namespace ProjectEpsilon.Progression
             ApplyMergeMovementState(
                 false
             );
+            if (wasOpen) // 실제 화면 종료 확인
+            { // 조건 시작
+                MergeClosed?.Invoke(merged); // 합성 결과 알림
+            } // 조건 끝
         }
 
         private void HandleCandidateSelected(int candidateIndex) // 합성 대상 및 강화 선택
@@ -277,7 +309,7 @@ namespace ProjectEpsilon.Progression
                 CloseMergePanel(); // 미확정 합성 취소
                 return; // 실패 처리 종료
             } // 조건 끝
-            CloseMergePanel(); // 합성 화면 닫기
+            CloseMergePanel(true); // 합성 성공 및 화면 닫기
         } // 메서드 끝
 
         private void HandleCloseRequested()

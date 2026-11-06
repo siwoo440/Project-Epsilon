@@ -2298,6 +2298,7 @@ GameObject:
   - component: {fileID: 587332129}
   - component: {fileID: 587332130}
   - component: {fileID: 587332131}
+  - component: {fileID: 587332132}
   m_Layer: 0
   m_Name: Player
   m_TagString: Untagged
@@ -2320,6 +2321,29 @@ Transform:
   m_Children: []
   m_Father: {fileID: 374004618}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &587332132
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 587332110}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e21a0000000000000000000000000001, type: 3}
+  m_Name:
+  m_EditorClassIdentifier: Assembly-CSharp::ProjectEpsilon.Progression.EliteRewardController
+  experience: {fileID: 587332124}
+  levelUp: {fileID: 587332126}
+  health: {fileID: 587332118}
+  body: {fileID: 2088063715}
+  weapons: {fileID: 2088063716}
+  weaponPool: {fileID: 11400000, guid: 49dd76540017b3c478302ff1d55c0c8e, type: 2}
+  merge: {fileID: 587332128}
+  panel: {fileID: 1637736539}
+  settingsMenu: {fileID: 431694690}
+  healingAmount: 15
+  gradeTwoChance: 0.25
 --- !u!114 &587332112
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -7006,6 +7030,7 @@ MonoBehaviour:
   despawnDistance: 22
   elapsed: 0
   visual: {fileID: 0}
+  eliteRewards: {fileID: 587332132}
   shooterDistance: 4
   projectileSpeed: 5
   projectileLifetime: 3

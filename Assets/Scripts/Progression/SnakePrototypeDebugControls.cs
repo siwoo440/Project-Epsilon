@@ -60,6 +60,17 @@ namespace ProjectEpsilon.Progression
                 );
             }
 
+            if (!keyboard.leftShiftKey.isPressed && !keyboard.rightShiftKey.isPressed) // 등급 디버그 조합 확인
+            { // 조건 시작
+                return; // 숫자 단독 입력 보호
+            } // 조건 끝
+
+            SnakeWeaponMergeController mergeController = GetComponent<SnakeWeaponMergeController>(); // 합성 화면 조회
+            if (mergeController != null && mergeController.IsMergeOpen) // 합성 선택 중 확인
+            { // 조건 시작
+                return; // 합성 선택 입력 보호
+            } // 조건 끝
+
             if (keyboard.digit3Key.wasPressedThisFrame)
             {
                 SetDebugGrade(3);

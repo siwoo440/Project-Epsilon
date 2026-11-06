@@ -19,6 +19,7 @@ namespace ProjectEpsilon.UI
         [SerializeField] private Text statusText;
 
         private bool wasPlayingBeforeOpen;
+        public bool IsOpen => settingsPanel != null && settingsPanel.activeInHierarchy; // 설정 화면 상태
 
         private void Start()
         {
@@ -110,6 +111,7 @@ namespace ProjectEpsilon.UI
                 gameManager.PauseGame();
             }
 
+            settingsPanel.transform.SetAsLastSibling(); // 설정 화면 표시 순서 우선
             settingsPanel.SetActive(true);
             RefreshBindingTexts();
             SetStatus(string.Empty);

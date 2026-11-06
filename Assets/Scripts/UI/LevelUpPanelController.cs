@@ -136,6 +136,41 @@ namespace ProjectEpsilon.UI
             BindButtons();
         }
 
+        public void ShowEliteRewards(string[] labels, bool[] available) // 엘리트 보상 후보 표시
+        { // 메서드 시작
+            gameObject.SetActive(true); // 선택 화면 표시
+            if (titleText != null) // 제목 연결 확인
+            { // 조건 시작
+                titleText.text = "ELITE REWARD"; // 보상 제목 표시
+            } // 조건 끝
+            if (levelText != null) // 부제 연결 확인
+            { // 조건 시작
+                levelText.text = "CHOOSE ONE"; // 단일 선택 안내
+            } // 조건 끝
+            if (growthText != null) // 안내 문구 연결 확인
+            { // 조건 시작
+                growthText.text = "1 / 2 / 3: SELECT"; // 입력 안내
+            } // 조건 끝
+            ConfigureEliteButton(candidateButton01, candidateLabel01, labels, available, 0); // 첫 후보 표시
+            ConfigureEliteButton(candidateButton02, candidateLabel02, labels, available, 1); // 둘째 후보 표시
+            ConfigureEliteButton(candidateButton03, candidateLabel03, labels, available, 2); // 셋째 후보 표시
+            BindButtons(); // 버튼 입력 연결
+        } // 메서드 끝
+
+        private static void ConfigureEliteButton(Button button, Text label, string[] labels, bool[] available, int index) // 보상 버튼 구성
+        { // 메서드 시작
+            bool exists = labels != null && available != null && index < labels.Length && index < available.Length; // 후보 존재 확인
+            if (button != null) // 버튼 연결 확인
+            { // 조건 시작
+                button.gameObject.SetActive(exists); // 후보 표시 여부
+                button.interactable = exists && available[index]; // 적용 가능 후보만 선택
+            } // 조건 끝
+            if (label != null && exists) // 문구와 후보 확인
+            { // 조건 시작
+                label.text = labels[index]; // 후보 내용 표시
+            } // 조건 끝
+        } // 메서드 끝
+
         public void ShowReplacementSelection(IReadOnlyList<SnakeWeaponSlot> slots, WeaponRewardCandidate candidate, int index) // 교체 슬롯 화면 표시
         { // 메서드 시작
             if (titleText != null) // 제목 연결 확인
@@ -144,7 +179,7 @@ namespace ProjectEpsilon.UI
             } // 조건 끝
             if (levelText != null) // 보상 문구 연결 확인
             { // 조건 시작
-                levelText.text = $"New: {candidate.Weapon.DisplayName}"; // 선택 보상 표시
+                levelText.text = $"New: {candidate.Weapon.DisplayName} ★{candidate.Grade}"; // 선택 무기와 등급 표시
             } // 조건 끝
             if (growthText != null) // 안내 문구 연결 확인
             { // 조건 시작
