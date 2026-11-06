@@ -1,3 +1,4 @@
+using System.Collections.Generic; // 명중 대상 목록
 using ProjectEpsilon.Core;
 using UnityEngine;
 
@@ -13,6 +14,8 @@ namespace ProjectEpsilon.Combat
         private WeaponAttributeCombatEffects attributeEffects; // 속성 효과 관리자
         private float speed = 8f;
         private float remainingLifetime = 3f;
+        private readonly HashSet<WeaponTarget> hitTargets = new HashSet<WeaponTarget>(); // 중복 명중 방지 목록
+        private int remainingHits = 1; // 남은 명중 횟수
 
         private void Awake()
         {
@@ -40,6 +43,8 @@ namespace ProjectEpsilon.Combat
                 : moveDirection.normalized;
 
             attackSnapshot = snapshot; // 공격 정보 저장
+            hitTargets.Clear(); // 이전 명중 기록 초기화
+            remainingHits = snapshot.Weapon == null ? 1 : snapshot.Weapon.ProjectileHitLimit; // 무기별 명중 수 적용
             attributeEffects = effects; // 효과 관리자 저장
             speed = Mathf.Max(0.01f, projectileSpeed);
             remainingLifetime = Mathf.Max(0.1f, lifetime);
@@ -79,7 +84,7 @@ namespace ProjectEpsilon.Combat
         {
             WeaponTarget target = other.GetComponent<WeaponTarget>();
 
-            if (target == null)
+            if (remainingHits <= 0 || target == null || !target.IsAlive || !hitTargets.Add(target)) // 명중 한도와 중복 대상 확인
             {
                 return;
             }
@@ -93,7 +98,11 @@ namespace ProjectEpsilon.Combat
                 target.TakeDamage(attackSnapshot.DirectDamage); // 직접 피해 대체 적용
             } // 대안 끝
 
-            Destroy(gameObject);
+            remainingHits--; // 남은 명중 횟수 감소
+            if (remainingHits <= 0) // 관통 횟수 소진 확인
+            { // 소멸 조건 시작
+                Destroy(gameObject); // 투사체 제거
+            } // 소멸 조건 끝
         }
     }
 }

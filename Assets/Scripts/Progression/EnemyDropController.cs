@@ -12,6 +12,7 @@ namespace ProjectEpsilon.Progression
         [Header("Experience")]
         [Min(1)]
         [SerializeField] private int experienceValue = 1;
+        [SerializeField] private int experienceGemCount = 1; // 경험치 보석 개수
 
         [Header("Recovery")]
         [Range(0f, 1f)]
@@ -47,7 +48,8 @@ namespace ProjectEpsilon.Progression
             int healing,
             float healChance,
             float repairChance,
-            Sprite visual
+            Sprite visual, // 보석 시각 자료
+            int gemCount = 1 // 경험치 보석 개수
         )
         {
             experienceValue =
@@ -74,6 +76,7 @@ namespace ProjectEpsilon.Progression
 
             pickupSprite =
                 visual;
+            experienceGemCount = Mathf.Clamp(gemCount, 1, experienceValue); // 경험치 보석 수 제한
 
             EnsureTarget();
             Subscribe();
@@ -151,12 +154,13 @@ namespace ProjectEpsilon.Progression
             Vector3 position =
                 deadTarget.transform.position;
 
-            ExperiencePickup.Spawn(
-                position,
-                experienceValue,
-                pickupSprite,
-                experience
-            );
+            int count = Mathf.Clamp(experienceGemCount, 1, experienceValue); // 유효 보석 수 계산
+            for (int index = 0; index < count; index++) // 경험치 보석 생성 반복
+            { // 반복 시작
+                int gemValue = experienceValue / count + (index < experienceValue % count ? 1 : 0); // 보석별 경험치 분배
+                float offset = (index - (count - 1) * 0.5f) * 0.3f; // 보석 간 간격 계산
+                ExperiencePickup.Spawn(position + Vector3.right * offset, gemValue, pickupSprite, experience); // 경험치 보석 생성
+            } // 반복 끝
 
             if (health != null &&
                 Random.value <=

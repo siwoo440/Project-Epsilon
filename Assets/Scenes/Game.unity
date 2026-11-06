@@ -2736,7 +2736,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &691704638
 Transform:
   m_ObjectHideFlags: 0
@@ -6940,6 +6940,7 @@ GameObject:
   - component: {fileID: 1886169891}
   - component: {fileID: 1886169893}
   - component: {fileID: 1886169892}
+  - component: {fileID: 1886169894}
   m_Layer: 0
   m_Name: ===Managers===
   m_TagString: Untagged
@@ -6987,6 +6988,66 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::ProjectEpsilon.Core.GameManager
   currentState: 0
+--- !u!114 &1886169894
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1886169890}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e19a0000000000000000000000000001, type: 3}
+  m_Name:
+  m_EditorClassIdentifier: Assembly-CSharp::ProjectEpsilon.Enemies.EarlyEnemyWaveSpawner
+  spawnInterval: 1.5
+  maximumEnemies: 40
+  spawnDistance: 9
+  despawnDistance: 22
+  elapsed: 0
+  visual: {fileID: 0}
+  shooterDistance: 4
+  projectileSpeed: 5
+  projectileLifetime: 3
+  eliteWarningDuration: 1
+  eliteChargeDuration: 0.6
+  eliteChargeMultiplier: 3
+  healAmount: 15
+  healDropChance: 0.25
+  bodyRepairDropChance: 0.1
+  enemies:
+  - kind: 0
+    health: 25
+    damage: 10
+    speedRatio: 0.8
+    attackInterval: 1.2
+    experience: 1
+    firstAppearance: 0
+    color: {r: 1, g: 0.35, b: 0.35, a: 1}
+  - kind: 1
+    health: 35
+    damage: 12
+    speedRatio: 0.9
+    attackInterval: 1.5
+    experience: 2
+    firstAppearance: 60
+    color: {r: 1, g: 0.65, b: 0.25, a: 1}
+  - kind: 2
+    health: 20
+    damage: 8
+    speedRatio: 0.7
+    attackInterval: 2
+    experience: 2
+    firstAppearance: 120
+    color: {r: 0.75, g: 0.4, b: 1, a: 1}
+  - kind: 3
+    health: 160
+    damage: 15
+    speedRatio: 0.9
+    attackInterval: 5
+    experience: 20
+    firstAppearance: 240
+    color: {r: 1, g: 0.1, b: 0.75, a: 1}
 --- !u!1 &1900265817
 GameObject:
   m_ObjectHideFlags: 0
@@ -7687,7 +7748,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::ProjectEpsilon.Combat.SnakeWeaponManager
   bodyManager: {fileID: 2088063715}
-  startingWeapon: {fileID: 11400000, guid: dbd234de925b0504ea1df71a51d5f2fb, type: 2}
+  startingWeapon: {fileID: 11400000, guid: 267b5f63f7994c24091e6effd8a230f1, type: 2}
   projectileSprite: {fileID: 1434238494030181667, guid: 0a4df3fa57e52bc469da7185f6109d59, type: 3}
   gradeEffectHooks: {fileID: 2088063717}
   attributeCombatEffects: {fileID: 2088063720}
@@ -7696,10 +7757,10 @@ MonoBehaviour:
     weapon: {fileID: 11400000, guid: 267b5f63f7994c24091e6effd8a230f1, type: 2}
     grade: 1
   - owner: {fileID: 67336842}
-    weapon: {fileID: 11400000, guid: dbd234de925b0504ea1df71a51d5f2fb, type: 2}
+    weapon: {fileID: 0}
     grade: 1
   - owner: {fileID: 880393966}
-    weapon: {fileID: 11400000, guid: ae78df5c8d898404b8eec67152f29f5c, type: 2}
+    weapon: {fileID: 0}
     grade: 1
 --- !u!114 &2088063717
 MonoBehaviour:

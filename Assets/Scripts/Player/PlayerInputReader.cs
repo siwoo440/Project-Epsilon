@@ -38,7 +38,7 @@ namespace ProjectEpsilon.Player
                 Keyboard keyboard = Keyboard.current;
 
                 return keyboard != null &&
-                    (keyboard.leftShiftKey.isPressed || keyboard.rightShiftKey.isPressed);
+                    keyboard.spaceKey.isPressed; // 기본 가속 키
             }
         }
 

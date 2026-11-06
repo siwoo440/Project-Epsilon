@@ -13,12 +13,15 @@ MonoBehaviour:
   m_Name: DebugPulse
   m_EditorClassIdentifier: Assembly-CSharp::ProjectEpsilon.Data.WeaponData
   id: debug_pulse
-  displayName: Debug Pulse
-  attribute: 0
+  displayName: 화염 고리
+  attribute: 1
   attackType: 3
-  baseDamage: 8
-  attackInterval: 1.4
+  baseDamage: 5
+  attackInterval: 1.2
   range: 1.8
   maxGrade: 5
   projectileSpeed: 8
   projectileLifetime: 3
+  projectileHitLimit: 1
+  burnDuration: 3
+  burnDamagePerSecond: 1

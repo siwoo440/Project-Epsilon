@@ -122,6 +122,34 @@ namespace ProjectEpsilon.UI
             BindButtons();
         }
 
+        public void ShowUpgradeSelection(WeaponMergeCandidate candidate) // 합성 강화 후보 표시
+        { // 메서드 시작
+            if (titleText != null) // 제목 연결 확인
+            { // 조건 시작
+                titleText.text = "SELECT MERGE UPGRADE"; // 강화 선택 제목
+            } // 조건 끝
+            if (stateText != null) // 상태 문구 연결 확인
+            { // 조건 시작
+                stateText.text = $"{candidate.Weapon.DisplayName} / ESC: CANCEL"; // 대상과 취소 안내
+            } // 조건 끝
+            ConfigureUpgradeButton(candidateButton01, candidateLabel01, "DAMAGE +5%"); // 공격력 선택 표시
+            ConfigureUpgradeButton(candidateButton02, candidateLabel02, "ATTACK SPEED +5%"); // 공격 속도 선택 표시
+            ConfigureUpgradeButton(candidateButton03, candidateLabel03, "RANGE / AREA +5%"); // 사거리 선택 표시
+        } // 메서드 끝
+
+        private static void ConfigureUpgradeButton(Button button, Text label, string caption) // 강화 버튼 표시
+        { // 메서드 시작
+            if (button != null) // 버튼 연결 확인
+            { // 조건 시작
+                button.gameObject.SetActive(true); // 후보 버튼 표시
+                button.interactable = true; // 후보 선택 허용
+            } // 조건 끝
+            if (label != null) // 문구 연결 확인
+            { // 조건 시작
+                label.text = caption; // 강화 내용 표시
+            } // 조건 끝
+        } // 메서드 끝
+
         public void Hide()
         {
             if (gameObject.activeSelf)

@@ -13,12 +13,15 @@ MonoBehaviour:
   m_Name: DebugNeedle
   m_EditorClassIdentifier: Assembly-CSharp::ProjectEpsilon.Data.WeaponData
   id: debug_needle
-  displayName: Debug Needle
+  displayName: 강철 창
   attribute: 0
   attackType: 1
-  baseDamage: 7
-  attackInterval: 0.48
+  baseDamage: 8
+  attackInterval: 1.0
   range: 7
   maxGrade: 5
   projectileSpeed: 11
   projectileLifetime: 2.5
+  projectileHitLimit: 2
+  burnDuration: 3
+  burnDamagePerSecond: 1

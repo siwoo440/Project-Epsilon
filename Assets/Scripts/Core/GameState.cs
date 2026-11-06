@@ -4,6 +4,7 @@ namespace ProjectEpsilon.Core
     {
         Starting,
         Playing,
-        Paused
+        Paused, // 일시정지 상태
+        Defeated // 몸통 소진 패배 상태
     }
 }

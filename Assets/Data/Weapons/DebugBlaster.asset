@@ -13,12 +13,15 @@ MonoBehaviour:
   m_Name: DebugBlaster
   m_EditorClassIdentifier: Assembly-CSharp::ProjectEpsilon.Data.WeaponData
   id: debug_blaster
-  displayName: Debug Blaster
-  attribute: 0
+  displayName: 화염탄
+  attribute: 1
   attackType: 1
-  baseDamage: 10
-  attackInterval: 0.9
+  baseDamage: 7
+  attackInterval: 0.8
   range: 6
   maxGrade: 5
   projectileSpeed: 8
   projectileLifetime: 3
+  projectileHitLimit: 1
+  burnDuration: 3
+  burnDamagePerSecond: 1

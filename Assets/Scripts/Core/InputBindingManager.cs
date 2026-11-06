@@ -162,9 +162,8 @@ namespace ProjectEpsilon.Core
             boostAction = gameplayMap.AddAction(
                 "Boost",
                 InputActionType.Button,
-                "<Keyboard>/leftShift"
+                "<Keyboard>/space" // 기본 가속 키
             );
-            boostAction.AddBinding("<Keyboard>/rightShift");
         }
 
         private InputAction GetAction(RebindableInput input)

@@ -284,9 +284,26 @@ namespace ProjectEpsilon.Combat
             return true;
         }
 
+        public bool TryReplaceWeapon(int slotIndex, WeaponData weapon, int grade = 1) // 선택 무기 교체 및 머리 뒤 배치
+        { // 메서드 시작
+            if (weapon == null || slotIndex < 0 || slotIndex >= slots.Count) // 입력 범위 확인
+            { // 조건 시작
+                return false; // 잘못된 교체 차단
+            } // 조건 끝
+            for (int index = slotIndex; index > 0; index--) // 선택 위치까지 역순 이동
+            { // 반복 시작
+                CopySlotWeapon(slots[index - 1], slots[index]); // 앞 무기와 강화 보존
+            } // 반복 끝
+            slots[0].Equip(weapon, grade); // 신규 무기를 머리 뒤에 장착
+            NotifyGradeEffect(slots[0], WeaponGradeEffectTrigger.Acquired); // 신규 무기 효과 알림
+            SlotsChanged?.Invoke(); // 슬롯 및 시너지 갱신
+            return true; // 교체 완료
+        } // 메서드 끝
+
         public bool TryMergeSlots(
             int firstSlotIndex,
-            int secondSlotIndex
+            int secondSlotIndex,
+            WeaponMergeUpgrade upgrade = WeaponMergeUpgrade.None // 합성 강화 선택
         )
         {
             if (firstSlotIndex ==
@@ -330,6 +347,9 @@ namespace ProjectEpsilon.Combat
                     5
                 );
 
+            int damageBonus = first.DamageUpgrades; // 첫 무기 공격력 강화 보존
+            int speedBonus = first.SpeedUpgrades; // 첫 무기 공격 속도 강화 보존
+            int rangeBonus = first.RangeUpgrades; // 첫 무기 사거리 강화 보존
             List<WeaponLoadoutEntry> remaining =
                 new List<WeaponLoadoutEntry>();
 
@@ -355,7 +375,10 @@ namespace ProjectEpsilon.Combat
                 remaining.Add(
                     new WeaponLoadoutEntry(
                         slot.Weapon,
-                        slot.Grade
+                        slot.Grade,
+                        slot.DamageUpgrades, // 공격력 강화 보존
+                        slot.SpeedUpgrades, // 공격 속도 강화 보존
+                        slot.RangeUpgrades // 사거리 강화 보존
                     )
                 );
             }
@@ -369,8 +392,12 @@ namespace ProjectEpsilon.Combat
 
             slots[0].Equip(
                 resultWeapon,
-                resultGrade
+                resultGrade,
+                damageBonus, // 기존 공격력 강화
+                speedBonus, // 기존 공격 속도 강화
+                rangeBonus // 기존 사거리 강화
             );
+            slots[0].ApplyUpgrade(upgrade); // 선택 강화 적용
 
             int writeIndex = 1;
 
@@ -381,7 +408,10 @@ namespace ProjectEpsilon.Combat
             {
                 slots[writeIndex].Equip(
                     remaining[index].Weapon,
-                    remaining[index].Grade
+                    remaining[index].Grade,
+                    remaining[index].DamageUpgrades, // 공격력 강화 복원
+                    remaining[index].SpeedUpgrades, // 공격 속도 강화 복원
+                    remaining[index].RangeUpgrades // 사거리 강화 복원
                 );
 
                 writeIndex++;
@@ -539,7 +569,7 @@ namespace ProjectEpsilon.Combat
             WeaponTarget target =
                 WeaponTarget.FindClosest(
                     origin,
-                    weapon.Range
+                    slot.EffectiveRange
                 );
 
             if (target == null)
@@ -552,7 +582,7 @@ namespace ProjectEpsilon.Combat
 
             SpawnAttackPulse(
                 origin,
-                weapon.Range,
+                slot.EffectiveRange,
                 new Color(
                     1f,
                     0.65f,
@@ -573,7 +603,7 @@ namespace ProjectEpsilon.Combat
             WeaponTarget target =
                 WeaponTarget.FindClosest(
                     slot.Origin.position,
-                    weapon.Range
+                    slot.EffectiveRange
                 );
 
             if (target == null)
@@ -601,7 +631,7 @@ namespace ProjectEpsilon.Combat
             WeaponAttributeAttackSnapshot attack = CreateAttackSnapshot(slot, origin); // 범위 공격 정보 생성
             int hitCount = WeaponTarget.VisitAllInRange( // 범위 대상 방문
                 origin, // 공격 중심 전달
-                weapon.Range, // 공격 범위 전달
+                slot.EffectiveRange, // 공격 범위 전달
                 target => ApplyWeaponHit(attack, target, target.transform.position) // 대상별 명중 적용
             ); // 방문 종료
 
@@ -612,7 +642,7 @@ namespace ProjectEpsilon.Combat
 
             SpawnAttackPulse(
                 origin,
-                weapon.Range,
+                slot.EffectiveRange,
                 new Color(
                     0.45f,
                     0.8f,
@@ -704,7 +734,7 @@ namespace ProjectEpsilon.Combat
             return WeaponGradeRules.CalculateDamage(
                 slot.Weapon.BaseDamage,
                 slot.Grade
-            );
+            ) * slot.DamageMultiplier; // 합성 공격력 강화 적용
         }
 
         private void NotifyGradeEffect(
@@ -797,7 +827,10 @@ namespace ProjectEpsilon.Combat
 
             destination.Equip(
                 source.Weapon,
-                source.Grade
+                source.Grade,
+                source.DamageUpgrades, // 공격력 강화 복사
+                source.SpeedUpgrades, // 공격 속도 강화 복사
+                source.RangeUpgrades // 사거리 강화 복사
             );
         }
 
@@ -856,14 +889,23 @@ namespace ProjectEpsilon.Combat
         {
             public WeaponData Weapon { get; }
             public int Grade { get; }
+            public int DamageUpgrades { get; } // 공격력 강화 횟수
+            public int SpeedUpgrades { get; } // 공격 속도 강화 횟수
+            public int RangeUpgrades { get; } // 사거리 강화 횟수
 
             public WeaponLoadoutEntry(
                 WeaponData weapon,
-                int grade
+                int grade,
+                int damage, // 공격력 강화 횟수
+                int speed, // 공격 속도 강화 횟수
+                int range // 사거리 강화 횟수
             )
             {
                 Weapon = weapon;
                 Grade = grade;
+                DamageUpgrades = damage; // 공격력 강화 저장
+                SpeedUpgrades = speed; // 공격 속도 강화 저장
+                RangeUpgrades = range; // 사거리 강화 저장
             }
         }
     }

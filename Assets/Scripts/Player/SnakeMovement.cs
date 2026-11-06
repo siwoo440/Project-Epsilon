@@ -25,10 +25,7 @@ namespace ProjectEpsilon.Player
             moveSpeed *
             (stamina == null
                 ? 1f
-                : stamina.CurrentSpeedMultiplier) *
-            (mergeMovementMode
-                ? mergeSpeedMultiplier
-                : 1f);
+                : stamina.CurrentSpeedMultiplier); // 합성 감속은 전체 시간에만 적용
 
         private void Awake()
         {

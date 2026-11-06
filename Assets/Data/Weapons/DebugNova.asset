@@ -13,12 +13,15 @@ MonoBehaviour:
   m_Name: DebugNova
   m_EditorClassIdentifier: Assembly-CSharp::ProjectEpsilon.Data.WeaponData
   id: debug_nova
-  displayName: Debug Nova
+  displayName: 철퇴
   attribute: 0
   attackType: 3
-  baseDamage: 12
-  attackInterval: 1.9
+  baseDamage: 7
+  attackInterval: 1.4
   range: 2.25
   maxGrade: 5
   projectileSpeed: 8
   projectileLifetime: 3
+  projectileHitLimit: 1
+  burnDuration: 3
+  burnDamagePerSecond: 1

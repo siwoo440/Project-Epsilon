@@ -56,6 +56,11 @@ namespace ProjectEpsilon.Combat // 전투 영역
             }
 
             WeaponAttributeAttackSnapshot resolvedAttack = ResolveTargetAttack(attack, target); // 대상 상태 반영 공격 계산
+            if (resolvedAttack.Attribute == WeaponAttribute.Physical && resolvedAttack.SynergyStage >= 4) // 물리 치명타 적용 확인
+            { // 조건 시작
+                float criticalDamage = WeaponAttributeDamageRules.CalculatePhysicalCriticalDamage(resolvedAttack.DirectDamage, resolvedAttack.SynergyStage, Random.value); // 개별 명중 치명타 판정
+                resolvedAttack = new WeaponAttributeAttackSnapshot(resolvedAttack.Weapon, resolvedAttack.Attribute, resolvedAttack.AttributeCount, resolvedAttack.SynergyStage, resolvedAttack.Grade, resolvedAttack.Origin, criticalDamage); // 명중 피해 갱신
+            } // 조건 끝
             int darkCurseStacks = ResolveDarkCurseStacks(target); // 명중 전 저주 중첩 조회
             float dealtDamage = target.TakeDamageAndReport(resolvedAttack.DirectDamage); // 직접 피해와 실제 피해량 적용
 
@@ -139,8 +144,10 @@ namespace ProjectEpsilon.Combat // 전투 영역
 
         private static void ApplyFire(WeaponAttributeAttackSnapshot attack, WeaponTarget target) // 화상 적용
         {
-            float duration = WeaponAttributeDamageRules.GetFireDuration(attack.SynergyStage); // 화상 지속 시간 계산
-            float damagePerSecond = WeaponAttributeDamageRules.CalculateFireDamagePerSecond(attack.DirectDamage, attack.SynergyStage); // 화상 초당 피해 계산
+            float baseDuration = attack.Weapon == null ? 3f : attack.Weapon.BurnDuration; // 무기별 기본 지속 시간
+            float baseDamage = attack.Weapon == null ? 1f : attack.Weapon.BurnDamagePerSecond; // 무기별 기본 화상 피해
+            float duration = WeaponAttributeDamageRules.GetFireDuration(attack.SynergyStage, baseDuration); // 화상 지속 시간 계산
+            float damagePerSecond = WeaponAttributeDamageRules.CalculateFireDamagePerSecond(baseDamage, attack.SynergyStage); // 화상 초당 피해 계산
 
             if (duration <= 0f || damagePerSecond <= 0f) // 활성 화상 여부 확인
             {

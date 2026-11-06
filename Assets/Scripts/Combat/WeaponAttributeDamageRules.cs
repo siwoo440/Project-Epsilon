@@ -25,77 +25,37 @@ namespace ProjectEpsilon.Combat // 전투 영역
         { // 메서드 시작
             int stage = NormalizeStage(synergyStage); // 단계 정규화
 
-            switch (stage) // 단계 분기
-            { // 분기 시작
-                case 8: // 8단계 선택
-                    return 1.5f; // 50퍼센트 증가
-
-                case 6: // 6단계 선택
-                    return 1.35f; // 35퍼센트 증가
-
-                case 4: // 4단계 선택
-                    return 1.2f; // 20퍼센트 증가
-
-                case 2: // 2단계 선택
-                    return 1.1f; // 10퍼센트 증가
-
-                default: // 비활성 단계 선택
-                    return 1f; // 기본 배율
-            } // 분기 끝
+            return stage >= 2 ? 1.1f : 1f; // 2단계 피해 증가 유지
         } // 메서드 끝
 
-        public static float GetFireDuration(int synergyStage) // 화상 지속 시간 조회
-        { // 메서드 시작
-            int stage = NormalizeStage(synergyStage); // 단계 정규화
-
-            switch (stage) // 단계 분기
-            { // 분기 시작
-                case 8: // 8단계 선택
-                    return 5f; // 5초 반환
-
-                case 6: // 6단계 선택
-                    return 4f; // 4초 반환
-
-                case 4: // 4단계 선택
-                    return 3f; // 3초 반환
-
-                case 2: // 2단계 선택
-                    return 2f; // 2초 반환
-
-                default: // 비활성 단계 선택
-                    return 0f; // 지속 없음
-            } // 분기 끝
-        } // 메서드 끝
-
-        public static float CalculateFireDamagePerSecond(float directDamage, int synergyStage) // 화상 초당 피해 계산
+        public static float CalculatePhysicalCriticalDamage(float directDamage, int synergyStage, float roll) // 물리 치명타 피해 계산
         { // 메서드 시작
             float safeDamage = directDamage < 0f ? 0f : directDamage; // 음수 피해 제거
             int stage = NormalizeStage(synergyStage); // 단계 정규화
+            if (stage < 4 || roll >= 0.1f) // 치명타 단계와 확률 확인
+            { // 조건 시작
+                return safeDamage; // 일반 피해 반환
+            } // 조건 끝
+            return safeDamage * (stage >= 8 ? 2.5f : 1.75f); // 치명타 피해 배율 적용
+        } // 메서드 끝
 
-            switch (stage) // 단계 분기
-            { // 분기 시작
-                case 8: // 8단계 선택
-                    return safeDamage * 0.25f; // 25퍼센트 반환
+        public static float GetFireDuration(int synergyStage, float baseDuration = 3f) // 화상 지속 시간 조회
+        { // 메서드 시작
+            int stage = NormalizeStage(synergyStage); // 단계 정규화
+            float safeDuration = baseDuration < 0f ? 0f : baseDuration; // 음수 지속 시간 제거
+            return safeDuration * (stage >= 4 ? 1.3f : 1f); // 4단계 지속 시간 증가
+        } // 메서드 끝
 
-                case 6: // 6단계 선택
-                    return safeDamage * 0.2f; // 20퍼센트 반환
-
-                case 4: // 4단계 선택
-                    return safeDamage * 0.15f; // 15퍼센트 반환
-
-                case 2: // 2단계 선택
-                    return safeDamage * 0.1f; // 10퍼센트 반환
-
-                default: // 비활성 단계 선택
-                    return 0f; // 피해 없음
-            } // 분기 끝
+        public static float CalculateFireDamagePerSecond(float baseDamage, int synergyStage) // 화상 초당 피해 계산
+        { // 메서드 시작
+            float safeDamage = baseDamage < 0f ? 0f : baseDamage; // 음수 피해 제거
+            int stage = NormalizeStage(synergyStage); // 단계 정규화
+            return safeDamage * (stage >= 2 ? 1.2f : 1f); // 2단계 피해 증가
         } // 메서드 끝
 
         public static bool ShouldReplaceBurn(int currentStage, int incomingStage) // 화상 교체 여부 계산
         { // 메서드 시작
-            int safeCurrent = NormalizeStage(currentStage); // 현재 단계 정규화
-            int safeIncoming = NormalizeStage(incomingStage); // 신규 단계 정규화
-            return safeIncoming > 0 && safeIncoming >= safeCurrent; // 동일 이상 단계 허용
+            return true; // 재적중 시 화상 갱신
         } // 메서드 끝
 
         private static int NormalizeStage(int synergyStage) // 단계 정규화

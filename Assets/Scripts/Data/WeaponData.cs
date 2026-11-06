@@ -22,6 +22,9 @@ namespace ProjectEpsilon.Data
         [Header("Projectile")]
         [Min(0.01f)] [SerializeField] private float projectileSpeed = 8f;
         [Min(0.1f)] [SerializeField] private float projectileLifetime = 3f;
+        [Min(1)] [SerializeField] private int projectileHitLimit = 1; // 투사체 최대 명중 수
+        [Min(0f)] [SerializeField] private float burnDuration = 3f; // 기본 화상 지속 시간
+        [Min(0f)] [SerializeField] private float burnDamagePerSecond = 1f; // 기본 화상 초당 피해
 
         public string Id => id;
         public string DisplayName => displayName;
@@ -33,5 +36,8 @@ namespace ProjectEpsilon.Data
         public int MaxGrade => maxGrade;
         public float ProjectileSpeed => projectileSpeed;
         public float ProjectileLifetime => projectileLifetime;
+        public int ProjectileHitLimit => Mathf.Max(1, projectileHitLimit); // 안전한 최대 명중 수
+        public float BurnDuration => Mathf.Max(0f, burnDuration); // 화상 지속 시간 반환
+        public float BurnDamagePerSecond => Mathf.Max(0f, burnDamagePerSecond); // 화상 초당 피해 반환
     }
 }

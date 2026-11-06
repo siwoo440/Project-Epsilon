@@ -1,4 +1,5 @@
 using UnityEngine;
+using ProjectEpsilon.Player; // 플레이어 체력 참조
 
 namespace ProjectEpsilon.Core
 {
@@ -7,6 +8,9 @@ namespace ProjectEpsilon.Core
         public static GameManager Instance { get; private set; }
 
         [SerializeField] private GameState currentState = GameState.Starting;
+
+        private float gameplayTimeScale = 1f; // 플레이 시간 배율
+        private SnakeHealth playerHealth; // 몸통 소진 감시 대상
 
         public GameState CurrentState => currentState;
         public bool IsPlaying => currentState == GameState.Playing;
@@ -29,6 +33,11 @@ namespace ProjectEpsilon.Core
 
         private void Start()
         {
+            playerHealth = FindFirstObjectByType<SnakeHealth>(); // 플레이어 체력 조회
+            if (playerHealth != null) // 체력 존재 확인
+            { // 조건 시작
+                playerHealth.BodyDepleted += HandleBodyDepleted; // 몸통 소진 연결
+            } // 조건 끝
             // 초기 플레이 상태 진입
             if (currentState == GameState.Starting)
             {
@@ -38,6 +47,10 @@ namespace ProjectEpsilon.Core
 
         private void OnDestroy()
         {
+            if (playerHealth != null) // 체력 연결 확인
+            { // 조건 시작
+                playerHealth.BodyDepleted -= HandleBodyDepleted; // 소진 이벤트 연결 해제
+            } // 조건 끝
             // 전역 참조 해제
             if (Instance == this)
             {
@@ -75,10 +88,31 @@ namespace ProjectEpsilon.Core
             ApplyTimeScale();
         }
 
+        public void SetGameplayTimeScale(float scale) // 플레이 시간 배율 설정
+        { // 메서드 시작
+            gameplayTimeScale = Mathf.Clamp(scale, 0.1f, 1f); // 안전 배율 저장
+            ApplyTimeScale(); // 현재 상태 반영
+        } // 메서드 끝
+
+        private void HandleBodyDepleted() // 몸통 소진 처리
+        { // 메서드 시작
+            SetState(GameState.Defeated); // 패배 상태 전환
+        } // 메서드 끝
+
+        private void OnGUI() // 패배 화면 표시
+        { // 메서드 시작
+            if (currentState != GameState.Defeated) // 패배 상태 확인
+            { // 조건 시작
+                return; // 패배 화면 생략
+            } // 조건 끝
+            Rect message = new Rect(Screen.width * 0.5f - 150f, Screen.height * 0.5f - 35f, 300f, 70f); // 화면 중앙 영역
+            GUI.Box(message, "GAME OVER"); // 패배 문구 표시
+        } // 메서드 끝
+
         private void ApplyTimeScale()
         {
             // 일시정지 시간 배율 적용
-            Time.timeScale = currentState == GameState.Paused ? 0f : 1f;
+            Time.timeScale = currentState == GameState.Paused || currentState == GameState.Defeated ? 0f : gameplayTimeScale; // 상태별 시간 배율
         }
     }
 }

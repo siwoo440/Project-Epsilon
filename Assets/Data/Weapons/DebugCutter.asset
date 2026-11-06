@@ -13,12 +13,15 @@ MonoBehaviour:
   m_Name: DebugCutter
   m_EditorClassIdentifier: Assembly-CSharp::ProjectEpsilon.Data.WeaponData
   id: debug_cutter
-  displayName: Debug Cutter
-  attribute: 0
+  displayName: 화염 검
+  attribute: 1
   attackType: 0
-  baseDamage: 18
-  attackInterval: 1.05
+  baseDamage: 8
+  attackInterval: 0.9
   range: 1.1
   maxGrade: 5
   projectileSpeed: 8
   projectileLifetime: 3
+  projectileHitLimit: 1
+  burnDuration: 3
+  burnDamagePerSecond: 1

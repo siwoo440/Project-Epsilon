@@ -97,6 +97,15 @@ namespace ProjectEpsilon.Player
             return true;
         }
 
+        public bool TryApplyEliteCut() // 엘리트 예고 절단 처리
+        { // 메서드 시작
+            if (IsFullInvulnerable() || bodyManager == null) // 전체 무적과 몸통 확인
+            { // 조건 시작
+                return false; // 절단 차단
+            } // 조건 끝
+            return bodyManager.RemoveBodies(1) > 0; // 직접 충돌 보호와 독립된 절단
+        } // 메서드 끝
+
         public bool TryApplyObstacleContact()
         {
             if (IsFullInvulnerable())
