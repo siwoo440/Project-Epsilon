@@ -22,6 +22,7 @@ MonoBehaviour:
   range: 2.25
   maxGrade: 5
   gradeThreeAreaRangeMultiplier: 1.25
+  gradeFiveAreaRangeMultiplier: 1.5
   projectileSpeed: 8
   projectileLifetime: 3
   projectileHitLimit: 1

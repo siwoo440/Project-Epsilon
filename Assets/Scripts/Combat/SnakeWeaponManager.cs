@@ -553,11 +553,20 @@ namespace ProjectEpsilon.Combat
             { // 조건 시작
                 second = WeaponTarget.FindClosest(origin, float.PositiveInfinity, target); // 첫 대상을 제외한 최근접 적
             } // 조건 끝
+            WeaponTarget third = null; // 셋째 공격 대상 초기화
+            if (weapon.GetMeleeTargetLimit(slot.Grade) >= 3) // 오 등급 추가 대상 확인
+            { // 조건 시작
+                third = WeaponTarget.FindClosest(origin, float.PositiveInfinity, target, second); // 첫째와 둘째를 제외한 최근접 적
+            } // 조건 끝
             WeaponAttributeAttackSnapshot attack = CreateAttackSnapshot(slot, origin); // 몸통 원점 공격 정보
             ApplyWeaponHit(attack, target, target.transform.position); // 첫 대상 속성 명중
             if (second != null && second.isActiveAndEnabled && second.IsAlive) // 첫 명중 후 추가 대상 유효성 확인
             { // 조건 시작
                 ApplyWeaponHit(attack, second, second.transform.position); // 둘째 대상 속성 명중
+            } // 조건 끝
+            if (third != null && third.isActiveAndEnabled && third.IsAlive) // 앞선 명중 후 셋째 대상 유효성 확인
+            { // 조건 시작
+                ApplyWeaponHit(attack, third, third.transform.position); // 셋째 대상 속성 명중
             } // 조건 끝
 
             SpawnAttackPulse(

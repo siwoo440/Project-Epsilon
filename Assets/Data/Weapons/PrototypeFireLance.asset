@@ -26,5 +26,6 @@ MonoBehaviour:
   projectileHitLimit: 2
   gradeThreeTransferRange: 2
   gradeThreeTransferDamageMultiplier: 0.5
+  gradeFiveTransferDamageScale: 1.5
   burnDuration: 3
   burnDamagePerSecond: 1

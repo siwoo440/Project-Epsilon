@@ -106,7 +106,12 @@ namespace ProjectEpsilon.Combat // 전투 영역
         } // 메서드 끝
 
         public static WeaponTarget FindClosest(Vector3 origin, float maximumRange, WeaponTarget excluded) // 제외 대상을 고려한 탐색
-        {
+        { // 메서드 시작
+            return FindClosest(origin, maximumRange, excluded, null); // 단일 제외 대상을 전달
+        } // 메서드 끝
+
+        public static WeaponTarget FindClosest(Vector3 origin, float maximumRange, WeaponTarget excluded, WeaponTarget secondExcluded) // 두 제외 대상을 고려한 탐색
+        { // 메서드 시작
             float safeRange = Mathf.Max(0f, maximumRange); // 탐색 범위 정규화
             float bestDistanceSquared = safeRange * safeRange; // 최대 거리 제곱 저장
             WeaponTarget closest = null; // 최근접 대상 초기화
@@ -121,7 +126,7 @@ namespace ProjectEpsilon.Combat // 전투 영역
                     continue; // 다음 대상 이동
                 }
 
-                if (target == excluded || !target.isActiveAndEnabled || !target.IsAlive) // 제외 대상과 공격 가능 여부 확인
+                if (target == excluded || target == secondExcluded || !target.isActiveAndEnabled || !target.IsAlive) // 제외 대상과 공격 가능 여부 확인
                 {
                     continue; // 대상 제외
                 }

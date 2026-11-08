@@ -128,6 +128,7 @@ namespace ProjectEpsilon.Editor // 편집기 영역
             yield return VerifyPiercing(); // 임시 관통 투사체 중복 방지 확인
             yield return VerifyTransferSnapshot(true); // 발사 후 임시 설정 감소
             yield return VerifyTransferSnapshot(false); // 발사 후 임시 설정 증가
+            yield return VerifyFiveTransferSnapshot(); // 오 등급 발사 시 전달 배율 고정
             yield return VerifyDisabledProjectile(); // 실제 비활성 투사체 물리 접촉 확인
             ClearObjects(); // 통제 표적 제거
             hooks.AttackTriggered -= OnAttack; // 발사 관측 해제
@@ -188,9 +189,10 @@ namespace ProjectEpsilon.Editor // 편집기 영역
             Require(Mathf.Approximately(other.CurrentHealth, 1000f) && Mathf.Approximately(outside.CurrentHealth, 1000f), "Transfer hit a farther or out-of-range target."); // 불필요한 대상 제외
             foreach (HitRecord hit in hits) // 실제 첫 발사 명중 순회
             { // 반복 시작
-                Require(Mathf.Abs(hit.Damage - damage) < 0.01f && hit.Stage == 0 && Mathf.Approximately(hit.BurnDps, 1f) && Vector3.Distance(hit.Origin, origin) < 0.01f, "Actual projectile damage, base burn, synergy or origin mismatch."); // 피해와 화상 및 실제 몸통 원점
+                float expectedDamage = hit.TargetId == nearestId && grade >= 5 ? damage * 1.5f : damage; // 오 등급 전달 피해 구분
+                Require(Mathf.Abs(hit.Damage - expectedDamage) < 0.01f && hit.Stage == 0 && Mathf.Approximately(hit.BurnDps, 1f) && Vector3.Distance(hit.Origin, origin) < 0.01f, "Actual projectile damage, base burn, synergy or origin mismatch."); // 피해와 화상 및 실제 몸통 원점
             } // 반복 끝
-            Debug.Log($"[FireballVerification] grade={grade}, targets={hits.Count}, firstDamage={damage:F2}, transferDamage={(grade >= 3 ? damage : 0f):F2}, range=2.0 provisional, origin={origin}."); // 등급별 실제 명중 기록
+            Debug.Log($"[FireballVerification] grade={grade}, targets={hits.Count}, firstDamage={damage:F2}, transferDamage={(grade >= 5 ? damage * 1.5f : grade >= 3 ? damage : 0f):F2}, range=2.0 provisional, origin={origin}."); // 등급별 실제 명중 기록
         } // 코루틴 끝
 
         private IEnumerator VerifyInside() // 전달 반경 안 대상만 존재
@@ -358,6 +360,30 @@ namespace ProjectEpsilon.Editor // 편집기 영역
             } // 조건 끝
             UnityEngine.Object.Destroy(clone); // 시험용 데이터 사본 제거
             Debug.Log($"[FireballVerification] launch transfer snapshot preserved, initially enabled={initiallyEnabled}."); // 실제 발사 시점 설정 기록
+        } // 코루틴 끝
+
+        private IEnumerator VerifyFiveTransferSnapshot() // 오 등급 발사 시 전달 배율 고정
+        { // 코루틴 시작
+            WeaponData clone = UnityEngine.Object.Instantiate(fireball); // 실제 무기 시험용 사본
+            FieldInfo scale = typeof(WeaponData).GetField("gradeFiveTransferDamageScale", BindingFlags.NonPublic | BindingFlags.Instance); // 오 등급 배율 설정 조회
+            Require(scale != null, "Grade-five transfer scale missing."); // 실제 데이터 필드 확인
+            scale.SetValue(clone, 1.5f); // 발사 전 오 등급 배율 설정
+            ConfigureWeapon(clone, 5, false); // 실제 오 등급 화염탄 장착
+            yield return null; // 이전 표적 제거 대기
+            WeaponTarget first = CreateTarget(origin + Vector3.right * 3f, 1000f, "FiveSnapshotFirst"); // 실제 최초 표적
+            WeaponTarget second = CreateTarget(first.transform.position + Vector3.up * 0.7f, 1000f, "FiveSnapshotSecond"); // 실제 전달 표적
+            Physics2D.SyncTransforms(); // 실제 물리 위치 반영
+            float deadline = Time.time + 2f; // 실제 발사 제한 시각
+            while (attacks.Count < 1 && Time.time < deadline) // 실제 발사 대기
+            { // 반복 시작
+                yield return null; // 실제 게임 프레임 진행
+            } // 반복 끝
+            Require(attacks.Count == 1 && hits.Count == 0, "Projectile hit before grade-five setting change."); // 발사와 명중 시점 확인
+            scale.SetValue(clone, 1f); // 발사 후 시험 데이터 변경
+            yield return WaitForVolley(2); // 실제 전달 명중 대기
+            Require(CountHit(first.GetInstanceID()) == 1 && CountHit(second.GetInstanceID()) == 1 && Mathf.Abs(hits[1].Damage - 23.1f) < 0.02f, "Grade-five projectile did not preserve launch transfer scale."); // 발사 시 오 등급 배율 유지 확인
+            UnityEngine.Object.Destroy(clone); // 시험용 데이터 사본 제거
+            Debug.Log("[FireballVerification] grade-five projectile preserved launch transfer scale."); // 발사 시 배율 결과 기록
         } // 코루틴 끝
 
         private void ConfigureWeapon(WeaponData weapon, int grade, bool fireStage) // 실제 몸통 무기 구성

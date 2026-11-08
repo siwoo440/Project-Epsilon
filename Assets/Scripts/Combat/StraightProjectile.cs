@@ -50,7 +50,7 @@ namespace ProjectEpsilon.Combat
             configurationVersion++; // 새로운 발사 세대 기록
             attackSnapshot = snapshot; // 공격 정보 저장
             transferRange = snapshot.Weapon == null ? 0f : snapshot.Weapon.GradeThreeTransferRange; // 발사 시점 전달 반경 저장
-            transferDamageMultiplier = snapshot.Weapon == null ? 0f : snapshot.Weapon.GradeThreeTransferDamageMultiplier; // 발사 시점 전달 배율 저장
+            transferDamageMultiplier = snapshot.Weapon == null ? 0f : snapshot.Weapon.GetTransferDamageMultiplier(snapshot.Grade); // 발사 시점 등급별 전달 배율 저장
             hitTargets.Clear(); // 이전 명중 기록 초기화
             transferAttempted = false; // 이전 전달 상태 초기화
             remainingHits = snapshot.Weapon == null ? 1 : snapshot.Weapon.ProjectileHitLimit; // 무기별 명중 수 적용
