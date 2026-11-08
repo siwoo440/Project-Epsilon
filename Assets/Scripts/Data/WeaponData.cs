@@ -20,6 +20,7 @@ namespace ProjectEpsilon.Data
         [Min(0f)] [SerializeField] private float range = 5f;
         [Range(1, 5)] [SerializeField] private int maxGrade = 5;
         [Range(1, 2)] [SerializeField] private int gradeThreeMeleeTargetLimit = 1; // 삼 등급 근접 최대 대상 수
+        [Min(1f)] [SerializeField] private float gradeThreeAreaRangeMultiplier = 1f; // 삼 등급 범위 배율 임시값
 
         [Header("Projectile")]
         [Min(0.01f)] [SerializeField] private float projectileSpeed = 8f;
@@ -40,6 +41,7 @@ namespace ProjectEpsilon.Data
         public float Range => range;
         public int MaxGrade => maxGrade;
         public int GetMeleeTargetLimit(int grade) => grade >= 3 ? Mathf.Clamp(gradeThreeMeleeTargetLimit, 1, 2) : 1; // 등급별 근접 대상 수
+        public float GetAreaRangeMultiplier(int grade) => grade >= 3 ? Mathf.Max(1f, gradeThreeAreaRangeMultiplier) : 1f; // 등급별 안전한 범위 배율
         public float ProjectileSpeed => projectileSpeed;
         public float ProjectileLifetime => projectileLifetime;
         public int ProjectileHitLimit => Mathf.Max(1, projectileHitLimit); // 안전한 최대 명중 수

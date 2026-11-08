@@ -24,7 +24,7 @@ MonoBehaviour:
   projectileSpeed: 8
   projectileLifetime: 3
   projectileHitLimit: 2
-  gradeThreeTransferRange: 0
-  gradeThreeTransferDamageMultiplier: 1
+  gradeThreeTransferRange: 2
+  gradeThreeTransferDamageMultiplier: 0.5
   burnDuration: 3
   burnDamagePerSecond: 1

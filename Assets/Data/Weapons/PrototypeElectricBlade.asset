@@ -21,7 +21,7 @@ MonoBehaviour:
   attackInterval: 0.9
   range: 1.35
   maxGrade: 5
-  gradeThreeMeleeTargetLimit: 1
+  gradeThreeMeleeTargetLimit: 2
   projectileSpeed: 8
   projectileLifetime: 3
   projectileHitLimit: 1

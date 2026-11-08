@@ -217,16 +217,21 @@ namespace ProjectEpsilon.Editor // 편집기 영역
             Debug.Log("[FireballVerification] range 2.01 excluded for provisional radius 2.0."); // 반경 경계 기록
         } // 코루틴 끝
 
-        private IEnumerator VerifyOtherWeapon() // 다른 투사체 무기의 전달 미적용
+        private IEnumerator VerifyOtherWeapon() // 전달을 끈 투사체 무기의 동작 확인
         { // 코루틴 시작
-            ConfigureWeapon(spear, 3, false); // 실제 삼 등급 강철 창 장착
+            WeaponData clone = UnityEngine.Object.Instantiate(spear); // 실제 강철 창의 시험용 사본
+            FieldInfo transferRange = typeof(WeaponData).GetField("gradeThreeTransferRange", BindingFlags.NonPublic | BindingFlags.Instance); // 전달 반경 설정 조회
+            Require(transferRange != null, "Transfer range setting missing."); // 실제 설정 확인
+            transferRange.SetValue(clone, 0f); // 시험 사본의 전달 비활성화
+            ConfigureWeapon(clone, 3, false); // 전달을 끈 삼 등급 강철 창 장착
             yield return null; // 이전 대상 제거 대기
             WeaponTarget first = CreateTarget(origin + Vector3.right * 0.8f, 1000f, "SpearFirst"); // 실제 최초 충돌 대상
             WeaponTarget sideways = CreateTarget(first.transform.position + Vector3.up * 0.7f, 1000f, "SpearSide"); // 투사체 경로 밖 인접 대상
             Physics2D.SyncTransforms(); // 실제 물리 위치 동기화
             yield return WaitForVolley(1); // 실제 강철 창 첫 명중
             Require(CountHit(first.GetInstanceID()) == 1 && hits.Count == 1 && Mathf.Approximately(sideways.CurrentHealth, 1000f), "Another projectile unexpectedly transferred to a side target."); // 다른 무기 전달 미적용
-            Debug.Log("[FireballVerification] actual grade-three spear did not transfer to a side target."); // 다른 무기 결과
+            UnityEngine.Object.Destroy(clone); // 시험용 데이터 사본 제거
+            Debug.Log("[FireballVerification] grade-three spear with disabled transfer did not hit a side target."); // 전달 비활성 결과
         } // 코루틴 끝
 
         private IEnumerator VerifySynergy() // 실제 화염 단계와 두 대상 화상

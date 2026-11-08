@@ -613,12 +613,13 @@ namespace ProjectEpsilon.Combat
             { // 조건 시작
                 return false; // 적이 없으면 공격 대기
             } // 조건 끝
-            Vector3 center = (closest.transform.position - origin).sqrMagnitude > slot.EffectiveRange * slot.EffectiveRange ? closest.transform.position : origin; // 사거리 밖 대상 또는 기존 몸통 중심
+            float attackRange = slot.EffectiveRange * weapon.GetAreaRangeMultiplier(slot.Grade); // 등급별 실제 범위
+            Vector3 center = (closest.transform.position - origin).sqrMagnitude > attackRange * attackRange ? closest.transform.position : origin; // 사거리 밖 대상 또는 기존 몸통 중심
             WeaponAttributeAttackSnapshot snapshot = CreateAttackSnapshot(slot, origin); // 실제 몸통 원점 공격 정보
             WeaponAttributeAttackSnapshot attack = new WeaponAttributeAttackSnapshot(snapshot.Weapon, snapshot.Attribute, snapshot.AttributeCount, snapshot.SynergyStage, snapshot.Grade, snapshot.Origin, snapshot.DirectDamage, center); // 실제 범위 중심 포함 공격 정보
             int hitCount = WeaponTarget.VisitAllInRange( // 범위 대상 방문
                 center, // 실제 범위 중심 전달
-                slot.EffectiveRange, // 공격 범위 전달
+                attackRange, // 등급별 공격 범위 전달
                 target => ApplyWeaponHit(attack, target, target.transform.position) // 대상별 명중 적용
             ); // 방문 종료
 
@@ -629,7 +630,7 @@ namespace ProjectEpsilon.Combat
 
             SpawnAttackPulse(
                 center, // 실제 범위 중심 표시
-                slot.EffectiveRange,
+                attackRange, // 등급별 범위 시각화
                 new Color(
                     0.45f,
                     0.8f,
