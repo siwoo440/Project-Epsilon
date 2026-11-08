@@ -23,6 +23,10 @@
 
 35일차 `AutomatedBossFanVerification.cs` SHA-256 `D46C2D133CDCD6EAB0B58869A210AC51D69535897098B9EDAB5B1284E1644D23`은 34일차 사본에서 보스가 한 발만 발사해 종료 코드 1, 수정 사본에서는 일반 사수 1발과 보스 1단계 3발·2단계 5발의 대칭 각도 및 실제 몸통 접촉 HP 15 피해를 확인해 종료 코드 0이었다. 보스 출현과 사격은 강제로 호출했고 자동 출현과 이동을 통제했다. 기존 실제 사수·출현 회귀도 종료 코드 0이었다. 두 수정본 Unity 실행에서 에디터 Search 시작 인덱싱 예외가 별도로 발생했다.
 
+36일차 돌진 선행 스크립트 SHA-256 `493FAEBB1510A891B344FD140889B2AD2ACBB3E8141C73FD79165AB7903AA4B4`는 35일차 사본에서 돌진 행동이 없어 종료 코드 1, 수정 사본의 실제 예고·1단계 HP 피해·2단계 절단에서 종료 코드 0이었다. 보강 스크립트 SHA-256 `0B398950085F38821528C814D7281736A068427F2724D7747892FE146FE838C1`은 실제 예고 중 정지·재개, HP 100→85, 몸통 3→2와 HP 100 유지, 전체 무적 중 HP·몸통 유지까지 확인해 종료 코드 0이었다. 보스 생성과 공격 시각, 예고·이동 수치는 통제했다. 기존 실제 보스 부채꼴 사격과 32배 가속 0→1,200.004초 전환·승리 회귀도 종료 코드 0이었다. Unity Editor Search 시작 인덱싱 예외는 각 실행에서 별도로 발생했다.
+
+36일차 최종 돌진 스크립트 SHA-256 `2698DDDB32F81EA3971ABB0EC53346710D2D99AAF13A2CB23AACE841033FCBCC`는 같은 통제 조건에서 실제 물리 콜백의 몸통 선행 진입 3회·머리 진입 1회와 몸통 손실 1칸을 함께 확인해 종료 코드 0이었다. 접촉 수는 하나의 실행에서 관측된 값이다.
+
 | 스크립트 | 실행할 메서드 | 실제로 실행한 조건 |
 | --- | --- | --- |
 | `AutomatedPilotVerification.cs` | `ProjectEpsilon.Editor.AutomatedPilotVerification.Run` | 정상 속도 300초, 가상 A/D·Space 회피 입력, 레벨업·보상 UI 자동 선택. 무적·능력치 변경 없음. 배치 포커스를 위해 입력 설정의 저장되지 않는 메모리 사본 사용 |
@@ -30,6 +34,7 @@
 | `AutomatedEarlyWaveVerification.cs` | `ProjectEpsilon.Editor.AutomatedEarlyWaveVerification.Run` | 실제 출현 시간 누적을 8배로 가속하고 일반 적을 관측 후 제거. 4분 자동 엘리트를 강제 처치하고 실제 XP 보석·연속 레벨업·엘리트 보상 UI 순서 확인 |
 | `AutomatedBossTransitionVerification.cs` | `ProjectEpsilon.Editor.AutomatedBossTransitionVerification.Run` | 실제 씬의 출현 시간을 0초부터 32배로 누적하고 적 이동·공격과 플레이어 이동·충돌을 통제. 20분 전환 시 적·아이템 정리, 합성 보류, 시험 보스 단계와 강제 처치 승리 확인 |
 | `AutomatedBossFanVerification.cs` | `ProjectEpsilon.Editor.AutomatedBossFanVerification.Run` | 보스 생성·사격을 강제하고 이동·자연 출현을 통제. 실제 일반 사수 단발, 보스 1·2단계 부채꼴 각도와 실제 2D 투사체 접촉 피해 확인 |
+| `AutomatedBossChargeVerification.cs` | `ProjectEpsilon.Editor.AutomatedBossChargeVerification.Run` | 보스 생성·돌진 시각과 예고·속도를 통제. 실제 2D 접촉의 1단계 HP 피해, 2단계 몸통 절단, 예고 중 정지와 전체 무적 확인 |
 | `AutomatedRunClockVerification.cs` | `ProjectEpsilon.Editor.AutomatedRunClockVerification.Run` | 실제 씬에서 같은 프레임의 일시정지 전 게임 시간, HUD 동기화, 정지 유지, 표시 전용 초기화와 재개를 확인 |
 | `AutomatedEliteScheduleVerification.cs` | `ProjectEpsilon.Editor.AutomatedEliteScheduleVerification.Run` / `RunExternalDestroy` | 실제 출현 시간을 32배로 가속하고 일반 적 만석을 유지. 엘리트 FIFO 대기·공존·보상과 별도의 외부 파괴 경계 확인 |
 | `AutomatedShooterSpawnVerification.cs` | `ProjectEpsilon.Editor.AutomatedShooterSpawnVerification.Run` | 실제 사수의 물리 발사·머리 기준 거리 유지 및 32:9 이동 카메라의 일반·엘리트 출현 위치와 정리, 렌더 직전 뷰포트 확인 |

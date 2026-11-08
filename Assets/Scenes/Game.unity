@@ -7033,6 +7033,11 @@ MonoBehaviour:
   projectileSpreadDegrees: 40
   phaseTwoSpeedMultiplier: 1.25
   phaseTwoIntervalMultiplier: 0.75
+  chargeInterval: 6
+  chargeWarningDuration: 1
+  chargeDuration: 0.8
+  chargeSpeed: 8
+  phaseTwoChargeSpeedMultiplier: 1.4
   spawnDistance: 8
 --- !u!4 &1886169891
 Transform:

@@ -19,6 +19,11 @@ namespace ProjectEpsilon.Enemies // 적 영역
         [SerializeField] private float projectileSpreadDegrees = 40f; // 부채꼴 전체 각도 임시값
         [SerializeField] private float phaseTwoSpeedMultiplier = 1.25f; // 두 번째 단계 속도 임시 배율
         [SerializeField] private float phaseTwoIntervalMultiplier = 0.75f; // 두 번째 단계 공격 간격 임시 배율
+        [SerializeField] private float chargeInterval = 6f; // 돌진 간격 임시값
+        [SerializeField] private float chargeWarningDuration = 1f; // 돌진 예고 시간 임시값
+        [SerializeField] private float chargeDuration = 0.8f; // 돌진 지속 시간 임시값
+        [SerializeField] private float chargeSpeed = 8f; // 돌진 속도 임시값
+        [SerializeField] private float phaseTwoChargeSpeedMultiplier = 1.4f; // 절단 돌진 속도 임시 배율
         [SerializeField] private float spawnDistance = 8f; // 보스 출현 거리 임시값
         private EarlyEnemyWaveSpawner spawner; // 실제 20분 전환기
         private WeaponTarget boss; // 실제 공격 가능한 보스
@@ -141,6 +146,7 @@ namespace ProjectEpsilon.Enemies // 적 영역
             } // 조건 끝
             boss = target; // 실제 보스 참조 저장
             spawned = true; // 중복 출현 방지
+            instance.AddComponent<PrototypeBossChargeAttack>().Configure(this, player, body, health, behaviour, chargeInterval, chargeWarningDuration, chargeDuration, chargeSpeed, phaseTwoChargeSpeedMultiplier, damage); // 실제 예고 돌진 구성
         } // 메서드 끝
     } // 클래스 끝
 } // 영역 끝
