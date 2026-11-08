@@ -257,10 +257,21 @@ namespace ProjectEpsilon.Enemies // 적 영역
             { // 조건 시작
                 return; // 발사 생략
             } // 조건 끝
-            GameObject shot = new GameObject("Enemy_Projectile"); // 투사체 오브젝트 생성
-            shot.transform.position = transform.position; // 발사 위치 설정
-            EnemyTestProjectile projectile = shot.AddComponent<EnemyTestProjectile>(); // 투사체 행동 추가
-            projectile.Configure(offset.normalized, projectileSpeed, projectileLifetime, settings.damage, health, body, player, visual); // 투사체 설정
+            Vector2 aim = offset.normalized; // 실제 목표 방향 정규화
+            int count = Mathf.Clamp(settings.projectileCount, 1, 9); // 안전한 투사체 수
+            float spread = Mathf.Clamp(settings.projectileSpreadDegrees, 0f, 180f); // 안전한 전체 부채각
+            for (int index = 0; index < count; index++) // 부채꼴 사격 순회
+            { // 반복 시작
+                float angle = count == 1 ? 0f : -spread * 0.5f + spread * index / (count - 1); // 목표 중심의 대칭 각도
+                float radians = angle * Mathf.Deg2Rad; // 회전 각도의 라디안 변환
+                float cosine = Mathf.Cos(radians); // 수평 회전 성분
+                float sine = Mathf.Sin(radians); // 수직 회전 성분
+                Vector2 direction = new Vector2(aim.x * cosine - aim.y * sine, aim.x * sine + aim.y * cosine); // 실제 투사체 발사 방향
+                GameObject shot = new GameObject("Enemy_Projectile"); // 투사체 오브젝트 생성
+                shot.transform.position = transform.position; // 발사 위치 설정
+                EnemyTestProjectile projectile = shot.AddComponent<EnemyTestProjectile>(); // 투사체 행동 추가
+                projectile.Configure(direction, projectileSpeed, projectileLifetime, settings.damage, health, body, player, visual); // 개별 투사체 설정
+            } // 반복 끝
         } // 메서드 끝
     } // 클래스 끝
 } // 영역 끝

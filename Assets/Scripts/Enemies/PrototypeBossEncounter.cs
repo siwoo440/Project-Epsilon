@@ -14,6 +14,9 @@ namespace ProjectEpsilon.Enemies // 적 영역
         [SerializeField] private float keepDistance = 4f; // 사격 유지 거리 임시값
         [SerializeField] private float projectileSpeed = 5f; // 투사체 속도 임시값
         [SerializeField] private float projectileLifetime = 3f; // 투사체 수명 임시값
+        [SerializeField] private int projectileCount = 3; // 첫 단계 부채꼴 투사체 수 임시값
+        [SerializeField] private int phaseTwoProjectileCount = 5; // 두 번째 단계 투사체 수 임시값
+        [SerializeField] private float projectileSpreadDegrees = 40f; // 부채꼴 전체 각도 임시값
         [SerializeField] private float phaseTwoSpeedMultiplier = 1.25f; // 두 번째 단계 속도 임시 배율
         [SerializeField] private float phaseTwoIntervalMultiplier = 0.75f; // 두 번째 단계 공격 간격 임시 배율
         [SerializeField] private float spawnDistance = 8f; // 보스 출현 거리 임시값
@@ -62,6 +65,7 @@ namespace ProjectEpsilon.Enemies // 적 영역
             { // 조건 시작
                 settings.speedRatio = Mathf.Max(0f, speedRatio) * Mathf.Max(0f, phaseTwoSpeedMultiplier); // 임시 이동 속도 변경
                 settings.attackInterval = Mathf.Max(0.1f, attackInterval * Mathf.Max(0f, phaseTwoIntervalMultiplier)); // 임시 사격 간격 변경
+                settings.projectileCount = Mathf.Clamp(phaseTwoProjectileCount, 1, 9); // 두 번째 단계 임시 사격 수
             } // 조건 끝
         } // 메서드 끝
 
@@ -122,7 +126,9 @@ namespace ProjectEpsilon.Enemies // 적 영역
                 health = maximumHealth, // 임시 체력
                 damage = damage, // 임시 투사체 피해
                 speedRatio = Mathf.Max(0f, speedRatio), // 임시 이동 속도
-                attackInterval = Mathf.Max(0.1f, attackInterval) // 임시 사격 간격
+                attackInterval = Mathf.Max(0.1f, attackInterval), // 임시 사격 간격
+                projectileCount = Mathf.Clamp(projectileCount, 1, 9), // 첫 단계 임시 사격 수
+                projectileSpreadDegrees = Mathf.Clamp(projectileSpreadDegrees, 0f, 180f) // 임시 부채꼴 각도
             }; // 설정 끝
             EarlyEnemyBehaviour behaviour = instance.AddComponent<EarlyEnemyBehaviour>(); // 기존 적 행동 재사용
             behaviour.Configure(settings, player, body, health, sprite, keepDistance, projectileSpeed, projectileLifetime, 1f, 0.6f, 3f); // 실제 사격과 이동 설정

@@ -14,6 +14,7 @@ internal static class Program // 출현 및 조준 시험
     { // 메서드 시작
         Check("사수의 최근접 몸통 발사", VerifyShooterBody); // 몸통 조준 검사
         Check("몸통 부재 시 머리 발사", VerifyShooterFallback); // 머리 대체 검사
+        Check("보스 부채꼴과 일반 사수 발사", VerifyProjectileFan); // 다방향 사격 검사
         Check("일반 적 화면 밖 출현", () => VerifySpawn(EarlyEnemyKind.Chaser, 16f / 9f, new Vector3(), true)); // 일반 출현 검사
         Check("엘리트 화면 밖 출현", () => VerifySpawn(EarlyEnemyKind.Elite, 16f / 9f, new Vector3(), true)); // 엘리트 출현 검사
         Check("이동된 넓은 카메라 밖 출현", () => VerifySpawn(EarlyEnemyKind.Chaser, 2.4f, new Vector3(2f, 1f, 0f), true)); // 이동 카메라 검사
@@ -55,6 +56,33 @@ internal static class Program // 출현 및 조준 시험
         GameObject root = new GameObject("Player"); // 플레이어 객체
         root.transform.position = new Vector3(5f, 0f, 0f); // 머리 위치
         return (root.AddComponent<SnakeMovement>(), root.AddComponent<SnakeBodyManager>(), root.AddComponent<SnakeHealth>()); // 플레이어 구성 반환
+    } // 메서드 끝
+    private static void VerifyProjectileFan() // 실제 사격 코드의 부채꼴 방향 확인
+    { // 메서드 시작
+        var fixture = Player(); // 실제 플레이어 대체 구성
+        GameObject enemy = new GameObject("FanShooter"); // 시험용 사수 객체
+        enemy.AddComponent<Rigidbody2D>(); // 실제 이동체 대체
+        EarlyEnemyBehaviour behaviour = enemy.AddComponent<EarlyEnemyBehaviour>(); // 실제 사격 행동
+        EarlyEnemySettings settings = new EarlyEnemySettings // 실제 적 능력 설정
+        { // 설정 시작
+            kind = EarlyEnemyKind.Shooter, // 사격 행동
+            attackInterval = 1f, // 임시 공격 간격
+            damage = 8 // 임시 피해
+        }; // 설정 끝
+        FieldInfo count = typeof(EarlyEnemySettings).GetField("projectileCount"); // 실제 투사체 수 설정 조회
+        FieldInfo spread = typeof(EarlyEnemySettings).GetField("projectileSpreadDegrees"); // 실제 부채꼴 각도 조회
+        Require(count != null && spread != null, "부채꼴 투사체 설정 누락"); // 실제 설정 존재 확인
+        count.SetValue(settings, 3); // 시험용 투사체 세 개
+        spread.SetValue(settings, 20f); // 시험용 전체 각도
+        behaviour.Configure(settings, fixture.player, fixture.body, fixture.health, null, 4f, 5f, 3f, 1f, 0.6f, 3f); // 실제 적 참조 구성
+        EnemyTestProjectile.Directions.Clear(); // 이전 발사 기록 제거
+        Invoke(behaviour, "FireProjectile", new Vector2(1f, 0f)); // 실제 사격 경로 실행
+        Require(EnemyTestProjectile.Directions.Count == 3, "부채꼴 투사체 수 오류"); // 실제 세 방향 발사 확인
+        Require(EnemyTestProjectile.Directions[0].y < -0.17f && Math.Abs(EnemyTestProjectile.Directions[1].y) < 0.001f && EnemyTestProjectile.Directions[2].y > 0.17f, "부채꼴 방향 또는 중앙 각도 오류"); // 실제 대칭 방향 확인
+        count.SetValue(settings, 1); // 일반 사수 한 발 설정
+        EnemyTestProjectile.Directions.Clear(); // 이전 발사 기록 제거
+        Invoke(behaviour, "FireProjectile", new Vector2(1f, 0f)); // 실제 일반 사격 실행
+        Require(EnemyTestProjectile.Directions.Count == 1 && Math.Abs(EnemyTestProjectile.Directions[0].y) < 0.001f, "기존 사수 단일 발사 변경"); // 기존 발사 유지 확인
     } // 메서드 끝
     private static void VerifyShooterBody() // 사수 몸통 조준 확인
     { // 메서드 시작

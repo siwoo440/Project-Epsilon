@@ -7028,6 +7028,9 @@ MonoBehaviour:
   keepDistance: 4
   projectileSpeed: 5
   projectileLifetime: 3
+  projectileCount: 3
+  phaseTwoProjectileCount: 5
+  projectileSpreadDegrees: 40
   phaseTwoSpeedMultiplier: 1.25
   phaseTwoIntervalMultiplier: 0.75
   spawnDistance: 8

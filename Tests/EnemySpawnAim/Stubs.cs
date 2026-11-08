@@ -81,6 +81,11 @@ namespace UnityEngine // Unity 대체
         public static float Sqrt(float value) => MathF.Sqrt(value); // 제곱근
         public static int Max(int a, int b) => Math.Max(a, b); // 정수 최댓값
         public static int CeilToInt(float value) => (int)MathF.Ceiling(value); // 올림
+        public const float Deg2Rad = MathF.PI / 180f; // 각도에서 라디안 변환
+        public static float Cos(float value) => MathF.Cos(value); // 코사인 계산
+        public static float Sin(float value) => MathF.Sin(value); // 사인 계산
+        public static float Clamp(float value, float minimum, float maximum) => Math.Clamp(value, minimum, maximum); // 실수 범위 제한
+        public static int Clamp(int value, int minimum, int maximum) => Math.Clamp(value, minimum, maximum); // 정수 범위 제한
     } // 클래스 끝
     public static class Time // 시험 시간
     { // 클래스 시작
@@ -175,5 +180,14 @@ namespace ProjectEpsilon.Enemies // 적 투사체 대체
 { // 영역 시작
     using ProjectEpsilon.Player; // 플레이어 참조
     using UnityEngine; // 방향 형식
-    public sealed class EnemyTestProjectile : MonoBehaviour { public static Vector2 LastDirection; public void Configure(Vector2 direction, float speed, float lifetime, int damage, SnakeHealth health, SnakeBodyManager body, SnakeMovement player, Sprite visual) { LastDirection = direction; } } // 발사 방향 기록
+    public sealed class EnemyTestProjectile : MonoBehaviour // 사격 방향 대체
+    { // 클래스 시작
+        public static Vector2 LastDirection; // 마지막 발사 방향
+        public static readonly List<Vector2> Directions = new List<Vector2>(); // 전체 발사 방향
+        public void Configure(Vector2 direction, float speed, float lifetime, int damage, SnakeHealth health, SnakeBodyManager body, SnakeMovement player, Sprite visual) // 시험용 발사 설정
+        { // 메서드 시작
+            LastDirection = direction; // 마지막 발사 방향 저장
+            Directions.Add(direction); // 실제 호출 순서 저장
+        } // 메서드 끝
+    } // 클래스 끝
 } // 영역 끝

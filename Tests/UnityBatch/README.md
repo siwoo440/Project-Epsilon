@@ -21,12 +21,15 @@
 
 34일차 초반 웨이브 회귀의 첫 실행은 레벨업 직후 같은 프레임에 보석 객체가 조회돼 종료 코드 1이었다. 보강 스크립트 SHA-256 `22F63CD799B90DFBF200DB3B50CC50BA87C0F416B0C27FD354F86F802A54E1B1`은 실제 8배 누적 240.011초, 강제 엘리트 사망·20 XP 보석·연속 레벨업과 엘리트 보상 UI에서 종료 코드 0이었다. 보강 후 같은 프레임 분기는 재발하지 않아 첫 실패의 원인은 확정하지 않았다. 각 Unity 실행에서 에디터 Search 시작 인덱싱 예외가 별도로 발생했다.
 
+35일차 `AutomatedBossFanVerification.cs` SHA-256 `D46C2D133CDCD6EAB0B58869A210AC51D69535897098B9EDAB5B1284E1644D23`은 34일차 사본에서 보스가 한 발만 발사해 종료 코드 1, 수정 사본에서는 일반 사수 1발과 보스 1단계 3발·2단계 5발의 대칭 각도 및 실제 몸통 접촉 HP 15 피해를 확인해 종료 코드 0이었다. 보스 출현과 사격은 강제로 호출했고 자동 출현과 이동을 통제했다. 기존 실제 사수·출현 회귀도 종료 코드 0이었다. 두 수정본 Unity 실행에서 에디터 Search 시작 인덱싱 예외가 별도로 발생했다.
+
 | 스크립트 | 실행할 메서드 | 실제로 실행한 조건 |
 | --- | --- | --- |
 | `AutomatedPilotVerification.cs` | `ProjectEpsilon.Editor.AutomatedPilotVerification.Run` | 정상 속도 300초, 가상 A/D·Space 회피 입력, 레벨업·보상 UI 자동 선택. 무적·능력치 변경 없음. 배치 포커스를 위해 입력 설정의 저장되지 않는 메모리 사본 사용 |
 | `AutomatedEliteRewardVerification.cs` | `ProjectEpsilon.Editor.AutomatedEliteRewardVerification.Run` | 출현기 시간을 240초로 설정하고 엘리트를 강제 처치. XP 보석과 보상 일시정지, 실제 UI 버튼 이벤트, 장착·재개 확인 |
 | `AutomatedEarlyWaveVerification.cs` | `ProjectEpsilon.Editor.AutomatedEarlyWaveVerification.Run` | 실제 출현 시간 누적을 8배로 가속하고 일반 적을 관측 후 제거. 4분 자동 엘리트를 강제 처치하고 실제 XP 보석·연속 레벨업·엘리트 보상 UI 순서 확인 |
 | `AutomatedBossTransitionVerification.cs` | `ProjectEpsilon.Editor.AutomatedBossTransitionVerification.Run` | 실제 씬의 출현 시간을 0초부터 32배로 누적하고 적 이동·공격과 플레이어 이동·충돌을 통제. 20분 전환 시 적·아이템 정리, 합성 보류, 시험 보스 단계와 강제 처치 승리 확인 |
+| `AutomatedBossFanVerification.cs` | `ProjectEpsilon.Editor.AutomatedBossFanVerification.Run` | 보스 생성·사격을 강제하고 이동·자연 출현을 통제. 실제 일반 사수 단발, 보스 1·2단계 부채꼴 각도와 실제 2D 투사체 접촉 피해 확인 |
 | `AutomatedRunClockVerification.cs` | `ProjectEpsilon.Editor.AutomatedRunClockVerification.Run` | 실제 씬에서 같은 프레임의 일시정지 전 게임 시간, HUD 동기화, 정지 유지, 표시 전용 초기화와 재개를 확인 |
 | `AutomatedEliteScheduleVerification.cs` | `ProjectEpsilon.Editor.AutomatedEliteScheduleVerification.Run` / `RunExternalDestroy` | 실제 출현 시간을 32배로 가속하고 일반 적 만석을 유지. 엘리트 FIFO 대기·공존·보상과 별도의 외부 파괴 경계 확인 |
 | `AutomatedShooterSpawnVerification.cs` | `ProjectEpsilon.Editor.AutomatedShooterSpawnVerification.Run` | 실제 사수의 물리 발사·머리 기준 거리 유지 및 32:9 이동 카메라의 일반·엘리트 출현 위치와 정리, 렌더 직전 뷰포트 확인 |

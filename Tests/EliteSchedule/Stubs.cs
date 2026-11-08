@@ -82,6 +82,11 @@ namespace UnityEngine // Unity 대체
         public static float Sqrt(float value) => MathF.Sqrt(value); // 제곱근
         public static int Max(int a, int b) => Math.Max(a, b); // 정수 최댓값
         public static int CeilToInt(float value) => (int)MathF.Ceiling(value); // 올림
+        public const float Deg2Rad = MathF.PI / 180f; // 각도에서 라디안 변환
+        public static float Cos(float value) => MathF.Cos(value); // 코사인 계산
+        public static float Sin(float value) => MathF.Sin(value); // 사인 계산
+        public static float Clamp(float value, float minimum, float maximum) => Math.Clamp(value, minimum, maximum); // 실수 범위 제한
+        public static int Clamp(int value, int minimum, int maximum) => Math.Clamp(value, minimum, maximum); // 정수 범위 제한
     } // 클래스 끝
     public static class Time // 시험 시간
     { // 클래스 시작

@@ -23,6 +23,8 @@ namespace ProjectEpsilon.Enemies // 적 영역
         public int damage; // 공격 피해
         public float speedRatio; // 기본 이동 속도 배율
         public float attackInterval; // 공격 간격
+        public int projectileCount = 1; // 사격 투사체 수 임시값
+        public float projectileSpreadDegrees; // 사격 전체 부채각 임시값
         public int experience; // 경험치
         public float firstAppearance; // 최초 출현 시간
         public Color color = Color.white; // 구분 색상
