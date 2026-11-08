@@ -120,14 +120,37 @@ namespace ProjectEpsilon.Editor // 편집기 영역
             yield return VerifyWeapon("DebugCutter", WeaponAttackType.Melee, WeaponAttribute.Fire, 8f, 0.9f, 1); // 화염 검 시험값
             yield return VerifyWeapon("DebugBlaster", WeaponAttackType.StraightProjectile, WeaponAttribute.Fire, 7f, 0.8f, 1); // 화염탄 시험값
             yield return VerifyWeapon("DebugPulse", WeaponAttackType.Area, WeaponAttribute.Fire, 5f, 1.2f, 2); // 화염 고리 시험값
+            yield return VerifyWeapon("PrototypePhysicalDagger", WeaponAttackType.Melee, WeaponAttribute.Physical, 6f, 0.55f, 1); // 물리 단검 임시 공격 확인
+            yield return VerifyWeapon("PrototypePhysicalJavelin", WeaponAttackType.StraightProjectile, WeaponAttribute.Physical, 6f, 0.7f, 1); // 물리 투창 임시 공격 확인
+            yield return VerifyWeapon("PrototypePhysicalHammer", WeaponAttackType.Area, WeaponAttribute.Physical, 11f, 1.8f, 3); // 물리 망치 임시 공격 확인
+            yield return VerifyWeapon("PrototypeFireBrand", WeaponAttackType.Melee, WeaponAttribute.Fire, 12f, 1.3f, 1); // 화염 곤봉 임시 공격 확인
+            yield return VerifyWeapon("PrototypeFireLance", WeaponAttackType.StraightProjectile, WeaponAttribute.Fire, 9f, 1.2f, 2); // 화염 창 임시 공격 확인
+            yield return VerifyWeapon("PrototypeFireBurst", WeaponAttackType.Area, WeaponAttribute.Fire, 8f, 1.6f, 3); // 화염 파동 임시 공격 확인
+            VerifyRewardPool(); // 실제 보상 풀 무기 확인
             ClearObjects(); // 시험 표적과 투사체 제거
             weapons.enabled = false; // 경험치 시험 중 자동 공격 중지
             yield return null; // 지연 객체 제거 대기
             yield return VerifyEnemyExperience(); // 실제 적 생성과 보석 획득
             hooks.AttackTriggered -= OnAttack; // 공격 기록 구독 해제
             hooks.HitTriggered -= OnHit; // 명중 기록 구독 해제
-            AutomatedEarlyWeaponVerification.Finish(0, "Six actual weapon assets, body origins, direct damage, cooldown, attack targets, real projectile contacts and three enemy XP drops/collection."); // 전체 성공 기록
+            AutomatedEarlyWeaponVerification.Finish(0, "Twelve weapon assets, reward pool, body origins, direct damage, cooldown, attack targets, projectile contacts and three enemy XP drops/collection."); // 전체 성공 기록
         } // 코루틴 끝
+
+        private void VerifyRewardPool() // 실제 레벨업 및 엘리트 공통 무기 풀 확인
+        { // 메서드 시작
+            WeaponRewardPool pool = AssetDatabase.LoadAssetAtPath<WeaponRewardPool>("Assets/Data/Progression/DebugWeaponRewardPool.asset"); // 실제 보상 풀 데이터
+            Require(pool != null && pool.Entries.Count == 12, "Reward pool must contain twelve weapons."); // 보상 풀 크기 확인
+            HashSet<string> ids = new HashSet<string>(); // 고유 무기 식별자 목록
+            int physical = 0; // 물리 무기 수
+            int fire = 0; // 화염 무기 수
+            foreach (WeaponRewardEntry entry in pool.Entries) // 실제 보상 후보 순회
+            { // 반복 시작
+                Require(entry != null && entry.Unlocked && entry.Weapon != null && ids.Add(entry.Weapon.Id), "Reward pool has missing, locked or duplicate weapon."); // 후보 유효성과 식별자 중복 확인
+                physical += entry.Weapon.Attribute == WeaponAttribute.Physical ? 1 : 0; // 물리 속성 수 집계
+                fire += entry.Weapon.Attribute == WeaponAttribute.Fire ? 1 : 0; // 화염 속성 수 집계
+            } // 반복 끝
+            Require(physical == 6 && fire == 6, "Reward pool does not contain six weapons per attribute."); // 속성별 무기 수 확인
+        } // 메서드 끝
 
         private void Prepare() // 실제 씬과 통제 조건 준비
         { // 메서드 시작

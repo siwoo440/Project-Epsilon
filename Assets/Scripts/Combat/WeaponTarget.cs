@@ -14,6 +14,7 @@ namespace ProjectEpsilon.Combat // 전투 영역
         private bool deathHandled; // 사망 처리 여부
 
         public event Action<WeaponTarget> Died; // 사망 이벤트
+        public event Action<float> Damaged; // 실제 피해 이벤트
 
         public float CurrentHealth => currentHealth; // 현재 체력 반환
         public float MaximumHealth => maximumHealth; // 최대 체력 반환
@@ -76,6 +77,7 @@ namespace ProjectEpsilon.Combat // 전투 영역
             float previousHealth = currentHealth; // 피해 전 체력 저장
             currentHealth = Mathf.Max(0f, currentHealth - finalDamage); // 체력 감소
             float dealtDamage = previousHealth - currentHealth; // 실제 피해량 계산
+            Damaged?.Invoke(dealtDamage); // 실제 피해 알림
 
             if (currentHealth <= 0f) // 사망 체력 확인
             {

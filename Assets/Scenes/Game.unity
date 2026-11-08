@@ -2333,7 +2333,7 @@ Transform:
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 0.72, y: 0.72, z: 1}
+  m_LocalScale: {x: 1.44, y: 1.44, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 374004618}
@@ -2374,8 +2374,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::ProjectEpsilon.Player.SnakePathRecorder
   minimumPointDistance: 0.04
-  maximumPathLength: 18
-  initialPathLength: 14
+  maximumPathLength: 36
+  initialPathLength: 28
 --- !u!114 &587332113
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -7862,7 +7862,7 @@ MonoBehaviour:
   - {fileID: 67336840}
   - {fileID: 880393964}
   tailSegment: {fileID: 2095993295}
-  segmentSpacing: 0.58
+  segmentSpacing: 1.16
 --- !u!114 &2088063714
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -7895,9 +7895,9 @@ MonoBehaviour:
   startingBodyCount: 3
   maximumBodyCount: 20
   earnedBodyCount: 3
-  segmentSpacing: 0.58
-  bodyScale: {x: 0.62, y: 0.62, z: 1}
-  tailScale: {x: 0.48, y: 0.48, z: 1}
+  segmentSpacing: 1.16
+  bodyScale: {x: 1.24, y: 1.24, z: 1}
+  tailScale: {x: 0.96, y: 0.96, z: 1}
   bodyColor: {r: 1, g: 1, b: 1, a: 1}
   tailColor: {r: 1, g: 1, b: 1, a: 1}
   bodyColliderRadius: 0.36

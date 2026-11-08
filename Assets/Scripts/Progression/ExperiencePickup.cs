@@ -167,15 +167,15 @@ namespace ProjectEpsilon.Progression
         {
             if (value >= 20)
             {
-                return 0.34f;
+                return 1.02f; // 대형 보석 세 배 크기
             }
 
             if (value >= 5)
             {
-                return 0.26f;
+                return 0.78f; // 중형 보석 세 배 크기
             }
 
-            return 0.18f;
+            return 0.54f; // 소형 보석 세 배 크기
         }
 
         public static ExperiencePickup Spawn(

@@ -66,6 +66,8 @@ namespace ProjectEpsilon.Editor // 편집기 영역
         private static bool experienceObserved; // 자연 경험치 획득 여부
         private static bool naturalProgressObserved; // 실제 성장과 보상 완료 여부
         private static SnakeExperience trackedExperience; // 경험치 이벤트 대상
+        private static SnakeBodyManager trackedBody; // 몸통 변경 이벤트 대상
+        private static int trackedBodyCount; // 직전 몸통 수
         private static int previousExperience; // 이전 경험치 값
         private static int previousLevel; // 이전 레벨 값
         private static float nextTacticalReport; // 다음 전투 거리 기록 시각
@@ -154,6 +156,12 @@ namespace ProjectEpsilon.Editor // 편집기 영역
                 previousExperience = experience.CurrentExperience; // 초기 경험치 저장
                 previousLevel = experience.CurrentLevel; // 초기 레벨 저장
                 experience.ExperienceChanged += HandleExperienceChanged; // 경험치 변경 구독
+            } // 조건 끝
+            if (trackedBody == null) // 몸통 이벤트 연결 확인
+            { // 조건 시작
+                trackedBody = body; // 실제 몸통 관리자 저장
+                trackedBodyCount = body.CurrentBodyCount; // 초기 몸통 수 저장
+                body.BodyCountChanged += HandleBodyCountChanged; // 실제 몸통 변경 구독
             } // 조건 끝
             if (keyboard == null) // 가상 키보드 확인
             { // 조건 시작
@@ -397,6 +405,9 @@ namespace ProjectEpsilon.Editor // 편집기 영역
         { // 메서드 시작
             Vector2 point = player.transform.position; // 예상 머리 시작 위치
             Vector2 forward = player.transform.up; // 예상 전진 방향
+            CircleCollider2D headCollider = player.GetComponent<CircleCollider2D>(); // 실제 머리 충돌체
+            SnakeBodyFollower follower = body.GetComponent<SnakeBodyFollower>(); // 실제 몸통 간격 조회
+            float spacing = follower != null ? follower.SegmentSpacing : 0.58f; // 실제 간격과 기존 대체값
             Vector2[] predicted = new Vector2[enemies.Length]; // 적별 예상 위치
             for (int index = 0; index < enemies.Length; index++) // 실제 적 위치 순회
             { // 반복 시작
@@ -418,7 +429,8 @@ namespace ProjectEpsilon.Editor // 편집기 영역
                     } // 조건 끝
                     Vector2 chase = point - predicted[enemyIndex]; // 적의 예상 추적 방향
                     predicted[enemyIndex] += chase.normalized * player.MoveSpeed * 0.8f * step; // 임시 추적 위치 예측
-                    if (Vector2.Distance(point, predicted[enemyIndex]) < 1.0f) // 머리 근접 위험 확인
+                    CircleCollider2D enemyCollider = enemies[enemyIndex].GetComponent<CircleCollider2D>(); // 실제 적 충돌체
+                    if (Vector2.Distance(point, predicted[enemyIndex]) < Mathf.Max(1f, ContactDistance(headCollider, enemyCollider) + 0.52f)) // 실제 머리 접촉 위험 확인
                     { // 조건 시작
                         return true; // 유지 회전 차단
                     } // 조건 끝
@@ -429,10 +441,10 @@ namespace ProjectEpsilon.Editor // 편집기 영역
                         { // 조건 시작
                             continue; // 다음 몸통 확인
                         } // 조건 끝
-                        Vector2 future = point - forward * (0.58f * (index + 1)); // 예상 몸통 위치
-                        float delay = 0.58f * (index + 1) / Mathf.Max(0.1f, player.MoveSpeed); // 몸통 이동 지연
+                        Vector2 future = point - forward * (spacing * (index + 1)); // 실제 간격 기준 예상 몸통 위치
+                        float delay = spacing * (index + 1) / Mathf.Max(0.1f, player.MoveSpeed); // 실제 간격 기준 몸통 이동 지연
                         Vector2 estimated = Vector2.Lerp(segment.transform.position, future, Mathf.Clamp01(step * tick / delay)); // 기존 위치와 예측 위치 보간
-                        if (Vector2.Distance(estimated, predicted[enemyIndex]) < 0.8f) // 몸통 근접 위험 확인
+                        if (Vector2.Distance(estimated, predicted[enemyIndex]) < Mathf.Max(0.8f, ContactDistance(segment.GetComponent<CircleCollider2D>(), enemyCollider) + 0.33f)) // 실제 몸통 접촉 위험 확인
                         { // 조건 시작
                             return true; // 유지 회전 차단
                         } // 조건 끝
@@ -446,6 +458,9 @@ namespace ProjectEpsilon.Editor // 편집기 영역
         { // 메서드 시작
             Vector2 point = origin; // 경로 위치 초기화
             Vector2 forward = heading; // 경로 방향 초기화
+            CircleCollider2D headCollider = player.GetComponent<CircleCollider2D>(); // 실제 머리 충돌체
+            SnakeBodyFollower follower = body.GetComponent<SnakeBodyFollower>(); // 실제 몸통 간격 조회
+            float spacing = follower != null ? follower.SegmentSpacing : 0.58f; // 실제 간격과 기존 대체값
             float score = (turn == 0 ? 0f : 1f) + (boost ? 0.35f : 0f); // 불필요한 회전과 가속 억제
             float expectedSpeed = player.MoveSpeed * (boost ? 1.5f : 1f); // 후보별 예상 이동 속도
             Vector2[] predictedEnemies = new Vector2[enemies.Length]; // 적별 예상 위치
@@ -496,16 +511,18 @@ namespace ProjectEpsilon.Editor // 편집기 영역
                     Vector2 predicted = enemyPosition + chase.normalized * player.MoveSpeed * 0.8f * step; // 적 추적 위치 갱신
                     predictedEnemies[enemyIndex] = predicted; // 다음 예상 위치 저장
                     float distance = Vector2.Distance(point, predicted); // 예상 접근 거리
+                    CircleCollider2D enemyCollider = enemy.GetComponent<CircleCollider2D>(); // 실제 적 충돌체
+                    float headContact = ContactDistance(headCollider, enemyCollider); // 실제 머리 접촉 거리
                     nearestEnemy = Mathf.Min(nearestEnemy, distance); // 최단 적 거리 갱신
-                    if (distance < 1.6f) // 근접 위험 범위 확인
+                    if (distance < Mathf.Max(1.6f, headContact + 1.12f)) // 실제 크기 기준 근접 위험 확인
                     { // 조건 시작
                         score += 0.3f / (distance * distance + 0.15f); // 근접 위험 누적
                     } // 조건 끝
-                    if (distance < 0.75f) // 머리 직접 충돌 위험 확인
+                    if (distance < Mathf.Max(0.75f, headContact + 0.27f)) // 실제 크기 기준 머리 충돌 위험 확인
                     { // 조건 시작
                         score += 40f; // 충돌 위험 가중
                     } // 조건 끝
-                    Vector2 expectedWeapon = point - forward * 0.58f; // 예상 첫 몸통 위치
+                    Vector2 expectedWeapon = point - forward * spacing; // 실제 간격 기준 첫 몸통 위치
                     float weaponDistance = Vector2.Distance(expectedWeapon, predicted); // 적과 첫 무기 거리
                     for (int index = 0; index < body.BodySegments.Count; index++) // 실제 몸통별 위험 확인
                     { // 반복 시작
@@ -514,16 +531,17 @@ namespace ProjectEpsilon.Editor // 편집기 영역
                         { // 조건 시작
                             continue; // 다음 몸통 확인
                         } // 조건 끝
-                        Vector2 futureSegment = point - forward * (0.58f * (index + 1)); // 예측 몸통 위치
-                        float travelTime = 0.58f * (index + 1) / Mathf.Max(0.1f, player.MoveSpeed); // 몸통 이동 지연
+                        Vector2 futureSegment = point - forward * (spacing * (index + 1)); // 실제 간격 기준 예측 몸통 위치
+                        float travelTime = spacing * (index + 1) / Mathf.Max(0.1f, player.MoveSpeed); // 실제 간격 기준 몸통 이동 지연
                         float travelFraction = Mathf.Clamp01(step * tick / travelTime); // 예상 경로 반영 비율
                         Vector2 estimatedSegment = Vector2.Lerp(segment.transform.position, futureSegment, travelFraction); // 현재 몸통과 예상 몸통 보간
                         float bodyDistance = Vector2.Distance(estimatedSegment, predicted); // 적과 예상 몸통 거리
-                        if (bodyDistance < 1.3f) // 몸통 근접 위험 확인
+                        float bodyContact = ContactDistance(segment.GetComponent<CircleCollider2D>(), enemyCollider); // 실제 몸통 접촉 거리
+                        if (bodyDistance < Mathf.Max(1.3f, bodyContact + 0.83f)) // 실제 크기 기준 몸통 근접 위험 확인
                         { // 조건 시작
                             score += 1.2f / (bodyDistance * bodyDistance + 0.15f); // 근접 공격 위험 반영
                         } // 조건 끝
-                        if (bodyDistance < 0.8f) // 몸통 직접 접촉 위험 확인
+                        if (bodyDistance < Mathf.Max(0.8f, bodyContact + 0.33f)) // 실제 크기 기준 몸통 접촉 위험 확인
                         { // 조건 시작
                             score += 25f; // 몸통 피해 위험 가중
                         } // 조건 끝
@@ -557,7 +575,7 @@ namespace ProjectEpsilon.Editor // 편집기 영역
                 for (int index = 2; index < body.BodySegments.Count; index++) // 뒤쪽 몸통 순회
                 { // 반복 시작
                     SnakeSegment segment = body.BodySegments[index]; // 몸통 조회
-                    if (segment != null && Vector2.Distance(point, segment.transform.position) < 0.65f) // 자기 충돌 위험 확인
+                    if (segment != null && Vector2.Distance(point, segment.transform.position) < Mathf.Max(0.65f, ContactDistance(headCollider, segment.GetComponent<CircleCollider2D>()) + 0.2f)) // 실제 크기 기준 자기 충돌 위험 확인
                     { // 조건 시작
                         score += 20f; // 자기 충돌 위험 가중
                     } // 조건 끝
@@ -566,6 +584,19 @@ namespace ProjectEpsilon.Editor // 편집기 영역
             return score; // 예상 위험 반환
         } // 메서드 끝
 
+        private static float ContactDistance(CircleCollider2D first, CircleCollider2D second) // 실제 원형 충돌체 접촉 거리
+        { // 메서드 시작
+            return WorldRadius(first) + WorldRadius(second); // 두 충돌 반경 합계
+        } // 메서드 끝
+        private static float WorldRadius(CircleCollider2D collider) // 실제 배율을 적용한 충돌 반경
+        { // 메서드 시작
+            if (collider == null || !collider.enabled) // 유효 충돌체 확인
+            { // 조건 시작
+                return 0f; // 없는 충돌체 제외
+            } // 조건 끝
+            Vector3 scale = collider.transform.lossyScale; // 실제 월드 배율
+            return collider.radius * Mathf.Max(Mathf.Abs(scale.x), Mathf.Abs(scale.y)); // 원형 충돌체 월드 반경
+        } // 메서드 끝
         private static bool ThreatBehind(Vector2 origin, Vector2 heading, EarlyEnemyBehaviour[] enemies) // 뒤쪽 근접 위험 확인
         { // 메서드 시작
             foreach (EarlyEnemyBehaviour enemy in enemies) // 적 순회
@@ -783,6 +814,14 @@ namespace ProjectEpsilon.Editor // 편집기 영역
             Debug.Log($"[NaturalCombatVerification] natural kill={naturalKills} id={target.GetInstanceID()} type={target.name} time={Time.time:F2}"); // 실제 처치 기록
         } // 메서드 끝
 
+        private static void HandleBodyCountChanged(int current, int maximum) // 실제 몸통 변경 원인 기록
+        { // 메서드 시작
+            if (current < trackedBodyCount) // 실제 몸통 손실 확인
+            { // 조건 시작
+                Debug.Log($"[NaturalCombatVerification] body loss {trackedBodyCount}->{current} time={Time.time:F2} stack={Environment.StackTrace}"); // 손실 호출 경로 기록
+            } // 조건 끝
+            trackedBodyCount = current; // 현재 몸통 수 저장
+        } // 메서드 끝
         private static void HandleExperienceChanged(int current, int required) // 실제 경험치 변경 기록
         { // 메서드 시작
             int level = trackedExperience == null ? previousLevel : trackedExperience.CurrentLevel; // 현재 레벨 조회
@@ -851,6 +890,10 @@ namespace ProjectEpsilon.Editor // 편집기 영역
 
         private static void Finish(int code) // 검증 종료
         { // 메서드 시작
+            if (trackedBody != null) // 실제 몸통 구독 확인
+            { // 조건 시작
+                trackedBody.BodyCountChanged -= HandleBodyCountChanged; // 몸통 이벤트 연결 해제
+            } // 조건 끝
             if (trackedExperience != null) // 경험치 관리자 연결 확인
             { // 조건 시작
                 trackedExperience.ExperienceChanged -= HandleExperienceChanged; // 경험치 이벤트 연결 해제

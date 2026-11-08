@@ -127,7 +127,7 @@ namespace ProjectEpsilon.Enemies // 적 영역
             Sprite sprite = bossVisual != null ? bossVisual : source == null ? null : source.sprite; // 지정 이미지 또는 기존 대체 이미지
             GameObject instance = new GameObject("PrototypeFinalBoss"); // 실제 보스 객체 생성
             instance.transform.position = player.transform.position + Vector3.up * Mathf.Max(1f, spawnDistance); // 시험용 출현 위치
-            instance.transform.localScale = Vector3.one * 1.4f; // 시험용 보스 크기
+            instance.transform.localScale = Vector3.one * 2.8f; // 시험용 보스 두 배 크기
             SpriteRenderer renderer = instance.AddComponent<SpriteRenderer>(); // 실제 보스 렌더러
             renderer.sprite = sprite; // 임시 보스 시각 자료
             renderer.color = bossTint; // 실제 설정한 보스 색상
@@ -140,6 +140,7 @@ namespace ProjectEpsilon.Enemies // 적 영역
             physicsBody.useFullKinematicContacts = true; // 실제 투사체 접촉 허용
             WeaponTarget target = instance.AddComponent<WeaponTarget>(); // 실제 무기 공격 대상
             target.Configure(maximumHealth); // 임시 최대 체력 반영
+            instance.AddComponent<EnemyHitFlash>(); // 실제 피격 표시 연결
             instance.AddComponent<WeaponTargetStatusController>().ConfigureColdFreezeResistance(true, coldFreezeSlowMultiplier); // 보스 냉기 빙결 저항 설정
             instance.AddComponent<WeaponTargetKnockbackController>().Configure(true); // 보스 넉백 면역
             settings = new EarlyEnemySettings // 기존 사수 행동의 임시 설정

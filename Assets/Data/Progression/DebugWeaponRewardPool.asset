@@ -25,3 +25,15 @@ MonoBehaviour:
     unlocked: 1
   - weapon: {fileID: 11400000, guid: f3262d3476cd8cb4a9b65c07ce65b2a3, type: 2}
     unlocked: 1
+  - weapon: {fileID: 11400000, guid: 6d979568adfe495ba52ef3d560706f8c, type: 2}
+    unlocked: 1
+  - weapon: {fileID: 11400000, guid: 3b0ba84dc8f14b2997710e7252fd017f, type: 2}
+    unlocked: 1
+  - weapon: {fileID: 11400000, guid: 25bbe22779b94ab48da7ef0e83be602a, type: 2}
+    unlocked: 1
+  - weapon: {fileID: 11400000, guid: 74dec55697a84a979aa41fb646a94aed, type: 2}
+    unlocked: 1
+  - weapon: {fileID: 11400000, guid: ed036bf55c7546d7af98f911e6f9de55, type: 2}
+    unlocked: 1
+  - weapon: {fileID: 11400000, guid: 23ab457020444a0f895456ef1f6bcd66, type: 2}
+    unlocked: 1

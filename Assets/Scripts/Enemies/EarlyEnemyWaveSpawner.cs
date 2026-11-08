@@ -264,7 +264,7 @@ namespace ProjectEpsilon.Enemies // 적 영역
             renderer.sprite = setting.enemySprite != null ? setting.enemySprite : visual; // 종류별 이미지 또는 기존 대체 이미지
             renderer.color = setting.enemySprite != null ? Color.white : setting.color; // 전용 이미지 원색 또는 기존 구분 색상
             renderer.sortingOrder = 8; // 적 표시 순서
-            enemy.transform.localScale = Vector3.one * (setting.kind == EarlyEnemyKind.Elite ? 0.8f : 0.5f); // 적 크기 적용
+            enemy.transform.localScale = Vector3.one * (setting.kind == EarlyEnemyKind.Elite ? 1.6f : 1f); // 적 크기 두 배 적용
             CircleCollider2D collider = enemy.AddComponent<CircleCollider2D>(); // 적 충돌체 생성
             collider.isTrigger = true; // 접촉 감지 설정
             Rigidbody2D rigidbody = enemy.AddComponent<Rigidbody2D>(); // 적 물리체 생성
@@ -273,6 +273,7 @@ namespace ProjectEpsilon.Enemies // 적 영역
             rigidbody.useFullKinematicContacts = true; // 운동학 충돌 감지
             WeaponTarget target = enemy.AddComponent<WeaponTarget>(); // 공격 가능 대상 생성
             target.Configure(setting.health); // 적 체력 설정
+            enemy.AddComponent<EnemyHitFlash>(); // 실제 피격 표시 연결
             enemy.AddComponent<WeaponTargetStatusController>(); // 기존 상태 효과 적용
             enemy.AddComponent<WeaponTargetKnockbackController>(); // 기존 넉백 적용
             if (!bossSummon) // 일반 적 보상 여부
