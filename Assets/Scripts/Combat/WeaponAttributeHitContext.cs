@@ -11,9 +11,10 @@ namespace ProjectEpsilon.Combat // 전투 영역
         public int SynergyStage { get; } // 시너지 단계
         public int Grade { get; } // 무기 등급
         public Vector3 Origin { get; } // 공격 시작 위치
+        public Vector3 AreaCenter { get; } // 실제 범위 공격 중심
         public float DirectDamage { get; } // 최종 직접 피해
 
-        public WeaponAttributeAttackSnapshot(WeaponData weapon, WeaponAttribute attribute, int attributeCount, int synergyStage, int grade, Vector3 origin, float directDamage) // 공격 정보 생성
+        public WeaponAttributeAttackSnapshot(WeaponData weapon, WeaponAttribute attribute, int attributeCount, int synergyStage, int grade, Vector3 origin, float directDamage, Vector3? areaCenter = null) // 공격 정보 생성
         { // 생성자 시작
             Weapon = weapon; // 무기 저장
             Attribute = attribute; // 속성 저장
@@ -21,6 +22,7 @@ namespace ProjectEpsilon.Combat // 전투 영역
             SynergyStage = WeaponAttributeSynergyRules.ResolveStage(synergyStage); // 단계 저장
             Grade = Mathf.Clamp(grade, 1, 5); // 등급 저장
             Origin = origin; // 시작 위치 저장
+            AreaCenter = areaCenter ?? origin; // 범위 중심 또는 기존 몸통 중심
             DirectDamage = Mathf.Max(0f, directDamage); // 직접 피해 저장
         } // 생성자 끝
     } // 구조체 끝

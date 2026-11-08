@@ -297,7 +297,7 @@ namespace ProjectEpsilon.Combat // 전투 영역
         {
             if (attack.Weapon != null && attack.Weapon.AttackType == WeaponAttackType.Area) // 범위 무기 확인
             {
-                return attack.Origin; // 공격 원점을 중심으로 반환
+                return attack.AreaCenter; // 실제 범위 공격 중심 반환
             }
 
             return hitPosition; // 실제 명중 위치 반환

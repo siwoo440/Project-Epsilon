@@ -58,7 +58,7 @@ namespace ProjectEpsilon.Combat // 전투 영역
 
             target = damageTarget; // 대상 저장
             synergyStage = WeaponAttributeSynergyRules.ResolveStage(incomingStage); // 독 단계 저장
-            stackCount = stackCount >= int.MaxValue ? int.MaxValue : stackCount + 1; // 독 중첩 증가
+            stackCount = Mathf.Clamp(stackCount, 0, 4) + 1; // 독 다섯 중첩 상한
             remainingDuration = WeaponAttributePoisonRules.NormalizeDuration(WeaponAttributePoisonRules.TemporaryDuration); // 임시 지속 시간 갱신
             return true; // 적용 성공
         }

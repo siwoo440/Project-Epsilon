@@ -53,7 +53,7 @@ namespace ProjectEpsilon.Editor // 편집기 영역
             { // 조건 시작
                 started = EditorApplication.timeSinceStartup; // 시작 시각 저장
             } // 조건 끝
-            if (EditorApplication.timeSinceStartup - started > 120d) // 전체 시험 제한 확인
+            if (EditorApplication.timeSinceStartup - started > 180d) // 전체 시험 제한 확인
             { // 조건 시작
                 Finish(1, "Timed out waiting for controlled weapon test."); // 시간 초과 기록
                 return; // 시험 중단
@@ -138,6 +138,18 @@ namespace ProjectEpsilon.Editor // 편집기 영역
             yield return VerifyWeapon("PrototypeElectricDagger", WeaponAttackType.Melee, WeaponAttribute.Electric, 6f, 0.55f, 1); // 전기 단검 임시 공격 확인
             yield return VerifyWeapon("PrototypeElectricBolt", WeaponAttackType.StraightProjectile, WeaponAttribute.Electric, 8f, 0.85f, 1); // 전기 탄 임시 공격 확인
             yield return VerifyWeapon("PrototypeElectricWave", WeaponAttackType.Area, WeaponAttribute.Electric, 9f, 1.6f, 3); // 전기 파동 임시 공격 확인
+            yield return VerifyWeapon("PrototypePoisonBlade", WeaponAttackType.Melee, WeaponAttribute.Poison, 9f, 0.9f, 1); // 독 검 임시 공격 확인
+            yield return VerifyWeapon("PrototypePoisonSpear", WeaponAttackType.StraightProjectile, WeaponAttribute.Poison, 7f, 1f, 2); // 독 창 임시 공격 확인
+            yield return VerifyWeapon("PrototypePoisonAura", WeaponAttackType.Area, WeaponAttribute.Poison, 6f, 1.4f, 3); // 독 고리 임시 공격 확인
+            yield return VerifyWeapon("PrototypePoisonDagger", WeaponAttackType.Melee, WeaponAttribute.Poison, 6f, 0.55f, 1); // 독 단검 임시 공격 확인
+            yield return VerifyWeapon("PrototypePoisonBolt", WeaponAttackType.StraightProjectile, WeaponAttribute.Poison, 8f, 0.85f, 1); // 독 탄 임시 공격 확인
+            yield return VerifyWeapon("PrototypePoisonWave", WeaponAttackType.Area, WeaponAttribute.Poison, 9f, 1.6f, 3); // 독 파동 임시 공격 확인
+            yield return VerifyWeapon("PrototypeExplosionBlade", WeaponAttackType.Melee, WeaponAttribute.Explosion, 9f, 0.9f, 3); // 폭발 검 임시 공격 확인
+            yield return VerifyWeapon("PrototypeExplosionSpear", WeaponAttackType.StraightProjectile, WeaponAttribute.Explosion, 7f, 1f, 3); // 폭발 창 임시 공격 확인
+            yield return VerifyWeapon("PrototypeExplosionAura", WeaponAttackType.Area, WeaponAttribute.Explosion, 6f, 1.4f, 3); // 폭발 고리 임시 공격 확인
+            yield return VerifyWeapon("PrototypeExplosionDagger", WeaponAttackType.Melee, WeaponAttribute.Explosion, 6f, 0.55f, 2); // 폭발 단검 임시 공격 확인
+            yield return VerifyWeapon("PrototypeExplosionBolt", WeaponAttackType.StraightProjectile, WeaponAttribute.Explosion, 8f, 0.85f, 3); // 폭발 탄 임시 공격 확인
+            yield return VerifyWeapon("PrototypeExplosionWave", WeaponAttackType.Area, WeaponAttribute.Explosion, 9f, 1.6f, 3); // 폭발 파동 임시 공격 확인
             VerifyRewardPool(); // 실제 보상 풀 무기 확인
             ClearObjects(); // 시험 표적과 투사체 제거
             weapons.enabled = false; // 경험치 시험 중 자동 공격 중지
@@ -145,18 +157,20 @@ namespace ProjectEpsilon.Editor // 편집기 영역
             yield return VerifyEnemyExperience(); // 실제 적 생성과 보석 획득
             hooks.AttackTriggered -= OnAttack; // 공격 기록 구독 해제
             hooks.HitTriggered -= OnHit; // 명중 기록 구독 해제
-            AutomatedEarlyWeaponVerification.Finish(0, "Twenty-four weapon assets, reward pool, body origins, direct damage, cooldown, cold status, projectile contacts and three enemy XP drops/collection."); // 전체 성공 기록
+            AutomatedEarlyWeaponVerification.Finish(0, "Thirty-six weapon assets, reward pool, body origins, damage, cooldown, status, projectile contacts and three enemy XP drops/collection."); // 전체 성공 기록
         } // 코루틴 끝
 
         private void VerifyRewardPool() // 실제 레벨업 및 엘리트 공통 무기 풀 확인
         { // 메서드 시작
             WeaponRewardPool pool = AssetDatabase.LoadAssetAtPath<WeaponRewardPool>("Assets/Data/Progression/DebugWeaponRewardPool.asset"); // 실제 보상 풀 데이터
-            Require(pool != null && pool.Entries.Count == 24, "Reward pool must contain twenty-four weapons."); // 보상 풀 크기 확인
+            Require(pool != null && pool.Entries.Count == 36, "Reward pool must contain thirty-six weapons."); // 보상 풀 크기 확인
             HashSet<string> ids = new HashSet<string>(); // 고유 무기 식별자 목록
             int physical = 0; // 물리 무기 수
             int fire = 0; // 화염 무기 수
             int cold = 0; // 냉기 무기 수
             int electric = 0; // 전기 무기 수
+            int poison = 0; // 독 무기 수
+            int explosion = 0; // 폭발 무기 수
             foreach (WeaponRewardEntry entry in pool.Entries) // 실제 보상 후보 순회
             { // 반복 시작
                 Require(entry != null && entry.Unlocked && entry.Weapon != null && ids.Add(entry.Weapon.Id), "Reward pool has missing, locked or duplicate weapon."); // 후보 유효성과 식별자 중복 확인
@@ -164,8 +178,10 @@ namespace ProjectEpsilon.Editor // 편집기 영역
                 fire += entry.Weapon.Attribute == WeaponAttribute.Fire ? 1 : 0; // 화염 속성 수 집계
                 cold += entry.Weapon.Attribute == WeaponAttribute.Cold ? 1 : 0; // 냉기 속성 수 집계
                 electric += entry.Weapon.Attribute == WeaponAttribute.Electric ? 1 : 0; // 전기 속성 수 집계
+                poison += entry.Weapon.Attribute == WeaponAttribute.Poison ? 1 : 0; // 독 속성 수 집계
+                explosion += entry.Weapon.Attribute == WeaponAttribute.Explosion ? 1 : 0; // 폭발 속성 수 집계
             } // 반복 끝
-            Require(physical == 6 && fire == 6 && cold == 6 && electric == 6, "Reward pool does not contain six weapons per attribute."); // 속성별 무기 수 확인
+            Require(physical == 6 && fire == 6 && cold == 6 && electric == 6 && poison == 6 && explosion == 6, "Reward pool does not contain six weapons per attribute."); // 속성별 무기 수 확인
         } // 메서드 끝
 
         private void Prepare() // 실제 씬과 통제 조건 준비
@@ -207,6 +223,11 @@ namespace ProjectEpsilon.Editor // 편집기 영역
             ClearObjects(); // 이전 표적과 투사체 제거
             activeWeapon = AssetDatabase.LoadAssetAtPath<WeaponData>("Assets/Data/Weapons/" + assetName + ".asset"); // 실제 시험용 무기 데이터
             Require(activeWeapon != null && activeWeapon.AttackType == type && activeWeapon.Attribute == attribute && Mathf.Approximately(activeWeapon.BaseDamage, damage) && Mathf.Approximately(activeWeapon.AttackInterval, interval), "Specification or asset mismatch for " + assetName); // 기획 임시값 및 유형 확인
+            if (attribute == WeaponAttribute.Poison || attribute == WeaponAttribute.Explosion) // 신규 속성 이미지 확인
+            { // 조건 시작
+                string expectedImage = attribute == WeaponAttribute.Poison ? "WeaponPoisonBlade_Casual" : "WeaponExplosionBlade_Casual"; // 실제 속성별 이미지 이름
+                Require(activeWeapon.Artwork != null && activeWeapon.Artwork.name == expectedImage, "Generated artwork missing: " + assetName); // 실제 무기 데이터 이미지 연결 확인
+            } // 조건 끝
             if (assetName == "DebugNeedle") // 강철 창 확인
             { // 조건 시작
                 Require(activeWeapon.ProjectileHitLimit == 2, "Steel spear piercing setting is not two."); // 관통 임시값 확인
@@ -215,12 +236,10 @@ namespace ProjectEpsilon.Editor // 편집기 영역
             attackTimes.Clear(); // 이전 공격 시각 초기화
             attackOrigins.Clear(); // 이전 공격 원점 초기화
             hits.Clear(); // 이전 명중 기록 초기화
-            WeaponTarget outside = CreateTarget(origin + Vector3.right * (activeWeapon.Range + 1f), "Outside_" + assetName); // 몸통 범위 밖 대상
             Physics2D.SyncTransforms(); // 물리 위치 동기화
             yield return null; // 실제 자동 공격 갱신
             yield return null; // 추가 갱신
-            Require(attackTimes.Count == 0 && Mathf.Approximately(outside.CurrentHealth, outside.MaximumHealth), "Weapon attacked while only an out-of-range target existed: " + assetName); // 사거리 밖 비공격 확인
-            outside.gameObject.SetActive(false); // 사거리 밖 대상 등록 해제
+            Require(attackTimes.Count == 0, "Weapon attacked without an active target: " + assetName); // 적이 없을 때 공격 대기 확인
             WeaponTarget first = CreateTarget(origin + Vector3.right * 0.6f, "First_" + assetName); // 첫 번째 실제 표적
             WeaponTarget second = CreateTarget(origin + Vector3.right * 1.25f, "Second_" + assetName); // 두 번째 실제 표적
             WeaponTarget third = CreateTarget(origin + Vector3.right * 1.9f, "Third_" + assetName); // 세 번째 실제 표적
@@ -246,7 +265,8 @@ namespace ProjectEpsilon.Editor // 편집기 영역
                 firstVolley++; // 첫 공격 명중 증가
                 hitTargets.Add(hit.Target); // 고유 명중 대상 기록
                 Require(Mathf.Abs(hit.Damage - damage) < 0.01f && Vector3.Distance(hit.Origin, origin) < 0.01f, "Direct damage or hit origin mismatch: " + assetName); // 실제 명중 피해와 원점 확인
-                Require(Mathf.Abs(hit.RemainingHealth - (100f - damage)) < 0.05f, "Actual target health did not reflect first direct damage: " + assetName); // 실제 첫 피해 체력 확인
+                bool validHealth = attribute == WeaponAttribute.Explosion ? hit.RemainingHealth >= 100f - damage * 1.25f - 0.05f && hit.RemainingHealth <= 100f - damage + 0.05f : Mathf.Abs(hit.RemainingHealth - (100f - damage)) < 0.05f; // 폭발 중심 피해와 일반 직접 피해 확인
+                Require(validHealth, "Actual target health did not reflect first damage: " + assetName); // 실제 첫 피해 체력 확인
             } // 반복 끝
             Require(firstVolley == expectedHits && hitTargets.Count == expectedHits && hitTargets.Contains(first), $"First automatic attack targets mismatch for {assetName}: expected={expectedHits}, hits={firstVolley}, unique={hitTargets.Count}"); // 단일·관통·범위 대상 확인
             if (expectedHits >= 2) // 복수 대상 공격 확인

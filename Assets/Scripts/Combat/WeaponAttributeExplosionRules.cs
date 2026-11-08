@@ -34,7 +34,7 @@ namespace ProjectEpsilon.Combat // 전투 영역
 
         public static float GetKnockbackDistance(int synergyStage) // 넉백 거리 계산
         {
-            return TemporaryKnockbackDistance; // 임시 넉백 거리 반환
+            return TemporaryKnockbackDistance * (WeaponAttributeSynergyRules.ResolveStage(synergyStage) >= 4 ? 1.2f : 1f); // 사 단계 넉백 거리 증가
         }
 
         public static float GetKnockbackDuration(int synergyStage) // 넉백 시간 계산

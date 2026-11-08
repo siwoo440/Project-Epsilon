@@ -540,7 +540,7 @@ namespace ProjectEpsilon.Combat
             WeaponTarget target =
                 WeaponTarget.FindClosest(
                     origin,
-                    slot.EffectiveRange
+                    float.PositiveInfinity // 사거리와 관계없는 최근접 대상
                 );
 
             if (target == null)
@@ -551,7 +551,7 @@ namespace ProjectEpsilon.Combat
             WeaponTarget second = null; // 추가 공격 대상 초기화
             if (weapon.GetMeleeTargetLimit(slot.Grade) >= 2) // 무기 등급별 두 대상 공격 확인
             { // 조건 시작
-                second = WeaponTarget.FindClosest(origin, slot.EffectiveRange, target); // 첫 대상을 제외한 최근접 적
+                second = WeaponTarget.FindClosest(origin, float.PositiveInfinity, target); // 첫 대상을 제외한 최근접 적
             } // 조건 끝
             WeaponAttributeAttackSnapshot attack = CreateAttackSnapshot(slot, origin); // 몸통 원점 공격 정보
             ApplyWeaponHit(attack, target, target.transform.position); // 첫 대상 속성 명중
@@ -583,7 +583,7 @@ namespace ProjectEpsilon.Combat
             WeaponTarget target =
                 WeaponTarget.FindClosest(
                     slot.Origin.position,
-                    slot.EffectiveRange
+                    float.PositiveInfinity // 사거리와 관계없는 최근접 대상
                 );
 
             if (target == null)
@@ -608,9 +608,16 @@ namespace ProjectEpsilon.Combat
             Vector3 origin =
                 slot.Origin.position;
 
-            WeaponAttributeAttackSnapshot attack = CreateAttackSnapshot(slot, origin); // 범위 공격 정보 생성
+            WeaponTarget closest = WeaponTarget.FindClosest(origin, float.PositiveInfinity); // 사거리와 관계없는 최근접 대상
+            if (closest == null) // 공격 대상 확인
+            { // 조건 시작
+                return false; // 적이 없으면 공격 대기
+            } // 조건 끝
+            Vector3 center = (closest.transform.position - origin).sqrMagnitude > slot.EffectiveRange * slot.EffectiveRange ? closest.transform.position : origin; // 사거리 밖 대상 또는 기존 몸통 중심
+            WeaponAttributeAttackSnapshot snapshot = CreateAttackSnapshot(slot, origin); // 실제 몸통 원점 공격 정보
+            WeaponAttributeAttackSnapshot attack = new WeaponAttributeAttackSnapshot(snapshot.Weapon, snapshot.Attribute, snapshot.AttributeCount, snapshot.SynergyStage, snapshot.Grade, snapshot.Origin, snapshot.DirectDamage, center); // 실제 범위 중심 포함 공격 정보
             int hitCount = WeaponTarget.VisitAllInRange( // 범위 대상 방문
-                origin, // 공격 중심 전달
+                center, // 실제 범위 중심 전달
                 slot.EffectiveRange, // 공격 범위 전달
                 target => ApplyWeaponHit(attack, target, target.transform.position) // 대상별 명중 적용
             ); // 방문 종료
@@ -621,7 +628,7 @@ namespace ProjectEpsilon.Combat
             }
 
             SpawnAttackPulse(
-                origin,
+                center, // 실제 범위 중심 표시
                 slot.EffectiveRange,
                 new Color(
                     0.45f,
@@ -673,7 +680,7 @@ namespace ProjectEpsilon.Combat
                 attack, // 공격 정보 전달
                 attributeCombatEffects, // 속성 효과 전달
                 weapon.ProjectileSpeed,
-                weapon.ProjectileLifetime,
+                Mathf.Max(weapon.ProjectileLifetime, direction.magnitude / Mathf.Max(0.01f, weapon.ProjectileSpeed) + 0.5f), // 발사 시점 원거리 목표까지의 최소 수명
                 projectileSprite
             );
         }

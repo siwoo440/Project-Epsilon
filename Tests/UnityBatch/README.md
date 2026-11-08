@@ -21,6 +21,8 @@
 
 39일차 24종 보상 풀의 같은 강철 창 자연 전투는 정상 속도, 자연 출현, 가상 입력과 자동 보상 선택 조건에서 게임 시간 76.8초에 적 직접 충돌로 패배해 종료 코드 1이었다. 60초 시점에 자연 처치 14회, 미획득 보석 14개, 레벨 1과 경험치 0을 관찰했으며 자연 레벨업과 5분 생존은 확인하지 못했다. 사용자 수동 플레이와는 구분한다.
 
+40일차 사거리 제한 제거와 36종 보상 풀 적용 후 같은 자동 조종 자연 전투는 게임 시간 67.7초에 적 직접 충돌로 패배해 종료 코드 1이었다. 60초 시점에 18처치와 경험치 5, 레벨 1을 기록했다. 무작위 출현 조건이 다른 이전 시험과 결과만으로 변경의 영향을 단독 판단할 수 없다.
+
 34일차 `AutomatedBossTransitionVerification.cs` SHA-256 `F2517686492B0736C4D8600EC5C9756FE9866795EF76AB756374659AA1836EDE`는 실제 씬에서 32배 누적 1,200.003초에 단일 전환과 관리 적 40마리 무보상 정리, XP·HP 회복 보존, 몸통 복구와 적 투사체 제거, 미확정 합성 재료 보존과 재개, 보스 50% 단계 및 강제 처치 승리를 확인해 종료 코드 0이었다. 이동·충돌과 적 행동을 통제하고 보스를 직접 치명 피해로 처치한 시험이다. 기존 33일차 사본의 선행 배치는 전환 API 부재로 종료 코드 1이었다.
 
 `AutomatedRunClockVerification.cs` SHA-256 `CF25E310166934019854757488242C128912D13A46640EE702D9E149DAB4BDE6`는 실제 씬에서 같은 프레임 일시정지 전 경과 0.000178초를 보존하고 HUD와 실제 전투 시간이 같으며, 정지 중 시간 유지·표시 전용 초기화·재개가 동작해 종료 코드 0이었다. 게임 관리자 API로 일시정지한 통제 시험이다.
@@ -82,7 +84,9 @@
 | `AutomatedShooterSpawnVerification.cs` | `ProjectEpsilon.Editor.AutomatedShooterSpawnVerification.Run` | 실제 사수의 물리 발사·머리 기준 거리 유지 및 32:9 이동 카메라의 일반·엘리트 출현 위치와 정리, 렌더 직전 뷰포트 확인 |
 | `AutomatedBodyHudVerification.cs` | `ProjectEpsilon.Editor.AutomatedBodyHudVerification.Run` | 초기 물리 단계 뒤 게임을 일시정지하고 성장·손실·복구 API를 직접 호출. 세 수치, 이벤트, HUD 텍스트와 너비 확인 |
 | `AutomatedCombatProgressionVerification.cs` | `ProjectEpsilon.Editor.AutomatedCombatProgressionVerification.Run` | 플레이어 이동과 자연 스폰을 끄고 충돌체 없는 정지 표적을 배치. 실제 몸통 무기 공격, 보석, 레벨업과 UI 버튼 이벤트 확인 |
-| `AutomatedEarlyWeaponVerification.cs` | `ProjectEpsilon.Editor.AutomatedEarlyWeaponVerification.Run` | 이동·몸통 추적·자연 스폰을 끄고 세 번째 몸통과 정지 표적을 배치. 시험 무기 24종의 자동 공격·냉기와 보상 풀, 통제 생성·강제 처치한 일반 적 3종의 경험치 확인 |
+| `AutomatedEarlyWeaponVerification.cs` | `ProjectEpsilon.Editor.AutomatedEarlyWeaponVerification.Run` | 이동·몸통 추적·자연 스폰을 끄고 세 번째 몸통과 정지 표적을 배치. 시험 무기 36종의 자동 공격·냉기와 보상 풀·이미지, 통제 생성·강제 처치한 일반 적 3종의 경험치 확인 |
+| `AutomatedGlobalAttackHudVerification.cs` | `ProjectEpsilon.Editor.AutomatedGlobalAttackHudVerification.Run` | 사거리 밖 최근접 공격·대상 변경·쿨타임·투사체 도달·범위 폭발과 실제 체력·경험치 막대 확인 |
+| `AutomatedDay40StatusVerification.cs` | `ProjectEpsilon.Editor.AutomatedDay40StatusVerification.Run` | 실제 독 최대 5중첩과 폭발 ×4 넉백 증가, 보스 넉백 면역 확인 |
 | `AutomatedDay39ElectricVerification.cs` | `ProjectEpsilon.Editor.AutomatedDay39ElectricVerification.Run` | 실제 속성 명중으로 전기 ×0·×2·×4의 연쇄 대상과 범위 확인. 실제 전기 무기 4개의 합성 후 ×2 단계 갱신 확인 |
 | `AutomatedSteelSwordGradeVerification.cs` | `ProjectEpsilon.Editor.AutomatedSteelSwordGradeVerification.Run` | 실제 시작 버튼을 자동 선택하고 이동·몸통 추적·자연 스폰을 끈 뒤 실제 세 번째 몸통과 정지 표적을 배치. 강철 검 등급별 자동 공격, 실제 사망 콜백의 대상 변경과 물리 시너지 확인 |
 | `AutomatedFireballGradeVerification.cs` | `ProjectEpsilon.Editor.AutomatedFireballGradeVerification.Run` | 이동·몸통 추적·자연 스폰을 끄고 실제 세 번째 몸통과 정지 2D 표적을 배치. 화염탄 등급별 자동 발사·전달·화상·시너지와 실제 물리 접촉 경계 확인 |

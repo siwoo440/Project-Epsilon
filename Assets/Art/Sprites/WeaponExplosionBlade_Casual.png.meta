@@ -1,0 +1,689 @@
+fileFormatVersion: 2
+guid: 6a115e6731beb494e9aeccfcbb9cbd90
+TextureImporter:
+  internalIDToNameTable:
+  - first:
+      213: -7126680319493670842
+    second: WeaponExplosionBlade_Casual_0
+  - first:
+      213: 8491680732180113890
+    second: WeaponExplosionBlade_Casual_1
+  - first:
+      213: -2292854253739036242
+    second: WeaponExplosionBlade_Casual_2
+  - first:
+      213: -7533885365483555726
+    second: WeaponExplosionBlade_Casual_3
+  - first:
+      213: 157497305781816102
+    second: WeaponExplosionBlade_Casual_4
+  - first:
+      213: 5426101114399588886
+    second: WeaponExplosionBlade_Casual_5
+  - first:
+      213: -2148046671679511277
+    second: WeaponExplosionBlade_Casual_6
+  - first:
+      213: 8814704946521095672
+    second: WeaponExplosionBlade_Casual_7
+  - first:
+      213: -8396305359966683025
+    second: WeaponExplosionBlade_Casual_8
+  - first:
+      213: 3228473550745382628
+    second: WeaponExplosionBlade_Casual_9
+  - first:
+      213: 642531932597224780
+    second: WeaponExplosionBlade_Casual_10
+  - first:
+      213: -4289692940985282130
+    second: WeaponExplosionBlade_Casual_11
+  - first:
+      213: -2821453068160915293
+    second: WeaponExplosionBlade_Casual_12
+  - first:
+      213: -8868024896453926188
+    second: WeaponExplosionBlade_Casual_13
+  - first:
+      213: 6363252160348104615
+    second: WeaponExplosionBlade_Casual_14
+  - first:
+      213: -4747485169712834864
+    second: WeaponExplosionBlade_Casual_15
+  - first:
+      213: 7392933135487923615
+    second: WeaponExplosionBlade_Casual_16
+  - first:
+      213: -1013979362199046823
+    second: WeaponExplosionBlade_Casual_17
+  - first:
+      213: 8040531030043319580
+    second: WeaponExplosionBlade_Casual_18
+  - first:
+      213: -1781039674092089149
+    second: WeaponExplosionBlade_Casual_19
+  - first:
+      213: 4325489812865263175
+    second: WeaponExplosionBlade_Casual_20
+  - first:
+      213: -8089677258631359229
+    second: WeaponExplosionBlade_Casual_21
+  externalObjects: {}
+  serializedVersion: 13
+  mipmaps:
+    mipMapMode: 0
+    enableMipMap: 0
+    sRGBTexture: 1
+    linearTexture: 0
+    fadeOut: 0
+    borderMipMap: 0
+    mipMapsPreserveCoverage: 0
+    alphaTestReferenceValue: 0.5
+    mipMapFadeDistanceStart: 1
+    mipMapFadeDistanceEnd: 3
+  bumpmap:
+    convertToNormalMap: 0
+    externalNormalMap: 0
+    heightScale: 0.25
+    normalMapFilter: 0
+    flipGreenChannel: 0
+  isReadable: 0
+  streamingMipmaps: 0
+  streamingMipmapsPriority: 0
+  vTOnly: 0
+  ignoreMipmapLimit: 0
+  grayScaleToAlpha: 0
+  generateCubemap: 6
+  cubemapConvolution: 0
+  seamlessCubemap: 0
+  textureFormat: 1
+  maxTextureSize: 2048
+  textureSettings:
+    serializedVersion: 2
+    filterMode: 1
+    aniso: 1
+    mipBias: 0
+    wrapU: 1
+    wrapV: 1
+    wrapW: 1
+  nPOTScale: 0
+  lightmap: 0
+  compressionQuality: 50
+  spriteMode: 1
+  spriteExtrude: 1
+  spriteMeshType: 1
+  alignment: 0
+  spritePivot: {x: 0.5, y: 0.5}
+  spritePixelsToUnits: 1000
+  spriteBorder: {x: 0, y: 0, z: 0, w: 0}
+  spriteGenerateFallbackPhysicsShape: 1
+  alphaUsage: 1
+  alphaIsTransparency: 1
+  spriteTessellationDetail: -1
+  textureType: 8
+  textureShape: 1
+  singleChannelComponent: 0
+  flipbookRows: 1
+  flipbookColumns: 1
+  maxTextureSizeSet: 0
+  compressionQualitySet: 0
+  textureFormatSet: 0
+  ignorePngGamma: 0
+  applyGammaDecoding: 0
+  swizzle: 50462976
+  cookieLightType: 0
+  platformSettings:
+  - serializedVersion: 4
+    buildTarget: DefaultTexturePlatform
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 4
+    buildTarget: Standalone
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  spriteSheet:
+    serializedVersion: 2
+    sprites:
+    - serializedVersion: 2
+      name: WeaponExplosionBlade_Casual_0
+      rect:
+        serializedVersion: 2
+        x: 30
+        y: 33
+        width: 346
+        height: 1241
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData:
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 648ffc81202f81d90800000000000000
+      internalID: -7126680319493670842
+      vertices: []
+      indices:
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: WeaponExplosionBlade_Casual_1
+      rect:
+        serializedVersion: 2
+        x: 364
+        y: 0
+        width: 820
+        height: 1274
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData:
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 2e9ef9392a288d570800000000000000
+      internalID: 8491680732180113890
+      vertices: []
+      indices:
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: WeaponExplosionBlade_Casual_2
+      rect:
+        serializedVersion: 2
+        x: 461
+        y: 1187
+        width: 12
+        height: 13
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData:
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: ea1342c44352e20e0800000000000000
+      internalID: -2292854253739036242
+      vertices: []
+      indices:
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: WeaponExplosionBlade_Casual_3
+      rect:
+        serializedVersion: 2
+        x: 794
+        y: 1127
+        width: 7
+        height: 10
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData:
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 274b6d32d23427790800000000000000
+      internalID: -7533885365483555726
+      vertices: []
+      indices:
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: WeaponExplosionBlade_Casual_4
+      rect:
+        serializedVersion: 2
+        x: 395
+        y: 1091
+        width: 13
+        height: 13
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData:
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 62bc43417fa8f2200800000000000000
+      internalID: 157497305781816102
+      vertices: []
+      indices:
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: WeaponExplosionBlade_Casual_5
+      rect:
+        serializedVersion: 2
+        x: 832
+        y: 932
+        width: 10
+        height: 18
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData:
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 612832ff6326d4b40800000000000000
+      internalID: 5426101114399588886
+      vertices: []
+      indices:
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: WeaponExplosionBlade_Casual_6
+      rect:
+        serializedVersion: 2
+        x: 356
+        y: 703
+        width: 14
+        height: 14
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData:
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 3152595deea9032e0800000000000000
+      internalID: -2148046671679511277
+      vertices: []
+      indices:
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: WeaponExplosionBlade_Casual_7
+      rect:
+        serializedVersion: 2
+        x: 840
+        y: 678
+        width: 8
+        height: 7
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData:
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 8fdb441527f145a70800000000000000
+      internalID: 8814704946521095672
+      vertices: []
+      indices:
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: WeaponExplosionBlade_Casual_8
+      rect:
+        serializedVersion: 2
+        x: 834
+        y: 663
+        width: 6
+        height: 6
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData:
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: f604a79b2c45a7b80800000000000000
+      internalID: -8396305359966683025
+      vertices: []
+      indices:
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: WeaponExplosionBlade_Casual_9
+      rect:
+        serializedVersion: 2
+        x: 857
+        y: 669
+        width: 7
+        height: 8
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData:
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 4ee2ce6d697ddcc20800000000000000
+      internalID: 3228473550745382628
+      vertices: []
+      indices:
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: WeaponExplosionBlade_Casual_10
+      rect:
+        serializedVersion: 2
+        x: 395
+        y: 649
+        width: 11
+        height: 15
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData:
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: c458d4f636bbae800800000000000000
+      internalID: 642531932597224780
+      vertices: []
+      indices:
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: WeaponExplosionBlade_Casual_11
+      rect:
+        serializedVersion: 2
+        x: 411
+        y: 645
+        width: 7
+        height: 10
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData:
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: ea152197ff2f774c0800000000000000
+      internalID: -4289692940985282130
+      vertices: []
+      indices:
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: WeaponExplosionBlade_Casual_12
+      rect:
+        serializedVersion: 2
+        x: 842
+        y: 641
+        width: 8
+        height: 10
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData:
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 3a825d9126f28d8d0800000000000000
+      internalID: -2821453068160915293
+      vertices: []
+      indices:
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: WeaponExplosionBlade_Casual_13
+      rect:
+        serializedVersion: 2
+        x: 330
+        y: 611
+        width: 50
+        height: 35
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData:
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 4d22b8b67527ee480800000000000000
+      internalID: -8868024896453926188
+      vertices: []
+      indices:
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: WeaponExplosionBlade_Casual_14
+      rect:
+        serializedVersion: 2
+        x: 824
+        y: 439
+        width: 26
+        height: 16
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData:
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 7a729c93020de4850800000000000000
+      internalID: 6363252160348104615
+      vertices: []
+      indices:
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: WeaponExplosionBlade_Casual_15
+      rect:
+        serializedVersion: 2
+        x: 905
+        y: 447
+        width: 11
+        height: 19
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData:
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 0d6d4d2346b8d1eb0800000000000000
+      internalID: -4747485169712834864
+      vertices: []
+      indices:
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: WeaponExplosionBlade_Casual_16
+      rect:
+        serializedVersion: 2
+        x: 913
+        y: 447
+        width: 13
+        height: 20
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData:
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: f95f8fc6489f89660800000000000000
+      internalID: 7392933135487923615
+      vertices: []
+      indices:
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: WeaponExplosionBlade_Casual_17
+      rect:
+        serializedVersion: 2
+        x: 1077
+        y: 359
+        width: 6
+        height: 7
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData:
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 9557c82742f9de1f0800000000000000
+      internalID: -1013979362199046823
+      vertices: []
+      indices:
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: WeaponExplosionBlade_Casual_18
+      rect:
+        serializedVersion: 2
+        x: 389
+        y: 263
+        width: 6
+        height: 8
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData:
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: c1ddc3b0f54b59f60800000000000000
+      internalID: 8040531030043319580
+      vertices: []
+      indices:
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: WeaponExplosionBlade_Casual_19
+      rect:
+        serializedVersion: 2
+        x: 543
+        y: 105
+        width: 7
+        height: 23
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData:
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 3c01dde4ad97847e0800000000000000
+      internalID: -1781039674092089149
+      vertices: []
+      indices:
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: WeaponExplosionBlade_Casual_20
+      rect:
+        serializedVersion: 2
+        x: 549
+        y: 118
+        width: 9
+        height: 10
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData:
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 746a76f311a370c30800000000000000
+      internalID: 4325489812865263175
+      vertices: []
+      indices:
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: WeaponExplosionBlade_Casual_21
+      rect:
+        serializedVersion: 2
+        x: 427
+        y: 39
+        width: 10
+        height: 9
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData:
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 305d8bbe461bbbf80800000000000000
+      internalID: -8089677258631359229
+      vertices: []
+      indices:
+      edges: []
+      weights: []
+    outline: []
+    customData:
+    physicsShape: []
+    bones: []
+    spriteID: 5e97eb03825dee720800000000000000
+    internalID: 0
+    vertices: []
+    indices:
+    edges: []
+    weights: []
+    secondaryTextures: []
+    spriteCustomMetadata:
+      entries: []
+    nameFileIdTable:
+      WeaponExplosionBlade_Casual_0: -7126680319493670842
+      WeaponExplosionBlade_Casual_1: 8491680732180113890
+      WeaponExplosionBlade_Casual_10: 642531932597224780
+      WeaponExplosionBlade_Casual_11: -4289692940985282130
+      WeaponExplosionBlade_Casual_12: -2821453068160915293
+      WeaponExplosionBlade_Casual_13: -8868024896453926188
+      WeaponExplosionBlade_Casual_14: 6363252160348104615
+      WeaponExplosionBlade_Casual_15: -4747485169712834864
+      WeaponExplosionBlade_Casual_16: 7392933135487923615
+      WeaponExplosionBlade_Casual_17: -1013979362199046823
+      WeaponExplosionBlade_Casual_18: 8040531030043319580
+      WeaponExplosionBlade_Casual_19: -1781039674092089149
+      WeaponExplosionBlade_Casual_2: -2292854253739036242
+      WeaponExplosionBlade_Casual_20: 4325489812865263175
+      WeaponExplosionBlade_Casual_21: -8089677258631359229
+      WeaponExplosionBlade_Casual_3: -7533885365483555726
+      WeaponExplosionBlade_Casual_4: 157497305781816102
+      WeaponExplosionBlade_Casual_5: 5426101114399588886
+      WeaponExplosionBlade_Casual_6: -2148046671679511277
+      WeaponExplosionBlade_Casual_7: 8814704946521095672
+      WeaponExplosionBlade_Casual_8: -8396305359966683025
+      WeaponExplosionBlade_Casual_9: 3228473550745382628
+  mipmapLimitGroupName:
+  pSDRemoveMatte: 0
+  userData:
+  assetBundleName:
+  assetBundleVariant:
