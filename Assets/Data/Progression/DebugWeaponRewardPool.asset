@@ -37,3 +37,27 @@ MonoBehaviour:
     unlocked: 1
   - weapon: {fileID: 11400000, guid: 23ab457020444a0f895456ef1f6bcd66, type: 2}
     unlocked: 1
+  - weapon: {fileID: 11400000, guid: 439f637bab534204ba1cdcda11bebe5b, type: 2}
+    unlocked: 1
+  - weapon: {fileID: 11400000, guid: c9a6f6fccc5f45b68e6e37cc33a23c28, type: 2}
+    unlocked: 1
+  - weapon: {fileID: 11400000, guid: 6414df64bb8d45e4a5f08a40c6d06e51, type: 2}
+    unlocked: 1
+  - weapon: {fileID: 11400000, guid: 6c66e3f59ee044bfa95fbf8109779b45, type: 2}
+    unlocked: 1
+  - weapon: {fileID: 11400000, guid: 858246d4c65a44c58ba2209aac0b86f1, type: 2}
+    unlocked: 1
+  - weapon: {fileID: 11400000, guid: 38d7b75afe0442138f2ebb3b3e48d291, type: 2}
+    unlocked: 1
+  - weapon: {fileID: 11400000, guid: f3a5e44898794ddd870c99287c1de229, type: 2}
+    unlocked: 1
+  - weapon: {fileID: 11400000, guid: 7c6ed14223ec4f3f93aca6ce55c4cd19, type: 2}
+    unlocked: 1
+  - weapon: {fileID: 11400000, guid: 00bfe1e1f1a74c31a4bb08dfc01107d8, type: 2}
+    unlocked: 1
+  - weapon: {fileID: 11400000, guid: 62f5b732ea094236b83f1228b1c05b92, type: 2}
+    unlocked: 1
+  - weapon: {fileID: 11400000, guid: 6b7e6c648739496b94a74177a9228658, type: 2}
+    unlocked: 1
+  - weapon: {fileID: 11400000, guid: 0e1eba36d0bd4cbfb98663ab03765670, type: 2}
+    unlocked: 1

@@ -67,7 +67,7 @@ namespace ProjectEpsilon.Combat // 전투 영역
                 return 0; // 추가 대상 없음
             }
 
-            return 1; // 최소 연쇄 대상 한 개
+            return WeaponAttributeSynergyRules.ResolveStage(synergyStage) >= 4 ? 2 : 1; // 사 단계 추가 대상 한 개 증가
         }
     }
 }

@@ -126,6 +126,18 @@ namespace ProjectEpsilon.Editor // 편집기 영역
             yield return VerifyWeapon("PrototypeFireBrand", WeaponAttackType.Melee, WeaponAttribute.Fire, 12f, 1.3f, 1); // 화염 곤봉 임시 공격 확인
             yield return VerifyWeapon("PrototypeFireLance", WeaponAttackType.StraightProjectile, WeaponAttribute.Fire, 9f, 1.2f, 2); // 화염 창 임시 공격 확인
             yield return VerifyWeapon("PrototypeFireBurst", WeaponAttackType.Area, WeaponAttribute.Fire, 8f, 1.6f, 3); // 화염 파동 임시 공격 확인
+            yield return VerifyWeapon("PrototypeColdBlade", WeaponAttackType.Melee, WeaponAttribute.Cold, 9f, 0.9f, 1); // 냉기 검 임시 공격 확인
+            yield return VerifyWeapon("PrototypeColdSpear", WeaponAttackType.StraightProjectile, WeaponAttribute.Cold, 7f, 1f, 2); // 냉기 창 임시 공격 확인
+            yield return VerifyWeapon("PrototypeColdAura", WeaponAttackType.Area, WeaponAttribute.Cold, 6f, 1.4f, 3); // 냉기 고리 임시 공격 확인
+            yield return VerifyWeapon("PrototypeColdDagger", WeaponAttackType.Melee, WeaponAttribute.Cold, 6f, 0.55f, 1); // 냉기 단검 임시 공격 확인
+            yield return VerifyWeapon("PrototypeColdBolt", WeaponAttackType.StraightProjectile, WeaponAttribute.Cold, 8f, 0.85f, 1); // 냉기 탄 임시 공격 확인
+            yield return VerifyWeapon("PrototypeColdWave", WeaponAttackType.Area, WeaponAttribute.Cold, 9f, 1.6f, 3); // 냉기 파동 임시 공격 확인
+            yield return VerifyWeapon("PrototypeElectricBlade", WeaponAttackType.Melee, WeaponAttribute.Electric, 9f, 0.9f, 1); // 전기 검 임시 공격 확인
+            yield return VerifyWeapon("PrototypeElectricSpear", WeaponAttackType.StraightProjectile, WeaponAttribute.Electric, 7f, 1f, 2); // 전기 창 임시 공격 확인
+            yield return VerifyWeapon("PrototypeElectricAura", WeaponAttackType.Area, WeaponAttribute.Electric, 6f, 1.4f, 3); // 전기 고리 임시 공격 확인
+            yield return VerifyWeapon("PrototypeElectricDagger", WeaponAttackType.Melee, WeaponAttribute.Electric, 6f, 0.55f, 1); // 전기 단검 임시 공격 확인
+            yield return VerifyWeapon("PrototypeElectricBolt", WeaponAttackType.StraightProjectile, WeaponAttribute.Electric, 8f, 0.85f, 1); // 전기 탄 임시 공격 확인
+            yield return VerifyWeapon("PrototypeElectricWave", WeaponAttackType.Area, WeaponAttribute.Electric, 9f, 1.6f, 3); // 전기 파동 임시 공격 확인
             VerifyRewardPool(); // 실제 보상 풀 무기 확인
             ClearObjects(); // 시험 표적과 투사체 제거
             weapons.enabled = false; // 경험치 시험 중 자동 공격 중지
@@ -133,23 +145,27 @@ namespace ProjectEpsilon.Editor // 편집기 영역
             yield return VerifyEnemyExperience(); // 실제 적 생성과 보석 획득
             hooks.AttackTriggered -= OnAttack; // 공격 기록 구독 해제
             hooks.HitTriggered -= OnHit; // 명중 기록 구독 해제
-            AutomatedEarlyWeaponVerification.Finish(0, "Twelve weapon assets, reward pool, body origins, direct damage, cooldown, attack targets, projectile contacts and three enemy XP drops/collection."); // 전체 성공 기록
+            AutomatedEarlyWeaponVerification.Finish(0, "Twenty-four weapon assets, reward pool, body origins, direct damage, cooldown, cold status, projectile contacts and three enemy XP drops/collection."); // 전체 성공 기록
         } // 코루틴 끝
 
         private void VerifyRewardPool() // 실제 레벨업 및 엘리트 공통 무기 풀 확인
         { // 메서드 시작
             WeaponRewardPool pool = AssetDatabase.LoadAssetAtPath<WeaponRewardPool>("Assets/Data/Progression/DebugWeaponRewardPool.asset"); // 실제 보상 풀 데이터
-            Require(pool != null && pool.Entries.Count == 12, "Reward pool must contain twelve weapons."); // 보상 풀 크기 확인
+            Require(pool != null && pool.Entries.Count == 24, "Reward pool must contain twenty-four weapons."); // 보상 풀 크기 확인
             HashSet<string> ids = new HashSet<string>(); // 고유 무기 식별자 목록
             int physical = 0; // 물리 무기 수
             int fire = 0; // 화염 무기 수
+            int cold = 0; // 냉기 무기 수
+            int electric = 0; // 전기 무기 수
             foreach (WeaponRewardEntry entry in pool.Entries) // 실제 보상 후보 순회
             { // 반복 시작
                 Require(entry != null && entry.Unlocked && entry.Weapon != null && ids.Add(entry.Weapon.Id), "Reward pool has missing, locked or duplicate weapon."); // 후보 유효성과 식별자 중복 확인
                 physical += entry.Weapon.Attribute == WeaponAttribute.Physical ? 1 : 0; // 물리 속성 수 집계
                 fire += entry.Weapon.Attribute == WeaponAttribute.Fire ? 1 : 0; // 화염 속성 수 집계
+                cold += entry.Weapon.Attribute == WeaponAttribute.Cold ? 1 : 0; // 냉기 속성 수 집계
+                electric += entry.Weapon.Attribute == WeaponAttribute.Electric ? 1 : 0; // 전기 속성 수 집계
             } // 반복 끝
-            Require(physical == 6 && fire == 6, "Reward pool does not contain six weapons per attribute."); // 속성별 무기 수 확인
+            Require(physical == 6 && fire == 6 && cold == 6 && electric == 6, "Reward pool does not contain six weapons per attribute."); // 속성별 무기 수 확인
         } // 메서드 끝
 
         private void Prepare() // 실제 씬과 통제 조건 준비
@@ -245,6 +261,11 @@ namespace ProjectEpsilon.Editor // 편집기 영역
             { // 조건 시작
                 WeaponTargetBurnStatus burn = first.GetComponent<WeaponTargetBurnStatus>(); // 실제 화상 상태 조회
                 Require(burn != null && burn.SynergyStage == 0 && Mathf.Approximately(burn.DamagePerSecond, 1f) && burn.RemainingDuration > 0f, "Base fire burn was not applied: " + assetName); // 임시 화상 상태 확인
+            } // 조건 끝
+            if (attribute == WeaponAttribute.Cold) // 기본 냉기 적용 확인
+            { // 조건 시작
+                WeaponTargetColdStatus cold = first.GetComponent<WeaponTargetColdStatus>(); // 실제 냉기 상태 조회
+                Require(cold != null && cold.StackCount >= 1 && cold.RemainingDuration > 0f, "Base cold status was not applied: " + assetName); // 실제 냉기 누적 확인
             } // 조건 끝
             Debug.Log($"[EarlyWeaponVerification] {assetName}: origin={origin}, headDistance={Vector3.Distance(movement.transform.position, first.transform.position):F2}, range={activeWeapon.Range:F2}, damage={damage:F2}, interval={observedInterval:F3}, firstHits={firstVolley}."); // 실제 공격 결과 기록
         } // 코루틴 끝
