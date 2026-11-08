@@ -6983,6 +6983,7 @@ GameObject:
   - component: {fileID: 1886169892}
   - component: {fileID: 1886169894}
   - component: {fileID: 1886169895}
+  - component: {fileID: 1886169896}
   m_Layer: 0
   m_Name: ===Managers===
   m_TagString: Untagged
@@ -7008,6 +7009,28 @@ MonoBehaviour:
   maximumGroupsPerPass: 4
   maximumAnchorsPerPass: 32
   maximumNeighborChecksPerPass: 512
+--- !u!114 &1886169896
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1886169890}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7d6c81a2b7094fe2bd5160097a5f2173, type: 3}
+  m_Name:
+  m_EditorClassIdentifier: Assembly-CSharp::ProjectEpsilon.Enemies.PrototypeBossEncounter
+  maximumHealth: 600
+  damage: 15
+  speedRatio: 0.75
+  attackInterval: 2
+  keepDistance: 4
+  projectileSpeed: 5
+  projectileLifetime: 3
+  phaseTwoSpeedMultiplier: 1.25
+  phaseTwoIntervalMultiplier: 0.75
+  spawnDistance: 8
 --- !u!4 &1886169891
 Transform:
   m_ObjectHideFlags: 0

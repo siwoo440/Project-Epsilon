@@ -9,8 +9,13 @@ namespace UnityEngine // Unity 대체
     public class Object // 객체 기반
     { // 클래스 시작
         public static T FindFirstObjectByType<T>() where T : class => GameObject.Objects.SelectMany(x => x.Components).OfType<T>().FirstOrDefault(); // 첫 객체 조회
+        public static T[] FindObjectsByType<T>(FindObjectsSortMode mode) where T : class => GameObject.Objects.Where(item => item.activeInHierarchy).SelectMany(item => item.Components).OfType<T>().ToArray(); // 활성 객체 목록 조회
         public static void Destroy(object item) { } // 제거 대체
     } // 클래스 끝
+    public enum FindObjectsSortMode // 객체 정렬 방식 대체
+    { // 열거 시작
+        None // 정렬 생략
+    } // 열거 끝
     public class Component : Object // 구성 요소
     { // 클래스 시작
         public GameObject gameObject; // 소속 객체
@@ -82,6 +87,7 @@ namespace UnityEngine // Unity 대체
         public static float time; // 경과 시간
         public static float fixedDeltaTime = 0.02f; // 물리 간격
         public static float deltaTime = 0.02f; // 프레임 간격
+        public static double timeAsDouble; // 실제 게임 시간 대체
     } // 클래스 끝
     public static class Random // 난수 대체
     { // 클래스 시작
@@ -117,7 +123,17 @@ namespace UnityEngine // Unity 대체
 
 namespace ProjectEpsilon.Core // 게임 상태
 { // 영역 시작
-    public sealed class GameManager { public static GameManager Instance = new GameManager(); public bool IsPlaying = true; } // 진행 상태
+    public enum GameState // 실제 진행 상태 대체
+    { // 열거 시작
+        Playing, // 진행 상태
+        Paused // 일시정지 상태
+    } // 열거 끝
+    public sealed class GameManager // 게임 관리자 대체
+    { // 클래스 시작
+        public static GameManager Instance = new GameManager(); // 전역 관리자
+        public bool IsPlaying = true; // 진행 상태
+        public GameState CurrentState => IsPlaying ? GameState.Playing : GameState.Paused; // 실제 상태 조회
+    } // 클래스 끝
 } // 영역 끝
 namespace ProjectEpsilon.Player // 플레이어 대체
 { // 영역 시작
@@ -140,6 +156,18 @@ namespace ProjectEpsilon.Combat // 전투 대체
 namespace ProjectEpsilon.Progression // 보상 대체
 { // 영역 시작
     using UnityEngine; // 객체 형식
+    public sealed class SnakeWeaponMergeController : MonoBehaviour // 합성 화면 대체
+    { // 클래스 시작
+        public bool IsMergeOpen; // 합성 화면 상태
+        public void CloseMergePanel() // 합성 보류 대체
+        { // 메서드 시작
+            IsMergeOpen = false; // 합성 화면 닫기
+        } // 메서드 끝
+    } // 클래스 끝
+    public sealed class RecoveryPickup : MonoBehaviour // 회복 아이템 대체
+    { // 클래스 시작
+        public bool IsBodyRepair; // 몸통 복구 여부
+    } // 클래스 끝
     public sealed class EliteRewardController : MonoBehaviour { public void QueueReward() { } } // 엘리트 보상
     public sealed class EnemyDropController : MonoBehaviour { public void Configure(int xp, int heal, float chance, float repair, Sprite sprite, int count) { } } // 적 보상
 } // 영역 끝

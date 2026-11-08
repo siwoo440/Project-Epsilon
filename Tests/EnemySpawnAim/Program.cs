@@ -33,7 +33,18 @@ internal static class Program // 출현 및 조준 시험
         try { action(); Console.WriteLine($"PASS: {label}"); } // 성공 기록
         catch (Exception error) { failures++; Console.WriteLine($"FAIL: {label}: {error.GetBaseException().Message}"); } // 실패 기록
     } // 메서드 끝
-    private static object Invoke(object instance, string name, params object[] args) => instance.GetType().GetMethod(name, Private).Invoke(instance, args); // 실제 내부 메서드 실행
+    private static object Invoke(object instance, string name, params object[] args) // 실제 내부 메서드 실행
+    { // 메서드 시작
+        if (instance is EarlyEnemyWaveSpawner && name == "Start") // 실제 출현기 시작 확인
+        { // 조건 시작
+            instance.GetType().GetMethod("OnEnable", Private).Invoke(instance, null); // 실제 활성화 순서 재현
+        } // 조건 끝
+        if (instance is EarlyEnemyWaveSpawner && name == "LateUpdate" && ProjectEpsilon.Core.GameManager.Instance.IsPlaying) // 실제 진행 프레임 확인
+        { // 조건 시작
+            Time.timeAsDouble += Time.deltaTime; // 시험 게임 시간 누적
+        } // 조건 끝
+        return instance.GetType().GetMethod(name, Private).Invoke(instance, args); // 실제 내부 메서드 실행
+    } // 메서드 끝
     private static void Set(object instance, string name, object value) => instance.GetType().GetField(name, Private).SetValue(instance, value); // 직렬화 값 설정
     private static void Require(bool condition, string message) { if (!condition) { throw new InvalidOperationException(message); } } // 검증 조건
     private static (SnakeMovement player, SnakeBodyManager body, SnakeHealth health) Player() // 플레이어 구성

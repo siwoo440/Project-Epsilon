@@ -159,6 +159,14 @@ namespace ProjectEpsilon.Editor // 편집기 영역
             } // 반복 끝
             RequireLevel(2, 10, 3, 4); // 첫 실제 레벨업 및 잔여 XP
             Require(eliteReward.PendingRewardCount == 1 && !eliteReward.IsPresentingReward, "Elite reward was not deferred behind the first level-up."); // 실제 엘리트 보상 대기 확인
+            if (dropped[0] != null) // 같은 프레임 지연 파괴 확인
+            { // 조건 시작
+                FieldInfo collectedField = typeof(ExperiencePickup).GetField("collected", BindingFlags.Instance | BindingFlags.NonPublic); // 실제 획득 상태 조회
+                FieldInfo destructionField = typeof(ExperiencePickup).GetField("destructionScheduled", BindingFlags.Instance | BindingFlags.NonPublic); // 실제 파괴 예약 상태 조회
+                Require(collectedField != null && destructionField != null && (bool)collectedField.GetValue(dropped[0]) && (bool)destructionField.GetValue(dropped[0]), "The still-present elite gem was not collected and scheduled for destruction."); // 실제 중복 획득 방지 확인
+                Debug.Log("[EarlyWaveVerification] collected elite gem is already consumed and destruction is scheduled in the same frame."); // 실제 지연 파괴 상태 기록
+                yield return null; // 실제 프레임 종료의 지연 파괴 대기
+            } // 조건 끝
             Require(UnityEngine.Object.FindObjectsByType<ExperiencePickup>(FindObjectsSortMode.None).Length == 0, "The actual elite gem remained active after collection."); // 보석 한 번 수집 확인
             Debug.Log("[EarlyWaveVerification] actual 20-XP gem collected: level=2, remaining XP=10, first level reward open, elite reward pending=1."); // 실제 첫 보상 순서 기록
             CompleteLevelReward(); // 실제 버튼으로 첫 레벨 보상 완료

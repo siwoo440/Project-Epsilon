@@ -47,6 +47,7 @@ namespace ProjectEpsilon.Enemies // 적 영역
         [SerializeField] private float healDropChance = 0.25f; // 회복 보상 확률 임시값
         [SerializeField] private float bodyRepairDropChance = 0.1f; // 몸통 복구 확률 임시값
         [SerializeField] private float elapsed; // 전투 경과 시간
+        [SerializeField] private float bossTransitionTime = 1200f; // 최종 보스 전환 시각
         [SerializeField] private Sprite visual; // 적과 보석 시각 자료
         [SerializeField] private EliteRewardController eliteRewards; // 엘리트 보상 대기열
         [SerializeField] private EarlyEnemySettings[] enemies = // 시험용 적 설정
@@ -105,7 +106,16 @@ namespace ProjectEpsilon.Enemies // 적 영역
         private readonly HashSet<WeaponTarget> eliteTargets = new HashSet<WeaponTarget>(); // 생존 엘리트 집합
         private readonly Queue<int> pendingEliteRounds = new Queue<int>(); // 출현 대기 회차
         private int nextEliteRound; // 다음 일정 회차
+        private double previousClockTime; // 이전 게임 시간 표본
+        private bool hasEnteredBossTransition; // 최종 보스 전환 여부
+        public event Action BossTransitionStarted; // 최종 보스 전환 알림
         public int ActiveEnemies => activeEnemies; // 생존 적 수 조회
+        public float ElapsedSeconds => elapsed; // 실제 전투 경과 시간 조회
+        public bool HasEnteredBossTransition => hasEnteredBossTransition; // 최종 보스 전환 상태 조회
+        private void OnEnable() // 출현기 활성 시간 초기화
+        { // 메서드 시작
+            previousClockTime = Time.timeAsDouble; // 비활성 구간 제외 기준
+        } // 메서드 끝
         private void Start() // 플레이 시작 처리
         { // 메서드 시작
             player = FindFirstObjectByType<SnakeMovement>(); // 플레이어 이동 조회
@@ -119,11 +129,30 @@ namespace ProjectEpsilon.Enemies // 적 영역
         } // 메서드 끝
         private void LateUpdate() // 카메라 이동 후 출현 시간 갱신
         { // 메서드 시작
-            if (player == null || GameManager.Instance == null || !GameManager.Instance.IsPlaying) // 전투 가능 여부
+            double now = Time.timeAsDouble; // 이번 프레임 게임 시간
+            float elapsedDelta = (float)Math.Max(0d, now - previousClockTime); // 지난 게임 시간 차이
+            previousClockTime = now; // 다음 프레임 기준 저장
+            GameManager manager = GameManager.Instance; // 현재 게임 관리자
+            if (player == null || manager == null) // 시간 기준과 플레이어 확인
             { // 조건 시작
                 return; // 출현 중지
             } // 조건 끝
-            elapsed += Time.deltaTime; // 전투 시간 누적
+            if (manager.CurrentState == GameState.Playing || manager.CurrentState == GameState.Paused) // 전투와 일시정지 상태 확인
+            { // 조건 시작
+                elapsed += elapsedDelta; // 직전 프레임 게임 시간 누적
+            } // 조건 끝
+            if (!manager.IsPlaying) // 일시정지 또는 종료 확인
+            { // 조건 시작
+                return; // 출현과 전환 대기
+            } // 조건 끝
+            if (!hasEnteredBossTransition && elapsed >= Mathf.Max(0f, bossTransitionTime)) // 보스 전환 시각 확인
+            { // 조건 시작
+                EnterBossTransition(); // 기존 전투 정리와 전환 알림
+            } // 조건 끝
+            if (hasEnteredBossTransition) // 보스 전환 이후 확인
+            { // 조건 시작
+                return; // 일반 적과 엘리트 출현 중지
+            } // 조건 끝
             CleanupDistantEnemies(); // 먼 일반 적 정리
             ProcessEliteSchedule(); // 엘리트 일정과 대기 출현 처리
 
@@ -157,6 +186,44 @@ namespace ProjectEpsilon.Enemies // 적 영역
                     break; // 선택 종료
                 } // 조건 끝
             } // 반복 끝
+        } // 메서드 끝
+        private void EnterBossTransition() // 기존 전투 무보상 정리
+        { // 메서드 시작
+            hasEnteredBossTransition = true; // 중복 전환 방지
+            SnakeWeaponMergeController merge = FindFirstObjectByType<SnakeWeaponMergeController>(); // 진행 중 합성 조회
+            if (merge != null && merge.IsMergeOpen) // 미확정 합성 확인
+            { // 조건 시작
+                merge.CloseMergePanel(); // 기존 재료를 보존한 합성 보류
+            } // 조건 끝
+            pendingEliteRounds.Clear(); // 미출현 엘리트 회차 폐기
+            foreach (WeaponTarget target in targets) // 관리 중인 실제 적 순회
+            { // 반복 시작
+                if (target == null) // 이미 제거된 적 확인
+                { // 조건 시작
+                    continue; // 빈 대상 무시
+                } // 조건 끝
+                target.Died -= HandleEnemyDied; // 처치와 보상 연결 해제
+                target.gameObject.SetActive(false); // 지연 파괴 전 공격과 보상 차단
+                Destroy(target.gameObject); // 사망 이벤트 없는 제거
+            } // 반복 끝
+            targets.Clear(); // 일반 적과 엘리트 목록 비우기
+            eliteTargets.Clear(); // 생존 엘리트 목록 비우기
+            activeEnemies = 0; // 생존 적 수 초기화
+            foreach (EnemyTestProjectile shot in FindObjectsByType<EnemyTestProjectile>(FindObjectsSortMode.None)) // 실제 적 투사체 순회
+            { // 반복 시작
+                shot.gameObject.SetActive(false); // 지연 파괴 전 접촉 차단
+                Destroy(shot.gameObject); // 기존 적 투사체 제거
+            } // 반복 끝
+            foreach (RecoveryPickup pickup in FindObjectsByType<RecoveryPickup>(FindObjectsSortMode.None)) // 실제 회복 아이템 순회
+            { // 반복 시작
+                if (!pickup.IsBodyRepair) // 체력 회복 아이템 확인
+                { // 조건 시작
+                    continue; // 체력 회복 아이템 보존
+                } // 조건 끝
+                pickup.gameObject.SetActive(false); // 지연 파괴 전 획득 차단
+                Destroy(pickup.gameObject); // 몸통 복구 아이템 제거
+            } // 반복 끝
+            BossTransitionStarted?.Invoke(); // 정리 완료 후 보스 전환 알림
         } // 메서드 끝
         private void Spawn(EarlyEnemySettings setting) // 적 생성
         { // 메서드 시작

@@ -33,6 +33,7 @@ namespace ProjectEpsilon.Progression
 
         private SpriteRenderer spriteRenderer;
         private bool collected;
+        public bool IsBodyRepair => pickupType == RecoveryPickupType.BodyRepair; // 몸통 복구 아이템 여부
 
         private void Awake()
         {

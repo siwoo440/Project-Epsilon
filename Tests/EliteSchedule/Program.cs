@@ -22,6 +22,8 @@ internal static class Program // 엘리트 일정 시험
         Check("여러 경계 통과 후 FIFO 보존", VerifySkippedBoundaries); // 긴 프레임 대기 검사
         Check("전체 상한이 엘리트로 찬 경우", VerifyEliteOnlyCapacity); // 엘리트 보존 검사
         Check("70퍼센트 축소 시간 경계", VerifySlowTime); // 축소 시간 검사
+        Check("같은 프레임 일시정지 시 실제 시간 보존", VerifyPauseFrameClock); // 경계 프레임 시간 검사
+        Check("20분 전환 정리와 합성 보류", VerifyBossTransition); // 실제 전환 코드 검사
         Console.WriteLine(failures == 0 ? "PASS" : $"FAIL: {failures}"); // 최종 결과
         return failures == 0 ? 0 : 1; // 종료 코드
     } // 메서드 끝
@@ -31,7 +33,18 @@ internal static class Program // 엘리트 일정 시험
         catch (Exception error) { failures++; Console.WriteLine($"FAIL: {label}: {error.GetBaseException().Message}"); } // 실패 기록
     } // 메서드 끝
     private static void Require(bool condition, string message) { if (!condition) { throw new InvalidOperationException(message); } } // 검증 조건
-    private static object Invoke(object instance, string name, params object[] args) => instance.GetType().GetMethod(name, Private).Invoke(instance, args); // 실제 내부 경로 실행
+    private static object Invoke(object instance, string name, params object[] args) // 실제 내부 경로 실행
+    { // 메서드 시작
+        if (instance is EarlyEnemyWaveSpawner && name == "Start") // 실제 출현기 시작 확인
+        { // 조건 시작
+            instance.GetType().GetMethod("OnEnable", Private).Invoke(instance, null); // 실제 활성화 순서 재현
+        } // 조건 끝
+        if (instance is EarlyEnemyWaveSpawner && name == "LateUpdate" && GameManager.Instance.IsPlaying) // 실제 진행 프레임 확인
+        { // 조건 시작
+            Time.timeAsDouble += Time.deltaTime; // 시험 게임 시간 누적
+        } // 조건 끝
+        return instance.GetType().GetMethod(name, Private).Invoke(instance, args); // 실제 내부 경로 실행
+    } // 메서드 끝
     private static void Set(object instance, string name, object value) => instance.GetType().GetField(name, Private).SetValue(instance, value); // 직렬화 값 설정
     private static (EarlyEnemyWaveSpawner spawner, EliteRewardController rewards) Create() // 출현기 시험 구성
     { // 메서드 시작
@@ -160,5 +173,47 @@ internal static class Program // 엘리트 일정 시험
         GameManager.Instance.IsPlaying = true; // 게임 재개
         Invoke(fixture.spawner, "LateUpdate"); // 재개 후 갱신
         Require(Elites().Length == 1, "재개 후 첫 엘리트 누락"); // 재개 출현 확인
+    } // 메서드 끝
+    private static void VerifyPauseFrameClock() // 이미 경과한 프레임 시간 보존
+    { // 메서드 시작
+        var fixture = Create(); // 실제 출현기 구성
+        Time.timeAsDouble += 0.02d; // 정지 직전 진행한 게임 시간
+        GameManager.Instance.IsPlaying = false; // 같은 프레임 일시정지
+        Invoke(fixture.spawner, "LateUpdate"); // 실제 출현기 후반 갱신
+        Require(Math.Abs(fixture.spawner.ElapsedSeconds - 0.02f) < 0.001f, "정지 직전 게임 시간이 누락됨"); // 실제 시간 보존 확인
+        Invoke(fixture.spawner, "LateUpdate"); // 시간 정지 상태 재확인
+        Require(Math.Abs(fixture.spawner.ElapsedSeconds - 0.02f) < 0.001f, "정지 중 시간이 추가로 증가함"); // 실제 정지 시간 확인
+    } // 메서드 끝
+    private static void VerifyBossTransition() // 실제 출현기의 전환 처리
+    { // 메서드 시작
+        var fixture = Create(); // 실제 출현기 구성
+        EarlyEnemySettings ordinary = new EarlyEnemySettings // 일반 적 시험 설정
+        { // 설정 시작
+            kind = EarlyEnemyKind.Chaser, // 추적 적 종류
+            health = 25f, // 임시 체력
+            experience = 1, // 임시 경험치
+            attackInterval = 1f // 임시 공격 간격
+        }; // 설정 끝
+        Invoke(fixture.spawner, "Spawn", ordinary); // 실제 일반 적 출현
+        Advance(fixture.spawner, 240f); // 실제 엘리트 출현
+        GameObject normal = GameObject.Objects.First(item => item.name == "EarlyEnemy_Chaser"); // 실제 일반 적 조회
+        GameObject elite = GameObject.Objects.First(item => item.name == "EarlyEnemy_Elite"); // 실제 엘리트 조회
+        GameObject shot = new GameObject("EnemyShot"); // 적 투사체 객체
+        shot.AddComponent<EnemyTestProjectile>(); // 실제 제거 대상 대체
+        GameObject healing = new GameObject("Healing"); // 체력 회복 객체
+        healing.AddComponent<RecoveryPickup>(); // 실제 회복 아이템 대체
+        GameObject repair = new GameObject("Repair"); // 몸통 복구 객체
+        repair.AddComponent<RecoveryPickup>().IsBodyRepair = true; // 실제 복구 아이템 대체
+        GameObject mergeObject = new GameObject("Merge"); // 합성 화면 객체
+        SnakeWeaponMergeController merge = mergeObject.AddComponent<SnakeWeaponMergeController>(); // 실제 합성 화면 대체
+        merge.IsMergeOpen = true; // 미확정 합성 진행 상태
+        int events = 0; // 실제 전환 이벤트 수
+        fixture.spawner.BossTransitionStarted += () => events++; // 실제 전환 알림 연결
+        Advance(fixture.spawner, 1200f); // 실제 20분 경계 진행
+        Require(events == 1 && fixture.spawner.HasEnteredBossTransition && fixture.spawner.ActiveEnemies == 0, "전환 상태 또는 등록 적 정리 오류"); // 실제 단일 전환 확인
+        Require(normal.destroyed && elite.destroyed && shot.destroyed && repair.destroyed && !healing.destroyed, "전환 대상 제거 또는 보존 오류"); // 제거와 보존 확인
+        Require(!merge.IsMergeOpen && fixture.rewards.Count == 0 && EnemyDropController.TotalExperience == 0, "합성 보류 또는 무보상 제거 오류"); // 실제 보상과 합성 확인
+        Invoke(fixture.spawner, "LateUpdate"); // 전환 후 추가 프레임
+        Require(events == 1 && fixture.spawner.ActiveEnemies == 0, "전환 중복 또는 기존 웨이브 재개"); // 중복 전환 방지 확인
     } // 메서드 끝
 } // 클래스 끝

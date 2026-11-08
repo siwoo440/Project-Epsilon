@@ -15,11 +15,19 @@
 3. 프로젝트 버전인 Unity **6000.3.21f1**의 `Unity.exe`를 사용한다. `-batchmode`, `-nographics`, 사본을 가리키는 `-projectPath`, 아래 표의 `-executeMethod`, 별도 `-logFile`을 지정한다. `-quit`은 플레이 모드 진입 전에 종료될 수 있으므로 사용하지 않는다.
 4. 프로세스가 종료된 뒤 로그의 테스트 접두사와 종료 코드를 확인한다. Unity 초기 에셋 가져오기와 컴파일 시간은 플레이 시간과 별개다.
 
+34일차 `AutomatedBossTransitionVerification.cs` SHA-256 `F2517686492B0736C4D8600EC5C9756FE9866795EF76AB756374659AA1836EDE`는 실제 씬에서 32배 누적 1,200.003초에 단일 전환과 관리 적 40마리 무보상 정리, XP·HP 회복 보존, 몸통 복구와 적 투사체 제거, 미확정 합성 재료 보존과 재개, 보스 50% 단계 및 강제 처치 승리를 확인해 종료 코드 0이었다. 이동·충돌과 적 행동을 통제하고 보스를 직접 치명 피해로 처치한 시험이다. 기존 33일차 사본의 선행 배치는 전환 API 부재로 종료 코드 1이었다.
+
+`AutomatedRunClockVerification.cs` SHA-256 `CF25E310166934019854757488242C128912D13A46640EE702D9E149DAB4BDE6`는 실제 씬에서 같은 프레임 일시정지 전 경과 0.000178초를 보존하고 HUD와 실제 전투 시간이 같으며, 정지 중 시간 유지·표시 전용 초기화·재개가 동작해 종료 코드 0이었다. 게임 관리자 API로 일시정지한 통제 시험이다.
+
+34일차 초반 웨이브 회귀의 첫 실행은 레벨업 직후 같은 프레임에 보석 객체가 조회돼 종료 코드 1이었다. 보강 스크립트 SHA-256 `22F63CD799B90DFBF200DB3B50CC50BA87C0F416B0C27FD354F86F802A54E1B1`은 실제 8배 누적 240.011초, 강제 엘리트 사망·20 XP 보석·연속 레벨업과 엘리트 보상 UI에서 종료 코드 0이었다. 보강 후 같은 프레임 분기는 재발하지 않아 첫 실패의 원인은 확정하지 않았다. 각 Unity 실행에서 에디터 Search 시작 인덱싱 예외가 별도로 발생했다.
+
 | 스크립트 | 실행할 메서드 | 실제로 실행한 조건 |
 | --- | --- | --- |
 | `AutomatedPilotVerification.cs` | `ProjectEpsilon.Editor.AutomatedPilotVerification.Run` | 정상 속도 300초, 가상 A/D·Space 회피 입력, 레벨업·보상 UI 자동 선택. 무적·능력치 변경 없음. 배치 포커스를 위해 입력 설정의 저장되지 않는 메모리 사본 사용 |
 | `AutomatedEliteRewardVerification.cs` | `ProjectEpsilon.Editor.AutomatedEliteRewardVerification.Run` | 출현기 시간을 240초로 설정하고 엘리트를 강제 처치. XP 보석과 보상 일시정지, 실제 UI 버튼 이벤트, 장착·재개 확인 |
 | `AutomatedEarlyWaveVerification.cs` | `ProjectEpsilon.Editor.AutomatedEarlyWaveVerification.Run` | 실제 출현 시간 누적을 8배로 가속하고 일반 적을 관측 후 제거. 4분 자동 엘리트를 강제 처치하고 실제 XP 보석·연속 레벨업·엘리트 보상 UI 순서 확인 |
+| `AutomatedBossTransitionVerification.cs` | `ProjectEpsilon.Editor.AutomatedBossTransitionVerification.Run` | 실제 씬의 출현 시간을 0초부터 32배로 누적하고 적 이동·공격과 플레이어 이동·충돌을 통제. 20분 전환 시 적·아이템 정리, 합성 보류, 시험 보스 단계와 강제 처치 승리 확인 |
+| `AutomatedRunClockVerification.cs` | `ProjectEpsilon.Editor.AutomatedRunClockVerification.Run` | 실제 씬에서 같은 프레임의 일시정지 전 게임 시간, HUD 동기화, 정지 유지, 표시 전용 초기화와 재개를 확인 |
 | `AutomatedEliteScheduleVerification.cs` | `ProjectEpsilon.Editor.AutomatedEliteScheduleVerification.Run` / `RunExternalDestroy` | 실제 출현 시간을 32배로 가속하고 일반 적 만석을 유지. 엘리트 FIFO 대기·공존·보상과 별도의 외부 파괴 경계 확인 |
 | `AutomatedShooterSpawnVerification.cs` | `ProjectEpsilon.Editor.AutomatedShooterSpawnVerification.Run` | 실제 사수의 물리 발사·머리 기준 거리 유지 및 32:9 이동 카메라의 일반·엘리트 출현 위치와 정리, 렌더 직전 뷰포트 확인 |
 | `AutomatedBodyHudVerification.cs` | `ProjectEpsilon.Editor.AutomatedBodyHudVerification.Run` | 초기 물리 단계 뒤 게임을 일시정지하고 성장·손실·복구 API를 직접 호출. 세 수치, 이벤트, HUD 텍스트와 너비 확인 |
