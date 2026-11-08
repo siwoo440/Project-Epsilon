@@ -174,6 +174,9 @@ namespace ProjectEpsilon.Editor // 배치 시험 영역
 
         private IEnumerator TestCharge(bool phaseTwo, bool invulnerable, bool bodyContact) // 실제 예고와 물리 충돌
         { // 코루틴 시작
+            boss.transform.position = player.transform.position + Vector3.up * 30f; // 이전 접촉을 분리할 보스 위치
+            Physics2D.SyncTransforms(); // 분리 위치의 물리 반영
+            yield return new WaitForFixedUpdate(); // 이전 접촉 종료 대기
             body.ResetBody(); // 실제 시험 몸통 초기화
             health.ResetHealth(); // 실제 공용 체력 초기화
             GetComponent<SnakeInvulnerability>().ClearInvulnerability(); // 실제 전체 무적 해제
@@ -229,6 +232,7 @@ namespace ProjectEpsilon.Editor // 배치 시험 영역
             Require(!(bool)chargeState.GetValue(charge), "Actual charge did not finish."); // 실제 돌진 종료 확인
             if (bodyContact) // 실제 몸통 선행 시험 확인
             { // 조건 시작
+                Debug.Log($"[BossChargeVerification] contact positions: boss={boss.transform.position}, head={player.transform.position}, bodies={body.CurrentBodyCount}, bodyEntries={contactProbe.BodyEntries}, headEntries={contactProbe.HeadEntries}."); // 실제 접촉 위치 진단
                 Require(contactProbe.BodyEntries > 0 && contactProbe.HeadEntries > 0 && contactProbe.BodyEnteredFirst, "Actual sequential body and head contacts were not observed."); // 실제 접촉 순서 확인
             } // 조건 끝
             if (phaseTwo && invulnerable) // 전체 무적 중 절단 확인

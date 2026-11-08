@@ -12,6 +12,7 @@ namespace ProjectEpsilon.UI
         [SerializeField] private Text staminaText;
         private RectTransform healthFill; // 체력 막대 채움 영역
         private RectTransform experienceFill; // 경험치 막대 채움 영역
+        private RectTransform staminaFill; // 스태미나 막대 채움 영역
 
         private void Start()
         {
@@ -88,6 +89,7 @@ namespace ProjectEpsilon.UI
 
         public void SetStamina(int current, int maximum)
         {
+            SetBar(staminaText, ref staminaFill, "StaminaBar", current, maximum, new Color(0.25f, 0.85f, 0.35f, 1f)); // 실제 스태미나 막대 갱신
             if (staminaText != null)
             {
                 staminaText.text = HUDTextFormatter.FormatStamina(current, maximum);

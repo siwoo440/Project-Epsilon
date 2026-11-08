@@ -88,7 +88,7 @@ namespace ProjectEpsilon.Enemies // 적 영역
                 return; // 완료 프레임 이동 생략
             } // 조건 끝
             float statusMultiplier = statuses == null ? 1f : statuses.CurrentMovementMultiplier; // 실제 상태 이동 배율
-            float speed = Mathf.Max(0.1f, chargeSpeed) * (cutAttack ? Mathf.Max(1f, phaseTwoSpeedMultiplier) : 1f); // 단계별 돌진 속도
+            float speed = Mathf.Max(0.1f, chargeSpeed) * (cutAttack ? Mathf.Max(1f, phaseTwoSpeedMultiplier) : 1f) * EnemyMovementRules.SpeedMultiplier; // 전체 적 이동 배율을 적용한 돌진 속도
             physicsBody.MovePosition(physicsBody.position + direction * speed * statusMultiplier * Time.fixedDeltaTime); // 예고한 방향의 실제 물리 이동
         } // 메서드 끝
 
@@ -122,7 +122,7 @@ namespace ProjectEpsilon.Enemies // 적 영역
             } // 조건 끝
             warning.startColor = cutAttack ? Color.magenta : Color.red; // 단계별 실제 예고 색상
             warning.endColor = warning.startColor; // 실제 예고 끝 색상
-            float distance = Mathf.Max(0.1f, chargeSpeed) * Mathf.Max(0.1f, chargeDuration) * (cutAttack ? Mathf.Max(1f, phaseTwoSpeedMultiplier) : 1f); // 예고한 최대 돌진 거리
+            float distance = Mathf.Max(0.1f, chargeSpeed) * Mathf.Max(0.1f, chargeDuration) * (cutAttack ? Mathf.Max(1f, phaseTwoSpeedMultiplier) : 1f) * EnemyMovementRules.SpeedMultiplier; // 실제 절반 속도를 반영한 예고 거리
             warning.SetPosition(0, transform.position); // 실제 예고 시작점
             warning.SetPosition(1, transform.position + (Vector3)(direction * distance)); // 실제 예고 종료점
             warning.enabled = true; // 실제 예고선 표시

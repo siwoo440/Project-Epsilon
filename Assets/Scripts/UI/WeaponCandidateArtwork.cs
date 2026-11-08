@@ -49,7 +49,7 @@ namespace ProjectEpsilon.UI // 화면 영역
                 area.anchorMax = new Vector2(0.5f, 1f); // 버튼 위 중앙 끝점
                 area.pivot = new Vector2(0.5f, 1f); // 이미지 위 중앙 기준
                 area.anchoredPosition = new Vector2(0f, -4f); // 버튼 위쪽 안쪽 위치
-                area.sizeDelta = new Vector2(48f, 48f); // 실제 이미지 영역 크기
+                area.sizeDelta = new Vector2(96f, 96f); // 기존 두 배 후보 이미지 크기
                 image = item.GetComponent<Image>(); // 실제 UI 이미지 조회
                 image.raycastTarget = false; // 버튼 입력 가림 방지
                 image.preserveAspect = true; // 원본 이미지 비율 유지
@@ -61,7 +61,7 @@ namespace ProjectEpsilon.UI // 화면 영역
             } // 조건 끝
             if (currentLabel != null && hasOriginalOffset) // 실제 문구 영역 확인
             { // 조건 시작
-                currentLabel.rectTransform.offsetMax = sprite != null ? originalOffsetMax - new Vector2(0f, 52f) : originalOffsetMax; // 이미지 공간 확보 또는 원래 영역 복구
+                currentLabel.rectTransform.offsetMax = sprite != null ? originalOffsetMax - new Vector2(0f, 100f) : originalOffsetMax; // 두 배 이미지 공간 확보 또는 원래 영역 복구
             } // 조건 끝
         } // 메서드 끝
         private void RestoreLabel() // 이전 문구 영역 복구

@@ -141,7 +141,7 @@ namespace ProjectEpsilon.Enemies // 적 영역
         private void Move(Vector2 direction, float multiplier) // 물리 이동
         { // 메서드 시작
             float statusMultiplier = statuses == null ? 1f : statuses.CurrentMovementMultiplier; // 상태 이동 배율
-            float speed = player.MoveSpeed * Mathf.Max(0f, settings.speedRatio) * statusMultiplier * multiplier; // 최종 이동 속도
+            float speed = player.MoveSpeed * Mathf.Max(0f, settings.speedRatio) * statusMultiplier * multiplier * EnemyMovementRules.SpeedMultiplier; // 전체 적 이동 속도 배율 적용
             movementBody.MovePosition(movementBody.position + direction * speed * Time.fixedDeltaTime); // 적 위치 이동
         } // 메서드 끝
         private bool TickCharge(Vector2 offset) // 엘리트 예고와 돌진
@@ -196,7 +196,7 @@ namespace ProjectEpsilon.Enemies // 적 영역
             } // 조건 끝
             warning.enabled = true; // 예고선 표시
             warning.SetPosition(0, transform.position); // 예고선 시작점
-            warning.SetPosition(1, transform.position + (Vector3)(chargeDirection * 6f)); // 예고선 끝점
+            warning.SetPosition(1, transform.position + (Vector3)(chargeDirection * (6f * EnemyMovementRules.SpeedMultiplier))); // 속도에 맞춘 예고선 끝점
         } // 메서드 끝
         private void OnTriggerStay2D(Collider2D other) // 적 접촉 지속 처리
         { // 메서드 시작

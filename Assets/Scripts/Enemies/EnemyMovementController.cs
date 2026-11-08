@@ -25,7 +25,7 @@ namespace ProjectEpsilon.Enemies // Enemy 영역
         public Rigidbody2D MovementBody => movementBody; // 이동 물리 반환
         public WeaponTargetKnockbackController KnockbackController => knockbackController; // 넉백 관리자 반환
         public float BaseMoveSpeed => enemyData == null ? Mathf.Max(0f, fallbackMoveSpeed) : Mathf.Max(0f, enemyData.MoveSpeed); // 기본 이동속도 반환
-        public float CurrentMoveSpeed => BaseMoveSpeed * (statusController == null ? 1f : statusController.CurrentMovementMultiplier); // 최종 이동속도 반환
+        public float CurrentMoveSpeed => BaseMoveSpeed * (statusController == null ? 1f : statusController.CurrentMovementMultiplier) * EnemyMovementRules.SpeedMultiplier; // 전체 적 이동 배율 적용
 
         private void Awake() // 참조 초기화
         {

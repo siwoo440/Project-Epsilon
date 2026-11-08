@@ -150,6 +150,18 @@ namespace ProjectEpsilon.Editor // 편집기 영역
             yield return VerifyWeapon("PrototypeExplosionDagger", WeaponAttackType.Melee, WeaponAttribute.Explosion, 6f, 0.55f, 2); // 폭발 단검 임시 공격 확인
             yield return VerifyWeapon("PrototypeExplosionBolt", WeaponAttackType.StraightProjectile, WeaponAttribute.Explosion, 8f, 0.85f, 3); // 폭발 탄 임시 공격 확인
             yield return VerifyWeapon("PrototypeExplosionWave", WeaponAttackType.Area, WeaponAttribute.Explosion, 9f, 1.6f, 3); // 폭발 파동 임시 공격 확인
+            yield return VerifyWeapon("PrototypeHolyBlade", WeaponAttackType.Melee, WeaponAttribute.Holy, 9f, 0.9f, 1); // 신성 검 임시 공격 확인
+            yield return VerifyWeapon("PrototypeHolySpear", WeaponAttackType.StraightProjectile, WeaponAttribute.Holy, 7f, 1f, 2); // 신성 창 임시 공격 확인
+            yield return VerifyWeapon("PrototypeHolyAura", WeaponAttackType.Area, WeaponAttribute.Holy, 6f, 1.4f, 3); // 신성 고리 임시 공격 확인
+            yield return VerifyWeapon("PrototypeHolyDagger", WeaponAttackType.Melee, WeaponAttribute.Holy, 6f, 0.55f, 1); // 신성 단검 임시 공격 확인
+            yield return VerifyWeapon("PrototypeHolyBolt", WeaponAttackType.StraightProjectile, WeaponAttribute.Holy, 8f, 0.85f, 1); // 신성 탄 임시 공격 확인
+            yield return VerifyWeapon("PrototypeHolyWave", WeaponAttackType.Area, WeaponAttribute.Holy, 9f, 1.6f, 3); // 신성 파동 임시 공격 확인
+            yield return VerifyWeapon("PrototypeDarkBlade", WeaponAttackType.Melee, WeaponAttribute.Dark, 9f, 0.9f, 1); // 암흑 검 임시 공격 확인
+            yield return VerifyWeapon("PrototypeDarkSpear", WeaponAttackType.StraightProjectile, WeaponAttribute.Dark, 7f, 1f, 2); // 암흑 창 임시 공격 확인
+            yield return VerifyWeapon("PrototypeDarkAura", WeaponAttackType.Area, WeaponAttribute.Dark, 6f, 1.4f, 3); // 암흑 고리 임시 공격 확인
+            yield return VerifyWeapon("PrototypeDarkDagger", WeaponAttackType.Melee, WeaponAttribute.Dark, 6f, 0.55f, 1); // 암흑 단검 임시 공격 확인
+            yield return VerifyWeapon("PrototypeDarkBolt", WeaponAttackType.StraightProjectile, WeaponAttribute.Dark, 8f, 0.85f, 1); // 암흑 탄 임시 공격 확인
+            yield return VerifyWeapon("PrototypeDarkWave", WeaponAttackType.Area, WeaponAttribute.Dark, 9f, 1.6f, 3); // 암흑 파동 임시 공격 확인
             VerifyRewardPool(); // 실제 보상 풀 무기 확인
             ClearObjects(); // 시험 표적과 투사체 제거
             weapons.enabled = false; // 경험치 시험 중 자동 공격 중지
@@ -157,13 +169,13 @@ namespace ProjectEpsilon.Editor // 편집기 영역
             yield return VerifyEnemyExperience(); // 실제 적 생성과 보석 획득
             hooks.AttackTriggered -= OnAttack; // 공격 기록 구독 해제
             hooks.HitTriggered -= OnHit; // 명중 기록 구독 해제
-            AutomatedEarlyWeaponVerification.Finish(0, "Thirty-six weapon assets, reward pool, body origins, damage, cooldown, status, projectile contacts and three enemy XP drops/collection."); // 전체 성공 기록
+            AutomatedEarlyWeaponVerification.Finish(0, "Forty-eight weapon assets, reward pool, body origins, damage, cooldown, status, projectile contacts and three enemy XP drops/collection."); // 전체 성공 기록
         } // 코루틴 끝
 
         private void VerifyRewardPool() // 실제 레벨업 및 엘리트 공통 무기 풀 확인
         { // 메서드 시작
             WeaponRewardPool pool = AssetDatabase.LoadAssetAtPath<WeaponRewardPool>("Assets/Data/Progression/DebugWeaponRewardPool.asset"); // 실제 보상 풀 데이터
-            Require(pool != null && pool.Entries.Count == 36, "Reward pool must contain thirty-six weapons."); // 보상 풀 크기 확인
+            Require(pool != null && pool.Entries.Count == 48, "Reward pool must contain forty-eight weapons."); // 보상 풀 크기 확인
             HashSet<string> ids = new HashSet<string>(); // 고유 무기 식별자 목록
             int physical = 0; // 물리 무기 수
             int fire = 0; // 화염 무기 수
@@ -171,6 +183,8 @@ namespace ProjectEpsilon.Editor // 편집기 영역
             int electric = 0; // 전기 무기 수
             int poison = 0; // 독 무기 수
             int explosion = 0; // 폭발 무기 수
+            int holy = 0; // 신성 무기 수
+            int dark = 0; // 암흑 무기 수
             foreach (WeaponRewardEntry entry in pool.Entries) // 실제 보상 후보 순회
             { // 반복 시작
                 Require(entry != null && entry.Unlocked && entry.Weapon != null && ids.Add(entry.Weapon.Id), "Reward pool has missing, locked or duplicate weapon."); // 후보 유효성과 식별자 중복 확인
@@ -180,8 +194,10 @@ namespace ProjectEpsilon.Editor // 편집기 영역
                 electric += entry.Weapon.Attribute == WeaponAttribute.Electric ? 1 : 0; // 전기 속성 수 집계
                 poison += entry.Weapon.Attribute == WeaponAttribute.Poison ? 1 : 0; // 독 속성 수 집계
                 explosion += entry.Weapon.Attribute == WeaponAttribute.Explosion ? 1 : 0; // 폭발 속성 수 집계
+                holy += entry.Weapon.Attribute == WeaponAttribute.Holy ? 1 : 0; // 신성 속성 수 집계
+                dark += entry.Weapon.Attribute == WeaponAttribute.Dark ? 1 : 0; // 암흑 속성 수 집계
             } // 반복 끝
-            Require(physical == 6 && fire == 6 && cold == 6 && electric == 6 && poison == 6 && explosion == 6, "Reward pool does not contain six weapons per attribute."); // 속성별 무기 수 확인
+            Require(physical == 6 && fire == 6 && cold == 6 && electric == 6 && poison == 6 && explosion == 6 && holy == 6 && dark == 6, "Reward pool does not contain six weapons per attribute."); // 속성별 무기 수 확인
         } // 메서드 끝
 
         private void Prepare() // 실제 씬과 통제 조건 준비
@@ -226,6 +242,11 @@ namespace ProjectEpsilon.Editor // 편집기 영역
             if (attribute == WeaponAttribute.Poison || attribute == WeaponAttribute.Explosion) // 신규 속성 이미지 확인
             { // 조건 시작
                 string expectedImage = attribute == WeaponAttribute.Poison ? "WeaponPoisonBlade_Casual" : "WeaponExplosionBlade_Casual"; // 실제 속성별 이미지 이름
+                Require(activeWeapon.Artwork != null && activeWeapon.Artwork.name == expectedImage, "Generated artwork missing: " + assetName); // 실제 무기 데이터 이미지 연결 확인
+            } // 조건 끝
+            if (attribute == WeaponAttribute.Holy || attribute == WeaponAttribute.Dark) // 신성 및 암흑 이미지 확인
+            { // 조건 시작
+                string expectedImage = attribute == WeaponAttribute.Holy ? "WeaponHolyBlade_Casual" : "WeaponDarkBlade_Casual"; // 실제 속성별 이미지 이름
                 Require(activeWeapon.Artwork != null && activeWeapon.Artwork.name == expectedImage, "Generated artwork missing: " + assetName); // 실제 무기 데이터 이미지 연결 확인
             } // 조건 끝
             if (assetName == "DebugNeedle") // 강철 창 확인

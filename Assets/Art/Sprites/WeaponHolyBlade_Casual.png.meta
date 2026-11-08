@@ -1,0 +1,871 @@
+fileFormatVersion: 2
+guid: 7fcfff14e1e6e1d4cb0d14d716ce1d66
+TextureImporter:
+  internalIDToNameTable:
+  - first:
+      213: -8819012309427480514
+    second: WeaponHolyBlade_Casual_0
+  - first:
+      213: 4401663578241714188
+    second: WeaponHolyBlade_Casual_1
+  - first:
+      213: -819318618125154794
+    second: WeaponHolyBlade_Casual_2
+  - first:
+      213: -1321480674733266291
+    second: WeaponHolyBlade_Casual_3
+  - first:
+      213: -4794176374219976483
+    second: WeaponHolyBlade_Casual_4
+  - first:
+      213: -8651302449384542931
+    second: WeaponHolyBlade_Casual_5
+  - first:
+      213: -3160314788009204083
+    second: WeaponHolyBlade_Casual_6
+  - first:
+      213: -1700655478552645180
+    second: WeaponHolyBlade_Casual_7
+  - first:
+      213: 7877502972182262699
+    second: WeaponHolyBlade_Casual_8
+  - first:
+      213: 522997692803202256
+    second: WeaponHolyBlade_Casual_9
+  - first:
+      213: -7604084407251533467
+    second: WeaponHolyBlade_Casual_10
+  - first:
+      213: -2758924320666190827
+    second: WeaponHolyBlade_Casual_11
+  - first:
+      213: -3155593590142106390
+    second: WeaponHolyBlade_Casual_12
+  - first:
+      213: 7317903969345122889
+    second: WeaponHolyBlade_Casual_13
+  - first:
+      213: -5222175296552229260
+    second: WeaponHolyBlade_Casual_14
+  - first:
+      213: 3960146267338000054
+    second: WeaponHolyBlade_Casual_15
+  - first:
+      213: 4791034581954001195
+    second: WeaponHolyBlade_Casual_16
+  - first:
+      213: 6828298236089288934
+    second: WeaponHolyBlade_Casual_17
+  - first:
+      213: -8254108462802907017
+    second: WeaponHolyBlade_Casual_18
+  - first:
+      213: 328537803199586378
+    second: WeaponHolyBlade_Casual_19
+  - first:
+      213: -2736228202432857186
+    second: WeaponHolyBlade_Casual_20
+  - first:
+      213: 462959362436263020
+    second: WeaponHolyBlade_Casual_21
+  - first:
+      213: 6027907700193645759
+    second: WeaponHolyBlade_Casual_22
+  - first:
+      213: -606160515454522463
+    second: WeaponHolyBlade_Casual_23
+  - first:
+      213: 5041885989035338453
+    second: WeaponHolyBlade_Casual_24
+  - first:
+      213: -1729100602193961600
+    second: WeaponHolyBlade_Casual_25
+  - first:
+      213: -2434554599943330130
+    second: WeaponHolyBlade_Casual_26
+  - first:
+      213: -7180458827002687526
+    second: WeaponHolyBlade_Casual_27
+  - first:
+      213: -5773223508283797505
+    second: WeaponHolyBlade_Casual_28
+  externalObjects: {}
+  serializedVersion: 13
+  mipmaps:
+    mipMapMode: 0
+    enableMipMap: 0
+    sRGBTexture: 1
+    linearTexture: 0
+    fadeOut: 0
+    borderMipMap: 0
+    mipMapsPreserveCoverage: 0
+    alphaTestReferenceValue: 0.5
+    mipMapFadeDistanceStart: 1
+    mipMapFadeDistanceEnd: 3
+  bumpmap:
+    convertToNormalMap: 0
+    externalNormalMap: 0
+    heightScale: 0.25
+    normalMapFilter: 0
+    flipGreenChannel: 0
+  isReadable: 0
+  streamingMipmaps: 0
+  streamingMipmapsPriority: 0
+  vTOnly: 0
+  ignoreMipmapLimit: 0
+  grayScaleToAlpha: 0
+  generateCubemap: 6
+  cubemapConvolution: 0
+  seamlessCubemap: 0
+  textureFormat: 1
+  maxTextureSize: 2048
+  textureSettings:
+    serializedVersion: 2
+    filterMode: 1
+    aniso: 1
+    mipBias: 0
+    wrapU: 1
+    wrapV: 1
+    wrapW: 1
+  nPOTScale: 0
+  lightmap: 0
+  compressionQuality: 50
+  spriteMode: 1
+  spriteExtrude: 1
+  spriteMeshType: 1
+  alignment: 0
+  spritePivot: {x: 0.5, y: 0.5}
+  spritePixelsToUnits: 1000
+  spriteBorder: {x: 0, y: 0, z: 0, w: 0}
+  spriteGenerateFallbackPhysicsShape: 1
+  alphaUsage: 1
+  alphaIsTransparency: 1
+  spriteTessellationDetail: -1
+  textureType: 8
+  textureShape: 1
+  singleChannelComponent: 0
+  flipbookRows: 1
+  flipbookColumns: 1
+  maxTextureSizeSet: 0
+  compressionQualitySet: 0
+  textureFormatSet: 0
+  ignorePngGamma: 0
+  applyGammaDecoding: 0
+  swizzle: 50462976
+  cookieLightType: 0
+  platformSettings:
+  - serializedVersion: 4
+    buildTarget: DefaultTexturePlatform
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 4
+    buildTarget: Standalone
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  spriteSheet:
+    serializedVersion: 2
+    sprites:
+    - serializedVersion: 2
+      name: WeaponHolyBlade_Casual_0
+      rect:
+        serializedVersion: 2
+        x: 24
+        y: 23
+        width: 854
+        height: 1270
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData:
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: e3817ca97039c9580800000000000000
+      internalID: -8819012309427480514
+      vertices: []
+      indices:
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: WeaponHolyBlade_Casual_1
+      rect:
+        serializedVersion: 2
+        x: 662
+        y: 1219
+        width: 9
+        height: 21
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData:
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: c084fd114b9d51d30800000000000000
+      internalID: 4401663578241714188
+      vertices: []
+      indices:
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: WeaponHolyBlade_Casual_2
+      rect:
+        serializedVersion: 2
+        x: 830
+        y: 87
+        width: 315
+        height: 1139
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData:
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 61649c8ce0231a4f0800000000000000
+      internalID: -819318618125154794
+      vertices: []
+      indices:
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: WeaponHolyBlade_Casual_3
+      rect:
+        serializedVersion: 2
+        x: 824
+        y: 1169
+        width: 20
+        height: 9
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData:
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: d8aeafce35829ade0800000000000000
+      internalID: -1321480674733266291
+      vertices: []
+      indices:
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: WeaponHolyBlade_Casual_4
+      rect:
+        serializedVersion: 2
+        x: 800
+        y: 1078
+        width: 11
+        height: 18
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData:
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: dd05c000df9a77db0800000000000000
+      internalID: -4794176374219976483
+      vertices: []
+      indices:
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: WeaponHolyBlade_Casual_5
+      rect:
+        serializedVersion: 2
+        x: 810
+        y: 1079
+        width: 7
+        height: 13
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData:
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: d2da7f3424660f780800000000000000
+      internalID: -8651302449384542931
+      vertices: []
+      indices:
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: WeaponHolyBlade_Casual_6
+      rect:
+        serializedVersion: 2
+        x: 915
+        y: 1071
+        width: 12
+        height: 11
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData:
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: d862c42c17e4424d0800000000000000
+      internalID: -3160314788009204083
+      vertices: []
+      indices:
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: WeaponHolyBlade_Casual_7
+      rect:
+        serializedVersion: 2
+        x: 243
+        y: 1007
+        width: 15
+        height: 41
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData:
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 4c13c8b4ade0668e0800000000000000
+      internalID: -1700655478552645180
+      vertices: []
+      indices:
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: WeaponHolyBlade_Casual_8
+      rect:
+        serializedVersion: 2
+        x: 808
+        y: 1010
+        width: 17
+        height: 14
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData:
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: ba3f1066733825d60800000000000000
+      internalID: 7877502972182262699
+      vertices: []
+      indices:
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: WeaponHolyBlade_Casual_9
+      rect:
+        serializedVersion: 2
+        x: 816
+        y: 1037
+        width: 12
+        height: 21
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData:
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 0dc32e171af024700800000000000000
+      internalID: 522997692803202256
+      vertices: []
+      indices:
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: WeaponHolyBlade_Casual_10
+      rect:
+        serializedVersion: 2
+        x: 824
+        y: 989
+        width: 46
+        height: 63
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData:
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 5618faf058dd87690800000000000000
+      internalID: -7604084407251533467
+      vertices: []
+      indices:
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: WeaponHolyBlade_Casual_11
+      rect:
+        serializedVersion: 2
+        x: 915
+        y: 1023
+        width: 36
+        height: 49
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData:
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 51c7180a2f456b9d0800000000000000
+      internalID: -2758924320666190827
+      vertices: []
+      indices:
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: WeaponHolyBlade_Casual_12
+      rect:
+        serializedVersion: 2
+        x: 281
+        y: 1014
+        width: 6
+        height: 7
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData:
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: ae4841c49541534d0800000000000000
+      internalID: -3155593590142106390
+      vertices: []
+      indices:
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: WeaponHolyBlade_Casual_13
+      rect:
+        serializedVersion: 2
+        x: 830
+        y: 975
+        width: 18
+        height: 21
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData:
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 942bc3163ea6e8560800000000000000
+      internalID: 7317903969345122889
+      vertices: []
+      indices:
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: WeaponHolyBlade_Casual_14
+      rect:
+        serializedVersion: 2
+        x: 915
+        y: 975
+        width: 20
+        height: 27
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData:
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 4762f2e6c3b1787b0800000000000000
+      internalID: -5222175296552229260
+      vertices: []
+      indices:
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: WeaponHolyBlade_Casual_15
+      rect:
+        serializedVersion: 2
+        x: 275
+        y: 868
+        width: 8
+        height: 12
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData:
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 6b645436c0445f630800000000000000
+      internalID: 3960146267338000054
+      vertices: []
+      indices:
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: WeaponHolyBlade_Casual_16
+      rect:
+        serializedVersion: 2
+        x: 832
+        y: 869
+        width: 12
+        height: 10
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData:
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: b29fafb719c2d7240800000000000000
+      internalID: 4791034581954001195
+      vertices: []
+      indices:
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: WeaponHolyBlade_Casual_17
+      rect:
+        serializedVersion: 2
+        x: 907
+        y: 873
+        width: 20
+        height: 17
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData:
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 6e8478e511df2ce50800000000000000
+      internalID: 6828298236089288934
+      vertices: []
+      indices:
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: WeaponHolyBlade_Casual_18
+      rect:
+        serializedVersion: 2
+        x: 107
+        y: 757
+        width: 16
+        height: 21
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData:
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 7705611d514837d80800000000000000
+      internalID: -8254108462802907017
+      vertices: []
+      indices:
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: WeaponHolyBlade_Casual_19
+      rect:
+        serializedVersion: 2
+        x: 834
+        y: 775
+        width: 6
+        height: 6
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData:
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: a40affe24633f8400800000000000000
+      internalID: 328537803199586378
+      vertices: []
+      indices:
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: WeaponHolyBlade_Casual_20
+      rect:
+        serializedVersion: 2
+        x: 890
+        y: 751
+        width: 18
+        height: 19
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData:
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: e9b759172f6f60ad0800000000000000
+      internalID: -2736228202432857186
+      vertices: []
+      indices:
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: WeaponHolyBlade_Casual_21
+      rect:
+        serializedVersion: 2
+        x: 946
+        y: 695
+        width: 11
+        height: 21
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData:
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: c6c64775613cc6600800000000000000
+      internalID: 462959362436263020
+      vertices: []
+      indices:
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: WeaponHolyBlade_Casual_22
+      rect:
+        serializedVersion: 2
+        x: 834
+        y: 599
+        width: 8
+        height: 7
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData:
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: fb452e8bd1e67a350800000000000000
+      internalID: 6027907700193645759
+      vertices: []
+      indices:
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: WeaponHolyBlade_Casual_23
+      rect:
+        serializedVersion: 2
+        x: 267
+        y: 513
+        width: 8
+        height: 7
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData:
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 1ab2777093c7697f0800000000000000
+      internalID: -606160515454522463
+      vertices: []
+      indices:
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: WeaponHolyBlade_Casual_24
+      rect:
+        serializedVersion: 2
+        x: 857
+        y: 341
+        width: 13
+        height: 11
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData:
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 5da687e089068f540800000000000000
+      internalID: 5041885989035338453
+      vertices: []
+      indices:
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: WeaponHolyBlade_Casual_25
+      rect:
+        serializedVersion: 2
+        x: 869
+        y: 341
+        width: 19
+        height: 12
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData:
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 08d9059d9200108e0800000000000000
+      internalID: -1729100602193961600
+      vertices: []
+      indices:
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: WeaponHolyBlade_Casual_26
+      rect:
+        serializedVersion: 2
+        x: 587
+        y: 79
+        width: 12
+        height: 17
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData:
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: ea6a51c7d79b63ed0800000000000000
+      internalID: -2434554599943330130
+      vertices: []
+      indices:
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: WeaponHolyBlade_Casual_27
+      rect:
+        serializedVersion: 2
+        x: 597
+        y: 77
+        width: 6
+        height: 13
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData:
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: adfcf249db2e95c90800000000000000
+      internalID: -7180458827002687526
+      vertices: []
+      indices:
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: WeaponHolyBlade_Casual_28
+      rect:
+        serializedVersion: 2
+        x: 678
+        y: 39
+        width: 12
+        height: 11
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData:
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: fff4fcb9ec361efa0800000000000000
+      internalID: -5773223508283797505
+      vertices: []
+      indices:
+      edges: []
+      weights: []
+    outline: []
+    customData:
+    physicsShape: []
+    bones: []
+    spriteID: 5e97eb03825dee720800000000000000
+    internalID: 0
+    vertices: []
+    indices:
+    edges: []
+    weights: []
+    secondaryTextures: []
+    spriteCustomMetadata:
+      entries: []
+    nameFileIdTable:
+      WeaponHolyBlade_Casual_0: -8819012309427480514
+      WeaponHolyBlade_Casual_1: 4401663578241714188
+      WeaponHolyBlade_Casual_10: -7604084407251533467
+      WeaponHolyBlade_Casual_11: -2758924320666190827
+      WeaponHolyBlade_Casual_12: -3155593590142106390
+      WeaponHolyBlade_Casual_13: 7317903969345122889
+      WeaponHolyBlade_Casual_14: -5222175296552229260
+      WeaponHolyBlade_Casual_15: 3960146267338000054
+      WeaponHolyBlade_Casual_16: 4791034581954001195
+      WeaponHolyBlade_Casual_17: 6828298236089288934
+      WeaponHolyBlade_Casual_18: -8254108462802907017
+      WeaponHolyBlade_Casual_19: 328537803199586378
+      WeaponHolyBlade_Casual_2: -819318618125154794
+      WeaponHolyBlade_Casual_20: -2736228202432857186
+      WeaponHolyBlade_Casual_21: 462959362436263020
+      WeaponHolyBlade_Casual_22: 6027907700193645759
+      WeaponHolyBlade_Casual_23: -606160515454522463
+      WeaponHolyBlade_Casual_24: 5041885989035338453
+      WeaponHolyBlade_Casual_25: -1729100602193961600
+      WeaponHolyBlade_Casual_26: -2434554599943330130
+      WeaponHolyBlade_Casual_27: -7180458827002687526
+      WeaponHolyBlade_Casual_28: -5773223508283797505
+      WeaponHolyBlade_Casual_3: -1321480674733266291
+      WeaponHolyBlade_Casual_4: -4794176374219976483
+      WeaponHolyBlade_Casual_5: -8651302449384542931
+      WeaponHolyBlade_Casual_6: -3160314788009204083
+      WeaponHolyBlade_Casual_7: -1700655478552645180
+      WeaponHolyBlade_Casual_8: 7877502972182262699
+      WeaponHolyBlade_Casual_9: 522997692803202256
+  mipmapLimitGroupName:
+  pSDRemoveMatte: 0
+  userData:
+  assetBundleName:
+  assetBundleVariant:

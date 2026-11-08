@@ -147,17 +147,32 @@ namespace ProjectEpsilon.Editor // 배치 시험 영역
             FieldInfo experienceField = typeof(HUDController).GetField("experienceText", BindingFlags.Instance | BindingFlags.NonPublic); // 실제 경험치 글자 필드
             Text healthText = (Text)healthField.GetValue(hud); // 실제 체력 글자
             Text experienceText = (Text)experienceField.GetValue(hud); // 실제 경험치 글자
+            Text levelText = (Text)typeof(HUDController).GetField("levelText", BindingFlags.Instance | BindingFlags.NonPublic).GetValue(hud); // 실제 레벨 글자
+            Text staminaText = (Text)typeof(HUDController).GetField("staminaText", BindingFlags.Instance | BindingFlags.NonPublic).GetValue(hud); // 실제 스태미나 글자
+            GameTimerUI timer = UnityEngine.Object.FindFirstObjectByType<GameTimerUI>(); // 실제 전투 타이머
+            Text timerText = (Text)typeof(GameTimerUI).GetField("timerText", BindingFlags.Instance | BindingFlags.NonPublic).GetValue(timer); // 실제 타이머 글자
+            Require(experienceText.rectTransform.anchorMin == new Vector2(0.5f, 1f) && levelText.rectTransform.anchorMin == new Vector2(0.5f, 1f) && experienceText.rectTransform.anchoredPosition.y < timerText.rectTransform.anchoredPosition.y, "Level and XP are not below the timer."); // 실제 타이머 아래 레벨과 경험치 확인
+            Require(levelText.alignment == TextAnchor.UpperLeft && experienceText.alignment == TextAnchor.UpperRight, "Level and XP text alignment mismatch."); // 레벨 왼쪽과 경험치 오른쪽 확인
+            Require(staminaText.rectTransform.anchorMin == new Vector2(0f, 1f) && Vector2.Distance(staminaText.rectTransform.anchoredPosition, new Vector2(30f, -150f)) < 0.001f, "Stamina did not use the previous XP position."); // 기존 경험치 위치의 스태미나 확인
             Transform healthBar = healthText.transform.Find("HealthBar"); // 실제 체력 막대
             Transform experienceBar = experienceText.transform.Find("ExperienceBar"); // 실제 경험치 막대
-            Require(healthBar != null && experienceBar != null, "Health or experience bar is missing."); // 실제 두 막대 확인
+            Transform staminaBar = staminaText.transform.Find("StaminaBar"); // 실제 스태미나 막대
+            Require(healthBar != null && experienceBar != null && staminaBar != null, "Health, experience or stamina bar is missing."); // 실제 세 막대 확인
             SnakeHealth health = GetComponent<SnakeHealth>(); // 실제 공용 체력
             SnakeExperience experience = GetComponent<SnakeExperience>(); // 실제 경험치
             health.TakeDamage(25); // 실제 체력 피해
             experience.AddExperience(5); // 실제 경험치 획득
             RectTransform healthFill = (RectTransform)healthBar.Find("Fill"); // 실제 체력 채움 영역
             RectTransform experienceFill = (RectTransform)experienceBar.Find("Fill"); // 실제 경험치 채움 영역
+            RectTransform staminaFill = (RectTransform)staminaBar.Find("Fill"); // 실제 스태미나 채움 영역
             Require(healthFill != null && Mathf.Abs(healthFill.anchorMax.x - 0.75f) < 0.001f, "Health bar did not reflect real damage."); // 실제 체력 비율 확인
             Require(experienceFill != null && Mathf.Abs(experienceFill.anchorMax.x - 0.5f) < 0.001f, "Experience bar did not reflect real XP."); // 실제 경험치 비율 확인
+            SnakeStamina stamina = GetComponent<SnakeStamina>(); // 실제 스태미나 구성
+            typeof(SnakeStamina).GetField("currentStamina", BindingFlags.Instance | BindingFlags.NonPublic).SetValue(stamina, 50f); // 시험용 스태미나 상태 설정
+            typeof(SnakeStamina).GetMethod("NotifyStaminaChanged", BindingFlags.Instance | BindingFlags.NonPublic).Invoke(stamina, null); // 실제 스태미나 이벤트 전달
+            Require(staminaFill != null && Mathf.Abs(staminaFill.anchorMax.x - 0.5f) < 0.001f, "Stamina bar did not reflect the real event."); // 실제 스태미나 이벤트 비율 확인
+            stamina.ResetStamina(); // 실제 스태미나 회복 이벤트
+            Require(Mathf.Abs(staminaFill.anchorMax.x - 1f) < 0.001f, "Stamina bar did not recover."); // 실제 스태미나 회복 비율 확인
             Require(!healthBar.GetComponent<Image>().raycastTarget && !experienceBar.GetComponent<Image>().raycastTarget && !healthFill.GetComponent<Image>().raycastTarget && !experienceFill.GetComponent<Image>().raycastTarget, "HUD bar blocked UI input."); // 막대 입력 차단 방지 확인
             experience.AddExperience(experience.RequiredExperience - experience.CurrentExperience); // 실제 레벨업 경험치 획득
             Require(experience.CurrentLevel == 2 && Mathf.Abs(experienceFill.anchorMax.x) < 0.001f && !experienceFill.gameObject.activeSelf, "Experience bar did not reset after leveling."); // 실제 레벨업 뒤 경험치 막대 초기화 확인
