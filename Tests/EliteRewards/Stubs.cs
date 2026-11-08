@@ -75,6 +75,7 @@ namespace ProjectEpsilon.Core // 게임 상태 대체 형식
         public static GameManager Instance; // 현재 관리자
         public bool IsPlaying = true; // 플레이 상태
         public bool IsPaused; // 일시정지 상태
+        public bool IsFinalBossPhase; // 보스전 상태 대체
         public void PauseGame() // 게임 정지
         { // 메서드 시작
             if (IsPlaying) // 플레이 상태 확인

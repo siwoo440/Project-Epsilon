@@ -14,6 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::ProjectEpsilon.Data.WeaponData
   id: debug_blade
   displayName: 강철 검
+  artwork: {fileID: 21300000, guid: 2cde3feb89d135d47b545945873125ec, type: 3}
   attribute: 0
   attackType: 0
   baseDamage: 10

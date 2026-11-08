@@ -15,6 +15,7 @@ namespace ProjectEpsilon.Progression
         private SpriteRenderer spriteRenderer;
         private bool collected;
         private bool destructionScheduled; // 파괴 예약 여부
+        private Sprite fallbackSprite; // 이미지 설정이 없는 씬의 기존 표시
 
         private void Awake()
         {
@@ -32,6 +33,7 @@ namespace ProjectEpsilon.Progression
                 return; // 제거 예정 보석 재설정 방지
             } // 조건 끝
             receiver = experienceReceiver;
+            fallbackSprite = visual; // 기존 대체 이미지 저장
             experienceValue = Mathf.Max(1, value);
             collected = false;
 
@@ -42,6 +44,7 @@ namespace ProjectEpsilon.Progression
 
             spriteRenderer.sprite = visual;
             spriteRenderer.color = new Color(1f, 0.9f, 0.25f, 1f);
+            RefreshArtwork(); // 실제 보석 등급 이미지 반영
             spriteRenderer.sortingOrder = 16;
 
             float scale = ResolveVisualScale(experienceValue);
@@ -135,6 +138,7 @@ namespace ProjectEpsilon.Progression
         internal void PromoteForMerge(int value) // 병합 결과 값 반영
         { // 메서드 시작
             experienceValue = value; // 보존한 경험치 저장
+            RefreshArtwork(); // 병합된 보석 등급 이미지 갱신
             gameObject.name = $"XP_Gem_{value}"; // 결과 등급 이름 갱신
             float scale = ResolveVisualScale(value); // 결과 등급 크기
             transform.localScale = new Vector3(scale, scale, 1f); // 보석 크기 갱신
@@ -145,6 +149,18 @@ namespace ProjectEpsilon.Progression
             collected = true; // 같은 프레임 중복 수집 방지
             destructionScheduled = true; // 파괴 예약 중 재설정 방지
             Destroy(gameObject); // 병합 재료 제거 예약
+        } // 메서드 끝
+
+        private void RefreshArtwork() // 실제 경험치별 이미지 설정
+        { // 메서드 시작
+            if (spriteRenderer == null) // 실제 표시기 확인
+            { // 조건 시작
+                return; // 표시기 없는 갱신 방지
+            } // 조건 끝
+            ExperienceGemVisualPalette palette = FindFirstObjectByType<ExperienceGemVisualPalette>(); // 실제 씬 보석 이미지 설정
+            Sprite selected = palette != null && palette.isActiveAndEnabled ? palette.Resolve(experienceValue) : null; // 실제 등급별 이미지
+            spriteRenderer.sprite = selected != null ? selected : fallbackSprite; // 전용 이미지 또는 기존 대체 이미지
+            spriteRenderer.color = selected != null ? Color.white : new Color(1f, 0.9f, 0.25f, 1f); // 원본 색상 또는 기존 임시 색상
         } // 메서드 끝
 
         private static float ResolveVisualScale(int value)

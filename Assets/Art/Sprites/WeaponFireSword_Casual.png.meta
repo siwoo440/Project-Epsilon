@@ -1,0 +1,559 @@
+fileFormatVersion: 2
+guid: 6219bd909ee6b804781a485ceb679989
+TextureImporter:
+  internalIDToNameTable:
+  - first:
+      213: 4298251463442136490
+    second: WeaponFireSword_Casual_0
+  - first:
+      213: 1364091955235892260
+    second: WeaponFireSword_Casual_1
+  - first:
+      213: 3931911769953710871
+    second: WeaponFireSword_Casual_2
+  - first:
+      213: -3933005119925998387
+    second: WeaponFireSword_Casual_3
+  - first:
+      213: 780892551214302246
+    second: WeaponFireSword_Casual_4
+  - first:
+      213: -5087793143106306295
+    second: WeaponFireSword_Casual_5
+  - first:
+      213: -1657686369482891968
+    second: WeaponFireSword_Casual_6
+  - first:
+      213: 6168325053616399682
+    second: WeaponFireSword_Casual_7
+  - first:
+      213: -5023519485950484933
+    second: WeaponFireSword_Casual_8
+  - first:
+      213: 2910410946038213326
+    second: WeaponFireSword_Casual_9
+  - first:
+      213: -5563219145540223976
+    second: WeaponFireSword_Casual_10
+  - first:
+      213: -1327561035243858657
+    second: WeaponFireSword_Casual_11
+  - first:
+      213: 4339324538759373794
+    second: WeaponFireSword_Casual_12
+  - first:
+      213: 7720226997611608220
+    second: WeaponFireSword_Casual_13
+  - first:
+      213: 261408543507964830
+    second: WeaponFireSword_Casual_14
+  - first:
+      213: 6251631688640893180
+    second: WeaponFireSword_Casual_15
+  - first:
+      213: 6730638103517619564
+    second: WeaponFireSword_Casual_16
+  externalObjects: {}
+  serializedVersion: 13
+  mipmaps:
+    mipMapMode: 0
+    enableMipMap: 0
+    sRGBTexture: 1
+    linearTexture: 0
+    fadeOut: 0
+    borderMipMap: 0
+    mipMapsPreserveCoverage: 0
+    alphaTestReferenceValue: 0.5
+    mipMapFadeDistanceStart: 1
+    mipMapFadeDistanceEnd: 3
+  bumpmap:
+    convertToNormalMap: 0
+    externalNormalMap: 0
+    heightScale: 0.25
+    normalMapFilter: 0
+    flipGreenChannel: 0
+  isReadable: 0
+  streamingMipmaps: 0
+  streamingMipmapsPriority: 0
+  vTOnly: 0
+  ignoreMipmapLimit: 0
+  grayScaleToAlpha: 0
+  generateCubemap: 6
+  cubemapConvolution: 0
+  seamlessCubemap: 0
+  textureFormat: 1
+  maxTextureSize: 2048
+  textureSettings:
+    serializedVersion: 2
+    filterMode: 1
+    aniso: 1
+    mipBias: 0
+    wrapU: 1
+    wrapV: 1
+    wrapW: 1
+  nPOTScale: 0
+  lightmap: 0
+  compressionQuality: 50
+  spriteMode: 1
+  spriteExtrude: 1
+  spriteMeshType: 1
+  alignment: 0
+  spritePivot: {x: 0.5, y: 0.5}
+  spritePixelsToUnits: 1000
+  spriteBorder: {x: 0, y: 0, z: 0, w: 0}
+  spriteGenerateFallbackPhysicsShape: 1
+  alphaUsage: 1
+  alphaIsTransparency: 1
+  spriteTessellationDetail: -1
+  textureType: 8
+  textureShape: 1
+  singleChannelComponent: 0
+  flipbookRows: 1
+  flipbookColumns: 1
+  maxTextureSizeSet: 0
+  compressionQualitySet: 0
+  textureFormatSet: 0
+  ignorePngGamma: 0
+  applyGammaDecoding: 0
+  swizzle: 50462976
+  cookieLightType: 0
+  platformSettings:
+  - serializedVersion: 4
+    buildTarget: DefaultTexturePlatform
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 4
+    buildTarget: Standalone
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  spriteSheet:
+    serializedVersion: 2
+    sprites:
+    - serializedVersion: 2
+      name: WeaponFireSword_Casual_0
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 565
+        width: 297
+        height: 669
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData:
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: aad75c1dee476ab30800000000000000
+      internalID: 4298251463442136490
+      vertices: []
+      indices:
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: WeaponFireSword_Casual_1
+      rect:
+        serializedVersion: 2
+        x: 42
+        y: 119
+        width: 89
+        height: 449
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData:
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 42cadc0f76a3ee210800000000000000
+      internalID: 1364091955235892260
+      vertices: []
+      indices:
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: WeaponFireSword_Casual_2
+      rect:
+        serializedVersion: 2
+        x: 55
+        y: 709
+        width: 11
+        height: 13
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData:
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 713b4403ce4f09630800000000000000
+      internalID: 3931911769953710871
+      vertices: []
+      indices:
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: WeaponFireSword_Casual_3
+      rect:
+        serializedVersion: 2
+        x: 134
+        y: 0
+        width: 724
+        height: 1312
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData:
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: dcca40f6ea82b69c0800000000000000
+      internalID: -3933005119925998387
+      vertices: []
+      indices:
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: WeaponFireSword_Casual_4
+      rect:
+        serializedVersion: 2
+        x: 192
+        y: 649
+        width: 12
+        height: 9
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData:
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 62480e253a946da00800000000000000
+      internalID: 780892551214302246
+      vertices: []
+      indices:
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: WeaponFireSword_Casual_5
+      rect:
+        serializedVersion: 2
+        x: 202
+        y: 231
+        width: 22
+        height: 10
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData:
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 90ffa76b7178469b0800000000000000
+      internalID: -5087793143106306295
+      vertices: []
+      indices:
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: WeaponFireSword_Casual_6
+      rect:
+        serializedVersion: 2
+        x: 215
+        y: 368
+        width: 80
+        height: 44
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData:
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 04d17fd9707bef8e0800000000000000
+      internalID: -1657686369482891968
+      vertices: []
+      indices:
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: WeaponFireSword_Casual_7
+      rect:
+        serializedVersion: 2
+        x: 849
+        y: 359
+        width: 11
+        height: 27
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData:
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 245a2ff74fa4a9550800000000000000
+      internalID: 6168325053616399682
+      vertices: []
+      indices:
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: WeaponFireSword_Casual_8
+      rect:
+        serializedVersion: 2
+        x: 857
+        y: 33
+        width: 329
+        height: 1249
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData:
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: b3e1bada4afd84ab0800000000000000
+      internalID: -5023519485950484933
+      vertices: []
+      indices:
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: WeaponFireSword_Casual_9
+      rect:
+        serializedVersion: 2
+        x: 879
+        y: 532
+        width: 47
+        height: 36
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData:
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: eca240dd55bd36820800000000000000
+      internalID: 2910410946038213326
+      vertices: []
+      indices:
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: WeaponFireSword_Casual_10
+      rect:
+        serializedVersion: 2
+        x: 899
+        y: 159
+        width: 7
+        height: 9
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData:
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 81c3c6e89a97bc2b0800000000000000
+      internalID: -5563219145540223976
+      vertices: []
+      indices:
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: WeaponFireSword_Casual_11
+      rect:
+        serializedVersion: 2
+        x: 899
+        y: 149
+        width: 7
+        height: 13
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData:
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: f15d3aca54e839de0800000000000000
+      internalID: -1327561035243858657
+      vertices: []
+      indices:
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: WeaponFireSword_Casual_12
+      rect:
+        serializedVersion: 2
+        x: 903
+        y: 313
+        width: 64
+        height: 73
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData:
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 2e363e16da0683c30800000000000000
+      internalID: 4339324538759373794
+      vertices: []
+      indices:
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: WeaponFireSword_Casual_13
+      rect:
+        serializedVersion: 2
+        x: 909
+        y: 873
+        width: 16
+        height: 17
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData:
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: c9835020d81c32b60800000000000000
+      internalID: 7720226997611608220
+      vertices: []
+      indices:
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: WeaponFireSword_Casual_14
+      rect:
+        serializedVersion: 2
+        x: 910
+        y: 381
+        width: 9
+        height: 6
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData:
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: e936b017fa5b0a300800000000000000
+      internalID: 261408543507964830
+      vertices: []
+      indices:
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: WeaponFireSword_Casual_15
+      rect:
+        serializedVersion: 2
+        x: 992
+        y: 701
+        width: 8
+        height: 16
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData:
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: cf01404f5e142c650800000000000000
+      internalID: 6251631688640893180
+      vertices: []
+      indices:
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: WeaponFireSword_Casual_16
+      rect:
+        serializedVersion: 2
+        x: 996
+        y: 687
+        width: 20
+        height: 33
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData:
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: c6560e7d1b7086d50800000000000000
+      internalID: 6730638103517619564
+      vertices: []
+      indices:
+      edges: []
+      weights: []
+    outline: []
+    customData:
+    physicsShape: []
+    bones: []
+    spriteID: 5e97eb03825dee720800000000000000
+    internalID: 0
+    vertices: []
+    indices:
+    edges: []
+    weights: []
+    secondaryTextures: []
+    spriteCustomMetadata:
+      entries: []
+    nameFileIdTable:
+      WeaponFireSword_Casual_0: 4298251463442136490
+      WeaponFireSword_Casual_1: 1364091955235892260
+      WeaponFireSword_Casual_10: -5563219145540223976
+      WeaponFireSword_Casual_11: -1327561035243858657
+      WeaponFireSword_Casual_12: 4339324538759373794
+      WeaponFireSword_Casual_13: 7720226997611608220
+      WeaponFireSword_Casual_14: 261408543507964830
+      WeaponFireSword_Casual_15: 6251631688640893180
+      WeaponFireSword_Casual_16: 6730638103517619564
+      WeaponFireSword_Casual_2: 3931911769953710871
+      WeaponFireSword_Casual_3: -3933005119925998387
+      WeaponFireSword_Casual_4: 780892551214302246
+      WeaponFireSword_Casual_5: -5087793143106306295
+      WeaponFireSword_Casual_6: -1657686369482891968
+      WeaponFireSword_Casual_7: 6168325053616399682
+      WeaponFireSword_Casual_8: -5023519485950484933
+      WeaponFireSword_Casual_9: 2910410946038213326
+  mipmapLimitGroupName:
+  pSDRemoveMatte: 0
+  userData:
+  assetBundleName:
+  assetBundleVariant:

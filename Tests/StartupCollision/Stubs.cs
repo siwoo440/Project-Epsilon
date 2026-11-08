@@ -42,6 +42,7 @@ namespace UnityEngine // 유니티 대체 형식
     } // 클래스 끝
     public class MonoBehaviour : Component // 행동 컴포넌트
     { // 클래스 시작
+        public bool isActiveAndEnabled = true; // 실제 활성 상태 대체
     } // 클래스 끝
     public class GameObject : Object // 게임 객체 대체
     { // 클래스 시작
@@ -166,6 +167,11 @@ namespace UnityEngine // 유니티 대체 형식
     { // 클래스 시작
         public static bool isPlaying; // 플레이 상태
     } // 클래스 끝
+    public static class Time // 게임 시간 대체
+    { // 클래스 시작
+        public static float time; // 현재 게임 시간
+        public static float deltaTime = 0.02f; // 실제 프레임 간격 대체
+    } // 클래스 끝
 } // 영역 끝
 
 namespace UnityEngine.UI // 문구 표시 대체
@@ -182,5 +188,6 @@ namespace ProjectEpsilon.Core // 게임 상태 대체
     { // 클래스 시작
         public static GameManager Instance => null; // 관리자 없음
         public bool IsPlaying => true; // 진행 상태
+        public bool IsFinalBossPhase => false; // 보스전 상태 대체
     } // 클래스 끝
 } // 영역 끝

@@ -28,6 +28,7 @@ namespace ProjectEpsilon.Enemies // 적 영역
         public int experience; // 경험치
         public float firstAppearance; // 최초 출현 시간
         public Color color = Color.white; // 구분 색상
+        public Sprite enemySprite; // 적 종류별 외형 이미지
     } // 클래스 끝
     [DefaultExecutionOrder(100)] // 카메라 이동 이후 실행
     public sealed class EarlyEnemyWaveSpawner : MonoBehaviour // 초반 적 출현기
@@ -234,11 +235,34 @@ namespace ProjectEpsilon.Enemies // 적 영역
             { // 조건 시작
                 direction = Vector2.right; // 대체 방향 설정
             } // 조건 끝
+            SpawnAt(setting, player.transform.position + (Vector3)(direction * ResolveSpawnDistance(direction)), false); // 기존 일반 적 생성 경로
+        } // 메서드 끝
+        public WeaponTarget SpawnBossSummon(Vector3 position) // 보스 패턴의 일반 적 소환
+        { // 메서드 시작
+            if (player == null || body == null || health == null || enemies == null || enemies.Length == 0 || enemies[0] == null || GameManager.Instance == null || !GameManager.Instance.IsPlaying || !GameManager.Instance.IsFinalBossPhase) // 실제 보스전과 적 설정 확인
+            { // 조건 시작
+                return null; // 무효 소환 방지
+            } // 조건 끝
+            return SpawnAt(enemies[0], position, true); // 기존 추적자 행동 재사용
+        } // 메서드 끝
+        public void RemoveBossSummon(WeaponTarget target) // 생존 소환 적 무보상 제거
+        { // 메서드 시작
+            if (target == null || !targets.Remove(target)) // 관리 대상 확인
+            { // 조건 시작
+                return; // 이미 제거된 대상 무시
+            } // 조건 끝
+            target.Died -= HandleEnemyDied; // 처치 수량 연결 해제
+            activeEnemies = Mathf.Max(0, activeEnemies - 1); // 생존 적 수 감소
+            target.gameObject.SetActive(false); // 지연 파괴 전 접촉 차단
+            Destroy(target.gameObject); // 사망 이벤트 없는 제거
+        } // 메서드 끝
+        private WeaponTarget SpawnAt(EarlyEnemySettings setting, Vector3 position, bool bossSummon) // 기존 적 생성 구조 재사용
+        { // 메서드 시작
             GameObject enemy = new GameObject("EarlyEnemy_" + setting.kind); // 적 오브젝트 생성
-            enemy.transform.position = player.transform.position + (Vector3)(direction * ResolveSpawnDistance(direction)); // 화면 밖 출현 위치
+            enemy.transform.position = position; // 실제 출현 위치
             SpriteRenderer renderer = enemy.AddComponent<SpriteRenderer>(); // 적 렌더러 생성
-            renderer.sprite = visual; // 시각 자료 적용
-            renderer.color = setting.color; // 적 구분 색상 적용
+            renderer.sprite = setting.enemySprite != null ? setting.enemySprite : visual; // 종류별 이미지 또는 기존 대체 이미지
+            renderer.color = setting.enemySprite != null ? Color.white : setting.color; // 전용 이미지 원색 또는 기존 구분 색상
             renderer.sortingOrder = 8; // 적 표시 순서
             enemy.transform.localScale = Vector3.one * (setting.kind == EarlyEnemyKind.Elite ? 0.8f : 0.5f); // 적 크기 적용
             CircleCollider2D collider = enemy.AddComponent<CircleCollider2D>(); // 적 충돌체 생성
@@ -251,8 +275,11 @@ namespace ProjectEpsilon.Enemies // 적 영역
             target.Configure(setting.health); // 적 체력 설정
             enemy.AddComponent<WeaponTargetStatusController>(); // 기존 상태 효과 적용
             enemy.AddComponent<WeaponTargetKnockbackController>(); // 기존 넉백 적용
-            EnemyDropController drop = enemy.AddComponent<EnemyDropController>(); // 기존 보상 적용
-            drop.Configure(setting.experience, healAmount, healDropChance, bodyRepairDropChance, visual, setting.kind != EarlyEnemyKind.Elite && setting.experience == 2 ? 2 : 1); // 임시 보상과 보석 수 설정
+            if (!bossSummon) // 일반 적 보상 여부
+            { // 조건 시작
+                EnemyDropController drop = enemy.AddComponent<EnemyDropController>(); // 기존 보상 적용
+                drop.Configure(setting.experience, healAmount, healDropChance, bodyRepairDropChance, visual, setting.kind != EarlyEnemyKind.Elite && setting.experience == 2 ? 2 : 1); // 기존 일반 적 보상 유지
+            } // 조건 끝
             SnakeContactHazard hazard = enemy.AddComponent<SnakeContactHazard>(); // 머리 직접 충돌 판정
             hazard.Configure(SnakeContactHazardType.EnemyDirect); // 적 직접 충돌 종류
             EarlyEnemyBehaviour behaviour = enemy.AddComponent<EarlyEnemyBehaviour>(); // 적 행동 생성
@@ -264,6 +291,7 @@ namespace ProjectEpsilon.Enemies // 적 영역
                 eliteTargets.Add(target); // 정리 제외 대상 등록
             } // 조건 끝
             target.Died += HandleEnemyDied; // 처치 시 수량 갱신 연결
+            return target; // 실제 생성 대상 반환
         } // 메서드 끝
         private float ResolveSpawnDistance(Vector2 direction) // 화면 밖 출현 거리
         { // 메서드 시작

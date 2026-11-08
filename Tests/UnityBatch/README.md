@@ -27,6 +27,32 @@
 
 36일차 최종 돌진 스크립트 SHA-256 `2698DDDB32F81EA3971ABB0EC53346710D2D99AAF13A2CB23AACE841033FCBCC`는 같은 통제 조건에서 실제 물리 콜백의 몸통 선행 진입 3회·머리 진입 1회와 몸통 손실 1칸을 함께 확인해 종료 코드 0이었다. 접촉 수는 하나의 실행에서 관측된 값이다.
 
+37일차 `AutomatedPoisonShotVerification.cs` SHA-256 `80583B4D2D7337C65AA2980CFDC4C15234D9AAF8D0A819D82E9228A5B5C39DD1`은 36일차 사본에서 독 2단계 사수의 실제 피해가 21로 유지돼 종료 코드 1이었다. 수정 사본의 실제 몸통 접촉에서는 독 미적용 21, 발사 전 독 적용 20, 발사 후 독 제거 20, 발사 후 독 적용 21, 기본 피해 8의 독 적용 8을 확인해 종료 코드 0이었다. 사수 생성과 발사, 이동·자연 출현은 통제했다. 발사 시점 피해 고정과 정수 올림은 임시 정책이며 기획 확정값이 아니다. 실제 보스 부채꼴 사격 회귀도 종료 코드 0이었다. Unity Editor Search 시작 인덱싱 예외는 각 실행에서 별도로 발생했다.
+
+37일차 `AutomatedBossRepairVerification.cs` SHA-256 `D35926B83EE2D548722B76DD124741A2BB8C34A2D35FEF93E5657CC9EC744D9C`는 보스전에도 별도 몸통 복구 API가 허용돼 수정 전 종료 코드 1, 수정 후 보스 전 복구 허용·보스전 API/아이템/엘리트 복구 보상 제한·실제 레벨업의 현재 몸 2→3과 성장 최대 3→4를 확인해 종료 코드 0이었다. 전환 시간을 1,199.99초로 주입하고 이동·충돌·공격은 통제했다. 기존 실제 몸통 성장·연속 레벨업과 4분 엘리트 무기 보상 회귀도 종료 코드 0이었다. Unity Editor Search 시작 인덱싱 예외가 각 실행에서 별도로 발생했다.
+
+37일차 냉기 선행 스크립트 SHA-256 `D5166463B656000C0367C51E7A743F379D2B8A6B46ABB5FE8A51B9867C7EC33A`는 일반 적의 최대 누적 이후 추가 명중에 빙결이 없어 종료 코드 1이었다. 최종 스크립트 SHA-256 `72F8F6738C2E7131F11128917969C560E949B0DDE039D4E26FBBEE25F732BC44`는 실제 속성 명중을 직접 호출하고 보스를 강제 생성한 조건에서 낮은 단계 감속, 고단계 일반 적 빙결과 보스 강한 감속·실제 이동, 조정 가능한 추가 명중·지속 시간, 일시정지와 효과 종료를 확인했다. 기존 실제 화염탄·화상과 보스 돌진 회귀도 종료 코드 0이었다. 추가 명중 조건, 빙결 시간과 보스 감속 배율은 기획 미정 임시값이다. Unity Editor Search 시작 인덱싱 예외가 각 실행에서 별도로 발생했다.
+
+37일차 보스 밀림 선행 스크립트 SHA-256 `EA7F7D3504F9541B0AAD1756F7A602F1FE01C4735F8A6D54083F44C60B2B05D8`은 밀림·몸통별 유예 부재로 종료 코드 1이었다. 수정 중 지속 겹침이 유예 후 처리되지 않은 사례에서는 머리 2D 물리체의 절전 상태와 지속 접촉 콜백 중단을 관찰했다. 최종 스크립트 SHA-256 `2212AD8E8F74785E76AEC5AE30D1E1FE5C0650CDC6E012529369D95BB0D734B7`은 비활성 추적기의 밀림·유예 차단, 실제 밀림·경로 복귀, 같은 스텝 유예, 다른 몸통 충돌, 정지, 절전 중 지속 겹침과 예약 뒤 같은 스텝 분리를 확인해 종료 코드 0이었다. 보스는 강제 생성하고 이동·공격과 몸통 위치를 통제했다. 실제 동시 충돌 우선순위·비활성 충돌·보스 돌진 회귀도 종료 코드 0이었다. Unity Editor Search 시작 인덱싱 예외가 각 실행에서 별도로 발생했다.
+
+37일차 위험 구역 스크립트 SHA-256 `75FB576DC7F382062D37B97B614938A7B778FB4490B6F57BCCA3427000B0B885`는 구현 전 위험 구역 설정 부재로 종료 코드 1이었다. 수정 사본에서는 실제 예고와 정지·회피·만료, 머리와 몸통 동시 접촉의 주기당 단일 피해 및 보스 사망 시 정리를 확인해 종료 코드 0이었다. 보스와 구역 생성 시각, 플레이어와 몸통 위치를 통제했다. Unity Editor Search 시작 인덱싱 예외가 별도로 발생했다.
+
+37일차 보스 소환 선행 시험은 설정 부재로 종료 코드 1이었다. 수정 후 첫 시험은 처치 직후 물리 스텝의 목록 갱신을 기다리지 않아 실패했다. 보강 스크립트 SHA-256 `64AC48134E15756736F4373BA2A1C54C7D3734A702CA5C9CFF7FBA449F0C4F5D`는 실제 소환 상한·무보상·처치 후 재소환·일시정지·승리 정리를 확인해 종료 코드 0이었다. 보스 전환과 소환 간격, 자동 공격·이동을 통제했다. Unity Editor Search 시작 인덱싱 예외가 별도로 발생했다.
+
+37일차 청크 스크립트 SHA-256 `87B2FB981B0084E6A58EE9FCA6839FD327C92C9F8AA96B4CFE9A6513513E1A4E`는 구현 전 실제 씬 구성 부재로 종료 코드 1, 수정 후 3×3 생성·유지·이탈 제거, 정지, 음수 좌표와 먼 거리 이동 확인으로 종료 코드 0이었다. 플레이어 위치를 직접 변경한 시험이며 빈 청크의 생명주기만 검사한다. Unity Editor Search 시작 인덱싱 예외가 별도로 발생했다.
+
+37일차 냉기 누적 선행 시험은 시너지 없는 기본 냉기 명중에서 감속이 없어 종료 코드 1이었다. 최종 스크립트 SHA-256 `7880C726E921D3697D9ED4C805CA16ACE86ED64E354ECDFCFC567EDA0E49422A`는 실제 속성 명중을 직접 호출해 기본 10%·20%·30% 감속과 최대 누적, ×2의 감속량 1.15배 임시 해석, 낮은 단계 빙결 방지 및 기존 일반 적·보스 효과를 확인해 종료 코드 0이었다. 초반 시험 무기와 보스 돌진 회귀도 각각 종료 코드 0이었다. Unity Editor Search 시작 인덱싱 예외가 별도로 발생했다.
+
+37일차 이미지 적용 전 수정본에서 자연 전투 스크립트 SHA-256 `6ECD5A56ADEC76058440F3BC819BFE3964A7D67F62A2638A689D39BB87818957`을 정상 속도 300초 실행해 자연 처치 153회, 레벨 9, 잔여 경험치 18, 선택 11회, 몸통 3칸과 HP 100으로 종료 코드 0이었다. 가상 이동과 선택 UI 자동 선택을 사용한 결과이며 이미지 적용 후 시험이 아니다.
+
+37일차 플레이어 이미지 스크립트 SHA-256 `4608F861965EFB051E4F8628B699BED649DBF3AF8ADC34664EC3D154C369028F`는 적용 전 머리 이미지 부재로 종료 코드 1, 수정 후 실제 씬의 머리·몸통·꼬리, 성장 후 이미지·충돌체와 적·보스 이미지 분리를 확인해 종료 코드 0이었다. 기존 몸통 성장·보스 밀림·시험 무기 회귀도 종료 코드 0이었다. 화면의 시각적 품질은 검사하지 않았다.
+
+37일차 일반 적 이미지 시험은 종류별 이미지 부재로 종료 코드 1, 이미지 연결 후 추가한 방향 시험은 기존 위쪽 방향이 유지돼 종료 코드 1이었다. 최종 스크립트 SHA-256 `41397813724E20D9B88B1EF0EC0A35B28D996932A3D6A607B7949F7420E18A99`는 실제 일반 적 3종의 이미지·목표 방향·충돌체와 기존 보상 이미지 유지로 종료 코드 0이었다. 적 출현 위치와 플레이어 이동을 통제했다. 시험 무기·사수 출현·보스 소환·충돌 우선순위 회귀도 각각 종료 코드 0이었다.
+
+37일차 엘리트·보스 이미지 시험은 엘리트 이미지 부재로 종료 코드 1이었다. 확장 스크립트 SHA-256 `1F048D129449E0E6119F60ACD94D374556AAB040EDDFC592D9DE2C40FE69F88E`는 일반 적·엘리트·보스 이미지, 엘리트 고정 돌진과 보스 예고 방향, 기존 보상·보스 투사체 이미지 유지로 종료 코드 0이었다. 출현 위치와 돌진 방향·시각을 통제했다. 기존 엘리트 보상·보스 돌진·부채꼴 사격·몸통 밀림 회귀도 각각 종료 코드 0이었다.
+
+37일차 무기·보석·바닥 이미지 선행 시험은 무기 이미지 데이터 부재로 종료 코드 1, 후보 UI 보강 전 시험은 후보 이미지 부재로 종료 코드 1이었다. 최종 스크립트 SHA-256 `6A5A38DA5F8AB0C7CA921C79812E3D770CF1D53D7101FFA56179C506FDAA76E0`은 무기 6종의 장착·합성·성장·손실 표시, 선택 UI와 다른 화면 복구, 보석 3단계·병합·대체 이미지, 바닥 3×3과 인접 반전을 확인해 종료 코드 0이었다. 적 출현·이동과 시험 데이터를 통제했으며 실제 화면 품질은 검사하지 않았다. 기존 보석 병합·부분 병합, 몸통 성장, 시험 무기, 청크, 플레이어 이미지, 시작 무기, 레벨 보상 합성, 설정 입력 우선순위, 엘리트 보상과 가속 보스 전환 회귀도 각각 종료 코드 0이었다. Unity Editor Search 시작 인덱싱 예외가 별도로 발생했다.
+
 | 스크립트 | 실행할 메서드 | 실제로 실행한 조건 |
 | --- | --- | --- |
 | `AutomatedPilotVerification.cs` | `ProjectEpsilon.Editor.AutomatedPilotVerification.Run` | 정상 속도 300초, 가상 A/D·Space 회피 입력, 레벨업·보상 UI 자동 선택. 무적·능력치 변경 없음. 배치 포커스를 위해 입력 설정의 저장되지 않는 메모리 사본 사용 |
@@ -35,6 +61,16 @@
 | `AutomatedBossTransitionVerification.cs` | `ProjectEpsilon.Editor.AutomatedBossTransitionVerification.Run` | 실제 씬의 출현 시간을 0초부터 32배로 누적하고 적 이동·공격과 플레이어 이동·충돌을 통제. 20분 전환 시 적·아이템 정리, 합성 보류, 시험 보스 단계와 강제 처치 승리 확인 |
 | `AutomatedBossFanVerification.cs` | `ProjectEpsilon.Editor.AutomatedBossFanVerification.Run` | 보스 생성·사격을 강제하고 이동·자연 출현을 통제. 실제 일반 사수 단발, 보스 1·2단계 부채꼴 각도와 실제 2D 투사체 접촉 피해 확인 |
 | `AutomatedBossChargeVerification.cs` | `ProjectEpsilon.Editor.AutomatedBossChargeVerification.Run` | 보스 생성·돌진 시각과 예고·속도를 통제. 실제 2D 접촉의 1단계 HP 피해, 2단계 몸통 절단, 예고 중 정지와 전체 무적 확인 |
+| `AutomatedPoisonShotVerification.cs` | `ProjectEpsilon.Editor.AutomatedPoisonShotVerification.Run` | 사수 생성과 발사를 통제하고 실제 독 시너지의 발사 전후 적용·제거와 2D 투사체 접촉 피해 확인 |
+| `AutomatedBossRepairVerification.cs` | `ProjectEpsilon.Editor.AutomatedBossRepairVerification.Run` | 전환 시간을 1,199.99초로 주입하고 이동·충돌·공격을 통제. 보스 전후 별도 복구, 엘리트 후보와 실제 레벨업 성장 확인 |
+| `AutomatedColdFreezeVerification.cs` | `ProjectEpsilon.Editor.AutomatedColdFreezeVerification.Run` | 실제 속성 명중을 직접 호출하고 보스를 강제 생성. 일반 적 빙결, 보스 강한 감속·물리 이동, 설정·정지·효과 종료 확인 |
+| `AutomatedBossPushVerification.cs` | `ProjectEpsilon.Editor.AutomatedBossPushVerification.Run` | 보스를 강제 생성하고 이동·공격과 몸통 위치를 통제. 실제 몸통 밀림·경로 복귀, 몸통별 유예, 같은 스텝 분리와 절전 중 재판정 확인 |
+| `AutomatedBossHazardVerification.cs` | `ProjectEpsilon.Editor.AutomatedBossHazardVerification.Run` | 보스와 구역 생성 시각·위치를 통제. 예고·정지·회피·주기 피해와 승리 시 구역 제거 확인 |
+| `AutomatedBossSummonVerification.cs` | `ProjectEpsilon.Editor.AutomatedBossSummonVerification.Run` | 보스 전환과 소환 간격을 통제. 소환 상한·무보상·재소환·일시정지와 승리 정리 확인 |
+| `AutomatedChunkMapVerification.cs` | `ProjectEpsilon.Editor.AutomatedChunkMapVerification.Run` | 플레이어 위치를 직접 변경. 3×3 청크 생성·유지·제거, 일시정지와 음수 좌표 확인 |
+| `AutomatedPlayerArtVerification.cs` | `ProjectEpsilon.Editor.AutomatedPlayerArtVerification.Run` | 실제 씬의 플레이어 머리·몸통·꼬리와 성장, 충돌체, 적·보스 이미지 분리 확인 |
+| `AutomatedEnemyArtVerification.cs` | `ProjectEpsilon.Editor.AutomatedEnemyArtVerification.Run` | 적 생성 위치·플레이어 이동과 돌진 방향을 통제. 일반 적·엘리트·보스 이미지, 목표와 돌진 방향, 충돌체와 보상·투사체 이미지 확인 |
+| `AutomatedCoreArtVerification.cs` | `ProjectEpsilon.Editor.AutomatedCoreArtVerification.Run` | 무기 데이터와 슬롯·UI를 통제. 무기 6종, 보석 3단계·병합, 3×3 바닥 이미지와 경계 반전 확인 |
 | `AutomatedRunClockVerification.cs` | `ProjectEpsilon.Editor.AutomatedRunClockVerification.Run` | 실제 씬에서 같은 프레임의 일시정지 전 게임 시간, HUD 동기화, 정지 유지, 표시 전용 초기화와 재개를 확인 |
 | `AutomatedEliteScheduleVerification.cs` | `ProjectEpsilon.Editor.AutomatedEliteScheduleVerification.Run` / `RunExternalDestroy` | 실제 출현 시간을 32배로 가속하고 일반 적 만석을 유지. 엘리트 FIFO 대기·공존·보상과 별도의 외부 파괴 경계 확인 |
 | `AutomatedShooterSpawnVerification.cs` | `ProjectEpsilon.Editor.AutomatedShooterSpawnVerification.Run` | 실제 사수의 물리 발사·머리 기준 거리 유지 및 32:9 이동 카메라의 일반·엘리트 출현 위치와 정리, 렌더 직전 뷰포트 확인 |
@@ -80,6 +116,7 @@
 ## 결과 해석
 
 - 자동 조종은 사람의 수동 플레이가 아니다. 300초 생존 여부와 경험치·레벨업 발생 여부를 따로 확인한다.
+- 37일차 무기·보석·바닥 이미지 적용 후 `NaturalSpearFiveMinute`를 정상 속도로 다시 실행한 결과 240초에 자연 처치 122회와 레벨 7을 기록했으나 266.3초에 몸통 0칸으로 패배해 종료 코드 1이었다. 마지막 충돌의 종류는 로그로 확인되지 않는다. 무작위 전투이므로 이 한 번의 결과만으로 이미지 변경의 영향을 판단할 수 없고, 현재 버전의 300초 생존도 통과로 기록하지 않는다.
 - 강철 창 5분 자연 전투는 31일차 `d515b65` 사본에 32일차 적 행동·출현기·씬 세 파일을 반영해 실행했다. 세 파일의 SHA-256은 각각 `4ACD9CBFABBAED00D902A32CB8EA1AB32263BFD16F6ED7BBC90ABE79691C33E7`, `CFF1BDEAA647A8535D4104ACD678B569E79122E8F24BF8FDD7694FCFC9661AE3`, `7943692B4319CDF87B04B919143FAC14F3CBAC9142627EC95CC1329FFE7248E2`이며 해당 파일만 식별한다. 실제 시작 화면의 두 번째 버튼으로 강철 창을 장착하고 자연 출현, 정상 속도, 가상 A/D·Space 입력을 사용했다. 무적·능력치·경험치·적 출현을 조작하지 않았고 레벨업·엘리트 보상 UI는 자동으로 선택했다.
 - 강철 창 5분 시험은 자연 처치·경험치 수집·레벨업 후 게임 시간 300.0초까지 생존해 Unity 종료 코드 0이었다. 실제 플레이 시간은 425.9초이고 마지막 상태는 181처치, 레벨 8, XP 19, 몸통 5칸, HP 80, 보석 126개였다. 로그의 레벨 선택 10과 엘리트 선택 1은 선택 상태에서 버튼 호출을 시도한 횟수이며 각각의 성공 횟수를 뜻하지 않는다. 지속 피해에 따른 미세 체력 변화마다 스택 추적이 기록돼 로그가 약 272MB로 늘었으며 계측이 실행 성능에 영향을 주었을 가능성은 있으나 실제 지연의 원인은 확인되지 않았다. Unity Editor Search 시작 인덱싱 예외가 별도 1회 발생했다. 재현 코드는 `NaturalSpearFiveMinute`에 있으며 기존 자연 전투 스크립트와 동시에 사본에 복사하지 않는다.
 - 강철 창 자연 전투는 31일차 `d515b65` 제품·설정 추적 파일 437개를 확인한 사본에서 실행했다. 이 중 411개는 바이트가 일치했고 26개는 줄바꿈만 달랐다. 실제 시작 화면의 두 번째 버튼으로 1성 강철 창을 장착했으며 실제 슬롯의 사거리는 7.00이었다. 정상 속도, 자연 출현과 가상 A/D·Space 입력을 사용하고 무적·능력치·경험치·적 출현을 조작하지 않았다. 레벨업 보상 UI는 자동 선택했다. 조종기의 공격 거리 점수는 강철 검 기준 고정값이 남아 있어 창에 맞춘 최적 조종이 아니다.

@@ -27,6 +27,8 @@ namespace UnityEngine // 유니티 대체 형식
     public sealed class Collider2D // 다른 충돌체
     { // 클래스 시작
         public object Component; // 충돌 대상 컴포넌트
+        public bool enabled = true; // 충돌체 활성 대체
+        public bool IsTouching(Collider2D other) => other != null; // 실제 접촉 대체
         public T GetComponent<T>() where T : class => Component as T; // 컴포넌트 조회
     } // 클래스 끝
     public static class Mathf // 수학 도구
@@ -84,6 +86,8 @@ namespace ProjectEpsilon.Player // 플레이어 대체 형식
     public sealed class SnakeSegment // 몸통 정보
     { // 클래스 시작
         public bool IsBody = true; // 몸통 여부
+        public bool IsBossPushGraceActive; // 보스 밀림 유예 대체
+        public T GetComponent<T>() where T : class => null; // 몸통 충돌체 조회 대체
     } // 클래스 끝
     public sealed class SnakeBodyManager // 몸통 관리자
     { // 클래스 시작

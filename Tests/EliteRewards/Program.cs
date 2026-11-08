@@ -16,6 +16,7 @@ public static class Program // 행동 검증 실행기
             VerifyCandidateRules(); // 후보 추첨 규칙 검증
             VerifyQueueAndHealing(); // 대기열과 회복 검증
             VerifyBodyRepair(); // 몸통 복구 검증
+            VerifyBossRepairRestriction(); // 보스전 몸통 복구 제한 검증
             VerifyWeaponAndReplacement(); // 무기와 교체 검증
             VerifyWeaponGradeLimits(); // 무기 등급 범위 검증
             VerifyMergeCancelAndSuccess(); // 합성 취소와 완료 검증
@@ -78,6 +79,22 @@ public static class Program // 행동 검증 실행기
         Require(fixture.Controller.ProcessPendingReward(), "몸통 보상 화면 실패"); // 보상 표시 확인
         Require(fixture.Controller.TrySelectCandidate(Find(fixture.Controller, 1)), "몸통 복구 선택 실패"); // 몸통 복구 선택
         Require(fixture.Body.CurrentBodyCount == 3 && fixture.Body.MissingRepairableBodyCount == 0 && fixture.Manager.IsPlaying, "몸통 복구 결과 오류"); // 실제 몸통 수 확인
+    } // 메서드 끝
+
+    private static void VerifyBossRepairRestriction() // 이미 표시된 보상 후보의 보스전 제한
+    { // 메서드 시작
+        Fixture fixture = new Fixture(); // 실제 보상 처리기 구성
+        fixture.Health.CurrentHealth = 50; // 대체 가능한 회복 보상 구성
+        fixture.Body.CurrentBodyCount = 2; // 실제 손실 몸통 대체
+        fixture.Body.MissingRepairableBodyCount = 1; // 실제 복구 가능 수 대체
+        fixture.Controller.QueueReward(); // 실제 엘리트 보상 요청
+        UnityEngine.Random.Counter = 2; // 회복과 복구가 포함된 후보 추첨
+        Require(fixture.Controller.ProcessPendingReward(), "보상 선택 화면 미표시"); // 실제 보상 화면 확인
+        int repairIndex = Find(fixture.Controller, 1); // 실제 복구 후보 위치
+        int healIndex = Find(fixture.Controller, 0); // 실제 체력 회복 후보 위치
+        fixture.Manager.IsFinalBossPhase = true; // 표시 이후 보스전 전환 대체
+        Require(!fixture.Controller.TrySelectCandidate(repairIndex) && fixture.Body.CurrentBodyCount == 2 && fixture.Controller.PendingRewardCount == 1, "보스전 복구 보상 적용 또는 보상 소실"); // 복구 차단과 기존 보상 유지 확인
+        Require(fixture.Controller.TrySelectCandidate(healIndex) && fixture.Health.CurrentHealth == 65 && fixture.Controller.PendingRewardCount == 0, "보스전 대체 보상 선택 실패"); // 기존 체력 회복 선택 확인
     } // 메서드 끝
 
     private static void VerifyWeaponAndReplacement() // 무기 보상과 만석 교체

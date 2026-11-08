@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using ProjectEpsilon.Core; // 보스전 상태 참조
 using UnityEngine;
 
 namespace ProjectEpsilon.Player
@@ -10,6 +11,7 @@ namespace ProjectEpsilon.Player
         [SerializeField] private SnakePathRecorder pathRecorder;
         [SerializeField] private SnakeBodyFollower bodyFollower;
         [SerializeField] private Sprite bodySprite;
+        [SerializeField] private Sprite tailSprite; // 별도 꼬리 이미지
         [SerializeField] private int startingBodyCount = 3;
         [SerializeField] private int maximumBodyCount = 20;
 
@@ -187,6 +189,10 @@ namespace ProjectEpsilon.Player
 
         public bool TryRepairBody()
         {
+            if (GameManager.Instance != null && GameManager.Instance.IsFinalBossPhase) // 별도 복구 제한 확인
+            { // 조건 시작
+                return false; // 보스전 몸통 복구 차단
+            } // 조건 끝
             EnsureInitialized();
             NormalizeEarnedBodyCount();
 
@@ -542,8 +548,7 @@ namespace ProjectEpsilon.Player
                 SpriteRenderer renderer =
                     tailObject.AddComponent<SpriteRenderer>();
 
-                renderer.sprite =
-                    bodySprite;
+                renderer.sprite = tailSprite != null ? tailSprite : bodySprite; // 꼬리 이미지와 기존 대체 이미지
 
                 renderer.color =
                     tailColor;
@@ -566,11 +571,9 @@ namespace ProjectEpsilon.Player
             SpriteRenderer tailRenderer =
                 tailSegment.GetComponent<SpriteRenderer>();
 
-            if (tailRenderer != null &&
-                bodySprite != null)
+            if (tailRenderer != null && (tailSprite != null || bodySprite != null)) // 실제 꼬리 표시와 이미지 확인
             {
-                tailRenderer.sprite =
-                    bodySprite;
+                tailRenderer.sprite = tailSprite != null ? tailSprite : bodySprite; // 별도 꼬리 이미지 유지
             }
 
             tailSegment.transform.localScale =

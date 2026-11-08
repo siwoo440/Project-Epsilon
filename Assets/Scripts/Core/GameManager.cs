@@ -14,10 +14,12 @@ namespace ProjectEpsilon.Core
         private float gameplayTimeScale = 1f; // 플레이 시간 배율
         private SnakeHealth playerHealth; // 몸통 소진 감시 대상
         private WeaponTarget finalBoss; // 등록된 최종 보스
+        private bool finalBossEncounterStarted; // 보스전 진입 여부
 
         public GameState CurrentState => currentState;
         public bool IsPlaying => currentState == GameState.Playing;
         public bool IsPaused => currentState == GameState.Paused;
+        public bool IsFinalBossPhase => finalBossEncounterStarted; // 보스전 상태 조회
 
         private void Awake()
         {
@@ -71,6 +73,7 @@ namespace ProjectEpsilon.Core
 
         public void StartGame()
         {
+            finalBossEncounterStarted = false; // 새 전투의 보스전 상태 초기화
             SetState(GameState.Playing);
         }
 
@@ -116,6 +119,7 @@ namespace ProjectEpsilon.Core
                 return finalBoss == target; // 동일 대상 재등록 여부
             } // 조건 끝
             finalBoss = target; // 최종 보스 저장
+            finalBossEncounterStarted = true; // 보스전 상태 저장
             finalBoss.Died += HandleFinalBossDied; // 실제 사망 이벤트 연결
             return true; // 등록 성공
         } // 메서드 끝

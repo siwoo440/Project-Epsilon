@@ -22,8 +22,21 @@ namespace ProjectEpsilon.Player
         private bool pendingEnemyContact; // 예약된 적 직접 충돌
         private bool pendingObstacleContact; // 예약된 장애물 충돌
         private SnakeSelfCollision pendingSelfCollision; // 예약된 자기 충돌
+        private bool pendingUnconditionalSelfCollision; // 몸통 정보 없는 기존 자기 충돌
+        private readonly List<PendingSelfSegment> pendingSelfSegments = new List<PendingSelfSegment>(); // 같은 스텝 자기 충돌 몸통
         private readonly List<Action<bool>> pendingEliteCuts = new List<Action<bool>>(); // 예약된 엘리트 절단
         private readonly List<PendingHealthDamage> pendingHealthDamage = new List<PendingHealthDamage>(); // 예약된 공용 체력 피해
+
+        private readonly struct PendingSelfSegment // 자기 충돌 몸통과 재확인 여부
+        { // 구조체 시작
+            public readonly SnakeSegment Segment; // 실제 자기 충돌 몸통
+            public readonly bool RequireStillTouching; // 물리 후 겹침 재확인 여부
+            public PendingSelfSegment(SnakeSegment segment, bool requireStillTouching) // 실제 몸통 예약 생성
+            { // 생성자 시작
+                Segment = segment; // 실제 몸통 저장
+                RequireStillTouching = requireStillTouching; // 물리 후 재확인 설정
+            } // 생성자 끝
+        } // 구조체 끝
 
         private readonly struct PendingHealthDamage // 스텝 시작 시 피해 정보
         { // 구조체 시작
@@ -126,6 +139,21 @@ namespace ProjectEpsilon.Player
 
         public void QueueSelfCollision(SnakeSelfCollision source) // 자기 충돌 예약
         { // 메서드 시작
+            QueueSelfCollision(source, null); // 기존 몸통 정보 없는 예약 유지
+        } // 메서드 끝
+
+        public void QueueSelfCollision(SnakeSelfCollision source, SnakeSegment segment) // 몸통별 자기 충돌 예약
+        { // 메서드 시작
+            QueueSelfCollision(source, segment, false); // 실제 접촉 콜백 예약
+        } // 메서드 끝
+
+        public void QueueDeferredSelfCollision(SnakeSelfCollision source, SnakeSegment segment) // 유예 종료 겹침 예약
+        { // 메서드 시작
+            QueueSelfCollision(source, segment, true); // 물리 후 실제 겹침 재확인 예약
+        } // 메서드 끝
+
+        private void QueueSelfCollision(SnakeSelfCollision source, SnakeSegment segment, bool requireStillTouching) // 실제 자기 충돌 예약 공통 처리
+        { // 메서드 시작
             if (source == null) // 충돌 대상 확인
             { // 조건 시작
                 return; // 잘못된 예약 무시
@@ -133,10 +161,27 @@ namespace ProjectEpsilon.Player
             if (!CanQueueContacts()) // 물리 스텝 등록 확인
             { // 조건 시작
                 ReportImmediateFallback(); // 우선순위 미보장 알림
+                if (segment != null && segment.IsBossPushGraceActive) // 해당 몸통의 보스 유예 확인
+                { // 조건 시작
+                    source.DeferBossPushContact(segment); // 지속 겹침의 나중 재판정
+                    return; // 현재 자기 충돌 생략
+                } // 조건 끝
+                if (requireStillTouching && !source.IsStillTouching(segment)) // 유예 접촉의 현재 겹침 확인
+                { // 조건 시작
+                    return; // 이미 분리된 몸통 무시
+                } // 조건 끝
                 source.TryApplySelfCollisionPenalty(); // 기존 즉시 판정
                 return; // 예약 종료
             } // 조건 끝
             pendingSelfCollision = source; // 자기 충돌 수집
+            if (segment == null) // 몸통 정보 없는 기존 예약 확인
+            { // 조건 시작
+                pendingUnconditionalSelfCollision = true; // 기존 자기 충돌 보존
+            } // 조건 끝
+            else // 실제 몸통을 포함한 예약 확인
+            { // 대안 시작
+                pendingSelfSegments.Add(new PendingSelfSegment(segment, requireStillTouching)); // 해당 몸통과 재확인 여부 저장
+            } // 대안 끝
         } // 메서드 끝
 
         public void QueueEliteCut(Action<bool> completed) // 엘리트 절단 예약
@@ -194,6 +239,8 @@ namespace ProjectEpsilon.Player
                 return; // 불필요한 목록 복사 방지
             } // 조건 끝
             SnakeSelfCollision self = pendingSelfCollision; // 자기 충돌 보관
+            bool unconditionalSelf = pendingUnconditionalSelfCollision; // 기존 자기 충돌 보관
+            PendingSelfSegment[] selfSegments = pendingSelfSegments.Count == 0 ? Array.Empty<PendingSelfSegment>() : pendingSelfSegments.ToArray(); // 예약된 몸통 목록 보관
             bool enemy = pendingEnemyContact; // 적 직접 충돌 보관
             bool obstacle = pendingObstacleContact; // 장애물 충돌 보관
             Action<bool>[] cuts = pendingEliteCuts.Count == 0 ? Array.Empty<Action<bool>>() : pendingEliteCuts.ToArray(); // 절단 요청 복사
@@ -201,7 +248,31 @@ namespace ProjectEpsilon.Player
             ClearPendingContacts(); // 다음 물리 스텝 준비
             if (self != null && self.isActiveAndEnabled) // 활성 자기 충돌 확인
             { // 조건 시작
-                self.TryApplySelfCollisionPenalty(); // 자기 몸통 손실과 무적
+                bool applySelf = unconditionalSelf; // 기존 무조건 자기 충돌 여부
+                foreach (PendingSelfSegment candidate in selfSegments) // 예약된 실제 몸통 순회
+                { // 반복 시작
+                    SnakeSegment segment = candidate.Segment; // 현재 실제 몸통 조회
+                    if (segment == null) // 파괴된 몸통 확인
+                    { // 조건 시작
+                        continue; // 무효 접촉 제외
+                    } // 조건 끝
+                    if (candidate.RequireStillTouching && !self.IsStillTouching(segment)) // 물리 스텝 이후 실제 겹침 확인
+                    { // 조건 시작
+                        continue; // 같은 스텝에 분리된 몸통 제외
+                    } // 조건 끝
+                    if (segment.IsBossPushGraceActive) // 같은 스텝 보스 밀림 유예 확인
+                    { // 조건 시작
+                        self.DeferBossPushContact(segment); // 유예 종료 후 지속 겹침 재판정
+                    } // 조건 끝
+                    else // 보호받지 않는 실제 몸통 확인
+                    { // 대안 시작
+                        applySelf = true; // 기존 자기 충돌 적용
+                    } // 대안 끝
+                } // 반복 끝
+                if (applySelf) // 적용 가능한 자기 충돌 확인
+                { // 조건 시작
+                    self.TryApplySelfCollisionPenalty(); // 자기 몸통 손실과 무적
+                } // 조건 끝
             } // 조건 끝
             if (enemy && !IsUnavailable()) // 적 충돌과 활성·생존 상태 확인
             { // 조건 시작
@@ -257,6 +328,8 @@ namespace ProjectEpsilon.Player
         private void ClearPendingContacts() // 수집한 충돌 초기화
         { // 메서드 시작
             pendingSelfCollision = null; // 자기 충돌 초기화
+            pendingUnconditionalSelfCollision = false; // 기존 자기 충돌 초기화
+            pendingSelfSegments.Clear(); // 몸통별 자기 충돌 초기화
             pendingEnemyContact = false; // 적 직접 충돌 초기화
             pendingObstacleContact = false; // 장애물 충돌 초기화
             pendingEliteCuts.Clear(); // 엘리트 절단 초기화

@@ -33,10 +33,11 @@ namespace ProjectEpsilon.Enemies // 적 영역
         private bool hitHandled; // 돌진당 성공 처리 여부
         private bool cutPending; // 같은 스텝 절단 대기
         private bool previousMovementEnabled; // 기존 행동 활성 상태
+        private bool alignVisualWithCharge; // 예고한 방향으로 이미지 회전
         public bool IsWarning => warningActive; // 실제 예고 상태 조회
         public bool IsCharging => charging; // 실제 돌진 상태 조회
 
-        public void Configure(PrototypeBossEncounter owner, SnakeMovement head, SnakeBodyManager segments, SnakeHealth sharedHealth, EarlyEnemyBehaviour movement, float interval, float warningTime, float duration, float speed, float secondPhaseSpeed, int hitDamage) // 실제 보스 돌진 구성
+        public void Configure(PrototypeBossEncounter owner, SnakeMovement head, SnakeBodyManager segments, SnakeHealth sharedHealth, EarlyEnemyBehaviour movement, float interval, float warningTime, float duration, float speed, float secondPhaseSpeed, int hitDamage, bool alignVisual = false) // 실제 보스 돌진 구성
         { // 메서드 시작
             encounter = owner; // 실제 보스 단계 저장
             player = head; // 실제 머리 저장
@@ -52,6 +53,7 @@ namespace ProjectEpsilon.Enemies // 적 영역
             chargeSpeed = Mathf.Max(0.1f, speed); // 안전한 돌진 속도
             phaseTwoSpeedMultiplier = Mathf.Max(1f, secondPhaseSpeed); // 안전한 강화 배율
             damage = Mathf.Max(0, hitDamage); // 안전한 HP 피해
+            alignVisualWithCharge = alignVisual; // 실제 이미지 방향 설정
             nextChargeAt = Time.time + chargeInterval; // 첫 돌진 시각
         } // 메서드 끝
 
@@ -94,6 +96,10 @@ namespace ProjectEpsilon.Enemies // 적 영역
         { // 메서드 시작
             Vector2 offset = (Vector2)player.transform.position - physicsBody.position; // 실제 머리 방향
             direction = offset.sqrMagnitude > 0.001f ? offset.normalized : Vector2.up; // 안전한 돌진 방향
+            if (alignVisualWithCharge) // 실제 이미지 방향 설정 확인
+            { // 조건 시작
+                physicsBody.MoveRotation(Mathf.Atan2(direction.y, direction.x) * Mathf.Rad2Deg - 90f); // 실제 예고 방향으로 보스 이미지 회전
+            } // 조건 끝
             cutAttack = encounter.IsPhaseTwo; // 예고 시 절단 유형 확정
             hitHandled = false; // 이전 돌진 명중 초기화
             cutPending = false; // 이전 절단 대기 초기화

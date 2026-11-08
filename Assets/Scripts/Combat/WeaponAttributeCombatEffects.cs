@@ -10,6 +10,8 @@ namespace ProjectEpsilon.Combat // 전투 영역
         [SerializeField] private WeaponAttributeEffectHooks effectHooks; // 속성 Hook 참조
         [SerializeField] private WeaponAttributePlayerEffects playerEffects; // 플레이어 속성 효과 참조
         [SerializeField] private Sprite pulseSprite; // 명중 Pulse 이미지
+        [Min(0f)] [SerializeField] private float coldFreezeDuration = 1f; // 빙결과 보스 강한 감속 시간 임시값
+        [Min(1)] [SerializeField] private int coldFreezeAdditionalHits = 1; // 최대 누적 뒤 추가 명중 임시값
 
         private int lastExplosionFrame = -1; // 마지막 폭발 처리 프레임
         private WeaponData lastExplosionWeapon; // 마지막 폭발 무기
@@ -164,13 +166,8 @@ namespace ProjectEpsilon.Combat // 전투 영역
             burn.Apply(target, attack.SynergyStage, duration, damagePerSecond); // 화상 상태 갱신
         }
 
-        private static void ApplyCold(WeaponAttributeAttackSnapshot attack, WeaponTarget target) // 냉기 적용
+        private void ApplyCold(WeaponAttributeAttackSnapshot attack, WeaponTarget target) // 냉기 적용
         {
-            if (!WeaponAttributeControlRules.IsActiveSynergy(attack.SynergyStage)) // 냉기 시너지 활성 확인
-            {
-                return; // 냉기 적용 생략
-            }
-
             WeaponTargetColdStatus cold = target.GetComponent<WeaponTargetColdStatus>(); // 기존 냉기 상태 조회
 
             if (cold == null) // 냉기 상태 없음 확인
@@ -178,7 +175,7 @@ namespace ProjectEpsilon.Combat // 전투 영역
                 cold = target.gameObject.AddComponent<WeaponTargetColdStatus>(); // 냉기 상태 추가
             }
 
-            cold.Apply(target, attack.SynergyStage); // 냉기 누적과 감속 적용
+            cold.Apply(target, attack.SynergyStage, coldFreezeDuration, coldFreezeAdditionalHits); // 냉기 누적과 조정 가능한 빙결 적용
         }
 
         private static void ApplyPoison(WeaponAttributeAttackSnapshot attack, WeaponTarget target) // 독 약화 적용

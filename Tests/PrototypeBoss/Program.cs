@@ -48,7 +48,9 @@ internal static class Program // 시험 보스 규칙 검증
         GameManager manager = Fixture(out SnakeHealth health); // 실제 게임 관리자 구성
         WeaponTarget boss = new WeaponTarget(); // 실제 보스 대상 대체
         WeaponTarget ordinary = new WeaponTarget(); // 별도 일반 적 대체
+        Require(!manager.IsFinalBossPhase, "보스 등록 전 보스전 상태 오류"); // 보스전 시작 전 확인
         Require(manager.RegisterFinalBoss(boss), "보스 등록 실패"); // 실제 등록 확인
+        Require(manager.IsFinalBossPhase, "등록 보스의 보스전 상태 누락"); // 보스전 진입 상태 확인
         ordinary.Kill(); // 일반 적 사망 이벤트
         Require(manager.IsPlaying, "일반 적 사망 시 승리 오류"); // 일반 적 사망 무시 확인
         boss.Kill(); // 실제 등록 보스 사망 이벤트

@@ -8,6 +8,7 @@ namespace ProjectEpsilon.Data
         [Header("Identity")]
         [SerializeField] private string id = "weapon_id";
         [SerializeField] private string displayName = "Weapon";
+        [SerializeField] private Sprite artwork; // 무기 장착 이미지
 
         [Header("Classification")]
         [SerializeField] private WeaponAttribute attribute = WeaponAttribute.Physical;
@@ -31,6 +32,7 @@ namespace ProjectEpsilon.Data
 
         public string Id => id;
         public string DisplayName => displayName;
+        public Sprite Artwork => artwork; // 무기 표시 이미지
         public WeaponAttribute Attribute => attribute;
         public WeaponAttackType AttackType => attackType;
         public float BaseDamage => baseDamage;

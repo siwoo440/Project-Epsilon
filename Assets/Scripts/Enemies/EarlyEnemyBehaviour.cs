@@ -59,6 +59,14 @@ namespace ProjectEpsilon.Enemies // 적 영역
                 return; // 일반 이동 중단
             } // 조건 끝
             Vector2 offset = TargetPosition() - movementBody.position; // 목표 방향 계산
+            if (settings.enemySprite != null && (statuses == null || statuses.CurrentMovementMultiplier > 0f)) // 전용 이미지와 움직임 가능 상태 확인
+            { // 조건 시작
+                Vector2 facing = settings.kind == EarlyEnemyKind.Elite && chargePhase != 0 ? chargeDirection : settings.kind == EarlyEnemyKind.Shooter ? ShooterTargetPosition() - movementBody.position : offset; // 고정 돌진 또는 실제 추적·발사 목표 방향
+                if (facing.sqrMagnitude > 0.0001f) // 유효한 목표 방향 확인
+                { // 조건 시작
+                    movementBody.MoveRotation(Mathf.Atan2(facing.y, facing.x) * Mathf.Rad2Deg - 90f); // 위쪽 기준 이미지의 실제 목표 회전
+                } // 조건 끝
+            } // 조건 끝
             if (settings.kind == EarlyEnemyKind.Elite && TickCharge(offset)) // 엘리트 돌진 처리
             { // 조건 시작
                 return; // 추적 이동 생략
@@ -260,6 +268,9 @@ namespace ProjectEpsilon.Enemies // 적 영역
             Vector2 aim = offset.normalized; // 실제 목표 방향 정규화
             int count = Mathf.Clamp(settings.projectileCount, 1, 9); // 안전한 투사체 수
             float spread = Mathf.Clamp(settings.projectileSpreadDegrees, 0f, 180f); // 안전한 전체 부채각
+            WeaponTarget target = GetComponent<WeaponTarget>(); // 실제 사수 전투 상태
+            float damageMultiplier = target == null ? 1f : target.OutgoingDamageMultiplier; // 발사 시점 독 약화 배율
+            int shotDamage = Mathf.CeilToInt(settings.damage * damageMultiplier); // 기존 올림 규칙의 발사 피해
             for (int index = 0; index < count; index++) // 부채꼴 사격 순회
             { // 반복 시작
                 float angle = count == 1 ? 0f : -spread * 0.5f + spread * index / (count - 1); // 목표 중심의 대칭 각도
@@ -270,7 +281,7 @@ namespace ProjectEpsilon.Enemies // 적 영역
                 GameObject shot = new GameObject("Enemy_Projectile"); // 투사체 오브젝트 생성
                 shot.transform.position = transform.position; // 발사 위치 설정
                 EnemyTestProjectile projectile = shot.AddComponent<EnemyTestProjectile>(); // 투사체 행동 추가
-                projectile.Configure(direction, projectileSpeed, projectileLifetime, settings.damage, health, body, player, visual); // 개별 투사체 설정
+                projectile.Configure(direction, projectileSpeed, projectileLifetime, shotDamage, health, body, player, visual); // 발사 시점 피해와 투사체 설정
             } // 반복 끝
         } // 메서드 끝
     } // 클래스 끝

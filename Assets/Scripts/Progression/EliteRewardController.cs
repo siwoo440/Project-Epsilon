@@ -234,7 +234,7 @@ namespace ProjectEpsilon.Progression // 진행 영역
             return new bool[] // 네 가지 적용 가능 여부
             { // 목록 시작
                 health != null && health.CurrentHealth < health.MaximumHealth && body != null && body.CurrentBodyCount > 0, // 손상된 체력 확인
-                body != null && body.MissingRepairableBodyCount > 0, // 복구 가능한 몸통 확인
+                (GameManager.Instance == null || !GameManager.Instance.IsFinalBossPhase) && body != null && body.MissingRepairableBodyCount > 0, // 보스전 제외 복구 가능 몸통
                 weapons != null && weapons.SlotCount > 0 && GetAvailableWeapons().Count > 0, // 무기 후보와 슬롯 확인
                 merge != null && merge.HasMergeCandidates() // 합성 가능한 쌍 확인
             }; // 목록 끝
@@ -297,7 +297,7 @@ namespace ProjectEpsilon.Progression // 진행 영역
             switch (kind) // 보상 종류 분기
             { // 분기 시작
                 case 0: return enabled ? $"HEAL +{healingAmount} (TEMP)" : "HEAL (HP FULL)"; // 체력 회복 안내
-                case 1: return enabled ? "REPAIR 1 BODY" : "REPAIR (BODY FULL)"; // 몸통 복구 안내
+                case 1: return enabled ? "REPAIR 1 BODY" : GameManager.Instance != null && GameManager.Instance.IsFinalBossPhase ? "REPAIR (BOSS)" : "REPAIR (BODY FULL)"; // 몸통 복구 제한 안내
                 case 2: return enabled ? "RANDOM WEAPON ★1-2" : "WEAPON (UNAVAILABLE)"; // 무기 보상 안내
                 case 3: return enabled ? "MERGE WEAPONS" : "MERGE (NO PAIR)"; // 합성 기회 안내
                 default: return "UNAVAILABLE"; // 알 수 없는 후보

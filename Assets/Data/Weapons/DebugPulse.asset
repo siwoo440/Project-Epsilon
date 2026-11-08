@@ -14,6 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::ProjectEpsilon.Data.WeaponData
   id: debug_pulse
   displayName: 화염 고리
+  artwork: {fileID: 21300000, guid: da3058be949882b489379c0f03ed72fb, type: 3}
   attribute: 1
   attackType: 3
   baseDamage: 5

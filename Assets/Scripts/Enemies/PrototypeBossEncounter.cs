@@ -24,7 +24,24 @@ namespace ProjectEpsilon.Enemies // 적 영역
         [SerializeField] private float chargeDuration = 0.8f; // 돌진 지속 시간 임시값
         [SerializeField] private float chargeSpeed = 8f; // 돌진 속도 임시값
         [SerializeField] private float phaseTwoChargeSpeedMultiplier = 1.4f; // 절단 돌진 속도 임시 배율
+        [SerializeField] private float coldFreezeSlowMultiplier = 0.5f; // 빙결 대체 보스 감속 임시값
+        [SerializeField] private float bodyPushDistance = 0.6f; // 보스 몸통 밀림 거리 임시값
+        [SerializeField] private float bodyPushRecoveryDuration = 0.4f; // 밀린 몸통 경로 복귀 시간 임시값
+        [SerializeField] private float bodyPushGraceDuration = 0.5f; // 밀린 몸통 자기 충돌 유예 임시값
+        [SerializeField] private float hazardInterval = 8f; // 위험 구역 출현 간격 임시값
+        [SerializeField] private float hazardWarningDuration = 1f; // 위험 구역 예고 시간 임시값
+        [SerializeField] private float hazardDuration = 3f; // 위험 구역 지속 시간 임시값
+        [SerializeField] private float hazardDamageInterval = 1f; // 위험 구역 피해 간격 임시값
+        [SerializeField] private float hazardRadius = 1.2f; // 위험 구역 반경 임시값
+        [SerializeField] private int hazardDamage = 10; // 위험 구역 피해 임시값
+        [SerializeField] private float summonInterval = 12f; // 보스 잡몹 소환 간격 임시값
+        [SerializeField] private int summonMaximum = 4; // 보스 잡몹 동시 상한 임시값
+        [SerializeField] private float summonRadius = 2f; // 보스 주변 소환 거리 임시값
         [SerializeField] private float spawnDistance = 8f; // 보스 출현 거리 임시값
+        [SerializeField] private Sprite bossVisual; // 보스 전용 또는 임시 이미지
+        [SerializeField] private Sprite projectileVisual; // 보스 투사체 전용 또는 임시 이미지
+        [SerializeField] private Color bossTint = new Color(0.7f, 0.1f, 0.9f); // 기존 보스 구분 색상
+        [SerializeField] private bool alignVisualWithTarget; // 보스 이미지의 목표 방향 회전
         private EarlyEnemyWaveSpawner spawner; // 실제 20분 전환기
         private WeaponTarget boss; // 실제 공격 가능한 보스
         private EarlyEnemySettings settings; // 실제 보스 행동 설정
@@ -107,13 +124,13 @@ namespace ProjectEpsilon.Enemies // 적 영역
                 return; // 잘못된 출현 방지
             } // 조건 끝
             SpriteRenderer source = player.GetComponentInChildren<SpriteRenderer>(); // 플레이어 스프라이트 조회
-            Sprite sprite = source == null ? null : source.sprite; // 시험용 대체 시각 자료
+            Sprite sprite = bossVisual != null ? bossVisual : source == null ? null : source.sprite; // 지정 이미지 또는 기존 대체 이미지
             GameObject instance = new GameObject("PrototypeFinalBoss"); // 실제 보스 객체 생성
             instance.transform.position = player.transform.position + Vector3.up * Mathf.Max(1f, spawnDistance); // 시험용 출현 위치
             instance.transform.localScale = Vector3.one * 1.4f; // 시험용 보스 크기
             SpriteRenderer renderer = instance.AddComponent<SpriteRenderer>(); // 실제 보스 렌더러
             renderer.sprite = sprite; // 임시 보스 시각 자료
-            renderer.color = new Color(0.7f, 0.1f, 0.9f); // 시험용 보스 구분 색상
+            renderer.color = bossTint; // 실제 설정한 보스 색상
             renderer.sortingOrder = 8; // 실제 렌더 순서
             CircleCollider2D collider = instance.AddComponent<CircleCollider2D>(); // 실제 보스 충돌체
             collider.isTrigger = true; // 실제 투사체 접촉 설정
@@ -123,7 +140,7 @@ namespace ProjectEpsilon.Enemies // 적 영역
             physicsBody.useFullKinematicContacts = true; // 실제 투사체 접촉 허용
             WeaponTarget target = instance.AddComponent<WeaponTarget>(); // 실제 무기 공격 대상
             target.Configure(maximumHealth); // 임시 최대 체력 반영
-            instance.AddComponent<WeaponTargetStatusController>(); // 기존 상태 효과 사용
+            instance.AddComponent<WeaponTargetStatusController>().ConfigureColdFreezeResistance(true, coldFreezeSlowMultiplier); // 보스 냉기 빙결 저항 설정
             instance.AddComponent<WeaponTargetKnockbackController>().Configure(true); // 보스 넉백 면역
             settings = new EarlyEnemySettings // 기존 사수 행동의 임시 설정
             { // 설정 시작
@@ -133,10 +150,11 @@ namespace ProjectEpsilon.Enemies // 적 영역
                 speedRatio = Mathf.Max(0f, speedRatio), // 임시 이동 속도
                 attackInterval = Mathf.Max(0.1f, attackInterval), // 임시 사격 간격
                 projectileCount = Mathf.Clamp(projectileCount, 1, 9), // 첫 단계 임시 사격 수
-                projectileSpreadDegrees = Mathf.Clamp(projectileSpreadDegrees, 0f, 180f) // 임시 부채꼴 각도
+                projectileSpreadDegrees = Mathf.Clamp(projectileSpreadDegrees, 0f, 180f), // 임시 부채꼴 각도
+                enemySprite = alignVisualWithTarget ? bossVisual : null // 보스 이미지 방향 회전 설정
             }; // 설정 끝
             EarlyEnemyBehaviour behaviour = instance.AddComponent<EarlyEnemyBehaviour>(); // 기존 적 행동 재사용
-            behaviour.Configure(settings, player, body, health, sprite, keepDistance, projectileSpeed, projectileLifetime, 1f, 0.6f, 3f); // 실제 사격과 이동 설정
+            behaviour.Configure(settings, player, body, health, projectileVisual != null ? projectileVisual : sprite, keepDistance, projectileSpeed, projectileLifetime, 1f, 0.6f, 3f); // 실제 투사체와 이동 설정
             if (!GameManager.Instance.RegisterFinalBoss(target)) // 실제 보스 등록 확인
             { // 조건 시작
                 instance.SetActive(false); // 등록 실패 시 공격 차단
@@ -146,7 +164,11 @@ namespace ProjectEpsilon.Enemies // 적 영역
             } // 조건 끝
             boss = target; // 실제 보스 참조 저장
             spawned = true; // 중복 출현 방지
-            instance.AddComponent<PrototypeBossChargeAttack>().Configure(this, player, body, health, behaviour, chargeInterval, chargeWarningDuration, chargeDuration, chargeSpeed, phaseTwoChargeSpeedMultiplier, damage); // 실제 예고 돌진 구성
+            instance.AddComponent<PrototypeBossChargeAttack>().Configure(this, player, body, health, behaviour, chargeInterval, chargeWarningDuration, chargeDuration, chargeSpeed, phaseTwoChargeSpeedMultiplier, damage, alignVisualWithTarget); // 실제 예고 돌진 구성
+            SnakeBodyFollower follower = body.GetComponent<SnakeBodyFollower>(); // 실제 몸통 경로 추적기 조회
+            instance.AddComponent<PrototypeBossBodyPush>().Configure(body, follower, bodyPushDistance, bodyPushRecoveryDuration, bodyPushGraceDuration); // 실제 보스 몸통 밀림 구성
+            instance.AddComponent<PrototypeBossHazardSpawner>().Configure(player, body, health, target, hazardInterval, hazardWarningDuration, hazardDuration, hazardDamageInterval, hazardRadius, hazardDamage); // 실제 예고 위험 구역 구성
+            instance.AddComponent<PrototypeBossSummoner>().Configure(spawner, target, summonInterval, summonMaximum, summonRadius); // 실제 보스 잡몹 소환 구성
         } // 메서드 끝
     } // 클래스 끝
 } // 영역 끝

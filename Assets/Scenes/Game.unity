@@ -452,8 +452,8 @@ SpriteRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 6
   m_MaskInteraction: 0
-  m_Sprite: {fileID: 1434238494030181667, guid: 0a4df3fa57e52bc469da7185f6109d59, type: 3}
-  m_Color: {r: 0.62, g: 0.48, b: 1, a: 1}
+  m_Sprite: {fileID: 21300000, guid: 939426a8bdd707e4997c05fa7a4f20eb, type: 3}
+  m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
   m_DrawMode: 0
@@ -595,8 +595,8 @@ SpriteRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 5
   m_MaskInteraction: 0
-  m_Sprite: {fileID: 1434238494030181667, guid: 0a4df3fa57e52bc469da7185f6109d59, type: 3}
-  m_Color: {r: 0.62, g: 0.48, b: 1, a: 1}
+  m_Sprite: {fileID: 21300000, guid: 939426a8bdd707e4997c05fa7a4f20eb, type: 3}
+  m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
   m_DrawMode: 0
@@ -2454,8 +2454,8 @@ SpriteRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 10
   m_MaskInteraction: 0
-  m_Sprite: {fileID: 2506003341352157630, guid: 432c814e2a4ba094bb6c3f806335148d, type: 3}
-  m_Color: {r: 0.32, g: 0.88, b: 1, a: 1}
+  m_Sprite: {fileID: 21300000, guid: b2210b3aceaa0234f81274a976850790, type: 3}
+  m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
   m_DrawMode: 0
@@ -3782,8 +3782,8 @@ SpriteRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 4
   m_MaskInteraction: 0
-  m_Sprite: {fileID: 1434238494030181667, guid: 0a4df3fa57e52bc469da7185f6109d59, type: 3}
-  m_Color: {r: 0.62, g: 0.48, b: 1, a: 1}
+  m_Sprite: {fileID: 21300000, guid: 939426a8bdd707e4997c05fa7a4f20eb, type: 3}
+  m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
   m_DrawMode: 0
@@ -6984,6 +6984,8 @@ GameObject:
   - component: {fileID: 1886169894}
   - component: {fileID: 1886169895}
   - component: {fileID: 1886169896}
+  - component: {fileID: 1886169897}
+  - component: {fileID: 1886169898}
   m_Layer: 0
   m_Name: ===Managers===
   m_TagString: Untagged
@@ -7038,7 +7040,53 @@ MonoBehaviour:
   chargeDuration: 0.8
   chargeSpeed: 8
   phaseTwoChargeSpeedMultiplier: 1.4
+  coldFreezeSlowMultiplier: 0.5
+  bodyPushDistance: 0.6
+  bodyPushRecoveryDuration: 0.4
+  bodyPushGraceDuration: 0.5
+  hazardInterval: 8
+  hazardWarningDuration: 1
+  hazardDuration: 3
+  hazardDamageInterval: 1
+  hazardRadius: 1.2
+  hazardDamage: 10
+  summonInterval: 12
+  summonMaximum: 4
+  summonRadius: 2
   spawnDistance: 8
+  bossVisual: {fileID: 21300000, guid: 81ec9455f85fb50448436b047f6df15e, type: 3}
+  projectileVisual: {fileID: 2506003341352157630, guid: 432c814e2a4ba094bb6c3f806335148d, type: 3}
+  bossTint: {r: 1, g: 1, b: 1, a: 1}
+  alignVisualWithTarget: 1
+--- !u!114 &1886169897
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1886169890}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8db2ac13fa664b23a692dc4ebc91a521, type: 3}
+  m_Name:
+  m_EditorClassIdentifier: Assembly-CSharp::ProjectEpsilon.World.PrototypeChunkMap
+  chunkSize: 24
+  groundSprite: {fileID: 21300000, guid: aa8fb6306d6836a47a709a925757de8c, type: 3}
+--- !u!114 &1886169898
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1886169890}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a697455872934be6bd612fa7bc11513d, type: 3}
+  m_Name:
+  m_EditorClassIdentifier: Assembly-CSharp::ProjectEpsilon.Progression.ExperienceGemVisualPalette
+  small: {fileID: 21300000, guid: c93ed40600c3b87449a15632ea9adc74, type: 3}
+  medium: {fileID: 21300000, guid: 416e4fddd3c58484ba55d94d7d635df3, type: 3}
+  large: {fileID: 21300000, guid: c3876c28f4d8cc6418726ed1f65d8523, type: 3}
 --- !u!4 &1886169891
 Transform:
   m_ObjectHideFlags: 0
@@ -7097,7 +7145,7 @@ MonoBehaviour:
   spawnViewportMargin: 0.5
   despawnDistance: 22
   elapsed: 0
-  visual: {fileID: 0}
+  visual: {fileID: 2506003341352157630, guid: 432c814e2a4ba094bb6c3f806335148d, type: 3}
   eliteRewards: {fileID: 587332132}
   shooterDistance: 4
   projectileSpeed: 5
@@ -7122,6 +7170,7 @@ MonoBehaviour:
     experience: 1
     firstAppearance: 0
     color: {r: 1, g: 0.35, b: 0.35, a: 1}
+    enemySprite: {fileID: 21300000, guid: d4e42cdcbbbeaa1449d6ad87cbab735c, type: 3}
   - kind: 1
     health: 35
     damage: 12
@@ -7130,6 +7179,7 @@ MonoBehaviour:
     experience: 2
     firstAppearance: 60
     color: {r: 1, g: 0.65, b: 0.25, a: 1}
+    enemySprite: {fileID: 21300000, guid: 6b9c42835e887c34c96775937163c948, type: 3}
   - kind: 2
     health: 20
     damage: 8
@@ -7138,6 +7188,7 @@ MonoBehaviour:
     experience: 2
     firstAppearance: 120
     color: {r: 0.75, g: 0.4, b: 1, a: 1}
+    enemySprite: {fileID: 21300000, guid: ab61c9a5c6dc0c644a29c9f3e8030a34, type: 3}
   - kind: 3
     health: 160
     damage: 15
@@ -7146,6 +7197,7 @@ MonoBehaviour:
     experience: 20
     firstAppearance: 240
     color: {r: 1, g: 0.1, b: 0.75, a: 1}
+    enemySprite: {fileID: 21300000, guid: c9d54d7e60b7e714791c37991d7d2d40, type: 3}
 --- !u!1 &1900265817
 GameObject:
   m_ObjectHideFlags: 0
@@ -7751,6 +7803,7 @@ GameObject:
   - component: {fileID: 2088063720}
   - component: {fileID: 2088063722}
   - component: {fileID: 2088063721}
+  - component: {fileID: 2088063723}
   m_Layer: 0
   m_Name: SnakeBody
   m_TagString: Untagged
@@ -7758,6 +7811,20 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
+--- !u!114 &2088063723
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2088063711}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7353414faf9f45e8be3c183eec495d3f, type: 3}
+  m_Name:
+  m_EditorClassIdentifier: Assembly-CSharp::ProjectEpsilon.Combat.SnakeWeaponVisualPresenter
+  weapons: {fileID: 2088063716}
+  visualScale: 0.65
 --- !u!4 &2088063712
 Transform:
   m_ObjectHideFlags: 0
@@ -7823,15 +7890,16 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::ProjectEpsilon.Player.SnakeBodyManager
   pathRecorder: {fileID: 587332112}
   bodyFollower: {fileID: 2088063713}
-  bodySprite: {fileID: 1434238494030181667, guid: 0a4df3fa57e52bc469da7185f6109d59, type: 3}
+  bodySprite: {fileID: 21300000, guid: 939426a8bdd707e4997c05fa7a4f20eb, type: 3}
+  tailSprite: {fileID: 21300000, guid: ed8331c4c3539324ead88ebb740ea9d1, type: 3}
   startingBodyCount: 3
   maximumBodyCount: 20
   earnedBodyCount: 3
   segmentSpacing: 0.58
   bodyScale: {x: 0.62, y: 0.62, z: 1}
   tailScale: {x: 0.48, y: 0.48, z: 1}
-  bodyColor: {r: 0.62, g: 0.48, b: 1, a: 1}
-  tailColor: {r: 0.42, g: 0.32, b: 0.78, a: 1}
+  bodyColor: {r: 1, g: 1, b: 1, a: 1}
+  tailColor: {r: 1, g: 1, b: 1, a: 1}
   bodyColliderRadius: 0.36
 --- !u!114 &2088063716
 MonoBehaviour:
@@ -7916,6 +7984,8 @@ MonoBehaviour:
   effectHooks: {fileID: 2088063718}
   playerEffects: {fileID: 2088063721}
   pulseSprite: {fileID: 1434238494030181667, guid: 0a4df3fa57e52bc469da7185f6109d59, type: 3}
+  coldFreezeDuration: 1
+  coldFreezeAdditionalHits: 1
 --- !u!114 &2088063721
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -8044,8 +8114,8 @@ SpriteRenderer:
   m_SortingLayer: 0
   m_SortingOrder: -20
   m_MaskInteraction: 0
-  m_Sprite: {fileID: 1434238494030181667, guid: 0a4df3fa57e52bc469da7185f6109d59, type: 3}
-  m_Color: {r: 0.42, g: 0.32, b: 0.78, a: 1}
+  m_Sprite: {fileID: 21300000, guid: ed8331c4c3539324ead88ebb740ea9d1, type: 3}
+  m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
   m_DrawMode: 0

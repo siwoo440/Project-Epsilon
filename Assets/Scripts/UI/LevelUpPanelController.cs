@@ -180,6 +180,7 @@ namespace ProjectEpsilon.UI
 
         private static void ConfigureEliteButton(Button button, Text label, string[] labels, bool[] available, int index) // 보상 버튼 구성
         { // 메서드 시작
+            WeaponCandidateArtwork.Set(button, label, null); // 이전 무기 후보 이미지 제거
             bool exists = labels != null && available != null && index < labels.Length && index < available.Length; // 후보 존재 확인
             if (button != null) // 버튼 연결 확인
             { // 조건 시작
@@ -241,6 +242,7 @@ namespace ProjectEpsilon.UI
 
         private static void SetReplacementButton(Button button, Text label, string caption) // 슬롯 선택 버튼 설정
         { // 메서드 시작
+            WeaponCandidateArtwork.Set(button, label, null); // 이전 무기 후보 이미지 제거
             if (button != null) // 버튼 연결 확인
             { // 조건 시작
                 button.gameObject.SetActive(true); // 버튼 표시
@@ -349,6 +351,8 @@ namespace ProjectEpsilon.UI
                 candidateIndex >= 0 &&
                 candidateIndex < candidates.Count &&
                 candidates[candidateIndex].IsValid;
+
+            WeaponCandidateArtwork.Set(button, label, hasCandidate ? candidates[candidateIndex].Weapon.Artwork : null); // 실제 무기 후보 이미지 표시
 
             if (button != null)
             {

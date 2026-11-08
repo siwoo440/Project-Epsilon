@@ -14,6 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::ProjectEpsilon.Data.WeaponData
   id: debug_nova
   displayName: 철퇴
+  artwork: {fileID: 21300000, guid: ce7b37ab678ed7b4da543f3eaf235ba6, type: 3}
   attribute: 0
   attackType: 3
   baseDamage: 7

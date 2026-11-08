@@ -12,29 +12,22 @@ namespace ProjectEpsilon.Combat // 전투 영역
             return WeaponAttributeSynergyRules.ResolveStage(synergyStage) >= 2; // 2단계 이상 활성
         }
 
-        public static float GetColdMovementMultiplier(int synergyStage) // 냉기 이동 배율 계산
-        {
-            if (!IsActiveSynergy(synergyStage)) // 비활성 단계 확인
-            {
-                return 1f; // 기본 이동 배율
-            }
-
-            return 0.85f; // 기획서 ×2 감속 15퍼센트
-        }
+        public static float GetColdMovementMultiplier(int synergyStage, int stackCount) // 냉기 누적별 이동 배율
+        { // 메서드 시작
+            float slow = ClampColdStacks(stackCount) * 0.1f; // 기본 누적당 감속량
+            float synergyMultiplier = IsActiveSynergy(synergyStage) ? 1.15f : 1f; // 감속량 15퍼센트 강화 임시 해석
+            return 1f - slow * synergyMultiplier; // 실제 이동 배율 반환
+        } // 메서드 끝
 
         public static float GetColdDuration(int synergyStage) // 냉기 지속 시간 계산
         {
-            if (!IsActiveSynergy(synergyStage)) // 비활성 단계 확인
-            {
-                return 0f; // 지속 없음
-            }
-
-            return ColdSlowDuration; // 공통 임시 지속 시간
+            return WeaponAttributeSynergyRules.ResolveStage(synergyStage) >= 4 ? ColdSlowDuration * 1.25f : ColdSlowDuration; // 네 단계 지속 시간 증가
         }
 
         public static int GetColdPriority(int synergyStage) // 냉기 우선순위 계산
         {
-            return WeaponAttributeSynergyRules.ResolveStage(synergyStage); // 시너지 단계 우선순위
+            int stage = WeaponAttributeSynergyRules.ResolveStage(synergyStage); // 실제 시너지 단계
+            return stage > 0 ? stage : 1; // 기본 냉기 우선순위 보장
         }
 
         public static int ClampColdStacks(int stackCount) // 냉기 누적 제한

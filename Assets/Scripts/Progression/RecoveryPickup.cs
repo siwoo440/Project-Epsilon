@@ -188,6 +188,7 @@ namespace ProjectEpsilon.Progression
             }
 
             return
+                (GameManager.Instance == null || !GameManager.Instance.IsFinalBossPhase) && // 보스전 별도 복구 제한
                 bodyManager != null &&
                 bodyManager.MissingRepairableBodyCount > 0;
         }

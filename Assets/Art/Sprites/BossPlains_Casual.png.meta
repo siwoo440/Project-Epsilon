@@ -1,0 +1,455 @@
+fileFormatVersion: 2
+guid: 81ec9455f85fb50448436b047f6df15e
+TextureImporter:
+  internalIDToNameTable:
+  - first:
+      213: 1592575226478181946
+    second: BossPlains_Casual_0
+  - first:
+      213: -5486103117081528283
+    second: BossPlains_Casual_1
+  - first:
+      213: -161774145615494172
+    second: BossPlains_Casual_2
+  - first:
+      213: -6183893329013956166
+    second: BossPlains_Casual_3
+  - first:
+      213: -4725961451878132590
+    second: BossPlains_Casual_4
+  - first:
+      213: 8515875280508801478
+    second: BossPlains_Casual_5
+  - first:
+      213: 1341386053815910502
+    second: BossPlains_Casual_6
+  - first:
+      213: 5983970874210535063
+    second: BossPlains_Casual_7
+  - first:
+      213: 5871642364950450373
+    second: BossPlains_Casual_8
+  - first:
+      213: 4884638973075963287
+    second: BossPlains_Casual_9
+  - first:
+      213: 7219916729465888425
+    second: BossPlains_Casual_10
+  - first:
+      213: 4815948702205086314
+    second: BossPlains_Casual_11
+  - first:
+      213: -4477375563873018413
+    second: BossPlains_Casual_12
+  externalObjects: {}
+  serializedVersion: 13
+  mipmaps:
+    mipMapMode: 0
+    enableMipMap: 0
+    sRGBTexture: 1
+    linearTexture: 0
+    fadeOut: 0
+    borderMipMap: 0
+    mipMapsPreserveCoverage: 0
+    alphaTestReferenceValue: 0.5
+    mipMapFadeDistanceStart: 1
+    mipMapFadeDistanceEnd: 3
+  bumpmap:
+    convertToNormalMap: 0
+    externalNormalMap: 0
+    heightScale: 0.25
+    normalMapFilter: 0
+    flipGreenChannel: 0
+  isReadable: 0
+  streamingMipmaps: 0
+  streamingMipmapsPriority: 0
+  vTOnly: 0
+  ignoreMipmapLimit: 0
+  grayScaleToAlpha: 0
+  generateCubemap: 6
+  cubemapConvolution: 0
+  seamlessCubemap: 0
+  textureFormat: 1
+  maxTextureSize: 2048
+  textureSettings:
+    serializedVersion: 2
+    filterMode: 1
+    aniso: 1
+    mipBias: 0
+    wrapU: 1
+    wrapV: 1
+    wrapW: 1
+  nPOTScale: 0
+  lightmap: 0
+  compressionQuality: 50
+  spriteMode: 1
+  spriteExtrude: 1
+  spriteMeshType: 1
+  alignment: 0
+  spritePivot: {x: 0.5, y: 0.5}
+  spritePixelsToUnits: 720
+  spriteBorder: {x: 0, y: 0, z: 0, w: 0}
+  spriteGenerateFallbackPhysicsShape: 1
+  alphaUsage: 1
+  alphaIsTransparency: 1
+  spriteTessellationDetail: -1
+  textureType: 8
+  textureShape: 1
+  singleChannelComponent: 0
+  flipbookRows: 1
+  flipbookColumns: 1
+  maxTextureSizeSet: 0
+  compressionQualitySet: 0
+  textureFormatSet: 0
+  ignorePngGamma: 0
+  applyGammaDecoding: 0
+  swizzle: 50462976
+  cookieLightType: 0
+  platformSettings:
+  - serializedVersion: 4
+    buildTarget: DefaultTexturePlatform
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 0
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 4
+    buildTarget: Standalone
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  spriteSheet:
+    serializedVersion: 2
+    sprites:
+    - serializedVersion: 2
+      name: BossPlains_Casual_0
+      rect:
+        serializedVersion: 2
+        x: 32
+        y: 23
+        width: 1213
+        height: 1103
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData:
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: a3eb15c0bb6f91610800000000000000
+      internalID: 1592575226478181946
+      vertices: []
+      indices:
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: BossPlains_Casual_1
+      rect:
+        serializedVersion: 2
+        x: 600
+        y: 1086
+        width: 125
+        height: 58
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData:
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 528313918427dd3b0800000000000000
+      internalID: -5486103117081528283
+      vertices: []
+      indices:
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: BossPlains_Casual_2
+      rect:
+        serializedVersion: 2
+        x: 766
+        y: 1054
+        width: 59
+        height: 105
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData:
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 4e30fbc854341cdf0800000000000000
+      internalID: -161774145615494172
+      vertices: []
+      indices:
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: BossPlains_Casual_3
+      rect:
+        serializedVersion: 2
+        x: 750
+        y: 1066
+        width: 17
+        height: 17
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData:
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: ab1273be7c56e2aa0800000000000000
+      internalID: -6183893329013956166
+      vertices: []
+      indices:
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: BossPlains_Casual_4
+      rect:
+        serializedVersion: 2
+        x: 728
+        y: 1048
+        width: 7
+        height: 13
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData:
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 2945d9649130a6eb0800000000000000
+      internalID: -4725961451878132590
+      vertices: []
+      indices:
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: BossPlains_Casual_5
+      rect:
+        serializedVersion: 2
+        x: 1072
+        y: 729
+        width: 9
+        height: 16
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData:
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 6c1d146d2777e2670800000000000000
+      internalID: 8515875280508801478
+      vertices: []
+      indices:
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: BossPlains_Casual_6
+      rect:
+        serializedVersion: 2
+        x: 1112
+        y: 699
+        width: 7
+        height: 8
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData:
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 6604c5c428f8d9210800000000000000
+      internalID: 1341386053815910502
+      vertices: []
+      indices:
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: BossPlains_Casual_7
+      rect:
+        serializedVersion: 2
+        x: 1072
+        y: 218
+        width: 7
+        height: 9
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData:
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 7964a9f3ec55b0350800000000000000
+      internalID: 5983970874210535063
+      vertices: []
+      indices:
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: BossPlains_Casual_8
+      rect:
+        serializedVersion: 2
+        x: 734
+        y: 187
+        width: 9
+        height: 17
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData:
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 5c091032f934c7150800000000000000
+      internalID: 5871642364950450373
+      vertices: []
+      indices:
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: BossPlains_Casual_9
+      rect:
+        serializedVersion: 2
+        x: 562
+        y: 160
+        width: 13
+        height: 12
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData:
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 79db83e1449b9c340800000000000000
+      internalID: 4884638973075963287
+      vertices: []
+      indices:
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: BossPlains_Casual_10
+      rect:
+        serializedVersion: 2
+        x: 688
+        y: 108
+        width: 17
+        height: 28
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData:
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 9aed6bf330c423460800000000000000
+      internalID: 7219916729465888425
+      vertices: []
+      indices:
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: BossPlains_Casual_11
+      rect:
+        serializedVersion: 2
+        x: 808
+        y: 131
+        width: 7
+        height: 12
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData:
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: a6a007324dfa5d240800000000000000
+      internalID: 4815948702205086314
+      vertices: []
+      indices:
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: BossPlains_Casual_12
+      rect:
+        serializedVersion: 2
+        x: 1078
+        y: 135
+        width: 15
+        height: 13
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData:
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 3dd955595aa2dd1c0800000000000000
+      internalID: -4477375563873018413
+      vertices: []
+      indices:
+      edges: []
+      weights: []
+    outline: []
+    customData:
+    physicsShape: []
+    bones: []
+    spriteID: 5e97eb03825dee720800000000000000
+    internalID: 0
+    vertices: []
+    indices:
+    edges: []
+    weights: []
+    secondaryTextures: []
+    spriteCustomMetadata:
+      entries: []
+    nameFileIdTable:
+      BossPlains_Casual_0: 1592575226478181946
+      BossPlains_Casual_1: -5486103117081528283
+      BossPlains_Casual_10: 7219916729465888425
+      BossPlains_Casual_11: 4815948702205086314
+      BossPlains_Casual_12: -4477375563873018413
+      BossPlains_Casual_2: -161774145615494172
+      BossPlains_Casual_3: -6183893329013956166
+      BossPlains_Casual_4: -4725961451878132590
+      BossPlains_Casual_5: 8515875280508801478
+      BossPlains_Casual_6: 1341386053815910502
+      BossPlains_Casual_7: 5983970874210535063
+      BossPlains_Casual_8: 5871642364950450373
+      BossPlains_Casual_9: 4884638973075963287
+  mipmapLimitGroupName:
+  pSDRemoveMatte: 0
+  userData:
+  assetBundleName:
+  assetBundleVariant:

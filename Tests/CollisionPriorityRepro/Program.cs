@@ -33,6 +33,33 @@ public static class Program // 충돌 순서 검증기
             MethodInfo selfEnter = typeof(SnakeSelfCollision).GetMethod("OnTriggerEnter2D", BindingFlags.NonPublic | BindingFlags.Instance); // 자기 충돌 콜백 조회
             Collider2D ownBody = new Collider2D(); // 몸통 충돌체
             ownBody.Component = new SnakeSegment(); // 자기 몸통 정보
+            if (mode == "boss-grace-before-self" || mode == "boss-grace-after-self") // 보스 유예와 자기 접촉 순서 확인
+            { // 조건 시작
+                SnakeSegment protectedBody = (SnakeSegment)ownBody.Component; // 실제 보호 몸통 대체
+                protectedBody.IsBossPushGraceActive = mode == "boss-grace-before-self"; // 먼저 시작된 유예 상태
+                selfEnter.Invoke(self, new object[] { ownBody }); // 실제 자기 충돌 진입
+                protectedBody.IsBossPushGraceActive = true; // 같은 스텝의 보스 유예 확정
+                typeof(SnakeExternalCollision).GetMethod("ResolvePendingContacts", BindingFlags.NonPublic | BindingFlags.Instance).Invoke(collision, null); // 실제 물리 스텝 해결
+                Require(body.CurrentBodyCount == 5, "보스 밀림 유예 중 자기 충돌 적용"); // 두 콜백 순서의 유예 확인
+                protectedBody.IsBossPushGraceActive = false; // 실제 유예 종료 대체
+                typeof(SnakeSelfCollision).GetMethod("OnTriggerStay2D", BindingFlags.NonPublic | BindingFlags.Instance).Invoke(self, new object[] { ownBody }); // 실제 지속 접촉 재판정
+                typeof(SnakeExternalCollision).GetMethod("ResolvePendingContacts", BindingFlags.NonPublic | BindingFlags.Instance).Invoke(collision, null); // 재판정 스텝 해결
+                Require(body.CurrentBodyCount == 3, "유예 종료 후 지속 자기 충돌 미처리"); // 실제 지속 접촉 손실 확인
+                Console.WriteLine("Collision priority passed: " + mode); // 실제 시험 성공 기록
+                return 0; // 독립 시험 종료
+            } // 조건 끝
+            if (mode == "boss-grace-other") // 보호 몸통과 다른 몸통 동시 접촉
+            { // 조건 시작
+                ((SnakeSegment)ownBody.Component).IsBossPushGraceActive = true; // 첫 몸통 유예 대체
+                selfEnter.Invoke(self, new object[] { ownBody }); // 유예 몸통 실제 진입
+                Collider2D otherBody = new Collider2D(); // 비보호 몸통 충돌체
+                otherBody.Component = new SnakeSegment(); // 별도 몸통 대체
+                selfEnter.Invoke(self, new object[] { otherBody }); // 비보호 몸통 실제 진입
+                typeof(SnakeExternalCollision).GetMethod("ResolvePendingContacts", BindingFlags.NonPublic | BindingFlags.Instance).Invoke(collision, null); // 실제 같은 스텝 처리
+                Require(body.CurrentBodyCount == 3, "비보호 몸통까지 보스 유예 적용"); // 다른 몸통 자기 충돌 확인
+                Console.WriteLine("Collision priority passed: " + mode); // 실제 시험 성공 기록
+                return 0; // 독립 시험 종료
+            } // 조건 끝
             if (mode == "disable") // 비활성화 중 절단 취소 확인
             { // 조건 시작
                 int callbacks = 0; // 절단 완료 알림 수
