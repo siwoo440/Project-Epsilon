@@ -1,0 +1,25 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 960fbfacb2f487b4588497574dacf44e, type: 3}
+  m_Name: PrototypeHeavy
+  m_EditorClassIdentifier: Assembly-CSharp::ProjectEpsilon.Data.CharacterData
+  id: prototype_heavy
+  displayName: 중장형
+  startingBodyCount: 4
+  bodyMaxHealth: 125
+  moveSpeedMultiplier: 0.9
+  turnPowerMultiplier: 0.85
+  passive: 2
+  passiveMultiplier: 0.9
+  secondaryMultiplier: 1
+  preferredCandidateWeight: 1
+  startingWeapons: {fileID: 11400000, guid: 5e2a18e39e4243869e3bdcb61856e602, type: 2}

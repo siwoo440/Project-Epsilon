@@ -239,16 +239,7 @@ namespace ProjectEpsilon.Editor // 편집기 영역
             ClearObjects(); // 이전 표적과 투사체 제거
             activeWeapon = AssetDatabase.LoadAssetAtPath<WeaponData>("Assets/Data/Weapons/" + assetName + ".asset"); // 실제 시험용 무기 데이터
             Require(activeWeapon != null && activeWeapon.AttackType == type && activeWeapon.Attribute == attribute && Mathf.Approximately(activeWeapon.BaseDamage, damage) && Mathf.Approximately(activeWeapon.AttackInterval, interval), "Specification or asset mismatch for " + assetName); // 기획 임시값 및 유형 확인
-            if (attribute == WeaponAttribute.Poison || attribute == WeaponAttribute.Explosion) // 신규 속성 이미지 확인
-            { // 조건 시작
-                string expectedImage = attribute == WeaponAttribute.Poison ? "WeaponPoisonBlade_Casual" : "WeaponExplosionBlade_Casual"; // 실제 속성별 이미지 이름
-                Require(activeWeapon.Artwork != null && activeWeapon.Artwork.name == expectedImage, "Generated artwork missing: " + assetName); // 실제 무기 데이터 이미지 연결 확인
-            } // 조건 끝
-            if (attribute == WeaponAttribute.Holy || attribute == WeaponAttribute.Dark) // 신성 및 암흑 이미지 확인
-            { // 조건 시작
-                string expectedImage = attribute == WeaponAttribute.Holy ? "WeaponHolyBlade_Casual" : "WeaponDarkBlade_Casual"; // 실제 속성별 이미지 이름
-                Require(activeWeapon.Artwork != null && activeWeapon.Artwork.name == expectedImage, "Generated artwork missing: " + assetName); // 실제 무기 데이터 이미지 연결 확인
-            } // 조건 끝
+            Require(activeWeapon.Artwork != null && activeWeapon.Artwork.name == "WeaponTurret_Casual", "Generated turret artwork missing: " + assetName); // 실제 공용 포탑 이미지 연결 확인
             if (assetName == "DebugNeedle") // 강철 창 확인
             { // 조건 시작
                 Require(activeWeapon.ProjectileHitLimit == 2, "Steel spear piercing setting is not two."); // 관통 임시값 확인

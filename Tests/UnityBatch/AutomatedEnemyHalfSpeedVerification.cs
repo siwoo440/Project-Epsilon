@@ -104,7 +104,7 @@ namespace ProjectEpsilon.Editor // 배치 시험 영역
             for (int index = 0; index < targets.Length; index++) // 실제 적 속도 순회
             { // 반복 시작
                 float speed = Vector3.Distance(positions[index], targets[index].transform.position) / elapsed; // 실제 측정 이동 속도
-                float expected = player.MoveSpeed * settings[index].speedRatio * 0.5f; // 기획 데이터 대비 절반 속도
+                float expected = player.BaseMoveSpeed * settings[index].speedRatio * 0.5f; // 기획 데이터 대비 절반 속도
                 Require(Mathf.Abs(speed - expected) < 0.16f, "Enemy speed mismatch for " + settings[index].kind + ": " + speed); // 일반 적과 엘리트 실제 속도 확인
             } // 반복 끝
             EarlyEnemyBehaviour elite = targets[3].GetComponent<EarlyEnemyBehaviour>(); // 실제 엘리트 행동
@@ -120,7 +120,7 @@ namespace ProjectEpsilon.Editor // 배치 시험 영역
                 yield return new WaitForFixedUpdate(); // 실제 돌진 이동 대기
             } // 반복 끝
             float eliteSpeed = Vector3.Distance(eliteStart, elite.transform.position) / (Time.fixedTime - start); // 실제 엘리트 돌진 속도
-            Require(Mathf.Abs(eliteSpeed - player.MoveSpeed * settings[3].speedRatio * multiplier * 0.5f) < 0.2f, "Elite charge speed mismatch: " + eliteSpeed); // 실제 엘리트 돌진 절반 속도 확인
+            Require(Mathf.Abs(eliteSpeed - player.BaseMoveSpeed * settings[3].speedRatio * multiplier * 0.5f) < 0.2f, "Elite charge speed mismatch: " + eliteSpeed); // 실제 엘리트 돌진 절반 속도 확인
             GameObject generic = new GameObject("HalfSpeedGeneric"); // 기존 데이터 기반 적 객체
             generic.transform.position = new Vector3(20f, -40f, 0f); // 다른 대상과 떨어진 위치
             generic.AddComponent<WeaponTarget>().Configure(100f); // 실제 공격 대상 생성

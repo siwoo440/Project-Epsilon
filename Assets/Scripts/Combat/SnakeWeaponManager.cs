@@ -184,6 +184,20 @@ namespace ProjectEpsilon.Combat
             SlotsChanged?.Invoke();
         }
 
+        public bool ClearStartingLoadout() // 시작 선택 전 기존 무기 정리
+        { // 메서드 시작
+            if (GameManager.Instance == null || GameManager.Instance.CurrentState != GameState.Starting) // 실제 시작 상태 확인
+            { // 조건 시작
+                return false; // 진행 중 무기 초기화 방지
+            } // 조건 끝
+            foreach (SnakeWeaponSlot slot in slots) // 실제 몸통 슬롯 순회
+            { // 반복 시작
+                slot?.Clear(); // 시작 전 기존 무기 제거
+            } // 반복 끝
+            SlotsChanged?.Invoke(); // 무기와 시너지 갱신
+            return true; // 시작 무기 정리 완료
+        } // 메서드 끝
+
         public bool TryEquipFirstEmpty(
             WeaponData weapon,
             int grade = 1

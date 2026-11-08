@@ -13,8 +13,8 @@ MonoBehaviour:
   m_Name: PrototypeDarkBlade
   m_EditorClassIdentifier: Assembly-CSharp::ProjectEpsilon.Data.WeaponData
   id: prototype_dark_blade
-  displayName: 시험용 암흑 검
-  artwork: {fileID: 21300000, guid: f0a0816fe620b6b498526fb96196e9d6, type: 3}
+  displayName: 시험용 암흑 근접 포탑
+  artwork: {fileID: 21300000, guid: f873d6246f772fb41a1fb370949f0060, type: 3}
   attribute: 7
   attackType: 0
   baseDamage: 9

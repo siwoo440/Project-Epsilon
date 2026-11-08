@@ -84,7 +84,7 @@ namespace ProjectEpsilon.Combat // 전투 영역
         { // 메서드 시작
             if (WeaponAttributeDarkRules.ShouldHealOnKill(synergyStage, curseStacks, Random.value)) // 저주 대상 처치 회복 확인
             { // 조건 시작
-                snakeHealth?.Heal(WeaponAttributeDarkRules.KillHealAmount); // 공유 체력 회복
+                snakeHealth?.Heal(Mathf.CeilToInt(WeaponAttributeDarkRules.KillHealAmount * CharacterRunInitializer.DarkKillHealMultiplier)); // 암흑형 저주 처치 회복 강화
             } // 조건 끝
 
             if (!WeaponAttributeDarkRules.ShouldSpreadCurse(synergyStage, curseStacks)) // 저주 전파 조건 확인

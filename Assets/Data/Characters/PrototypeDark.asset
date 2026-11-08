@@ -1,0 +1,25 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 960fbfacb2f487b4588497574dacf44e, type: 3}
+  m_Name: PrototypeDark
+  m_EditorClassIdentifier: Assembly-CSharp::ProjectEpsilon.Data.CharacterData
+  id: prototype_dark
+  displayName: 암흑 특화형
+  startingBodyCount: 3
+  bodyMaxHealth: 90
+  moveSpeedMultiplier: 1
+  turnPowerMultiplier: 1
+  passive: 5
+  passiveMultiplier: 2
+  secondaryMultiplier: 1
+  preferredCandidateWeight: 2
+  startingWeapons: {fileID: 11400000, guid: 370988f35fe14d18bd53ebe78dbed67e, type: 2}

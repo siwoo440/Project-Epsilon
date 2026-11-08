@@ -1,4 +1,5 @@
 using System;
+using ProjectEpsilon.Core; // 실제 런 시작 상태
 using UnityEngine;
 
 namespace ProjectEpsilon.Player
@@ -12,6 +13,7 @@ namespace ProjectEpsilon.Player
         [SerializeField] private int currentHealth = 100;
 
         private bool subscribed;
+        private float healingRemainder; // 캐릭터 회복 배율 소수 누적
 
         public event Action<int, int> HealthChanged;
         public event Action BodyDepleted;
@@ -66,6 +68,19 @@ namespace ProjectEpsilon.Player
             NotifyHealthChanged();
         }
 
+        public bool SetStartingMaximumHealth(int maximum) // 런 시작 공용 체력 설정
+        { // 메서드 시작
+            if (GameManager.Instance == null || GameManager.Instance.CurrentState != GameState.Starting) // 실제 시작 상태 확인
+            { // 조건 시작
+                return false; // 진행 중 체력 초기화 방지
+            } // 조건 끝
+            maximumHealth = Mathf.Max(1, maximum); // 안전한 최대 체력 저장
+            currentHealth = maximumHealth; // 시작 체력 완전 회복
+            healingRemainder = 0f; // 이전 회복 소수 초기화
+            NotifyHealthChanged(); // 실제 HUD 체력 갱신
+            return true; // 시작 체력 설정 완료
+        } // 메서드 끝
+
         public bool TakeDamage(int damage)
         {
             int remainingDamage =
@@ -73,6 +88,8 @@ namespace ProjectEpsilon.Player
                     0,
                     damage
                 );
+
+            remainingDamage = Mathf.CeilToInt(remainingDamage * CharacterRunInitializer.DamageReceivedMultiplier); // 중장형 실제 피해 경감
 
             if (remainingDamage <= 0 ||
                 IsInvulnerable)
@@ -160,9 +177,12 @@ namespace ProjectEpsilon.Player
                 return false;
             }
 
+            float modifiedHealing = safeAmount * CharacterRunInitializer.HealingMultiplier + healingRemainder; // 실제 회복 배율과 소수 누적
+            int actualHealing = Mathf.FloorToInt(modifiedHealing); // 실제 정수 회복량
+            healingRemainder = modifiedHealing - actualHealing; // 다음 회복을 위한 소수 보존
             SetHealth(
                 currentHealth +
-                safeAmount
+                actualHealing // 캐릭터 회복 배율 반영
             );
 
             return true;
@@ -170,6 +190,7 @@ namespace ProjectEpsilon.Player
 
         public void ResetHealth()
         {
+            healingRemainder = 0f; // 이전 회복 소수 초기화
             SetHealth(
                 bodyManager != null &&
                 bodyManager.CurrentBodyCount <= 0

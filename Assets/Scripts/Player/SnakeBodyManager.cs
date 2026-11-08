@@ -276,6 +276,21 @@ namespace ProjectEpsilon.Player
             return removedCount;
         }
 
+        public bool SetStartingBodyCount(int count) // 런 시작 몸통 수 설정
+        { // 메서드 시작
+            if (GameManager.Instance == null || GameManager.Instance.CurrentState != GameState.Starting) // 실제 시작 상태 확인
+            { // 조건 시작
+                return false; // 진행 중 몸통 초기화 방지
+            } // 조건 끝
+            int safeCount = Mathf.Clamp(count, 1, maximumBodyCount); // 절대 상한 이내 시작 수
+            if (startingBodyCount != safeCount || CurrentBodyCount != safeCount || EarnedBodyCount != safeCount) // 기존 시작 구성과 차이 확인
+            { // 조건 시작
+                startingBodyCount = safeCount; // 새 시작 몸통 수 저장
+                ResetBody(); // 실제 몸통과 성장 최대 초기화
+            } // 조건 끝
+            return true; // 실제 시작 설정 완료
+        } // 메서드 끝
+
         public void ResetBody()
         {
             EnsureInitialized();

@@ -113,7 +113,7 @@ namespace ProjectEpsilon.Editor // 편집기 영역
                     if (game.IsPlaying) // 버튼 선택 완료 확인
                     { // 조건 시작
                         SnakeWeaponManager weapons = UnityEngine.Object.FindFirstObjectByType<SnakeWeaponManager>(); // 실제 장착 관리자
-                        if (options == null || options.Weapons == null || options.Weapons.Length < 2 || options.Weapons[1] == null || options.Weapons[1].DisplayName != "강철 창" || weapons == null || weapons.Slots.Count == 0 || weapons.Slots[0].Weapon != options.Weapons[1] || weapons.OccupiedSlotCount != 1) // 두 번째 강철 창 실제 장착 확인
+                        if (options == null || options.Weapons == null || options.Weapons.Length < 2 || options.Weapons[1] == null || options.Weapons[1].Id != "debug_needle" || weapons == null || weapons.Slots.Count == 0 || weapons.Slots[0].Weapon != options.Weapons[1] || weapons.OccupiedSlotCount != 1) // 두 번째 강철 관통 포탑 실제 장착 확인
                         { // 조건 시작
                             throw new InvalidOperationException("Second starting weapon button did not equip exactly one steel spear."); // 시작 장착 오류
                         } // 조건 끝
@@ -870,7 +870,10 @@ namespace ProjectEpsilon.Editor // 편집기 영역
             { // 조건 시작
                 return; // 선택 생략
             } // 조건 끝
-            string[] names = { "candidateButton01", "candidateButton02", "candidateButton03" }; // 버튼 필드 이름
+            SnakeWeaponMergeController merge = UnityEngine.Object.FindFirstObjectByType<SnakeWeaponMergeController>(); // 실제 합성 상태 조회
+            FieldInfo stageField = typeof(SnakeWeaponMergeController).GetField("selectionStage", PrivateInstance); // 실제 재료 선택 단계 조회
+            int stage = merge == null || stageField == null ? -1 : (int)stageField.GetValue(merge); // 현재 실제 선택 단계
+            string[] names = stage >= 0 && stage < 2 ? new[] { "candidateButton02" } : new[] { "candidateButton01", "candidateButton02", "candidateButton03" }; // 재료 확정 또는 강화 버튼 선택
             foreach (string name in names) // 후보 버튼 순회
             { // 반복 시작
                 Button button = (Button)typeof(WeaponMergePanelController).GetField(name, PrivateInstance).GetValue(panel); // 버튼 조회

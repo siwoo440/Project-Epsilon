@@ -1,5 +1,6 @@
 using System.Collections.Generic; // 대상 집합 사용
 using ProjectEpsilon.Data; // 무기 데이터 사용
+using ProjectEpsilon.Player; // 캐릭터 패시브 참조
 using UnityEngine; // Unity 기능 사용
 
 namespace ProjectEpsilon.Combat // 전투 영역
@@ -41,6 +42,7 @@ namespace ProjectEpsilon.Combat // 전투 영역
             int count = synergyManager == null ? 0 : synergyManager.GetCount(attribute); // 속성 개수 조회
             int stage = synergyManager == null ? 0 : synergyManager.GetStage(attribute); // 시너지 단계 조회
             float directDamage = WeaponAttributeDamageRules.CalculateDirectDamage(gradeDamage, attribute, stage); // 직접 피해 계산
+            directDamage *= attribute == WeaponAttribute.Holy ? CharacterRunInitializer.HolyDamageMultiplier : 1f; // 신성형 실제 신성 피해 강화
             return new WeaponAttributeAttackSnapshot(weapon, attribute, count, stage, grade, origin, directDamage); // 공격 정보 반환
         }
 

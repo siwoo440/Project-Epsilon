@@ -313,7 +313,7 @@ namespace ProjectEpsilon.Progression // 진행 영역
             } // 조건 끝
             if (!pendingWeapon.IsValid || !available.Contains(pendingWeapon.Weapon) || pendingWeapon.Grade > pendingWeapon.Weapon.MaxGrade) // 기존 무기 후보 유효성 확인
             { // 조건 시작
-                WeaponData selected = available[Random.Range(0, available.Count)]; // 무기 종류 추첨
+                WeaponData selected = available[WeaponRewardPool.SelectWeaponIndex(available, weapons, CharacterRunInitializer.ActiveCharacter)]; // 캐릭터별 무기 후보 가중 추첨
                 int selectedGrade = selected.MaxGrade >= 2 && Random.value < gradeTwoChance ? 2 : 1; // 임시 등급 추첨
                 pendingWeapon = new WeaponRewardCandidate(selected, selectedGrade); // 보상 무기와 등급 고정
             } // 조건 끝

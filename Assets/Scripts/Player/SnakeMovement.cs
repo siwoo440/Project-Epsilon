@@ -17,12 +17,13 @@ namespace ProjectEpsilon.Player
 
         private PlayerInputReader inputReader;
 
-        public float MoveSpeed => moveSpeed;
-        public float TurnSpeed => turnSpeed;
+        public float BaseMoveSpeed => moveSpeed; // 캐릭터 보정 전 기본 이동 속도
+        public float MoveSpeed => moveSpeed * CharacterRunInitializer.MoveSpeedMultiplier; // 캐릭터 이동 배율 적용
+        public float TurnSpeed => turnSpeed * CharacterRunInitializer.TurnSpeedMultiplier; // 캐릭터 회전 배율 적용
         public bool IsMergeMovementMode => mergeMovementMode;
 
         public float CurrentMoveSpeed =>
-            moveSpeed *
+            MoveSpeed * // 캐릭터 이동 속도 적용
             (stamina == null
                 ? 1f
                 : stamina.CurrentSpeedMultiplier); // 합성 감속은 전체 시간에만 적용
@@ -84,7 +85,7 @@ namespace ProjectEpsilon.Player
 
             float rotationAmount =
                 -turnInput *
-                turnSpeed *
+                TurnSpeed * // 캐릭터 회전 속도 적용
                 Time.deltaTime;
 
             transform.Rotate(

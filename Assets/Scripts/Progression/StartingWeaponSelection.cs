@@ -2,6 +2,7 @@ using System.Collections.Generic; // 시작 후보 목록
 using ProjectEpsilon.Combat; // 무기 관리자
 using ProjectEpsilon.Core; // 게임 상태
 using ProjectEpsilon.Data; // 무기 데이터
+using ProjectEpsilon.Player; // 시작 캐릭터 선택
 using ProjectEpsilon.UI; // 시작 후보 화면
 using UnityEngine; // 유니티 구성
 using UnityEngine.InputSystem; // 키보드 입력
@@ -21,6 +22,21 @@ namespace ProjectEpsilon.Progression // 게임 진행 영역
         private bool selecting; // 선택 진행 여부
         private bool selected; // 무기 확정 여부
         public bool IsSelecting => selecting; // 시작 선택 상태 조회
+        public bool CanChangeStartingOptions => !selected && GameManager.Instance != null && GameManager.Instance.CurrentState == GameState.Starting; // 시작 후보 변경 가능 여부
+
+        public bool SetStartingOptions(StartingWeaponOptions data) // 캐릭터별 시작 후보 적용
+        { // 메서드 시작
+            if (data == null || !CanChangeStartingOptions) // 선택과 시작 상태 확인
+            { // 조건 시작
+                return false; // 진행 중 후보 변경 방지
+            } // 조건 끝
+            options = data; // 실제 캐릭터 후보 저장
+            if (initialized && isActiveAndEnabled) // 이미 표시된 시작 화면 확인
+            { // 조건 시작
+                ShowIfStarting(); // 실제 후보 화면 갱신
+            } // 조건 끝
+            return true; // 시작 후보 적용 완료
+        } // 메서드 끝
 
         public void Configure(SnakeWeaponManager weapons, LevelUpPanelController selectionPanel, StartingWeaponOptions data) // 시작 선택 구성
         { // 메서드 시작
@@ -84,6 +100,12 @@ namespace ProjectEpsilon.Progression // 게임 진행 영역
             { // 조건 시작
                 return; // 키 입력 생략
             } // 조건 끝
+            if (keyboard.leftArrowKey.wasPressedThisFrame || keyboard.rightArrowKey.wasPressedThisFrame) // 이전 또는 다음 캐릭터 입력
+            { // 조건 시작
+                CharacterRunInitializer initializer = GetComponent<CharacterRunInitializer>(); // 실제 시작 캐릭터 처리기
+                initializer?.CycleCharacter(keyboard.rightArrowKey.wasPressedThisFrame ? 1 : -1); // 실제 캐릭터와 후보 변경
+                return; // 같은 프레임 무기 선택 차단
+            } // 조건 끝
             if (keyboard.digit1Key.wasPressedThisFrame || keyboard.numpad1Key.wasPressedThisFrame) // 첫 후보 입력
             { // 조건 시작
                 HandleSelected(0); // 첫 무기 선택
@@ -138,6 +160,7 @@ namespace ProjectEpsilon.Progression // 게임 진행 영역
             } // 반복 끝
             selecting = true; // 시작 선택 활성
             panel.ShowStartingWeapons(candidates); // 세 후보 표시
+            panel.SetStartingCharacter(CharacterRunInitializer.ActiveCharacter); // 실제 캐릭터와 선택 안내 표시
         } // 메서드 끝
 
         private bool IsInputBlocked() // 설정 입력 우선 확인

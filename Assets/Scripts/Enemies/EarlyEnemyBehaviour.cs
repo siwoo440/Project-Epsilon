@@ -141,7 +141,7 @@ namespace ProjectEpsilon.Enemies // 적 영역
         private void Move(Vector2 direction, float multiplier) // 물리 이동
         { // 메서드 시작
             float statusMultiplier = statuses == null ? 1f : statuses.CurrentMovementMultiplier; // 상태 이동 배율
-            float speed = player.MoveSpeed * Mathf.Max(0f, settings.speedRatio) * statusMultiplier * multiplier * EnemyMovementRules.SpeedMultiplier; // 전체 적 이동 속도 배율 적용
+            float speed = player.BaseMoveSpeed * Mathf.Max(0f, settings.speedRatio) * statusMultiplier * multiplier * EnemyMovementRules.SpeedMultiplier; // 캐릭터 보정과 독립된 적 이동 속도
             movementBody.MovePosition(movementBody.position + direction * speed * Time.fixedDeltaTime); // 적 위치 이동
         } // 메서드 끝
         private bool TickCharge(Vector2 offset) // 엘리트 예고와 돌진

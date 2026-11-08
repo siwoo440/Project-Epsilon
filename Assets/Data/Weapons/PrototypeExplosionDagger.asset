@@ -13,8 +13,8 @@ MonoBehaviour:
   m_Name: PrototypeExplosionDagger
   m_EditorClassIdentifier: Assembly-CSharp::ProjectEpsilon.Data.WeaponData
   id: prototype_explosion_dagger
-  displayName: 시험용 폭발 단검
-  artwork: {fileID: 21300000, guid: 6a115e6731beb494e9aeccfcbb9cbd90, type: 3}
+  displayName: 시험용 폭발 속사 근접 포탑
+  artwork: {fileID: 21300000, guid: f873d6246f772fb41a1fb370949f0060, type: 3}
   attribute: 5
   attackType: 0
   baseDamage: 6

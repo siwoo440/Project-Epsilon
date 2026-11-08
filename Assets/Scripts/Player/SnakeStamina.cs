@@ -28,6 +28,7 @@ namespace ProjectEpsilon.Player
 
         public float CurrentStamina => currentStamina;
         public float MaximumStamina => maximumStamina;
+        public float EffectiveRecoveryPerSecond => recoveryPerSecond * CharacterRunInitializer.StaminaRecoveryMultiplier; // 캐릭터별 실제 회복률
         public bool IsBoosting => isBoosting;
         public bool IsBoostBlocked => boostBlocked;
 
@@ -193,7 +194,7 @@ namespace ProjectEpsilon.Player
                 Mathf.Min(
                     maximumStamina,
                     currentStamina +
-                    (recoveryPerSecond *
+                    (EffectiveRecoveryPerSecond * // 캐릭터별 실제 회복률
                     Time.deltaTime)
                 );
 

@@ -81,8 +81,8 @@ namespace ProjectEpsilon.Editor // 배치 시험 영역
             player.enabled = false; // 시험 중 플레이어 이동 중지
             spawner.enabled = false; // 시험 외 적 생성 중지
             Require(Mathf.Abs(player.transform.lossyScale.x - 1.44f) < 0.001f, "Player head scale mismatch."); // 머리 두 배 크기 확인
-            Require(body.BodySegments.Count == 3 && Mathf.Abs(body.BodySegments[0].transform.lossyScale.x - 1.24f) < 0.001f && Mathf.Abs(body.TailSegment.transform.lossyScale.x - 0.96f) < 0.001f, "Player body or tail scale mismatch."); // 몸통과 꼬리 두 배 크기 확인
-            Require(Mathf.Abs(follower.SegmentSpacing - 1.16f) < 0.001f, "Body spacing mismatch."); // 두 배 몸통 간격 확인
+            Require(body.BodySegments.Count == 3 && Mathf.Abs(body.BodySegments[0].transform.lossyScale.x - 0.62f) < 0.001f && Mathf.Abs(body.TailSegment.transform.lossyScale.x - 0.48f) < 0.001f, "Player body or tail scale mismatch."); // 축소된 몸통과 꼬리 크기 확인
+            Require(Mathf.Abs(follower.SegmentSpacing - 0.58f) < 0.001f, "Body spacing mismatch."); // 축소된 몸통 간격 확인
             int[] values = { 1, 5, 20 }; // 경험치 등급 값
             float[] sizes = { 0.54f, 0.78f, 1.02f }; // 보석 세 배 크기
             for (int i = 0; i < values.Length; i++) // 경험치 등급 순회

@@ -13,8 +13,8 @@ MonoBehaviour:
   m_Name: PrototypeFireBrand
   m_EditorClassIdentifier: Assembly-CSharp::ProjectEpsilon.Data.WeaponData
   id: prototype_fire_brand
-  displayName: 시험용 화염 곤봉
-  artwork: {fileID: 21300000, guid: 6219bd909ee6b804781a485ceb679989, type: 3}
+  displayName: 시험용 화염 중근접 포탑
+  artwork: {fileID: 21300000, guid: f873d6246f772fb41a1fb370949f0060, type: 3}
   attribute: 1
   attackType: 0
   baseDamage: 12

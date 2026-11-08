@@ -37,6 +37,23 @@ namespace ProjectEpsilon.Data
         public string Id => id;
         public string DisplayName => displayName;
         public Sprite Artwork => artwork; // 무기 표시 이미지
+        public Color ArtworkTint // 속성별 포탑 표시 색상
+        { // 속성 시작
+            get // 색상 조회
+            { // 접근자 시작
+                switch (attribute) // 무기 속성 확인
+                { // 분기 시작
+                    case WeaponAttribute.Fire: return new Color(1f, 0.55f, 0.4f, 1f); // 화염색
+                    case WeaponAttribute.Cold: return new Color(0.5f, 0.85f, 1f, 1f); // 냉기색
+                    case WeaponAttribute.Electric: return new Color(1f, 0.95f, 0.45f, 1f); // 전기색
+                    case WeaponAttribute.Poison: return new Color(0.55f, 1f, 0.5f, 1f); // 독색
+                    case WeaponAttribute.Explosion: return new Color(1f, 0.68f, 0.3f, 1f); // 폭발색
+                    case WeaponAttribute.Holy: return new Color(1f, 0.95f, 0.65f, 1f); // 신성색
+                    case WeaponAttribute.Dark: return new Color(0.7f, 0.5f, 0.95f, 1f); // 암흑색
+                    default: return Color.white; // 기본 물리색
+                } // 분기 끝
+            } // 접근자 끝
+        } // 속성 끝
         public WeaponAttribute Attribute => attribute;
         public WeaponAttackType AttackType => attackType;
         public float BaseDamage => baseDamage;

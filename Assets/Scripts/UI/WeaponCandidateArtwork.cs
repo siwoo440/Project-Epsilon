@@ -10,7 +10,7 @@ namespace ProjectEpsilon.UI // 화면 영역
         private Vector2 originalOffsetMax; // 기존 문구 위쪽 여백
         private bool hasOriginalOffset; // 기존 문구 크기 저장 여부
 
-        public static void Set(Button button, Text label, Sprite sprite) // 실제 후보 이미지 설정
+        public static void Set(Button button, Text label, Sprite sprite, Color? tint = null) // 실제 후보 이미지와 속성 색상 설정
         { // 메서드 시작
             if (button == null) // 실제 버튼 확인
             { // 조건 시작
@@ -25,10 +25,10 @@ namespace ProjectEpsilon.UI // 화면 영역
             { // 조건 시작
                 artwork = button.gameObject.AddComponent<WeaponCandidateArtwork>(); // 실제 후보 표시기 생성
             } // 조건 끝
-            artwork.Apply(label, sprite); // 실제 후보와 문구 반영
+            artwork.Apply(label, sprite, tint ?? Color.white); // 실제 후보와 속성 색상 반영
         } // 메서드 끝
 
-        private void Apply(Text label, Sprite sprite) // 실제 이미지와 문구 영역 갱신
+        private void Apply(Text label, Sprite sprite, Color tint) // 실제 이미지와 문구 영역 갱신
         { // 메서드 시작
             if (currentLabel != label) // 실제 문구 연결 변경 확인
             { // 조건 시작
@@ -57,6 +57,7 @@ namespace ProjectEpsilon.UI // 화면 영역
             if (image != null) // 실제 이미지 표시기 확인
             { // 조건 시작
                 image.sprite = sprite; // 실제 무기 이미지 설정
+                image.color = tint; // 무기 속성별 포탑 색상 설정
                 image.gameObject.SetActive(sprite != null); // 이미지 존재 시 표시
             } // 조건 끝
             if (currentLabel != null && hasOriginalOffset) // 실제 문구 영역 확인

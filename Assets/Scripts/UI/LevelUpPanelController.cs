@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using ProjectEpsilon.Progression;
+using ProjectEpsilon.Data; // 시작 캐릭터 데이터
 using ProjectEpsilon.Combat; // 무기 슬롯 사용
 using UnityEngine;
 using UnityEngine.UI;
@@ -155,6 +156,22 @@ namespace ProjectEpsilon.UI
             ConfigureCandidate(1, candidateButton02, candidateLabel02, candidates); // 둘째 후보 표시
             ConfigureCandidate(2, candidateButton03, candidateLabel03, candidates); // 셋째 후보 표시
             BindButtons(); // 후보 버튼 연결
+        } // 메서드 끝
+
+        public void SetStartingCharacter(CharacterData character) // 시작 화면 캐릭터 정보 표시
+        { // 메서드 시작
+            if (character == null) // 캐릭터 데이터 확인
+            { // 조건 시작
+                return; // 기존 시작 안내 유지
+            } // 조건 끝
+            if (levelText != null) // 실제 캐릭터 문구 확인
+            { // 조건 시작
+                levelText.text = $"{character.DisplayName} | BODY {character.StartingBodyCount} / HP {character.BodyMaxHealth:0}"; // 실제 캐릭터 시작 능력치
+            } // 조건 끝
+            if (growthText != null) // 실제 조작 안내 확인
+            { // 조건 시작
+                growthText.text = "← / →: CHARACTER    1 / 2 / 3: WEAPON"; // 캐릭터와 무기 선택 안내
+            } // 조건 끝
         } // 메서드 끝
 
         public void ShowEliteRewards(string[] labels, bool[] available) // 엘리트 보상 후보 표시
@@ -352,7 +369,7 @@ namespace ProjectEpsilon.UI
                 candidateIndex < candidates.Count &&
                 candidates[candidateIndex].IsValid;
 
-            WeaponCandidateArtwork.Set(button, label, hasCandidate ? candidates[candidateIndex].Weapon.Artwork : null); // 실제 무기 후보 이미지 표시
+            WeaponCandidateArtwork.Set(button, label, hasCandidate ? candidates[candidateIndex].Weapon.Artwork : null, hasCandidate ? candidates[candidateIndex].Weapon.ArtworkTint : Color.white); // 실제 속성별 포탑 후보 표시
 
             if (button != null)
             {

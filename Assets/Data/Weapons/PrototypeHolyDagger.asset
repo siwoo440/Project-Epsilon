@@ -13,8 +13,8 @@ MonoBehaviour:
   m_Name: PrototypeHolyDagger
   m_EditorClassIdentifier: Assembly-CSharp::ProjectEpsilon.Data.WeaponData
   id: prototype_holy_dagger
-  displayName: 시험용 신성 단검
-  artwork: {fileID: 21300000, guid: 7fcfff14e1e6e1d4cb0d14d716ce1d66, type: 3}
+  displayName: 시험용 신성 속사 근접 포탑
+  artwork: {fileID: 21300000, guid: f873d6246f772fb41a1fb370949f0060, type: 3}
   attribute: 6
   attackType: 0
   baseDamage: 6

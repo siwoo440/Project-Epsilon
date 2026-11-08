@@ -1,0 +1,18 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5191b5134936486c938b84b125e1668f, type: 3}
+  m_Name: PrototypeHeavyStartingWeaponOptions
+  m_EditorClassIdentifier: Assembly-CSharp::ProjectEpsilon.Progression.StartingWeaponOptions
+  weapons:
+  - {fileID: 11400000, guid: 25bbe22779b94ab48da7ef0e83be602a, type: 2}
+  - {fileID: 11400000, guid: 439f637bab534204ba1cdcda11bebe5b, type: 2}
+  - {fileID: 11400000, guid: f3262d3476cd8cb4a9b65c07ce65b2a3, type: 2}

@@ -86,7 +86,7 @@ namespace ProjectEpsilon.Editor // 배치 시험 영역
         private static void VerifyWeapons(SnakeWeaponManager weapons, SnakeBodyManager body) // 실제 무기와 몸통 표시 검증
         { // 메서드 시작
             string[] files = { "DebugBlade", "DebugNeedle", "DebugNova", "DebugCutter", "DebugBlaster", "DebugPulse" }; // 실제 시험 무기 데이터
-            string[] images = { "WeaponSteelSword_Casual", "WeaponSteelSpear_Casual", "WeaponMace_Casual", "WeaponFireSword_Casual", "WeaponFireball_Casual", "WeaponFireRing_Casual" }; // 실제 무기 이미지
+            string[] images = { "WeaponTurret_Casual", "WeaponTurret_Casual", "WeaponTurret_Casual", "WeaponTurret_Casual", "WeaponTurret_Casual", "WeaponTurret_Casual" }; // 실제 공용 포탑 이미지
             PropertyInfo art = typeof(WeaponData).GetProperty("Artwork"); // 실제 무기 이미지 속성
             Require(art != null, "Actual weapon artwork property missing."); // 실제 데이터 연결 확인
             Require(weapons.Slots.Count >= 2 && body.CurrentBodyCount >= 2, "Actual weapon slots missing."); // 실제 몸통 슬롯 확인
@@ -119,7 +119,7 @@ namespace ProjectEpsilon.Editor // 배치 시험 영역
         { // 메서드 시작
             Transform visual = slot.Origin == null ? null : slot.Origin.Find("WeaponVisual"); // 실제 몸통 아래 무기 표시
             SpriteRenderer renderer = visual == null ? null : visual.GetComponent<SpriteRenderer>(); // 실제 무기 표시기
-            Require(renderer != null && visual.gameObject.activeSelf && renderer.sprite == expected && renderer.color == Color.white, "Actual weapon visual did not follow its slot."); // 실제 이미지와 색상 확인
+            Require(renderer != null && visual.gameObject.activeSelf && renderer.sprite == expected && renderer.color == slot.Weapon.ArtworkTint, "Actual weapon visual did not follow its slot."); // 실제 이미지와 색상 확인
             Require(visual.GetComponent<Collider2D>() == null, "Actual weapon decoration added a collider."); // 실제 공격 판정 영향 방지 확인
         } // 메서드 끝
         private static void VerifyGems(SnakeMovement player) // 실제 경험치 보석 이미지 검증

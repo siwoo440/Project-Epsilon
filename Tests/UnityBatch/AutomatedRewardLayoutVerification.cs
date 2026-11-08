@@ -79,7 +79,9 @@ namespace ProjectEpsilon.Editor // 배치 시험 영역
             LevelUpPanelController panel = UnityEngine.Object.FindFirstObjectByType<LevelUpPanelController>(FindObjectsInactive.Include); // 실제 보상 화면 조회
             WeaponData weapon = AssetDatabase.LoadAssetAtPath<WeaponData>("Assets/Data/Weapons/DebugBlade.asset"); // 실제 시작 무기 조회
             Require(panel != null && weapon != null, "Reward panel or weapon missing."); // 실제 시험 구성 확인
-            var candidates = new List<WeaponRewardCandidate> { new WeaponRewardCandidate(weapon, 1), new WeaponRewardCandidate(weapon, 1), new WeaponRewardCandidate(weapon, 1) }; // 실제 세 후보 준비
+            WeaponData fire = AssetDatabase.LoadAssetAtPath<WeaponData>("Assets/Data/Weapons/DebugBlaster.asset"); // 실제 화염 포탑 데이터
+            Require(fire != null, "Fire turret missing."); // 실제 화염 포탑 확인
+            var candidates = new List<WeaponRewardCandidate> { new WeaponRewardCandidate(weapon, 1), new WeaponRewardCandidate(fire, 1), new WeaponRewardCandidate(weapon, 1) }; // 실제 속성별 후보 준비
             panel.ShowStartingWeapons(candidates); // 실제 시작 보상 화면 열기
             Canvas.ForceUpdateCanvases(); // 실제 화면 배치 갱신
             RectTransform panelRect = (RectTransform)panel.transform; // 실제 보상 패널 영역
@@ -94,6 +96,7 @@ namespace ProjectEpsilon.Editor // 배치 시험 영역
                 Require(image != null && image.gameObject.activeSelf && Mathf.Abs(image.sizeDelta.x - 96f) < 0.001f && Mathf.Abs(image.sizeDelta.y - 96f) < 0.001f, "Reward artwork is not double size."); // 기존 사십팔 대비 두 배 크기 확인
                 Require(!image.GetComponent<Image>().raycastTarget, "Reward artwork blocks button input."); // 이미지 입력 차단 방지 확인
             } // 반복 끝
+            Require(buttons[1].transform.Find("WeaponArtwork").GetComponent<Image>().color == fire.ArtworkTint, "Reward icon did not show turret attribute color."); // 실제 화염 포탑 후보 색상 확인
             RectTransform first = (RectTransform)buttons[0].transform; // 실제 첫 카드 영역
             RectTransform second = (RectTransform)buttons[1].transform; // 실제 둘째 카드 영역
             RectTransform third = (RectTransform)buttons[2].transform; // 실제 셋째 카드 영역

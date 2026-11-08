@@ -13,8 +13,8 @@ MonoBehaviour:
   m_Name: PrototypeElectricWave
   m_EditorClassIdentifier: Assembly-CSharp::ProjectEpsilon.Data.WeaponData
   id: prototype_electric_wave
-  displayName: 시험용 전기 파동
-  artwork: {fileID: 21300000, guid: ce7b37ab678ed7b4da543f3eaf235ba6, type: 3}
+  displayName: 시험용 전기 파동 포탑
+  artwork: {fileID: 21300000, guid: f873d6246f772fb41a1fb370949f0060, type: 3}
   attribute: 3
   attackType: 3
   baseDamage: 9
