@@ -4,6 +4,7 @@ using ProjectEpsilon.Core; // 게임 상태
 using ProjectEpsilon.Data; // 무기 데이터
 using ProjectEpsilon.Player; // 시작 캐릭터 선택
 using ProjectEpsilon.UI; // 시작 후보 화면
+using ProjectEpsilon.World; // 시작 맵 선택
 using UnityEngine; // 유니티 구성
 using UnityEngine.InputSystem; // 키보드 입력
 
@@ -106,6 +107,15 @@ namespace ProjectEpsilon.Progression // 게임 진행 영역
                 initializer?.CycleCharacter(keyboard.rightArrowKey.wasPressedThisFrame ? 1 : -1); // 실제 캐릭터와 후보 변경
                 return; // 같은 프레임 무기 선택 차단
             } // 조건 끝
+            if (keyboard.upArrowKey.wasPressedThisFrame || keyboard.downArrowKey.wasPressedThisFrame) // 이전 또는 다음 맵 입력
+            { // 조건 시작
+                PrototypeMapSelection maps = FindFirstObjectByType<PrototypeMapSelection>(); // 실제 맵 선택기
+                if (maps != null && maps.CycleMap(keyboard.downArrowKey.wasPressedThisFrame ? 1 : -1)) // 실제 맵 순환
+                { // 조건 시작
+                    ShowIfStarting(); // 현재 맵과 시작 후보 갱신
+                } // 조건 끝
+                return; // 같은 프레임 무기 선택 차단
+            } // 조건 끝
             if (keyboard.digit1Key.wasPressedThisFrame || keyboard.numpad1Key.wasPressedThisFrame) // 첫 후보 입력
             { // 조건 시작
                 HandleSelected(0); // 첫 무기 선택
@@ -161,6 +171,8 @@ namespace ProjectEpsilon.Progression // 게임 진행 영역
             selecting = true; // 시작 선택 활성
             panel.ShowStartingWeapons(candidates); // 세 후보 표시
             panel.SetStartingCharacter(CharacterRunInitializer.ActiveCharacter); // 실제 캐릭터와 선택 안내 표시
+            PrototypeMapSelection maps = FindFirstObjectByType<PrototypeMapSelection>(); // 실제 맵 선택 조회
+            panel.SetStartingMap(maps != null ? maps.SelectedProfile : null); // 현재 맵과 조작 안내 표시
         } // 메서드 끝
 
         private bool IsInputBlocked() // 설정 입력 우선 확인

@@ -174,6 +174,14 @@ namespace ProjectEpsilon.UI
             } // 조건 끝
         } // 메서드 끝
 
+        public void SetStartingMap(ProjectEpsilon.World.PrototypeMapProfile map) // 시작 화면 맵 정보 표시
+        { // 메서드 시작
+            if (growthText != null && map != null) // 실제 안내와 맵 확인
+            { // 조건 시작
+                growthText.text = $"← / →: CHARACTER    ↑ / ↓: MAP ({map.DisplayName})    1 / 2 / 3: WEAPON"; // 시작 맵과 조작 표시
+            } // 조건 끝
+        } // 메서드 끝
+
         public void ShowEliteRewards(string[] labels, bool[] available) // 엘리트 보상 후보 표시
         { // 메서드 시작
             gameObject.SetActive(true); // 선택 화면 표시

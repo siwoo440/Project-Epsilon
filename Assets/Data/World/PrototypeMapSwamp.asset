@@ -1,0 +1,31 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 421dfce3117840c9abe12b22179a0198, type: 3}
+  m_Name: PrototypeMapSwamp
+  m_EditorClassIdentifier: Assembly-CSharp::ProjectEpsilon.World.PrototypeMapProfile
+  displayName: MUTANT SWAMP
+  ground: {fileID: 21300000, guid: 448c87bdcce1442390fdd937122442ab, type: 3}
+  bossTint: {r: 0.68, g: 1, b: 0.72, a: 1}
+  bossHealth: 650
+  bossSpeedRatio: 0.7
+  bossAttackInterval: 2.2
+  bossProjectileCount: 4
+  bossPhaseTwoProjectileCount: 6
+  obstacleChance: 0.22
+  specialZoneChance: 0.3
+  obstaclePattern: 2
+  zoneRadius: 2.5
+  zoneSlowMultiplier: 0.7
+  zoneExperienceMultiplier: 1.5
+  zoneTickSeconds: 2
+  zoneDamage: 5
+  zoneHealing: 2

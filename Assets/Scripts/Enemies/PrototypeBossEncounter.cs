@@ -1,6 +1,7 @@
 using ProjectEpsilon.Combat; // 실제 무기 공격 대상
 using ProjectEpsilon.Core; // 게임 진행 상태
 using ProjectEpsilon.Player; // 플레이어와 공용 체력
+using ProjectEpsilon.World; // 맵별 시험 보스 데이터
 using UnityEngine; // 유니티 기능
 
 namespace ProjectEpsilon.Enemies // 적 영역
@@ -49,6 +50,21 @@ namespace ProjectEpsilon.Enemies // 적 영역
         private bool spawned; // 보스 출현 완료 여부
         public WeaponTarget Boss => boss; // 실제 생성 보스 조회
         public bool IsPhaseTwo => phase.IsPhaseTwo; // 현재 보스 단계 조회
+
+        public bool ApplyProfile(PrototypeMapProfile profile) // 시작 전 맵별 보스 설정
+        { // 메서드 시작
+            if (profile == null || spawned) // 실제 데이터와 출현 상태 확인
+            { // 조건 시작
+                return false; // 출현 후 보스 변경 방지
+            } // 조건 끝
+            maximumHealth = profile.BossHealth; // 맵별 임시 체력
+            speedRatio = profile.BossSpeedRatio; // 맵별 임시 이동 비율
+            attackInterval = profile.BossAttackInterval; // 맵별 임시 발사 간격
+            projectileCount = profile.BossProjectileCount; // 맵별 첫 단계 발사 수
+            phaseTwoProjectileCount = profile.BossPhaseTwoProjectileCount; // 맵별 두 번째 단계 발사 수
+            bossTint = profile.BossTint; // 임시 보스 구분 색상
+            return true; // 맵별 설정 적용 완료
+        } // 메서드 끝
 
         private void OnEnable() // 실제 전환 알림 연결
         { // 메서드 시작

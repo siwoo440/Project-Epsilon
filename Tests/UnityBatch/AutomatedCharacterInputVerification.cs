@@ -10,6 +10,7 @@ using ProjectEpsilon.Core; // 실제 게임 상태
 using ProjectEpsilon.Data; // 실제 캐릭터 데이터
 using ProjectEpsilon.Player; // 실제 플레이어 구성
 using ProjectEpsilon.Progression; // 실제 시작 후보와 무기 풀
+using ProjectEpsilon.World; // 실제 시작 맵 선택
 using UnityEditor; // 유니티 배치 실행
 using UnityEditor.SceneManagement; // 실제 씬 열기
 using UnityEngine; // 유니티 기능
@@ -91,9 +92,21 @@ namespace ProjectEpsilon.Editor // 배치 시험 영역
             Button closeSettings = settings == null ? null : (Button)typeof(SettingsMenuController).GetField("closeButton", BindingFlags.Instance | BindingFlags.NonPublic).GetValue(settings); // 실제 설정 닫기 버튼
             Require(openSettings != null && closeSettings != null, "Settings controls missing."); // 실제 설정 버튼 확인
             openSettings.onClick.Invoke(); // 실제 설정 화면 열기
+            PrototypeMapSelection maps = UnityEngine.Object.FindFirstObjectByType<PrototypeMapSelection>(); // 실제 맵 선택기
+            Require(maps != null && maps.ProfileCount == 3 && maps.SelectedIndex == 0, "Default map selection missing."); // 실제 기본 맵 확인
+            yield return Tap(keyboard, Key.DownArrow); // 설정 중 실제 맵 변경 입력
+            Require(maps.SelectedIndex == 0, "Map input leaked through settings."); // 설정 화면 입력 우선 확인
             yield return Tap(keyboard, Key.RightArrow); // 설정 화면 위 캐릭터 변경 입력
             Require(settings.IsOpen && CharacterRunInitializer.ActiveCharacter.Id == "prototype_balanced", "Character input leaked through settings."); // 설정 우선 입력 차단 확인
             closeSettings.onClick.Invoke(); // 실제 설정 화면 닫기
+            yield return Tap(keyboard, Key.DownArrow); // 실제 다음 맵 키 입력
+            Text guide = (Text)typeof(LevelUpPanelController).GetField("growthText", BindingFlags.Instance | BindingFlags.NonPublic).GetValue(panel); // 실제 시작 안내 문구
+            Require(maps.SelectedIndex == 1 && guide != null && guide.text.Contains("RUINED CORRIDOR"), "Map arrow input or visible selection failed."); // 실제 맵 변경과 안내 확인
+            yield return Tap(keyboard, Key.UpArrow); // 실제 이전 맵 키 입력
+            Require(maps.SelectedIndex == 0, "Map arrow did not return to plains."); // 실제 첫 맵 복귀 확인
+            yield return Tap(keyboard, Key.UpArrow); // 실제 맵 역순 순환 입력
+            Require(maps.SelectedIndex == 2, "Map selection did not wrap backwards."); // 실제 세 번째 맵 순환 확인
+            yield return Tap(keyboard, Key.DownArrow); // 실제 기본 맵 복귀 입력
             yield return Tap(keyboard, Key.RightArrow); // 실제 다음 캐릭터 키 입력
             Require(CharacterRunInitializer.ActiveCharacter != null && CharacterRunInitializer.ActiveCharacter.Id == "prototype_mobile" && health.MaximumHealth == 85 && body.CurrentBodyCount == 3, "Right arrow did not select mobile character."); // 실제 기동형 선택과 능력치 확인
             Text label = (Text)typeof(LevelUpPanelController).GetField("levelText", BindingFlags.Instance | BindingFlags.NonPublic).GetValue(panel); // 실제 시작 화면 캐릭터 문구
@@ -118,6 +131,7 @@ namespace ProjectEpsilon.Editor // 배치 시험 영역
             button.onClick.Invoke(); // 실제 시작 무기 버튼 선택
             SnakeWeaponManager weapons = UnityEngine.Object.FindFirstObjectByType<SnakeWeaponManager>(); // 실제 무기 관리자
             Require(GameManager.Instance.IsPlaying && weapons.Slots[0].Weapon == chosen && health.MaximumHealth == 85, "Character-specific weapon did not start the run."); // 실제 캐릭터별 무기와 게임 시작 확인
+            Require(!maps.SelectMap(1) && maps.SelectedIndex == 0, "Map changed after the run started."); // 전투 중 맵 변경 차단 확인
             InputSystem.RemoveDevice(keyboard); // 실제 가상 키보드 제거
             if (originalSettings != null) // 이전 입력 설정 유효성 확인
             { // 조건 시작

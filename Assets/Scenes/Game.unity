@@ -7008,6 +7008,7 @@ GameObject:
   - component: {fileID: 1886169896}
   - component: {fileID: 1886169897}
   - component: {fileID: 1886169898}
+  - component: {fileID: 1886169899}
   m_Layer: 0
   m_Name: ===Managers===
   m_TagString: Untagged
@@ -7109,6 +7110,22 @@ MonoBehaviour:
   small: {fileID: 21300000, guid: c93ed40600c3b87449a15632ea9adc74, type: 3}
   medium: {fileID: 21300000, guid: 416e4fddd3c58484ba55d94d7d635df3, type: 3}
   large: {fileID: 21300000, guid: c3876c28f4d8cc6418726ed1f65d8523, type: 3}
+--- !u!114 &1886169899
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1886169890}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5c8ac0cbf81946de8bda5b750da94600, type: 3}
+  m_Name:
+  m_EditorClassIdentifier: Assembly-CSharp::ProjectEpsilon.World.PrototypeMapSelection
+  profiles:
+  - {fileID: 11400000, guid: 46c22ef68d6749439126670bf22a1771, type: 2}
+  - {fileID: 11400000, guid: 149f504c7d984076be61489ba5702a21, type: 2}
+  - {fileID: 11400000, guid: 7b160d3d6f544b16b655bb0c542527b2, type: 2}
 --- !u!4 &1886169891
 Transform:
   m_ObjectHideFlags: 0

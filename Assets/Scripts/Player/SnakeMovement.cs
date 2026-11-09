@@ -24,6 +24,7 @@ namespace ProjectEpsilon.Player
 
         public float CurrentMoveSpeed =>
             MoveSpeed * // 캐릭터 이동 속도 적용
+            ProjectEpsilon.World.PrototypeSpecialZone.SpeedMultiplierAt(transform.position) * // 현재 지역 감속 적용
             (stamina == null
                 ? 1f
                 : stamina.CurrentSpeedMultiplier); // 합성 감속은 전체 시간에만 적용

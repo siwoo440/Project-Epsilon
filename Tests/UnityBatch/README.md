@@ -198,3 +198,13 @@
 `AutomatedDay45PilotVerification.Run`은 같은 조종기 파일과 공용 헬퍼가 필요하며 뒤의 적 재접근 대신 앞쪽 보석으로 향하는 판단을 검사한다. `AutomatedDay45PickupVerification.Run`은 실제 움직이는 머리의 보석 수집과 일시정지를 검사한다. `AutomatedDay45PickupSettingsVerification.Run`은 실제 씬의 설정 에셋 연결, 조정한 새 보석의 이동, 경험치 보존, 설정 부재 시 기존 기본값을 검사한다. 각 테스트는 `ProjectEpsilon.Editor.` 접두사를 붙여 실행한다.
 
 변경 전과 후의 자연 전투 결과 및 수동 검증 한계는 `Devlogs/Day45/README.md`에 기록한다.
+
+---
+
+## 46일차 맵과 특수 지역
+
+`AutomatedDay46MapsVerification.cs`와 `StartingWeaponBatchHelper.cs`를 별도 Unity 사본의 `Assets/Editor`에 복사한다. `ProjectEpsilon.Editor.AutomatedDay46MapsVerification.Run`에 `-epsilonMapIndex 0`, `1`, `2`를 각각 지정해 세 맵을 검사한다. 실제 시작 전 맵 선택, 3×3 바닥, 확률을 100%로 통제한 장애물·특수 지역, 보스 체력·두 단계 사격과 단계 전환을 확인한다. 보스 생성과 플레이어 위치는 직접 통제한다.
+
+`AutomatedDay46GenerationVerification.Run`은 실제 씬에서 생성 확률 0%·100%, 장애물 충돌체와 특수 지역 최소 거리를 확인한다. `AutomatedDay46ZonesVerification.Run`은 실제 감속, 경험치 소수 누적, 위험 피해, 회복, 일시정지와 지역 이탈을 통제 조건에서 검사한다. 각 진입점 앞에는 `ProjectEpsilon.Editor.`를 붙인다.
+
+`AutomatedCharacterInputVerification.Run`은 시작 화면의 맵 위·아래 키, 설정 화면 입력 우선과 전투 중 변경 금지를 함께 검사한다. 실행 결과와 미완료 사항은 `Devlogs/Day46/README.md`에 기록한다.

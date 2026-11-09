@@ -12,6 +12,7 @@ namespace ProjectEpsilon.Progression
         [SerializeField] private float experienceGrowthMultiplier = 1.12f;
         [SerializeField] private bool levelUpPending;
         [SerializeField] private ExperiencePickupSettings pickupSettings; // 보석 흡수 설정
+        private double zoneExperienceBonusRemainder; // 지역 경험치 소수 보너스
 
         public static SnakeExperience Current { get; private set; }
 
@@ -82,6 +83,7 @@ namespace ProjectEpsilon.Progression
 
         public void ResetProgression()
         {
+            zoneExperienceBonusRemainder = 0d; // 새 성장의 지역 소수 초기화
             currentLevel = 1;
             currentExperience = 0;
             levelUpPending = false;
@@ -92,6 +94,7 @@ namespace ProjectEpsilon.Progression
 
         public void ResetExperience()
         {
+            zoneExperienceBonusRemainder = 0d; // 경험치 초기화의 소수 제거
             currentExperience = 0;
             levelUpPending = false;
             NotifyExperienceChanged();
@@ -103,6 +106,12 @@ namespace ProjectEpsilon.Progression
             {
                 return;
             }
+
+            float zoneMultiplier = ProjectEpsilon.World.PrototypeSpecialZone.ExperienceMultiplierAt(transform.position); // 현재 지역 경험치 배율
+            double zoneBonus = amount * ((double)zoneMultiplier - 1d) + zoneExperienceBonusRemainder; // 지역 소수 보너스 누적
+            int wholeBonus = zoneBonus >= int.MaxValue ? int.MaxValue : (int)System.Math.Floor(zoneBonus); // 정수 범위 내 추가 경험치
+            zoneExperienceBonusRemainder = zoneBonus >= int.MaxValue ? 0d : zoneBonus - wholeBonus; // 다음 획득의 소수 보존
+            amount = wholeBonus > int.MaxValue - amount ? int.MaxValue : amount + wholeBonus; // 정수 범위 내 최종 획득량
 
             if (currentExperience > int.MaxValue - amount)
             {

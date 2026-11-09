@@ -1,0 +1,31 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 421dfce3117840c9abe12b22179a0198, type: 3}
+  m_Name: PrototypeMapPlains
+  m_EditorClassIdentifier: Assembly-CSharp::ProjectEpsilon.World.PrototypeMapProfile
+  displayName: OPEN PLAINS
+  ground: {fileID: 21300000, guid: aa8fb6306d6836a47a709a925757de8c, type: 3}
+  bossTint: {r: 1, g: 1, b: 1, a: 1}
+  bossHealth: 600
+  bossSpeedRatio: 0.75
+  bossAttackInterval: 2
+  bossProjectileCount: 3
+  bossPhaseTwoProjectileCount: 5
+  obstacleChance: 0.12
+  specialZoneChance: 0.12
+  obstaclePattern: 0
+  zoneRadius: 2.5
+  zoneSlowMultiplier: 0.7
+  zoneExperienceMultiplier: 1.5
+  zoneTickSeconds: 2
+  zoneDamage: 5
+  zoneHealing: 2
