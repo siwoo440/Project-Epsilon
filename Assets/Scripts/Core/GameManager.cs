@@ -2,6 +2,7 @@ using UnityEngine;
 using ProjectEpsilon.Player; // 플레이어 체력 참조
 using ProjectEpsilon.Progression; // 시작 무기 선택 참조
 using ProjectEpsilon.Combat; // 최종 보스 대상 참조
+using ProjectEpsilon.UI; // 실제 화면 흐름
 
 namespace ProjectEpsilon.Core
 {
@@ -34,6 +35,10 @@ namespace ProjectEpsilon.Core
             // 전역 관리자 등록
             Instance = this;
             DontDestroyOnLoad(gameObject);
+            if (FindFirstObjectByType<StartingWeaponSelection>(FindObjectsInactive.Include) != null) // 실제 출격 선택 씬 확인
+            { // 조건 시작
+                gameObject.AddComponent<RunFrontendController>(); // 실제 메뉴 화면 구성
+            } // 조건 끝
             ApplyTimeScale();
         }
 
@@ -152,30 +157,6 @@ namespace ProjectEpsilon.Core
         private void HandleBodyDepleted() // 몸통 소진 처리
         { // 메서드 시작
             SetState(GameState.Defeated); // 패배 상태 전환
-        } // 메서드 끝
-
-        private void OnGUI() // 종료 화면 표시
-        { // 메서드 시작
-            if (currentState == GameState.Paused) // 실제 일시정지 확인
-            { // 조건 시작
-                Rect abandon = new Rect(Screen.width - 175f, 55f, 160f, 32f); // 런 포기 버튼 위치
-                if (GUI.Button(abandon, "ABANDON RUN")) // 실제 포기 입력 확인
-                { // 조건 시작
-                    AbandonRun(); // 실제 성과 저장 후 종료
-                } // 조건 끝
-            } // 조건 끝
-            if (currentState != GameState.Defeated && currentState != GameState.Victory) // 종료 상태 확인
-            { // 조건 시작
-                return; // 종료 화면 생략
-            } // 조건 끝
-            Rect message = new Rect(Screen.width * 0.5f - 150f, Screen.height * 0.5f - 35f, 300f, 70f); // 화면 중앙 영역
-            GUI.Box(message, currentState == GameState.Victory ? "VICTORY" : "GAME OVER"); // 종료 문구 표시
-            MetaProgressionController meta = MetaProgressionController.Instance; // 실제 보상 관리자
-            GUI.Label(new Rect(message.x, message.y + 28f, message.width, 24f), meta != null && meta.HasPendingSave ? "SAVE FAILED - RETRY" : $"CORES +{(meta == null ? 0 : meta.LastAward)}"); // 실제 보상 또는 저장 오류 표시
-            if (GUI.Button(new Rect(message.x + 75f, message.y + 76f, 150f, 32f), "RETRY")) // 실제 재시작 버튼
-            { // 조건 시작
-                RestartRun(); // 저장 확인 후 새 런 시작
-            } // 조건 끝
         } // 메서드 끝
 
         public void AbandonRun() // 실제 진행 중 런 포기

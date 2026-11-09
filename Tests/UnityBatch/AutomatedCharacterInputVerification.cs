@@ -53,6 +53,12 @@ namespace ProjectEpsilon.Editor // 배치 시험 영역
                 Finish(1, "Timed out."); // 시간 초과 실패
                 return; // 시험 중단
             } // 조건 끝
+            RunFrontendController frontend = RunFrontendController.Instance; // 실제 시작 화면 단계
+            if (frontend != null && frontend.Stage != FrontendStage.Weapons) // 실제 포탑 선택 전 단계 확인
+            { // 조건 시작
+                StartingWeaponBatchHelper.HandleStartingSelection(); // 실제 메뉴 단계 진행
+                return; // 실제 포탑 화면 대기
+            } // 조건 끝
             StartingWeaponSelection selection = UnityEngine.Object.FindFirstObjectByType<StartingWeaponSelection>(); // 실제 시작 선택기
             if (injected || selection == null || !selection.IsSelecting || GameManager.Instance == null || GameManager.Instance.CurrentState != GameState.Starting) // 시작 상태와 실행 여부 확인
             { // 조건 시작

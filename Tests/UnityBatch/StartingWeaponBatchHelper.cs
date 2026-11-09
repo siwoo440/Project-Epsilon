@@ -15,6 +15,18 @@ namespace ProjectEpsilon.Editor // 배치 시험 영역
             { // 조건 시작
                 return false; // 일반 배치 진행
             } // 조건 끝
+            RunFrontendController frontend = RunFrontendController.Instance; // 실제 전용 시작 화면
+            if (frontend != null && frontend.Stage != FrontendStage.Weapons) // 실제 출격 단계 확인
+            { // 조건 시작
+                string name = frontend.Stage == FrontendStage.Main ? "FrontendStartButton" : frontend.Stage == FrontendStage.Characters ? "FrontendCharactersNextButton" : frontend.Stage == FrontendStage.Maps ? "FrontendMapsNextButton" : null; // 실제 다음 단계 버튼
+                GameObject next = string.IsNullOrEmpty(name) ? null : GameObject.Find(name); // 실제 다음 단계 조회
+                Button navigation = next == null ? null : next.GetComponent<Button>(); // 실제 다음 단계 버튼 조회
+                if (navigation != null && navigation.IsActive() && navigation.interactable) // 실제 버튼 사용 가능 확인
+                { // 조건 시작
+                    navigation.onClick.Invoke(); // 실제 시작 단계 이동
+                } // 조건 끝
+                return true; // 실제 화면 전환 대기
+            } // 조건 끝
             StartingWeaponSelection selection = Object.FindFirstObjectByType<StartingWeaponSelection>(); // 시작 선택기 검색
             if (selection == null || !selection.IsSelecting) // 선택 화면 준비 확인
             { // 조건 시작

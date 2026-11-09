@@ -1,6 +1,7 @@
 using ProjectEpsilon.Core; // 실제 게임 상태
 using ProjectEpsilon.Player; // 실제 시작 능력치
 using UnityEngine; // Unity 표시 기능
+using ProjectEpsilon.UI; // 실제 메뉴 단계
 
 namespace ProjectEpsilon.Progression // 영구 성장 영역
 { // 영역 시작
@@ -13,10 +14,17 @@ namespace ProjectEpsilon.Progression // 영구 성장 영역
         { // 메서드 시작
             controller = source; // 실제 성장 관리자 저장
         } // 메서드 끝
+        public void Open() // 실제 메뉴에서 성장 열기
+        { // 메서드 시작
+            if (controller != null && controller.Service != null && controller.Service.IsAvailable && controller.Service.FinishedFirstRun) // 실제 해금과 저장 확인
+            { // 조건 시작
+                IsOpen = true; // 실제 성장 메뉴 표시
+            } // 조건 끝
+        } // 메서드 끝
         private void OnGUI() // 실제 시작 화면 표시
         { // 메서드 시작
             GameManager game = GameManager.Instance; // 실제 게임 상태
-            if (controller == null || controller.Service == null || game == null || game.CurrentState != GameState.Starting) // 실제 시작 상태 확인
+            if (controller == null || controller.Service == null || game == null || game.CurrentState != GameState.Starting || RunFrontendController.Instance != null && !RunFrontendController.Instance.IsMainMenu) // 실제 시작 상태 확인
             { // 조건 시작
                 IsOpen = false; // 다른 화면에서 메뉴 닫기
                 return; // 실제 시작 외 표시 차단

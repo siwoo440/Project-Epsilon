@@ -224,3 +224,11 @@
 `AutomatedDay48MetaVerification.Run`, `AutomatedDay48EffectsVerification.Run`, `AutomatedDay48StartStatsVerification.Run`은 `StartingWeaponBatchHelper.cs`와 함께 별도 Unity 사본의 `Assets/Editor`에서 실행한다. 메타 시험은 저장 초기화 전 제품 이름이 `Project-Epsilon-Day48-Isolated`인지 검사한다. 저장 시험 직후 `AutomatedDay48FreshProcessVerification.Run`을 새 Unity 프로세스에서 실행해 실제 파일 재로딩을 확인한다. 기존 모든 대상 해금을 전제로 한 회귀 검사는 격리 사본에서만 `AutomatedDay48RegressionSeed.Run`을 실행한 뒤 수행한다. 각 진입점 앞에는 `ProjectEpsilon.Editor.`를 붙인다.
 
 성과·해금 대상의 임시값, 실제 테스트 범위와 사용자 화면에서 확인할 내용은 `Devlogs/Day48/README.md`에 기록한다.
+
+---
+
+## 49일차 전용 화면
+
+`AutomatedDay49FrontendVerification.Run`은 `StartingWeaponBatchHelper.cs` 및 `AutomatedDay48MetaVerification.cs`의 메모리 저장소와 함께 격리 사본에서 실행한다. 제품 이름이 `Project-Epsilon-Day48-Isolated`인지 검사한 후에만 전용 메타·화면 설정 키를 초기화한다. 실제 버튼 이벤트와 가상 키로 메뉴·선택·설정·합성 우선·정지·결과·저장 실패·재도전을 검증한다. 화면 그림과 입력 위치는 직접 확인해야 한다.
+
+기존 시작 포탑 회귀 도우미는 실제 주 메뉴와 캐릭터·맵 단계를 거쳐 시작한다. 검사 결과와 별도 프로필 사용 범위는 `Devlogs/Day49/README.md`에 기록한다.

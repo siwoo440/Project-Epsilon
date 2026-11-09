@@ -47,6 +47,10 @@ namespace ProjectEpsilon.Progression
         private int openedFrame = -1; // 합성 화면 진입 프레임
         private WeaponRewardCandidate pendingReward; // 합성할 미장착 보상
 
+        public void ClearManualPause() // 실제 메뉴 재개 상태 정리
+        { // 메서드 시작
+            pauseOwnedByInput = false; // 직접 정지 소유 해제
+        } // 메서드 끝
         public bool IsMergeOpen => mergeOpen;
         public event Action<bool> MergeClosed; // 합성 완료 또는 취소 알림
 
@@ -150,6 +154,10 @@ namespace ProjectEpsilon.Progression
             { // 조건 시작
                 return; // 설정 중 게임 입력 차단
             } // 조건 끝
+            if (RunFrontendController.Instance != null && RunFrontendController.Instance.Stage == FrontendStage.Settings) // 실제 전용 설정 화면 확인
+            { // 조건 시작
+                return; // 설정 중 ESC와 게임 입력 차단
+            } // 조건 끝
             if (mergeOpen && Time.frameCount == openedFrame) // 화면 진입 프레임 확인
             { // 조건 시작
                 return; // 진입 키 중복 선택 방지
@@ -165,11 +173,13 @@ namespace ProjectEpsilon.Progression
                 { // 조건 시작
                     manager.PauseGame(); // 게임 일시정지
                     pauseOwnedByInput = true; // 직접 일시정지 기록
+                    RunFrontendController.Instance?.ShowManualPause(); // 실제 일시정지 화면 표시
                 } // 조건 끝
                 else if (manager != null && manager.IsPaused && pauseOwnedByInput) // 직접 정지 상태 확인
                 { // 조건 시작
                     manager.ResumeGame(); // 게임 재개
                     pauseOwnedByInput = false; // 직접 일시정지 해제
+                    RunFrontendController.Instance?.HideManualPause(); // 실제 일시정지 화면 닫기
                 } // 조건 끝
                 return; // 중복 입력 방지
             } // 조건 끝

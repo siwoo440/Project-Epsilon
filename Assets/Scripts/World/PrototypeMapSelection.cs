@@ -10,12 +10,20 @@ namespace ProjectEpsilon.World // 맵 영역
     { // 클래스 시작
         [SerializeField] private PrototypeMapProfile[] profiles; // 맵별 시험 데이터 목록
         private int selectedIndex; // 현재 맵 번호
+        private bool hasSelection; // 실제 초기 맵 선택 여부
         public int ProfileCount => profiles == null ? 0 : profiles.Length; // 실제 맵 개수
         public int SelectedIndex => selectedIndex; // 현재 맵 번호
+        public PrototypeMapProfile GetProfile(int index) // 실제 맵 후보 조회
+        { // 메서드 시작
+            return profiles != null && index >= 0 && index < profiles.Length ? profiles[index] : null; // 안전한 맵 반환
+        } // 메서드 끝
         public PrototypeMapProfile SelectedProfile => profiles != null && selectedIndex >= 0 && selectedIndex < profiles.Length ? profiles[selectedIndex] : null; // 현재 맵 데이터
         private void Start() // 기본 맵 연결
         { // 메서드 시작
-            SelectMap(0); // 첫 번째 맵 기본 적용
+            if (!hasSelection) // 이전에 적용한 재도전 맵 확인
+            { // 조건 시작
+                SelectMap(0); // 첫 번째 맵 기본 적용
+            } // 조건 끝
         } // 메서드 끝
         public bool SelectMap(int index) // 시작 전 실제 맵 선택
         { // 메서드 시작
@@ -34,6 +42,7 @@ namespace ProjectEpsilon.World // 맵 영역
                 return false; // 필수 구성 누락 차단
             } // 조건 끝
             selectedIndex = index; // 선택한 맵 저장
+            hasSelection = true; // 실제 맵 선택 완료 기록
             return true; // 실제 맵 선택 완료
         } // 메서드 끝
         public bool CycleMap(int direction) // 시작 화면 맵 순환

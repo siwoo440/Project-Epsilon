@@ -175,8 +175,17 @@ namespace ProjectEpsilon.Progression // 게임 진행 영역
             panel.SetStartingMap(maps != null ? maps.SelectedProfile : null); // 현재 맵과 조작 안내 표시
         } // 메서드 끝
 
+        public void RefreshStartingDisplay() // 실제 선택 화면 새로고침
+        { // 메서드 시작
+            ShowIfStarting(); // 실제 캐릭터와 맵 반영
+        } // 메서드 끝
+
         private bool IsInputBlocked() // 설정 입력 우선 확인
         { // 메서드 시작
+            if (RunFrontendController.Instance != null && !RunFrontendController.Instance.AllowsStartingWeaponSelection) // 실제 출격 단계 확인
+            { // 조건 시작
+                return true; // 이전 메뉴의 포탑 선택 차단
+            } // 조건 끝
             if (MetaProgressionController.Instance != null && MetaProgressionController.Instance.Menu != null && MetaProgressionController.Instance.Menu.IsOpen) // 실제 영구 성장 메뉴 확인
             { // 조건 시작
                 return true; // 성장 화면의 시작 입력 차단

@@ -11,6 +11,11 @@ namespace ProjectEpsilon.Player // 플레이어 영역
     { // 클래스 시작
         [SerializeField] private CharacterData defaultCharacter; // 기본 균형형 데이터
         [SerializeField] private CharacterData[] availableCharacters; // 시작 화면 캐릭터 목록
+        public int CharacterCount => availableCharacters == null ? 0 : availableCharacters.Length; // 실제 선택 캐릭터 수
+        public CharacterData GetCharacter(int index) // 실제 선택 캐릭터 조회
+        { // 메서드 시작
+            return availableCharacters != null && index >= 0 && index < availableCharacters.Length ? availableCharacters[index] : null; // 안전한 후보 반환
+        } // 메서드 끝
         public static CharacterData SelectedCharacter { get; private set; } // 다음 런 선택 캐릭터
         public static CharacterData ActiveCharacter { get; private set; } // 현재 런 적용 캐릭터
         public static float MoveSpeedMultiplier => ActiveCharacter == null ? 1f : Mathf.Clamp(ActiveCharacter.MoveSpeedMultiplier, 0.9f, 1.1f); // 안전한 캐릭터 이동 배율

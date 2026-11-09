@@ -96,7 +96,7 @@ namespace ProjectEpsilon.UI
             boostButton?.onClick.RemoveListener(RebindBoost);
         }
 
-        private void OpenSettings()
+        public void OpenSettings() // 실제 메뉴에서 설정 열기
         {
             if (settingsPanel == null)
             {
@@ -117,7 +117,7 @@ namespace ProjectEpsilon.UI
             SetStatus(string.Empty);
         }
 
-        private void CloseSettings()
+        public void CloseSettings() // 실제 메뉴에서 설정 닫기
         {
             InputBindingManager.Instance?.CancelRebind();
 
