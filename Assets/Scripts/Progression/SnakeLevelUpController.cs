@@ -112,6 +112,10 @@ namespace ProjectEpsilon.Progression
                 FinishLevelUp(); // 새 무기 거절 및 레벨업 완료
                 return; // 다른 선택 차단
             } // 조건 끝
+            if (keyboard.rKey.wasPressedThisFrame && TryRerollCandidates()) // 실제 런당 후보 재선택 입력
+            { // 조건 시작
+                return; // 같은 프레임 후보 선택 차단
+            } // 조건 끝
             if (keyboard.digit1Key.wasPressedThisFrame || keyboard.numpad1Key.wasPressedThisFrame) // 첫 선택 키 확인
             { // 조건 시작
                 HandleCandidateSelected(0); // 첫 버튼 선택
@@ -288,7 +292,26 @@ namespace ProjectEpsilon.Progression
                 healthRestored,
                 currentCandidates
             );
+            levelUpPanel.SetRerollAvailable(MetaProgressionController.Instance != null && MetaProgressionController.Instance.CanReroll); // 실제 재선택 안내
         }
+
+        public bool TryRerollCandidates() // 실제 런당 보상 후보 재선택
+        { // 메서드 시작
+            MetaProgressionController meta = MetaProgressionController.Instance; // 실제 영구 성장 관리자
+            if (!presentingLevelUp || selectingReplacement || selectingRewardAction || awaitingRewardMerge || IsInputBlocked() || rewardPool == null || meta == null || !meta.CanReroll) // 실제 후보 선택과 성장 확인
+            { // 조건 시작
+                return false; // 재선택 불가 상태 유지
+            } // 조건 끝
+            List<WeaponRewardCandidate> candidates = rewardPool.BuildCandidates(displayedLevel, weaponManager, 3); // 실제 새 보상 후보
+            if (candidates.Count == 0 || !meta.TryUseReroll()) // 후보와 런당 사용 확인
+            { // 조건 시작
+                return false; // 기존 후보 유지
+            } // 조건 끝
+            currentCandidates.Clear(); // 이전 후보 제거
+            currentCandidates.AddRange(candidates); // 실제 새 후보 적용
+            ShowCandidates(); // 실제 후보 화면 갱신
+            return true; // 실제 재선택 완료
+        } // 메서드 끝
 
         private void HandleCandidateSelected(int candidateIndex) // 보상 및 교체 선택 처리
         { // 메서드 시작
@@ -383,6 +406,7 @@ namespace ProjectEpsilon.Progression
         private void ShowCandidates() // 기존 레벨업 후보 표시
         { // 메서드 시작
             levelUpPanel.Show(displayedLevel, displayedBodyGrowth, bodyManager == null ? 0 : bodyManager.CurrentBodyCount, bodyManager == null ? 20 : bodyManager.MaximumBodyCount, displayedHealthRestore, currentCandidates); // 저장된 후보 표시
+            levelUpPanel.SetRerollAvailable(MetaProgressionController.Instance != null && MetaProgressionController.Instance.CanReroll); // 실제 재선택 안내
         } // 메서드 끝
 
         private void ShowRewardAction() // 보상 처리 방식 표시

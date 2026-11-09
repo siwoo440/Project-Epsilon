@@ -767,7 +767,7 @@ namespace ProjectEpsilon.Combat
             return WeaponGradeRules.CalculateDamage(
                 slot.Weapon.BaseDamage,
                 slot.Grade
-            ) * slot.DamageMultiplier; // 합성 공격력 강화 적용
+            ) * slot.DamageMultiplier * ProjectEpsilon.Progression.MetaModifiers.DamageMultiplier(slot.Grade); // 합성과 영구 성장 피해 적용
         }
 
         private void NotifyGradeEffect(

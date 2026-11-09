@@ -27,7 +27,7 @@ namespace ProjectEpsilon.Player
         public event Action<bool> BoostStateChanged;
 
         public float CurrentStamina => currentStamina;
-        public float MaximumStamina => maximumStamina;
+        public float MaximumStamina => maximumStamina * ProjectEpsilon.Progression.MetaModifiers.StaminaMultiplier; // 영구 성장 최대 스태미나
         public float EffectiveRecoveryPerSecond => recoveryPerSecond * CharacterRunInitializer.StaminaRecoveryMultiplier; // 캐릭터별 실제 회복률
         public bool IsBoosting => isBoosting;
         public bool IsBoostBlocked => boostBlocked;
@@ -50,6 +50,10 @@ namespace ProjectEpsilon.Player
 
         private void Start()
         {
+            if (Mathf.Approximately(currentStamina, maximumStamina)) // 기존 시작 최대치 확인
+            { // 조건 시작
+                currentStamina = MaximumStamina; // 영구 성장 시작 최대치 적용
+            } // 조건 끝
             NotifyStaminaChanged();
             SetBoosting(false);
         }
@@ -117,7 +121,7 @@ namespace ProjectEpsilon.Player
         {
             NormalizeValues();
 
-            currentStamina = maximumStamina;
+            currentStamina = MaximumStamina; // 실제 영구 성장 최대치 복구
             recoveryBlockedUntil = 0f;
             exhaustedUntilRelease = false;
             boostBlocked = false;
@@ -152,6 +156,7 @@ namespace ProjectEpsilon.Player
                     0f,
                     currentStamina -
                     (drainPerSecond *
+                    ProjectEpsilon.Progression.MetaModifiers.DrainMultiplier(currentStamina, MaximumStamina) * // 낮은 스태미나 소모 감소
                     Time.deltaTime)
                 );
 
@@ -181,7 +186,7 @@ namespace ProjectEpsilon.Player
                 return;
             }
 
-            if (currentStamina >= maximumStamina ||
+            if (currentStamina >= MaximumStamina || // 실제 영구 성장 최대치 확인
                 recoveryPerSecond <= 0f)
             {
                 return;
@@ -192,7 +197,7 @@ namespace ProjectEpsilon.Player
 
             currentStamina =
                 Mathf.Min(
-                    maximumStamina,
+                    MaximumStamina, // 실제 영구 성장 최대치
                     currentStamina +
                     (EffectiveRecoveryPerSecond * // 캐릭터별 실제 회복률
                     Time.deltaTime)
@@ -219,7 +224,7 @@ namespace ProjectEpsilon.Player
                 Mathf.Clamp(
                     currentStamina,
                     0f,
-                    maximumStamina
+                    MaximumStamina // 실제 영구 성장 최대치
                 );
 
             boostMultiplier =
@@ -268,7 +273,7 @@ namespace ProjectEpsilon.Player
                     currentStamina
                 ),
                 Mathf.RoundToInt(
-                    maximumStamina
+                    MaximumStamina // 실제 HUD 최대치
                 )
             );
         }

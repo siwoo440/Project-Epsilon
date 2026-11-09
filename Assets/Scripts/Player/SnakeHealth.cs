@@ -177,7 +177,7 @@ namespace ProjectEpsilon.Player
                 return false;
             }
 
-            float modifiedHealing = safeAmount * CharacterRunInitializer.HealingMultiplier + healingRemainder; // 실제 회복 배율과 소수 누적
+            float modifiedHealing = safeAmount * CharacterRunInitializer.HealingMultiplier * ProjectEpsilon.Progression.MetaModifiers.HealingMultiplier + healingRemainder; // 캐릭터와 영구 성장 회복 배율
             int actualHealing = Mathf.FloorToInt(modifiedHealing); // 실제 정수 회복량
             healingRemainder = modifiedHealing - actualHealing; // 다음 회복을 위한 소수 보존
             SetHealth(

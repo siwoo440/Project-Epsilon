@@ -137,6 +137,14 @@ namespace ProjectEpsilon.UI
             BindButtons();
         }
 
+        public void SetRerollAvailable(bool available) // 런당 재선택 안내
+        { // 메서드 시작
+            if (available && growthText != null) // 실제 안내 표시 확인
+            { // 조건 시작
+                growthText.text += "   R: REROLL"; // 실제 재선택 키 표시
+            } // 조건 끝
+        } // 메서드 끝
+
         public void ShowStartingWeapons(IReadOnlyList<WeaponRewardCandidate> candidates) // 시작 무기 후보 표시
         { // 메서드 시작
             gameObject.SetActive(true); // 시작 후보 화면 표시

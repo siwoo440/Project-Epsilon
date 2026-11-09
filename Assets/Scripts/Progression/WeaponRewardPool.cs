@@ -199,6 +199,11 @@ namespace ProjectEpsilon.Progression
                     continue;
                 }
 
+                if (MetaProgressionController.Instance != null && !MetaProgressionController.Instance.IsTurretUnlocked(entry.Weapon)) // 실제 포탑 해금 확인
+                { // 조건 시작
+                    continue; // 미해금 포탑 제외
+                } // 조건 끝
+
                 if (weaponManager != null &&
                     weaponManager.HasCompletedGradeFive(
                         entry.Weapon

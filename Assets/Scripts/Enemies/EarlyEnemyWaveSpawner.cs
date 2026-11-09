@@ -107,13 +107,16 @@ namespace ProjectEpsilon.Enemies // 적 영역
         private int activeEnemies; // 생존 적 수
         private readonly List<WeaponTarget> targets = new List<WeaponTarget>(); // 생존 적 추적
         private readonly HashSet<WeaponTarget> eliteTargets = new HashSet<WeaponTarget>(); // 생존 엘리트 집합
+        private readonly HashSet<WeaponTarget> bossSummonTargets = new HashSet<WeaponTarget>(); // 무보상 보스 소환 적 집합
         private readonly Queue<int> pendingEliteRounds = new Queue<int>(); // 출현 대기 회차
         private int nextEliteRound; // 다음 일정 회차
         private double previousClockTime; // 이전 게임 시간 표본
         private bool hasEnteredBossTransition; // 최종 보스 전환 여부
         public event Action BossTransitionStarted; // 최종 보스 전환 알림
+        public event Action<bool> RewardableEnemyDied; // 실제 보상 대상 처치 알림
         public int ActiveEnemies => activeEnemies; // 생존 적 수 조회
         public float ElapsedSeconds => elapsed; // 실제 전투 경과 시간 조회
+        public double CurrentRunSeconds => elapsed + (GameManager.Instance != null && (GameManager.Instance.IsPlaying || GameManager.Instance.IsPaused) ? Math.Max(0d, Time.timeAsDouble - previousClockTime) : 0d); // 종료 프레임을 포함한 전투 시간
         public bool HasEnteredBossTransition => hasEnteredBossTransition; // 최종 보스 전환 상태 조회
         private void OnEnable() // 출현기 활성 시간 초기화
         { // 메서드 시작
@@ -211,6 +214,7 @@ namespace ProjectEpsilon.Enemies // 적 영역
             } // 반복 끝
             targets.Clear(); // 일반 적과 엘리트 목록 비우기
             eliteTargets.Clear(); // 생존 엘리트 목록 비우기
+            bossSummonTargets.Clear(); // 이전 소환 적 목록 제거
             activeEnemies = 0; // 생존 적 수 초기화
             foreach (EnemyTestProjectile shot in FindObjectsByType<EnemyTestProjectile>(FindObjectsSortMode.None)) // 실제 적 투사체 순회
             { // 반복 시작
@@ -252,6 +256,7 @@ namespace ProjectEpsilon.Enemies // 적 영역
                 return; // 이미 제거된 대상 무시
             } // 조건 끝
             target.Died -= HandleEnemyDied; // 처치 수량 연결 해제
+            bossSummonTargets.Remove(target); // 무보상 소환 목록 제거
             activeEnemies = Mathf.Max(0, activeEnemies - 1); // 생존 적 수 감소
             target.gameObject.SetActive(false); // 지연 파괴 전 접촉 차단
             Destroy(target.gameObject); // 사망 이벤트 없는 제거
@@ -287,6 +292,10 @@ namespace ProjectEpsilon.Enemies // 적 영역
             behaviour.Configure(setting, player, body, health, visual, shooterDistance, projectileSpeed, projectileLifetime, eliteWarningDuration, eliteChargeDuration, eliteChargeMultiplier); // 적 행동 연결
             activeEnemies++; // 생존 적 증가
             targets.Add(target); // 생존 적 목록 추가
+            if (bossSummon) // 보스 소환 적 여부 확인
+            { // 조건 시작
+                bossSummonTargets.Add(target); // 무보상 소환 적 구분
+            } // 조건 끝
             if (setting.kind == EarlyEnemyKind.Elite) // 엘리트 확인
             { // 조건 시작
                 eliteTargets.Add(target); // 정리 제외 대상 등록
@@ -338,9 +347,15 @@ namespace ProjectEpsilon.Enemies // 적 영역
             { // 조건 시작
                 return; // 중복 사망 무시
             } // 조건 끝
-            if (eliteTargets.Remove(target)) // 엘리트 개별 처치 확인
+            bool elite = eliteTargets.Remove(target); // 실제 엘리트 처치 여부
+            bool summon = bossSummonTargets.Remove(target); // 무보상 소환 처치 여부
+            if (elite) // 엘리트 개별 처치 확인
             { // 조건 시작
                 eliteRewards?.QueueReward(); // 선택 보상 대기열 추가
+            } // 조건 끝
+            if (!summon) // 보상 가능한 일반 적 또는 엘리트 확인
+            { // 조건 시작
+                RewardableEnemyDied?.Invoke(elite); // 실제 런 성과 한 번 기록
             } // 조건 끝
             activeEnemies = Mathf.Max(0, activeEnemies - 1); // 생존 적 감소
         } // 메서드 끝
@@ -358,6 +373,7 @@ namespace ProjectEpsilon.Enemies // 적 영역
                 if (target == null) // 외부 제거 적 확인
                 { // 조건 시작
                     eliteTargets.Remove(target); // 외부 제거 엘리트 정리
+                    bossSummonTargets.Remove(target); // 외부 제거 소환 적 정리
                     targets.RemoveAt(index); // 빈 대상 제거
                     activeEnemies = Mathf.Max(0, activeEnemies - 1); // 생존 수 보정
                     continue; // 다음 적 확인
@@ -367,6 +383,7 @@ namespace ProjectEpsilon.Enemies // 적 영역
                     continue; // 유지 대상 건너뛰기
                 } // 조건 끝
                 target.Died -= HandleEnemyDied; // 처치 수량 연결 해제
+                bossSummonTargets.Remove(target); // 거리 정리 소환 적 제외
                 targets.RemoveAt(index); // 생존 목록 제거
                 activeEnemies = Mathf.Max(0, activeEnemies - 1); // 생존 수 감소
                 target.gameObject.SetActive(false); // 지연 파괴 전 보상과 공격 대상 해제
@@ -440,6 +457,7 @@ namespace ProjectEpsilon.Enemies // 적 영역
                 return false; // 엘리트만 남은 경우 출현 보류
             } // 조건 끝
             farthest.Died -= HandleEnemyDied; // 제거 대상 사망 연결 해제
+            bossSummonTargets.Remove(farthest); // 무보상 소환 목록 정리
             targets.Remove(farthest); // 생존 적 목록 제거
             activeEnemies = Mathf.Max(0, activeEnemies - 1); // 생존 적 수 감소
             farthest.gameObject.SetActive(false); // 지연 파괴 전 보상과 공격 대상 해제

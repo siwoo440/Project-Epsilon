@@ -93,7 +93,7 @@ namespace ProjectEpsilon.Progression
             }
 
             float attractionRangeSquared =
-                attractionRange * attractionRange;
+                MergeAttractionRange * MergeAttractionRange; // 영구 성장 흡수 범위 적용
 
             if (delta.sqrMagnitude > attractionRangeSquared)
             {
@@ -129,7 +129,7 @@ namespace ProjectEpsilon.Progression
         public int ExperienceValue => experienceValue; // 보석 경험치 조회
         internal bool IsMergeAvailable => !collected && isActiveAndEnabled && gameObject.activeInHierarchy; // 병합 가능 상태
         internal SnakeExperience MergeReceiver => receiver != null ? receiver : SnakeExperience.Current; // 실제 경험치 수신자
-        internal float MergeAttractionRange => Mathf.Max(0f, attractionRange); // 안전한 자동 흡수 거리
+        internal float MergeAttractionRange => Mathf.Max(0f, attractionRange * MetaModifiers.PickupRangeMultiplier); // 영구 성장의 안전한 흡수 거리
 
         internal bool IsOutsideAttraction() // 자동 흡수 범위 밖 확인
         { // 메서드 시작

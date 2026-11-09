@@ -113,7 +113,7 @@ namespace ProjectEpsilon.Combat
                 return;
             }
 
-            nextAttackTime = currentTime + Mathf.Max(0.01f, weapon.AttackInterval / SpeedMultiplier); // 강화 공격 주기
+            nextAttackTime = currentTime + Mathf.Max(0.01f, weapon.AttackInterval / (SpeedMultiplier * ProjectEpsilon.Progression.MetaModifiers.AttackSpeedMultiplier)); // 합성과 영구 성장 공격 주기
         }
     }
 }

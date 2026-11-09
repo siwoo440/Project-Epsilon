@@ -270,7 +270,7 @@ namespace ProjectEpsilon.Progression // 진행 영역
             } // 조건 끝
             foreach (WeaponRewardEntry entry in weaponPool.Entries) // 무기 풀 순회
             { // 반복 시작
-                if (entry != null && entry.Unlocked && entry.Weapon != null && !weapons.HasCompletedGradeFive(entry.Weapon)) // 해금 및 최고 등급 확인
+                if (entry != null && entry.Unlocked && entry.Weapon != null && (MetaProgressionController.Instance == null || MetaProgressionController.Instance.IsTurretUnlocked(entry.Weapon)) && !weapons.HasCompletedGradeFive(entry.Weapon)) // 실제 해금 및 최고 등급 확인
                 { // 조건 시작
                     result.Add(entry.Weapon); // 사용 가능한 무기 추가
                 } // 조건 끝

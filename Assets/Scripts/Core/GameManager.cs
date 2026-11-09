@@ -15,6 +15,7 @@ namespace ProjectEpsilon.Core
         private SnakeHealth playerHealth; // 몸통 소진 감시 대상
         private WeaponTarget finalBoss; // 등록된 최종 보스
         private bool finalBossEncounterStarted; // 보스전 진입 여부
+        private bool actualBossDefeated; // 등록된 보스 실제 처치 여부
 
         public GameState CurrentState => currentState;
         public bool IsPlaying => currentState == GameState.Playing;
@@ -73,6 +74,11 @@ namespace ProjectEpsilon.Core
 
         public void StartGame()
         {
+            if (currentState == GameState.Starting) // 실제 새 런 시작 확인
+            { // 조건 시작
+                actualBossDefeated = false; // 새 런의 보스 처치 초기화
+                MetaProgressionController.Instance?.BeginRun(); // 실제 성과 집계 시작
+            } // 조건 끝
             finalBossEncounterStarted = false; // 새 전투의 보스전 상태 초기화
             SetState(GameState.Playing);
         }
@@ -97,6 +103,10 @@ namespace ProjectEpsilon.Core
 
         public void SetState(GameState nextState)
         {
+            if ((nextState == GameState.Defeated || nextState == GameState.Victory) && currentState != GameState.Defeated && currentState != GameState.Victory) // 실제 첫 종료 상태 확인
+            { // 조건 시작
+                MetaProgressionController.Instance?.CompleteRun(actualBossDefeated && nextState == GameState.Victory); // 실제 성과 저장과 중복 지급 방지
+            } // 조건 끝
             // 게임 상태 변경
             currentState = nextState;
             ApplyTimeScale();
@@ -131,6 +141,7 @@ namespace ProjectEpsilon.Core
                 return; // 다른 대상 무시
             } // 조건 끝
             finalBoss.Died -= HandleFinalBossDied; // 중복 승리 연결 해제
+            actualBossDefeated = true; // 등록 보스의 실제 처치 기록
             finalBoss = null; // 보스 참조 해제
             if (currentState != GameState.Defeated && currentState != GameState.Victory) // 종료 상태 확인
             { // 조건 시작
@@ -145,12 +156,50 @@ namespace ProjectEpsilon.Core
 
         private void OnGUI() // 종료 화면 표시
         { // 메서드 시작
+            if (currentState == GameState.Paused) // 실제 일시정지 확인
+            { // 조건 시작
+                Rect abandon = new Rect(Screen.width - 175f, 55f, 160f, 32f); // 런 포기 버튼 위치
+                if (GUI.Button(abandon, "ABANDON RUN")) // 실제 포기 입력 확인
+                { // 조건 시작
+                    AbandonRun(); // 실제 성과 저장 후 종료
+                } // 조건 끝
+            } // 조건 끝
             if (currentState != GameState.Defeated && currentState != GameState.Victory) // 종료 상태 확인
             { // 조건 시작
                 return; // 종료 화면 생략
             } // 조건 끝
             Rect message = new Rect(Screen.width * 0.5f - 150f, Screen.height * 0.5f - 35f, 300f, 70f); // 화면 중앙 영역
             GUI.Box(message, currentState == GameState.Victory ? "VICTORY" : "GAME OVER"); // 종료 문구 표시
+            MetaProgressionController meta = MetaProgressionController.Instance; // 실제 보상 관리자
+            GUI.Label(new Rect(message.x, message.y + 28f, message.width, 24f), meta != null && meta.HasPendingSave ? "SAVE FAILED - RETRY" : $"CORES +{(meta == null ? 0 : meta.LastAward)}"); // 실제 보상 또는 저장 오류 표시
+            if (GUI.Button(new Rect(message.x + 75f, message.y + 76f, 150f, 32f), "RETRY")) // 실제 재시작 버튼
+            { // 조건 시작
+                RestartRun(); // 저장 확인 후 새 런 시작
+            } // 조건 끝
+        } // 메서드 끝
+
+        public void AbandonRun() // 실제 진행 중 런 포기
+        { // 메서드 시작
+            if (currentState == GameState.Playing || currentState == GameState.Paused) // 실제 포기 가능 상태 확인
+            { // 조건 시작
+                SetState(GameState.Defeated); // 기존 패배 화면과 실제 보상 처리
+            } // 조건 끝
+        } // 메서드 끝
+
+        public bool RestartRun() // 실제 종료 후 현재 씬 재시작
+        { // 메서드 시작
+            if (currentState != GameState.Defeated && currentState != GameState.Victory) // 실제 종료 상태 확인
+            { // 조건 시작
+                return false; // 진행 중 재시작 방지
+            } // 조건 끝
+            MetaProgressionController meta = MetaProgressionController.Instance; // 실제 저장 관리자
+            if (meta != null && meta.HasPendingSave && !meta.CompleteRun(false)) // 실패한 보상의 재저장 확인
+            { // 조건 시작
+                return false; // 저장 실패 시 성과 보존
+            } // 조건 끝
+            GameObject loader = new GameObject("RunSceneReloader"); // 실제 재시작 보조 객체
+            loader.AddComponent<RunSceneReloader>().Begin(gameObject, UnityEngine.SceneManagement.SceneManager.GetActiveScene().path); // 관리자 제거 후 실제 씬 재로딩
+            return true; // 재시작 예약 완료
         } // 메서드 끝
 
         private void ApplyTimeScale()

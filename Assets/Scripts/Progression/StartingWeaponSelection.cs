@@ -177,6 +177,10 @@ namespace ProjectEpsilon.Progression // 게임 진행 영역
 
         private bool IsInputBlocked() // 설정 입력 우선 확인
         { // 메서드 시작
+            if (MetaProgressionController.Instance != null && MetaProgressionController.Instance.Menu != null && MetaProgressionController.Instance.Menu.IsOpen) // 실제 영구 성장 메뉴 확인
+            { // 조건 시작
+                return true; // 성장 화면의 시작 입력 차단
+            } // 조건 끝
             if (InputBindingManager.Instance != null && InputBindingManager.Instance.IsRebinding) // 입력 재설정 확인
             { // 조건 시작
                 return true; // 시작 선택 차단

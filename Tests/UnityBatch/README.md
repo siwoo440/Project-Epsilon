@@ -216,3 +216,11 @@
 `AutomatedDay47UniqueEffectsVerification.Run`은 실제 강철 포탑의 4회 주기·범위·재장착 초기화와 화염탄의 화상 처치·만료·중복·즉사·연쇄 차단·지속 피해 처치·실제 탄 발사 후 폭발을 통제 조건에서 검사한다. `AutomatedPlayerArtVerification.Run`은 실제 머리와 몸통의 최대 표시 크기 각 1 및 기존 충돌체를 확인한다. `AutomatedGlobalAttackHudVerification.Run`은 근접·범위의 시각 탄 이동·일시정지와 실제 직선 탄의 이미지·충돌체·원거리 명중을 함께 확인한다. 각 진입점 앞에는 `ProjectEpsilon.Editor.`를 붙이며, 스크립트와 `StartingWeaponBatchHelper.cs`는 별도 Unity 사본에만 복사한다.
 
 48종 ★5 시험은 강철 근접의 주기 강타와 화염탄의 화상 폭발을 공통 효과와 구분한다. 등급별 시험 결과와 수동 확인 한계는 `Devlogs/Day47/README.md`를 참조한다.
+
+---
+
+## 48일차 영구 성장과 저장
+
+`AutomatedDay48MetaVerification.Run`, `AutomatedDay48EffectsVerification.Run`, `AutomatedDay48StartStatsVerification.Run`은 `StartingWeaponBatchHelper.cs`와 함께 별도 Unity 사본의 `Assets/Editor`에서 실행한다. 메타 시험은 저장 초기화 전 제품 이름이 `Project-Epsilon-Day48-Isolated`인지 검사한다. 저장 시험 직후 `AutomatedDay48FreshProcessVerification.Run`을 새 Unity 프로세스에서 실행해 실제 파일 재로딩을 확인한다. 기존 모든 대상 해금을 전제로 한 회귀 검사는 격리 사본에서만 `AutomatedDay48RegressionSeed.Run`을 실행한 뒤 수행한다. 각 진입점 앞에는 `ProjectEpsilon.Editor.`를 붙인다.
+
+성과·해금 대상의 임시값, 실제 테스트 범위와 사용자 화면에서 확인할 내용은 `Devlogs/Day48/README.md`에 기록한다.

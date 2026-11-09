@@ -1,5 +1,6 @@
 using ProjectEpsilon.Core; // 실제 게임 상태
 using ProjectEpsilon.Enemies; // 실제 보스 출현기
+using ProjectEpsilon.Progression; // 실제 맵 해금 진행
 using UnityEngine; // Unity 기능
 
 namespace ProjectEpsilon.World // 맵 영역
@@ -22,6 +23,10 @@ namespace ProjectEpsilon.World // 맵 영역
             { // 조건 시작
                 return false; // 잘못된 선택 차단
             } // 조건 끝
+            if (MetaProgressionController.Instance != null && !MetaProgressionController.Instance.IsMapUnlocked(index)) // 실제 맵 해금 확인
+            { // 조건 시작
+                return false; // 미해금 맵 선택 차단
+            } // 조건 끝
             PrototypeChunkMap map = GetComponent<PrototypeChunkMap>(); // 같은 관리자의 청크 맵
             PrototypeBossEncounter boss = GetComponent<PrototypeBossEncounter>(); // 같은 관리자의 보스 출현기
             if (map == null || boss == null || !map.ApplyProfile(profiles[index]) || !boss.ApplyProfile(profiles[index])) // 실제 맵과 보스 연결
@@ -37,8 +42,16 @@ namespace ProjectEpsilon.World // 맵 영역
             { // 조건 시작
                 return false; // 잘못된 순환 차단
             } // 조건 끝
-            int next = (selectedIndex + (direction > 0 ? 1 : -1) + ProfileCount) % ProfileCount; // 순환 맵 번호
-            return SelectMap(next); // 실제 맵 선택 적용
+            for (int offset = 1; offset <= ProfileCount; offset++) // 실제 해금 맵 순회
+            { // 반복 시작
+                int step = direction > 0 ? offset : -offset; // 실제 순환 방향
+                int next = (selectedIndex + step + ProfileCount) % ProfileCount; // 순환 맵 번호
+                if (SelectMap(next)) // 실제 맵 선택 확인
+                { // 조건 시작
+                    return true; // 실제 해금 맵 적용
+                } // 조건 끝
+            } // 반복 끝
+            return false; // 사용 가능한 맵 부재
         } // 메서드 끝
     } // 클래스 끝
 } // 영역 끝

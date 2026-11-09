@@ -72,6 +72,10 @@ namespace ProjectEpsilon.Player // 플레이어 영역
             { // 조건 시작
                 return false; // 잘못된 데이터와 진행 중 변경 차단
             } // 조건 끝
+            if (MetaProgressionController.Instance != null && !MetaProgressionController.Instance.IsCharacterUnlocked(data.Id)) // 실제 캐릭터 해금 확인
+            { // 조건 시작
+                return false; // 미해금 캐릭터 선택 차단
+            } // 조건 끝
             WeaponData[] options = data.StartingWeapons.Weapons; // 실제 시작 무기 후보
             if (options[0] == null || options[1] == null || options[2] == null || options[0] == options[1] || options[0] == options[2] || options[1] == options[2]) // 후보 누락과 중복 확인
             { // 조건 시작
@@ -87,7 +91,7 @@ namespace ProjectEpsilon.Player // 플레이어 영역
             } // 조건 끝
             ActiveCharacter = data; // 실제 런 패시브와 이동 배율 적용
             body.SetStartingBodyCount(data.StartingBodyCount); // 실제 시작 몸통과 성장 최대 적용
-            health.SetStartingMaximumHealth(Mathf.RoundToInt(data.BodyMaxHealth)); // 실제 시작 공용 체력 적용
+            health.SetStartingMaximumHealth(Mathf.RoundToInt(data.BodyMaxHealth * MetaModifiers.HealthMultiplier)); // 캐릭터와 영구 성장의 공용 체력
             weapons.ClearStartingLoadout(); // 이전 시작 무기 제거
             selection.SetStartingOptions(data.StartingWeapons); // 캐릭터별 실제 선택 후보 적용
             return true; // 실제 시작 적용 완료

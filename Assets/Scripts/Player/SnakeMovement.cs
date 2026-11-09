@@ -16,14 +16,16 @@ namespace ProjectEpsilon.Player
         [SerializeField] private float mergeSpeedMultiplier = 0.7f;
 
         private PlayerInputReader inputReader;
+        private SnakeBodyManager bodyManager; // 마지막 몸통의 실제 상태
 
         public float BaseMoveSpeed => moveSpeed; // 캐릭터 보정 전 기본 이동 속도
         public float MoveSpeed => moveSpeed * CharacterRunInitializer.MoveSpeedMultiplier; // 캐릭터 이동 배율 적용
-        public float TurnSpeed => turnSpeed * CharacterRunInitializer.TurnSpeedMultiplier; // 캐릭터 회전 배율 적용
+        public float TurnSpeed => turnSpeed * CharacterRunInitializer.TurnSpeedMultiplier * ProjectEpsilon.Progression.MetaModifiers.TurnMultiplier; // 캐릭터와 영구 회전 배율
         public bool IsMergeMovementMode => mergeMovementMode;
 
         public float CurrentMoveSpeed =>
             MoveSpeed * // 캐릭터 이동 속도 적용
+            ProjectEpsilon.Progression.MetaModifiers.LastBodySpeedMultiplier(bodyManager) * // 마지막 몸통 영구 효과
             ProjectEpsilon.World.PrototypeSpecialZone.SpeedMultiplierAt(transform.position) * // 현재 지역 감속 적용
             (stamina == null
                 ? 1f
@@ -31,6 +33,7 @@ namespace ProjectEpsilon.Player
 
         private void Awake()
         {
+            bodyManager = FindFirstObjectByType<SnakeBodyManager>(); // 실제 몸통 상태 연결
             inputReader =
                 GetComponent<PlayerInputReader>();
 
