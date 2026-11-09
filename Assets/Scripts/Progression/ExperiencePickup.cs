@@ -33,6 +33,13 @@ namespace ProjectEpsilon.Progression
                 return; // 제거 예정 보석 재설정 방지
             } // 조건 끝
             receiver = experienceReceiver;
+            ExperiencePickupSettings settings = receiver != null ? receiver.PickupSettings : SnakeExperience.Current != null ? SnakeExperience.Current.PickupSettings : null; // 실제 수신자의 흡수 설정
+            if (settings != null) // 공통 설정 존재 확인
+            { // 조건 시작
+                attractionRange = settings.AttractionRange; // 흡수 범위 적용
+                attractionSpeed = settings.AttractionSpeed; // 흡수 속도 적용
+                collectDistance = settings.CollectDistance; // 획득 거리 적용
+            } // 조건 끝
             fallbackSprite = visual; // 기존 대체 이미지 저장
             experienceValue = Mathf.Max(1, value);
             collected = false;

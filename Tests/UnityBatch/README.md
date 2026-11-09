@@ -188,3 +188,13 @@
 - 시작 무기 선택의 비활성 `Configure` 수정 직전 실제 씬 배치는 새 플레이 세 번에서 임시 후보 강철 검·강철 창·화염 고리의 첫 몸통 장착, 버튼과 가상 숫자 입력, 선택 전 시간·이동·출현 정지 및 선택 후 재개를 확인해 종료 코드 0이었다. 이후 비활성 선택기의 `Configure` 화면 복구 문제를 수정하고 별도 실제 씬 배치에서 비활성 유지와 첫 후보 선택을 확인해 종료 코드 0이었다. 최종 수정본으로 세 후보와 공용 헬퍼가 적용된 기존 배치를 다시 실행하려 했으나 Unity 초기화가 정체해 중단했고, 독립 사본의 캐시 복사도 미완료이므로 최종 전체 회귀는 확인되지 않았다.
 - HUD 시험의 텍스트 너비 비교는 배치 환경에서 측정 가능한 경우에만 유효하다. 실제 화면에서의 가독성은 별도로 확인한다.
 - 실행 환경에 따라 Unity Editor의 SearchDatabase 시작 인덱싱 예외가 발생할 수 있다. 게임 스크립트 예외와 구분하고 로그에서 실제 발생 여부를 확인한다.
+
+---
+
+## 45일차 초반 전투와 경험치 보석
+
+`Day45NaturalCombat/AutomatedNaturalCombatVerification.cs`를 사본의 `Assets/Editor/AutomatedNaturalCombatVerification.cs`로 복사하고 `StartingWeaponBatchHelper.cs`를 함께 둔다. `ProjectEpsilon.Editor.AutomatedNaturalCombatVerification.Run`에 `-epsilonSeed 4501`을 추가하면 시험 조종기의 난수 초기값을 지정한다. 다른 자연 전투 조종기와 같은 클래스 이름이므로 동시에 복사하지 않는다. 300초 생존·자연 레벨업·4분 엘리트 관찰을 확인하며 수동 플레이나 모든 프레임의 결정적 재현을 뜻하지 않는다.
+
+`AutomatedDay45PilotVerification.Run`은 같은 조종기 파일과 공용 헬퍼가 필요하며 뒤의 적 재접근 대신 앞쪽 보석으로 향하는 판단을 검사한다. `AutomatedDay45PickupVerification.Run`은 실제 움직이는 머리의 보석 수집과 일시정지를 검사한다. `AutomatedDay45PickupSettingsVerification.Run`은 실제 씬의 설정 에셋 연결, 조정한 새 보석의 이동, 경험치 보존, 설정 부재 시 기존 기본값을 검사한다. 각 테스트는 `ProjectEpsilon.Editor.` 접두사를 붙여 실행한다.
+
+변경 전과 후의 자연 전투 결과 및 수동 검증 한계는 `Devlogs/Day45/README.md`에 기록한다.

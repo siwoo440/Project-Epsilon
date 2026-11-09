@@ -1,6 +1,7 @@
 using System; // 기본 형식
 using System.Collections; // 코루틴 형식
 using System.Reflection; // 시험 설정 조회
+using ProjectEpsilon.Combat; // 시험 중 포탑 제어
 using ProjectEpsilon.Core; // 게임 상태
 using ProjectEpsilon.Enemies; // 적 출현 제어
 using ProjectEpsilon.Player; // 플레이어 이동 제어
@@ -100,6 +101,16 @@ namespace ProjectEpsilon.Editor // 편집기 영역
             Require(movement != null && spawner != null, "Controlled Game scene fixtures are missing."); // 필수 통제 구성 확인
             movement.enabled = false; // 플레이어 이동 정지
             spawner.enabled = false; // 자연 적 출현 정지
+            SnakeWeaponManager weapons = UnityEngine.Object.FindFirstObjectByType<SnakeWeaponManager>(); // 실제 포탑 관리자 조회
+            if (weapons != null) // 포탑 관리자 존재 확인
+            { // 조건 시작
+                weapons.enabled = false; // 시험 중 적 처치 방지
+            } // 조건 끝
+            foreach (EarlyEnemyBehaviour enemy in UnityEngine.Object.FindObjectsByType<EarlyEnemyBehaviour>(FindObjectsSortMode.None)) // 시험 전 생성된 적 순회
+            { // 반복 시작
+                enemy.gameObject.SetActive(false); // 적 사망 보상 없는 시험 격리
+                UnityEngine.Object.Destroy(enemy.gameObject); // 이전 적 정리
+            } // 반복 끝
             playerPosition = experience.transform.position; // 실제 수신자 위치 기록
             controller.enabled = false; // 시험 준비 중 병합 중지
             ClearPickups(); // 기존 보석 정리
@@ -212,13 +223,19 @@ namespace ProjectEpsilon.Editor // 편집기 영역
             yield return null; // 지연 파괴 완료 대기
             SpawnGroup(anchor, 1, 4); // 파괴 경계의 활성 네 개
             fifth = ExperiencePickup.Spawn(anchor + Vector3.up * 0.2f, 1, null, experience); // 외부 파괴 대상
+            int destroyedId = fifth.GetInstanceID(); // 파괴 대상 번호 기록
             UnityEngine.Object.Destroy(fifth.gameObject); // 실제 외부 지연 파괴
             yield return null; // Unity 파괴 완료 프레임
+            Debug.Log($"[ExperienceMergeVerification] destruction boundary id={destroyedId} small={CountPickups(1)} total={TotalExperience()} destroyed={fifth == null}"); // 파괴 직후 실제 보석 상태
             previous = ReadMetric("CompletedPassCount"); // 파괴 후 검사 횟수
             controller.enabled = true; // 실제 검사 재개
             yield return WaitForPass(previous); // 실제 검사 대기
             controller.enabled = false; // 추가 검사 정지
-            Require(CountPickups(1) == 4 && CountPickups(5) == 0 && TotalExperience() == 4, "Destroyed pickup remained a merge candidate after its destruction frame."); // 파괴 완료 후보 제외 확인
+            foreach (ExperiencePickup remaining in UnityEngine.Object.FindObjectsByType<ExperiencePickup>(FindObjectsSortMode.None)) // 실제 잔여 보석 순회
+            { // 반복 시작
+                Debug.Log($"[ExperienceMergeVerification] destruction remaining id={remaining.GetInstanceID()} position={remaining.transform.position} value={remaining.ExperienceValue}"); // 예상 밖 보석 위치 기록
+            } // 반복 끝
+            Require(CountPickups(1) == 4 && CountPickups(5) == 0 && TotalExperience() == 4, $"Destroyed pickup boundary mismatch: small={CountPickups(1)}, medium={CountPickups(5)}, total={TotalExperience()}, destroyed={fifth == null}, xp={experience.CurrentExperience}."); // 파괴 완료 후보와 수량 확인
             Debug.Log("[ExperienceMergeVerification] inactive exclusion, reactivation and external destruction after frame boundary passed."); // 객체 경계 결과 기록
         } // 코루틴 끝
 

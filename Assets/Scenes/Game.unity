@@ -2662,6 +2662,7 @@ MonoBehaviour:
   currentLevel: 1
   currentExperience: 0
   baseRequiredExperience: 10
+  pickupSettings: {fileID: 11400000, guid: b0b29ea343f14edab708ce4970812294, type: 2}
   experienceGrowthMultiplier: 1.12
   levelUpPending: 0
 --- !u!114 &587332125

@@ -11,6 +11,7 @@ namespace ProjectEpsilon.Progression
         [SerializeField] private int baseRequiredExperience = 10;
         [SerializeField] private float experienceGrowthMultiplier = 1.12f;
         [SerializeField] private bool levelUpPending;
+        [SerializeField] private ExperiencePickupSettings pickupSettings; // 보석 흡수 설정
 
         public static SnakeExperience Current { get; private set; }
 
@@ -20,6 +21,12 @@ namespace ProjectEpsilon.Progression
 
         public int CurrentLevel => currentLevel;
         public int CurrentExperience => currentExperience;
+        public ExperiencePickupSettings PickupSettings => pickupSettings; // 새 보석의 흡수 설정
+
+        public void ConfigurePickupSettings(ExperiencePickupSettings settings) // 새 보석 설정 연결
+        { // 메서드 시작
+            pickupSettings = settings; // 흡수 설정 저장
+        } // 메서드 끝
         public int RequiredExperience =>
             CalculateRequiredExperience(
                 baseRequiredExperience,
