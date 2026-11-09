@@ -189,10 +189,10 @@ namespace ProjectEpsilon.Editor // 편집기 영역
             Require(Mathf.Approximately(other.CurrentHealth, 1000f) && Mathf.Approximately(outside.CurrentHealth, 1000f), "Transfer hit a farther or out-of-range target."); // 불필요한 대상 제외
             foreach (HitRecord hit in hits) // 실제 첫 발사 명중 순회
             { // 반복 시작
-                float expectedDamage = hit.TargetId == nearestId && grade >= 5 ? damage * 1.5f : damage; // 오 등급 전달 피해 구분
+                float expectedDamage = hit.TargetId == nearestId ? damage * fireball.GetTransferDamageMultiplier(grade) : damage; // 실제 무기 데이터의 전달 피해 구분
                 Require(Mathf.Abs(hit.Damage - expectedDamage) < 0.01f && hit.Stage == 0 && Mathf.Approximately(hit.BurnDps, 1f) && Vector3.Distance(hit.Origin, origin) < 0.01f, "Actual projectile damage, base burn, synergy or origin mismatch."); // 피해와 화상 및 실제 몸통 원점
             } // 반복 끝
-            Debug.Log($"[FireballVerification] grade={grade}, targets={hits.Count}, firstDamage={damage:F2}, transferDamage={(grade >= 5 ? damage * 1.5f : grade >= 3 ? damage : 0f):F2}, range=2.0 provisional, origin={origin}."); // 등급별 실제 명중 기록
+            Debug.Log($"[FireballVerification] grade={grade}, targets={hits.Count}, firstDamage={damage:F2}, transferDamage={(grade >= 3 ? damage * fireball.GetTransferDamageMultiplier(grade) : 0f):F2}, range=2.0 provisional, origin={origin}."); // 등급별 실제 명중 기록
         } // 코루틴 끝
 
         private IEnumerator VerifyInside() // 전달 반경 안 대상만 존재

@@ -89,6 +89,12 @@ namespace ProjectEpsilon.Editor // 배치 시험 영역
             Require(IsSprite(head, "PlayerHead_Casual.png"), "Actual player head sprite was not assigned."); // 실제 머리 이미지 확인
             Require(head.color == Color.white, "Actual player head retained placeholder tint."); // 실제 머리 원본 색상 확인
             Require(body.CurrentBodyCount == 3, "Actual starting body count changed."); // 실제 시작 몸통 수 확인
+            SpriteRenderer firstBody = body.BodySegments[0].GetComponent<SpriteRenderer>(); // 실제 첫 몸통 표시기
+            float headSize = Mathf.Max(head.sprite.bounds.size.x * Mathf.Abs(head.transform.lossyScale.x), head.sprite.bounds.size.y * Mathf.Abs(head.transform.lossyScale.y)); // 회전 전 머리 최대 표시 크기
+            float bodySize = Mathf.Max(firstBody.sprite.bounds.size.x * Mathf.Abs(firstBody.transform.lossyScale.x), firstBody.sprite.bounds.size.y * Mathf.Abs(firstBody.transform.lossyScale.y)); // 회전 전 몸통 최대 표시 크기
+            CircleCollider2D headCollider = player.GetComponent<CircleCollider2D>(); // 실제 머리 충돌체
+            CircleCollider2D bodyCollider = body.BodySegments[0].GetComponent<CircleCollider2D>(); // 실제 몸통 충돌체
+            Require(Mathf.Abs(headSize - 1f) < 0.02f && Mathf.Abs(bodySize - 1f) < 0.02f && headCollider != null && Mathf.Approximately(headCollider.radius, 0.16f) && Mathf.Approximately(player.transform.localScale.x, 1.44f) && bodyCollider != null && Mathf.Approximately(bodyCollider.radius, 0.36f) && Mathf.Approximately(body.BodySegments[0].transform.localScale.x, 0.62f), $"Head or body visual is not one unit or hitboxes changed: head={headSize:F3}, body={bodySize:F3}."); // 두 표시 크기와 기존 충돌 범위 확인
             foreach (SnakeSegment segment in body.BodySegments) // 실제 시작 몸통 순회
             { // 반복 시작
                 Require(IsSprite(segment.GetComponent<SpriteRenderer>(), "PlayerBody_Casual.png"), "Actual starting body sprite was not assigned."); // 실제 시작 몸통 이미지 확인

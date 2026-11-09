@@ -33,6 +33,11 @@ namespace ProjectEpsilon.Data
         [Min(1f)] [SerializeField] private float gradeFiveTransferDamageScale = 1f; // 오 등급 전달 피해 추가 배율
         [Min(0f)] [SerializeField] private float burnDuration = 3f; // 기본 화상 지속 시간
         [Min(0f)] [SerializeField] private float burnDamagePerSecond = 1f; // 기본 화상 초당 피해
+        [Min(0)] [SerializeField] private int gradeFiveWideStrikeInterval; // 오 등급 강타 공격 주기
+        [Min(0f)] [SerializeField] private float gradeFiveWideStrikeRadius; // 오 등급 강타 반경
+        [Min(0f)] [SerializeField] private float gradeFiveWideStrikeDamageMultiplier = 1f; // 오 등급 강타 피해 배율
+        [Min(0f)] [SerializeField] private float gradeFiveBurnExplosionRadius; // 화상 적 처치 폭발 반경
+        [Min(0f)] [SerializeField] private float gradeFiveBurnExplosionDamageMultiplier; // 화상 적 처치 폭발 피해 배율
 
         public string Id => id;
         public string DisplayName => displayName;
@@ -70,5 +75,10 @@ namespace ProjectEpsilon.Data
         public float GetTransferDamageMultiplier(int grade) => GradeThreeTransferDamageMultiplier * (grade >= 5 ? Mathf.Max(1f, gradeFiveTransferDamageScale) : 1f); // 등급별 전달 피해 배율
         public float BurnDuration => Mathf.Max(0f, burnDuration); // 화상 지속 시간 반환
         public float BurnDamagePerSecond => Mathf.Max(0f, burnDamagePerSecond); // 화상 초당 피해 반환
+        public int GradeFiveWideStrikeInterval => Mathf.Max(0, gradeFiveWideStrikeInterval); // 안전한 강타 주기
+        public float GradeFiveWideStrikeRadius => Mathf.Max(0f, gradeFiveWideStrikeRadius); // 안전한 강타 반경
+        public float GradeFiveWideStrikeDamageMultiplier => Mathf.Max(0f, gradeFiveWideStrikeDamageMultiplier); // 안전한 강타 피해 배율
+        public float GradeFiveBurnExplosionRadius => Mathf.Max(0f, gradeFiveBurnExplosionRadius); // 안전한 화상 폭발 반경
+        public float GradeFiveBurnExplosionDamageMultiplier => Mathf.Max(0f, gradeFiveBurnExplosionDamageMultiplier); // 안전한 화상 폭발 피해 배율
     }
 }

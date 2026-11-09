@@ -66,6 +66,10 @@ namespace ProjectEpsilon.Combat // 전투 영역
                 resolvedAttack = new WeaponAttributeAttackSnapshot(resolvedAttack.Weapon, resolvedAttack.Attribute, resolvedAttack.AttributeCount, resolvedAttack.SynergyStage, resolvedAttack.Grade, resolvedAttack.Origin, criticalDamage); // 명중 피해 갱신
             } // 조건 끝
             int darkCurseStacks = ResolveDarkCurseStacks(target); // 명중 전 저주 중첩 조회
+            if (resolvedAttack.Attribute == WeaponAttribute.Fire && resolvedAttack.Grade >= 5 && resolvedAttack.Weapon != null && resolvedAttack.Weapon.GradeFiveBurnExplosionRadius > 0f) // 실제 화염탄 오 등급 효과 확인
+            { // 조건 시작
+                WeaponBurnDeathExplosion.Attach(target, resolvedAttack, pulseSprite); // 화상 상태의 처치 폭발 연결
+            } // 조건 끝
             float dealtDamage = target.TakeDamageAndReport(resolvedAttack.DirectDamage); // 직접 피해와 실제 피해량 적용
 
             if (resolvedAttack.Attribute == WeaponAttribute.Fire && target.IsAlive) // 생존 화염 명중 확인

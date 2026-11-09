@@ -98,6 +98,15 @@ namespace ProjectEpsilon.Editor // 배치 시험 영역
             weapons.enabled = true; // 실제 자동 공격 시작
             yield return new WaitForSeconds(0.2f); // 첫 공격 대기
             Require(near.CurrentHealth == 90f && far.CurrentHealth == 100f, "Out-of-range melee did not attack the nearest target."); // 사거리 밖 최근접 공격 확인
+            Type tracerType = typeof(SnakeWeaponManager).Assembly.GetType("ProjectEpsilon.Combat.TurretAttackTracer"); // 실제 비행 연출 형식
+            Component tracer = tracerType == null ? null : UnityEngine.Object.FindFirstObjectByType(tracerType) as Component; // 실제 근접 발사 표시
+            Require(tracer != null && tracer.GetComponent<SpriteRenderer>() != null && tracer.GetComponent<SpriteRenderer>().sprite != null && tracer.GetComponent<SpriteRenderer>().sprite.name == "TurretProjectile_Prototype" && tracer.GetComponent<Collider2D>() == null, "Actual melee projectile visual is missing or affects collisions."); // 실제 탄 이미지와 시각 전용 확인
+            Require(tracer.transform.position.x > origin.x && tracer.transform.position.x < near.transform.position.x, "Actual melee projectile visual did not travel from the body toward the target."); // 실제 비행 방향 확인
+            Vector3 pausedTracer = tracer.transform.position; // 정지 전 실제 탄 위치
+            GameManager.Instance.PauseGame(); // 실제 게임 일시정지
+            yield return new WaitForSecondsRealtime(0.15f); // 실제 정지 시간 대기
+            Require(tracer != null && Vector3.Distance(tracer.transform.position, pausedTracer) < 0.001f, "Visual tracer moved while paused."); // 정지 중 탄 비행 차단
+            GameManager.Instance.ResumeGame(); // 실제 게임 재개
             yield return new WaitForSeconds(0.25f); // 공격 주기 이전 대기
             Require(near.CurrentHealth == 90f, "Melee ignored attack cooldown."); // 쿨타임 중 재공격 방지 확인
             near.transform.position = origin + Vector3.right * 16f; // 기존 대상의 거리 증가
@@ -116,6 +125,10 @@ namespace ProjectEpsilon.Editor // 배치 시험 영역
             weapons.enabled = true; // 실제 투사체 발사
             yield return new WaitForSeconds(0.15f); // 첫 발사 대기
             weapons.enabled = false; // 중복 발사 중지
+            StraightProjectile actualShot = UnityEngine.Object.FindFirstObjectByType<StraightProjectile>(); // 실제 공격 투사체
+            SpriteRenderer actualArt = actualShot == null ? null : actualShot.transform.Find("ProjectileArtwork")?.GetComponent<SpriteRenderer>(); // 실제 투사체 자식 이미지
+            Require(actualShot != null && actualArt != null && actualArt.sprite != null && actualArt.sprite.name == "TurretProjectile_Prototype" && Mathf.Approximately(actualShot.GetComponent<CircleCollider2D>().radius, 0.3f) && Mathf.Approximately(actualShot.transform.localScale.x, 0.18f), "Actual projectile artwork or original hitbox is missing."); // 실제 탄 이미지와 기존 충돌체 확인
+            Require(actualShot.transform.position.x > origin.x, "Actual damaging projectile did not travel from the equipped body."); // 실제 피해 탄 이동 확인
             yield return new WaitForSeconds(3.2f); // 기존 수명 밖 표적 도달 대기
             Require(near.CurrentHealth == 92f && far.CurrentHealth == 100f, "Projectile did not reach the nearest out-of-range target."); // 원거리 최근접 실제 명중 확인
             foreach (StraightProjectile projectile in UnityEngine.Object.FindObjectsByType<StraightProjectile>(FindObjectsSortMode.None)) // 남은 시험 투사체 순회
@@ -134,6 +147,8 @@ namespace ProjectEpsilon.Editor // 배치 시험 영역
             yield return new WaitForSeconds(0.2f); // 실제 범위 공격 대기
             weapons.enabled = false; // 시험 공격 중지
             Require(near.CurrentHealth == 93f && far.CurrentHealth == 93f, "Out-of-range area attack did not hit the nearest target and neighbors."); // 먼 표적과 주변 범위 피해 확인
+            Component areaTracer = UnityEngine.Object.FindFirstObjectByType(tracerType) as Component; // 실제 범위 공격 탄 표시
+            Require(areaTracer != null && areaTracer.transform.position.x > origin.x && areaTracer.transform.position.x < near.transform.position.x, "Area attack projectile visual did not travel toward the target."); // 실제 범위 탄 비행 확인
             near.Configure(100f); // 가까운 표적 체력 복구
             far.Configure(100f); // 주변 표적 체력 복구
             WeaponData explosion = AssetDatabase.LoadAssetAtPath<WeaponData>("Assets/Data/Weapons/PrototypeExplosionAura.asset"); // 실제 폭발 범위 무기

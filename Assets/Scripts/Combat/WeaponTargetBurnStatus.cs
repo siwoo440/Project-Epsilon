@@ -37,8 +37,8 @@ namespace ProjectEpsilon.Combat // 전투 영역
             } // 조건 끝
 
             float delta = Mathf.Min(Time.deltaTime, remainingDuration); // 실제 적용 시간 계산
-            remainingDuration = Mathf.Max(0f, remainingDuration - delta); // 남은 시간 감소
             target.TakeDamage(damagePerSecond * delta); // 프레임 비례 피해 적용
+            remainingDuration = Mathf.Max(0f, remainingDuration - delta); // 피해 적용 뒤 남은 시간 감소
             UpdateVisual(); // 화상 색상 갱신
 
             if (remainingDuration <= 0f || target == null || !target.IsAlive) // 적용 후 종료 확인

@@ -25,6 +25,7 @@ namespace ProjectEpsilon.Combat
         [SerializeField] private int rangeUpgrades; // 사거리 강화 횟수
         private const float UpgradeBonus = 0.05f; // 강화 1회당 임시 증가율
         private float nextAttackTime;
+        private int meleeAttackCount; // 장착 후 근접 공격 횟수
 
         public SnakeSegment Owner => owner;
         public Transform Origin => owner == null ? null : owner.transform;
@@ -43,6 +44,7 @@ namespace ProjectEpsilon.Combat
             owner = segment;
             grade = 1;
             nextAttackTime = 0f;
+            meleeAttackCount = 0; // 새 포탑의 강타 횟수 초기화
         }
 
         public void SetOwner(SnakeSegment segment)
@@ -58,11 +60,13 @@ namespace ProjectEpsilon.Combat
             speedUpgrades = Mathf.Max(0, speedBonus); // 공격 속도 강화 저장
             rangeUpgrades = Mathf.Max(0, rangeBonus); // 사거리 강화 저장
             nextAttackTime = 0f;
+            meleeAttackCount = 0; // 새 장착의 강타 횟수 초기화
         }
 
         public void Clear()
         {
             weapon = null;
+            meleeAttackCount = 0; // 제거한 포탑의 강타 횟수 초기화
             grade = 1;
             damageUpgrades = 0; // 공격력 강화 초기화
             speedUpgrades = 0; // 공격 속도 강화 초기화
@@ -90,6 +94,16 @@ namespace ProjectEpsilon.Combat
         {
             return weapon != null && currentTime >= nextAttackTime;
         }
+
+        public bool CountWideStrike(int interval) // 실제 공격의 주기 강타 확인
+        { // 메서드 시작
+            if (interval <= 0) // 비활성 주기 확인
+            { // 조건 시작
+                return false; // 일반 공격 유지
+            } // 조건 끝
+            meleeAttackCount = (meleeAttackCount + 1) % interval; // 주기 내 공격 횟수 갱신
+            return meleeAttackCount == 0; // 강타 시점 반환
+        } // 메서드 끝
 
         public void StartCooldown(float currentTime)
         {

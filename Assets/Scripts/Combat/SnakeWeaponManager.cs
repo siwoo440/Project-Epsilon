@@ -13,6 +13,7 @@ namespace ProjectEpsilon.Combat
         [SerializeField] private SnakeBodyManager bodyManager;
         [SerializeField] private WeaponData startingWeapon;
         [SerializeField] private Sprite projectileSprite;
+        [SerializeField] private Sprite turretProjectileSprite; // 실제 포탑 탄 이미지
 
         [Header("Grade Effects")]
         [SerializeField] private WeaponGradeEffectHooks gradeEffectHooks;
@@ -562,6 +563,25 @@ namespace ProjectEpsilon.Combat
                 return false;
             }
 
+            TurretAttackTracer.Spawn(origin, target.transform.position, turretProjectileSprite, weapon.ArtworkTint); // 몸통에서 최근접 적까지 발사 표시
+            if (slot.Grade >= 5 && weapon.GradeFiveWideStrikeRadius > 0f && slot.CountWideStrike(weapon.GradeFiveWideStrikeInterval)) // 실제 주기 강타 확인
+            { // 조건 시작
+                Vector3 center = target.transform.position; // 최근접 대상의 실제 위치
+                float rangeScale = weapon.Range > 0f ? slot.EffectiveRange / weapon.Range : 1f; // 합성 범위 강화 배율
+                float radius = weapon.GradeFiveWideStrikeRadius * rangeScale; // 실제 강타 범위
+                WeaponAttributeAttackSnapshot normal = CreateAttackSnapshot(slot, origin); // 몸통 원점 공격 정보
+                WeaponAttributeAttackSnapshot wide = new WeaponAttributeAttackSnapshot(normal.Weapon, normal.Attribute, normal.AttributeCount, normal.SynergyStage, normal.Grade, normal.Origin, normal.DirectDamage * weapon.GradeFiveWideStrikeDamageMultiplier); // 실제 강타 피해 정보
+                WeaponTarget[] targets = UnityEngine.Object.FindObjectsByType<WeaponTarget>(FindObjectsSortMode.None); // 강타 전 실제 대상 목록
+                foreach (WeaponTarget candidate in targets) // 강타 대상 순회
+                { // 반복 시작
+                    if (candidate != null && candidate.isActiveAndEnabled && candidate.IsAlive && (candidate.transform.position - center).sqrMagnitude <= radius * radius) // 범위 안 생존 대상 확인
+                    { // 조건 시작
+                        ApplyWeaponHit(wide, candidate, candidate.transform.position); // 실제 강타 피해 적용
+                    } // 조건 끝
+                } // 반복 끝
+                SpawnAttackPulse(center, radius, new Color(1f, 0.65f, 0.25f, 0.75f), 0.2f); // 실제 강타 범위 표시
+                return true; // 강타 공격 완료
+            } // 조건 끝
             WeaponTarget second = null; // 추가 공격 대상 초기화
             if (weapon.GetMeleeTargetLimit(slot.Grade) >= 2) // 무기 등급별 두 대상 공격 확인
             { // 조건 시작
@@ -636,6 +656,7 @@ namespace ProjectEpsilon.Combat
             { // 조건 시작
                 return false; // 적이 없으면 공격 대기
             } // 조건 끝
+            TurretAttackTracer.Spawn(origin, closest.transform.position, turretProjectileSprite, weapon.ArtworkTint); // 몸통에서 범위 공격 대상까지 표시
             float attackRange = slot.EffectiveRange * weapon.GetAreaRangeMultiplier(slot.Grade); // 등급별 실제 범위
             Vector3 center = (closest.transform.position - origin).sqrMagnitude > attackRange * attackRange ? closest.transform.position : origin; // 사거리 밖 대상 또는 기존 몸통 중심
             WeaponAttributeAttackSnapshot snapshot = CreateAttackSnapshot(slot, origin); // 실제 몸통 원점 공격 정보
@@ -707,6 +728,7 @@ namespace ProjectEpsilon.Combat
                 Mathf.Max(weapon.ProjectileLifetime, direction.magnitude / Mathf.Max(0.01f, weapon.ProjectileSpeed) + 0.5f), // 발사 시점 원거리 목표까지의 최소 수명
                 projectileSprite
             );
+            projectile.SetArtwork(turretProjectileSprite, weapon.ArtworkTint); // 실제 판정과 분리된 탄 이미지
         }
 
         private WeaponAttributeAttackSnapshot CreateAttackSnapshot(SnakeWeaponSlot slot, Vector3 origin) // 공격 정보 생성

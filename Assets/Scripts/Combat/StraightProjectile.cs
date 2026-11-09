@@ -21,6 +21,7 @@ namespace ProjectEpsilon.Combat
         private float transferRange; // 발사 시점 전달 반경
         private float transferDamageMultiplier; // 발사 시점 전달 피해 배율
         private int configurationVersion; // 발사 구성 세대
+        private SpriteRenderer artworkRenderer; // 실제 충돌체와 분리된 탄 이미지
 
         private void Awake()
         {
@@ -59,6 +60,11 @@ namespace ProjectEpsilon.Combat
             remainingLifetime = Mathf.Max(0.1f, lifetime);
 
             SpriteRenderer renderer = GetComponent<SpriteRenderer>();
+            renderer.enabled = true; // 새 발사의 기본 표시 복구
+            if (artworkRenderer != null) // 이전 별도 이미지 확인
+            { // 조건 시작
+                artworkRenderer.gameObject.SetActive(false); // 새 설정 전 이전 이미지 숨김
+            } // 조건 끝
             renderer.sprite = visual;
             renderer.color = new Color(0.45f, 1f, 1f, 1f);
             renderer.sortingOrder = 20;
@@ -88,6 +94,32 @@ namespace ProjectEpsilon.Combat
                 Destroy(gameObject);
             }
         }
+
+        public void SetArtwork(Sprite artwork, Color tint) // 실제 탄 이미지 설정
+        { // 메서드 시작
+            SpriteRenderer original = GetComponent<SpriteRenderer>(); // 기존 표시기 조회
+            if (artwork == null) // 별도 이미지 부재 확인
+            { // 조건 시작
+                original.enabled = true; // 기존 투사체 표시 유지
+                if (artworkRenderer != null) // 기존 탄 이미지 확인
+                { // 조건 시작
+                    artworkRenderer.gameObject.SetActive(false); // 이전 이미지 숨김
+                } // 조건 끝
+                return; // 기존 판정과 표시 유지
+            } // 조건 끝
+            if (artworkRenderer == null) // 실제 자식 이미지 부재 확인
+            { // 조건 시작
+                GameObject child = new GameObject("ProjectileArtwork"); // 실제 탄 이미지 객체
+                child.transform.SetParent(transform, false); // 실제 투사체에 연결
+                child.transform.localScale = Vector3.one * 3.3f; // 충돌 범위와 독립된 표시 크기
+                artworkRenderer = child.AddComponent<SpriteRenderer>(); // 실제 탄 표시기
+            } // 조건 끝
+            artworkRenderer.gameObject.SetActive(true); // 실제 탄 이미지 표시
+            artworkRenderer.sprite = artwork; // 생성한 탄 이미지 연결
+            artworkRenderer.color = tint; // 실제 포탑 속성 색상
+            artworkRenderer.sortingOrder = 21; // 바닥과 적 위 표시
+            original.enabled = false; // 기존 디버그 표시 숨김
+        } // 메서드 끝
 
         private void OnTriggerEnter2D(Collider2D other) // 투사체 명중 처리
         { // 메서드 시작

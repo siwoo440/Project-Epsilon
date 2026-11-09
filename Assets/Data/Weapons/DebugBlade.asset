@@ -22,9 +22,12 @@ MonoBehaviour:
   range: 1.35
   maxGrade: 5
   gradeThreeMeleeTargetLimit: 2
-  gradeFiveMeleeTargetLimit: 3
+  gradeFiveMeleeTargetLimit: 2
   projectileSpeed: 8
   projectileLifetime: 3
   projectileHitLimit: 1
   burnDuration: 3
   burnDamagePerSecond: 1
+  gradeFiveWideStrikeInterval: 4
+  gradeFiveWideStrikeRadius: 2
+  gradeFiveWideStrikeDamageMultiplier: 1.5

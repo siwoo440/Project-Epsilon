@@ -208,3 +208,11 @@
 `AutomatedDay46GenerationVerification.Run`은 실제 씬에서 생성 확률 0%·100%, 장애물 충돌체와 특수 지역 최소 거리를 확인한다. `AutomatedDay46ZonesVerification.Run`은 실제 감속, 경험치 소수 누적, 위험 피해, 회복, 일시정지와 지역 이탈을 통제 조건에서 검사한다. 각 진입점 앞에는 `ProjectEpsilon.Editor.`를 붙인다.
 
 `AutomatedCharacterInputVerification.Run`은 시작 화면의 맵 위·아래 키, 설정 화면 입력 우선과 전투 중 변경 금지를 함께 검사한다. 실행 결과와 미완료 사항은 `Devlogs/Day46/README.md`에 기록한다.
+
+---
+
+## 47일차 포탑 고유 효과와 탄 표시
+
+`AutomatedDay47UniqueEffectsVerification.Run`은 실제 강철 포탑의 4회 주기·범위·재장착 초기화와 화염탄의 화상 처치·만료·중복·즉사·연쇄 차단·지속 피해 처치·실제 탄 발사 후 폭발을 통제 조건에서 검사한다. `AutomatedPlayerArtVerification.Run`은 실제 머리와 몸통의 최대 표시 크기 각 1 및 기존 충돌체를 확인한다. `AutomatedGlobalAttackHudVerification.Run`은 근접·범위의 시각 탄 이동·일시정지와 실제 직선 탄의 이미지·충돌체·원거리 명중을 함께 확인한다. 각 진입점 앞에는 `ProjectEpsilon.Editor.`를 붙이며, 스크립트와 `StartingWeaponBatchHelper.cs`는 별도 Unity 사본에만 복사한다.
+
+48종 ★5 시험은 강철 근접의 주기 강타와 화염탄의 화상 폭발을 공통 효과와 구분한다. 등급별 시험 결과와 수동 확인 한계는 `Devlogs/Day47/README.md`를 참조한다.

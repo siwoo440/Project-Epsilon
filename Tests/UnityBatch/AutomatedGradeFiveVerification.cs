@@ -85,13 +85,15 @@ namespace ProjectEpsilon.Editor // 배치 시험 영역
                 Require(weapon != null, "Missing weapon data."); // 무기 데이터 확인
                 if (weapon.AttackType == WeaponAttackType.Melee) // 근접 무기 확인
                 { // 조건 시작
-                    Require(weapon.GetMeleeTargetLimit(4) == 2 && weapon.GetMeleeTargetLimit(5) == 3, "Melee grade-five targets missing: " + weapon.Id); // 등급별 대상 수 확인
+                    int expectedLimit = weapon.GradeFiveWideStrikeInterval > 0 ? 2 : 3; // 강타 포탑과 기존 공통 효과 구분
+                    Require(weapon.GetMeleeTargetLimit(4) == 2 && weapon.GetMeleeTargetLimit(5) == expectedLimit, "Melee grade-five targets missing: " + weapon.Id); // 등급별 대상 수 확인
                 } // 조건 끝
                 else if (weapon.AttackType == WeaponAttackType.StraightProjectile) // 직선 무기 확인
                 { // 조건 시작
                     float low = (float)transferMultiplier.Invoke(weapon, new object[] { 4 }); // 사 등급 전달 배율
                     float high = (float)transferMultiplier.Invoke(weapon, new object[] { 5 }); // 오 등급 전달 배율
-                    Require(low > 0f && Mathf.Approximately(high, low * 1.5f), "Projectile grade-five multiplier missing: " + weapon.Id); // 등급별 전달 배율 확인
+                    float expectedScale = weapon.GradeFiveBurnExplosionRadius > 0f ? 1f : 1.5f; // 화상 폭발 포탑과 기존 공통 효과 구분
+                    Require(low > 0f && Mathf.Approximately(high, low * expectedScale), "Projectile grade-five multiplier missing: " + weapon.Id); // 등급별 전달 배율 확인
                 } // 조건 끝
                 else if (weapon.AttackType == WeaponAttackType.Area) // 범위 무기 확인
                 { // 조건 시작
@@ -168,7 +170,7 @@ namespace ProjectEpsilon.Editor // 배치 시험 영역
                 yield return AttackOnce(weapons, entry.Weapon, 5); // 실제 오 등급 자동 공격
                 yield return new WaitForSeconds(0.3f); // 직선 투사체 실제 명중 대기
                 Require(target.CurrentHealth < 100f && extra.CurrentHealth < 100f, "Grade-five weapon did not hit both targets: " + entry.Weapon.Id); // 실제 무기별 두 대상 명중 확인
-                Require(entry.Weapon.AttackType != WeaponAttackType.Melee || last.CurrentHealth < 100f, "Grade-five melee missed third target: " + entry.Weapon.Id); // 실제 근접 무기별 셋째 대상 확인
+                Require(entry.Weapon.AttackType != WeaponAttackType.Melee || entry.Weapon.GradeFiveWideStrikeInterval > 0 && Mathf.Approximately(last.CurrentHealth, 100f) || entry.Weapon.GradeFiveWideStrikeInterval == 0 && last.CurrentHealth < 100f, "Grade-five melee target count differs from its configured effect: " + entry.Weapon.Id); // 실제 강타와 공통 근접 대상 구분
                 target.gameObject.SetActive(false); // 이전 첫 표적 접촉 차단
                 extra.gameObject.SetActive(false); // 이전 둘째 표적 접촉 차단
                 last.gameObject.SetActive(false); // 이전 셋째 표적 접촉 차단
