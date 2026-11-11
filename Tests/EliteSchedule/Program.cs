@@ -10,11 +10,11 @@ using ProjectEpsilon.Progression; // 보상 대체
 using UnityEngine; // 위치와 시간 대체
 
 internal static class Program // 엘리트 일정 시험
-{ // 클래스 시작
+{
     private static readonly BindingFlags Private = BindingFlags.Instance | BindingFlags.NonPublic; // 비공개 범위
     private static int failures; // 실패 횟수
     private static int Main() // 시험 시작
-    { // 메서드 시작
+    {
         Check("네 차례 출현과 개별 보상", VerifyFourRounds); // 일정과 보상 검사
         Check("동시 상한과 FIFO 대기", VerifyPendingQueue); // 미처치 대기 검사
         Check("만석 일반 적 정리와 엘리트 보존", VerifyFullCapacity); // 만석과 공존 검사
@@ -26,28 +26,28 @@ internal static class Program // 엘리트 일정 시험
         Check("20분 전환 정리와 합성 보류", VerifyBossTransition); // 실제 전환 코드 검사
         Console.WriteLine(failures == 0 ? "PASS" : $"FAIL: {failures}"); // 최종 결과
         return failures == 0 ? 0 : 1; // 종료 코드
-    } // 메서드 끝
+    }
     private static void Check(string label, Action action) // 개별 시험
-    { // 메서드 시작
+    {
         try { action(); Console.WriteLine($"PASS: {label}"); } // 성공 기록
         catch (Exception error) { failures++; Console.WriteLine($"FAIL: {label}: {error.GetBaseException().Message}"); } // 실패 기록
-    } // 메서드 끝
+    }
     private static void Require(bool condition, string message) { if (!condition) { throw new InvalidOperationException(message); } } // 검증 조건
     private static object Invoke(object instance, string name, params object[] args) // 실제 내부 경로 실행
-    { // 메서드 시작
+    {
         if (instance is EarlyEnemyWaveSpawner && name == "Start") // 실제 출현기 시작 확인
-        { // 조건 시작
+        {
             instance.GetType().GetMethod("OnEnable", Private).Invoke(instance, null); // 실제 활성화 순서 재현
-        } // 조건 끝
+        }
         if (instance is EarlyEnemyWaveSpawner && name == "LateUpdate" && GameManager.Instance.IsPlaying) // 실제 진행 프레임 확인
-        { // 조건 시작
+        {
             Time.timeAsDouble += Time.deltaTime; // 시험 게임 시간 누적
-        } // 조건 끝
+        }
         return instance.GetType().GetMethod(name, Private).Invoke(instance, args); // 실제 내부 경로 실행
-    } // 메서드 끝
+    }
     private static void Set(object instance, string name, object value) => instance.GetType().GetField(name, Private).SetValue(instance, value); // 직렬화 값 설정
     private static (EarlyEnemyWaveSpawner spawner, EliteRewardController rewards) Create() // 출현기 시험 구성
-    { // 메서드 시작
+    {
         GameObject.Objects.Clear(); // 기존 객체 제거
         Camera.main = null; // 카메라 부재 대조
         GameManager.Instance.IsPlaying = true; // 게임 진행 설정
@@ -65,30 +65,30 @@ internal static class Program // 엘리트 일정 시험
         Set(spawner, "nextSpawn", float.MaxValue); // 일반 자연 출현 차단
         Invoke(spawner, "Start"); // 실제 참조 초기화
         return (spawner, rewards); // 시험 구성 반환
-    } // 메서드 끝
+    }
     private static void Advance(EarlyEnemyWaveSpawner spawner, float time) // 지정 시점 갱신
-    { // 메서드 시작
+    {
         Set(spawner, "elapsed", time - 0.01f); // 경계 직전 시간
         Invoke(spawner, "LateUpdate"); // 실제 출현기 갱신
-    } // 메서드 끝
+    }
     private static WeaponTarget[] Elites() => GameObject.Objects.Where(value => value.name == "EarlyEnemy_Elite").Select(value => value.GetComponent<WeaponTarget>()).ToArray(); // 생성된 엘리트 목록
     private static Queue<int> Pending(EarlyEnemyWaveSpawner spawner) => (Queue<int>)spawner.GetType().GetField("pendingEliteRounds", Private).GetValue(spawner); // 보류 회차 조회
     private static void VerifyFourRounds() // 네 시각의 개별 출현과 보상
-    { // 메서드 시작
+    {
         var fixture = Create(); // 시험 구성
         float[] times = { 240f, 480f, 720f, 960f }; // 기획 출현 시각
         for (int index = 0; index < times.Length; index++) // 출현 시각 순회
-        { // 반복 시작
+        {
             Advance(fixture.spawner, times[index]); // 현재 시각 진행
             WeaponTarget[] targets = Elites(); // 현재까지 생성된 엘리트
             Require(targets.Length == index + 1, $"{times[index]}초 엘리트 누락 또는 중복"); // 회차 출현 확인
             targets[index].Kill(); // 실제 사망 이벤트 대체
             targets[index].Kill(); // 중복 사망 대조
             Require(fixture.rewards.Count == index + 1 && EnemyDropController.TotalExperience == (index + 1) * 20, "개별 선택 보상 또는 경험치 누락·중복"); // 개별 보상 확인
-        } // 반복 끝
-    } // 메서드 끝
+        }
+    }
     private static void VerifyPendingQueue() // 동시 상한과 순차 대기
-    { // 메서드 시작
+    {
         var fixture = Create(); // 시험 구성
         Advance(fixture.spawner, 240f); // 첫 엘리트 출현
         Advance(fixture.spawner, 480f); // 둘째 출현 예정
@@ -110,9 +110,9 @@ internal static class Program // 엘리트 일정 시험
         Elites()[2].Kill(); // 셋째 엘리트 사망
         Elites()[3].Kill(); // 넷째 엘리트 사망
         Require(fixture.rewards.Count == 4 && EnemyDropController.TotalExperience == 80, "공존 엘리트의 개별 보상 오류"); // 네 번 보상 확인
-    } // 메서드 끝
+    }
     private static void VerifyFullCapacity() // 만석에서 일반 적만 제거
-    { // 메서드 시작
+    {
         var fixture = Create(); // 시험 구성
         EarlyEnemySettings ordinary = new EarlyEnemySettings { kind = EarlyEnemyKind.Chaser, health = 25f, experience = 1, attackInterval = 1f }; // 시험용 일반 적
         for (int index = 0; index < 40; index++) { Invoke(fixture.spawner, "Spawn", ordinary); } // 일반 적 만석
@@ -126,9 +126,9 @@ internal static class Program // 엘리트 일정 시험
         Advance(fixture.spawner, 480f); // 둘째 엘리트 예정
         Advance(fixture.spawner, 720f); // 둘째 자리 해제
         Require(fixture.spawner.ActiveEnemies == 40 && Elites().Length == 2 && !Elites()[0].gameObject.destroyed, "기존 엘리트가 만석 제거 대상이 됨"); // 엘리트 보존 확인
-    } // 메서드 끝
+    }
     private static void VerifySkippedBoundaries() // 여러 시점 도달 시 FIFO 보존
-    { // 메서드 시작
+    {
         var fixture = Create(); // 시험 구성
         Advance(fixture.spawner, 960f); // 네 시각을 한 번에 통과
         Require(Elites().Length == 1 && Pending(fixture.spawner).SequenceEqual(new[] { 1, 2, 3 }), "첫 회차와 대기 순서 오류"); // 첫 회차 확인
@@ -141,9 +141,9 @@ internal static class Program // 엘리트 일정 시험
         Require(Elites().Length == 4 && Pending(fixture.spawner).Count == 0, "긴 프레임 후 네 회차 보존 오류"); // 모든 회차 확인
         Invoke(fixture.spawner, "LateUpdate"); // 추가 갱신
         Require(Elites().Length == 4, "완료 회차 중복 생성"); // 중복 방지 확인
-    } // 메서드 끝
+    }
     private static void VerifyEliteOnlyCapacity() // 전체 상한에 일반 적이 없는 경우
-    { // 메서드 시작
+    {
         var fixture = Create(); // 시험 구성
         Set(fixture.spawner, "maximumEnemies", 1); // 전체 적 상한 축소
         Advance(fixture.spawner, 240f); // 첫 엘리트 출현
@@ -152,9 +152,9 @@ internal static class Program // 엘리트 일정 시험
         Elites()[0].Kill(); // 기존 엘리트 처치
         Invoke(fixture.spawner, "LateUpdate"); // 빈 자리 대기 처리
         Require(Elites().Length == 2 && fixture.spawner.ActiveEnemies == 1 && Pending(fixture.spawner).Count == 1, "빈 자리에서 보류 회차 누락"); // 보류 재개 확인
-    } // 메서드 끝
+    }
     private static void VerifySlowTime() // 70퍼센트 시간 흐름 확인
-    { // 메서드 시작
+    {
         var fixture = Create(); // 시험 구성
         Set(fixture.spawner, "elapsed", 239.98f); // 첫 출현 전 시간
         Time.deltaTime = 0.014f; // 70퍼센트 축소 시간
@@ -162,9 +162,9 @@ internal static class Program // 엘리트 일정 시험
         Require(Elites().Length == 0, "축소 시간 경계 전 출현"); // 경계 전 확인
         Invoke(fixture.spawner, "LateUpdate"); // 둘째 축소 프레임
         Require(Elites().Length == 1, "축소 시간 경계 후 출현 누락"); // 경계 후 확인
-    } // 메서드 끝
+    }
     private static void VerifyPause() // 정지 시간과 미처치 엘리트 유지
-    { // 메서드 시작
+    {
         var fixture = Create(); // 시험 구성
         Set(fixture.spawner, "elapsed", 239.99f); // 첫 출현 직전
         GameManager.Instance.IsPlaying = false; // 게임 일시정지
@@ -173,9 +173,9 @@ internal static class Program // 엘리트 일정 시험
         GameManager.Instance.IsPlaying = true; // 게임 재개
         Invoke(fixture.spawner, "LateUpdate"); // 재개 후 갱신
         Require(Elites().Length == 1, "재개 후 첫 엘리트 누락"); // 재개 출현 확인
-    } // 메서드 끝
+    }
     private static void VerifyPauseFrameClock() // 이미 경과한 프레임 시간 보존
-    { // 메서드 시작
+    {
         var fixture = Create(); // 실제 출현기 구성
         Time.timeAsDouble += 0.02d; // 정지 직전 진행한 게임 시간
         GameManager.Instance.IsPlaying = false; // 같은 프레임 일시정지
@@ -183,17 +183,17 @@ internal static class Program // 엘리트 일정 시험
         Require(Math.Abs(fixture.spawner.ElapsedSeconds - 0.02f) < 0.001f, "정지 직전 게임 시간이 누락됨"); // 실제 시간 보존 확인
         Invoke(fixture.spawner, "LateUpdate"); // 시간 정지 상태 재확인
         Require(Math.Abs(fixture.spawner.ElapsedSeconds - 0.02f) < 0.001f, "정지 중 시간이 추가로 증가함"); // 실제 정지 시간 확인
-    } // 메서드 끝
+    }
     private static void VerifyBossTransition() // 실제 출현기의 전환 처리
-    { // 메서드 시작
+    {
         var fixture = Create(); // 실제 출현기 구성
         EarlyEnemySettings ordinary = new EarlyEnemySettings // 일반 적 시험 설정
-        { // 설정 시작
+        {
             kind = EarlyEnemyKind.Chaser, // 추적 적 종류
             health = 25f, // 임시 체력
             experience = 1, // 임시 경험치
             attackInterval = 1f // 임시 공격 간격
-        }; // 설정 끝
+        };
         Invoke(fixture.spawner, "Spawn", ordinary); // 실제 일반 적 출현
         Advance(fixture.spawner, 240f); // 실제 엘리트 출현
         GameObject normal = GameObject.Objects.First(item => item.name == "EarlyEnemy_Chaser"); // 실제 일반 적 조회
@@ -215,5 +215,5 @@ internal static class Program // 엘리트 일정 시험
         Require(!merge.IsMergeOpen && fixture.rewards.Count == 0 && EnemyDropController.TotalExperience == 0, "합성 보류 또는 무보상 제거 오류"); // 실제 보상과 합성 확인
         Invoke(fixture.spawner, "LateUpdate"); // 전환 후 추가 프레임
         Require(events == 1 && fixture.spawner.ActiveEnemies == 0, "전환 중복 또는 기존 웨이브 재개"); // 중복 전환 방지 확인
-    } // 메서드 끝
-} // 클래스 끝
+    }
+}

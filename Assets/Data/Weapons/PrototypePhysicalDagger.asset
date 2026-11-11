@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: PrototypePhysicalDagger
   m_EditorClassIdentifier: Assembly-CSharp::ProjectEpsilon.Data.WeaponData
   id: prototype_physical_dagger
-  displayName: 시험용 물리 속사 근접 포탑
+  displayName: 물리 속사 근접 포탑
   artwork: {fileID: 21300000, guid: f873d6246f772fb41a1fb370949f0060, type: 3}
   attribute: 0
   attackType: 0

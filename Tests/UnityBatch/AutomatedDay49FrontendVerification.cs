@@ -17,64 +17,64 @@ using UnityEngine.InputSystem.LowLevel; // 실제 키 상태
 using UnityEngine.UI; // 실제 버튼과 문구
 
 namespace ProjectEpsilon.Editor // 배치 시험 영역
-{ // 영역 시작
+{
     [InitializeOnLoad] // 실제 도메인 재시작
     public static class AutomatedDay49FrontendVerification // 실제 화면 흐름 검증
-    { // 클래스 시작
+    {
         private const string Key = "EpsilonDay49Frontend"; // 실제 시험 표식
         private static double started; // 실제 시험 시작 시간
         private static bool injected; // 실제 시험기 생성 여부
         static AutomatedDay49FrontendVerification() // 실제 도메인 재시작
-        { // 생성자 시작
+        {
             if (SessionState.GetBool(Key, false)) // 실제 진행 확인
-            { // 조건 시작
+            {
                 EditorApplication.update += Tick; // 실제 시험 감시
-            } // 조건 끝
-        } // 생성자 끝
+            }
+        }
         public static void Run() // 실제 배치 진입
-        { // 메서드 시작
+        {
             EditorSceneManager.OpenScene("Assets/Scenes/Game.unity"); // 실제 게임 씬 열기
             SessionState.SetBool(Key, true); // 실제 시험 기록
             EditorApplication.update -= Tick; // 기존 감시 제거
             EditorApplication.update += Tick; // 실제 시험 감시
             EditorApplication.isPlaying = true; // 실제 플레이 진입
-        } // 메서드 끝
+        }
         private static void Tick() // 실제 시작 화면 확인
-        { // 메서드 시작
+        {
             if (!EditorApplication.isPlaying) // 실제 시작 대기
-            { // 조건 시작
+            {
                 return; // 실제 준비 대기
-            } // 조건 끝
+            }
             if (started <= 0d) // 실제 시작 시간 확인
-            { // 조건 시작
+            {
                 started = EditorApplication.timeSinceStartup; // 실제 시작 시각 기록
-            } // 조건 끝
+            }
             if (EditorApplication.timeSinceStartup - started > 120d) // 실제 시간 제한 확인
-            { // 조건 시작
+            {
                 Finish(1, "Timed out."); // 실제 시간 초과
                 return; // 추가 시험 중단
-            } // 조건 끝
+            }
             if (injected || GameManager.Instance == null || RunFrontendController.Instance == null || GameObject.Find("FrontendStartButton") == null) // 실제 시작 화면 준비 확인
-            { // 조건 시작
+            {
                 return; // 실제 화면 구성 대기
-            } // 조건 끝
+            }
             injected = true; // 실제 시험 중복 방지
             GameObject runner = new GameObject("Day49FrontendRunner"); // 실제 지속 시험기
             UnityEngine.Object.DontDestroyOnLoad(runner); // 실제 재시작 중 시험 유지
             runner.AddComponent<Day49FrontendRunner>(); // 실제 화면 시나리오 시작
-        } // 메서드 끝
+        }
         public static void Finish(int code, string message) // 실제 결과 처리
-        { // 메서드 시작
+        {
             SessionState.SetBool(Key, false); // 실제 시험 표식 제거
             EditorApplication.update -= Tick; // 실제 시험 감시 해제
             Debug.Log($"[Day49FrontendVerification] {(code == 0 ? "PASS" : "FAIL")}: {message}"); // 실제 결과 기록
             EditorApplication.Exit(code); // 실제 종료 코드
-        } // 메서드 끝
-    } // 클래스 끝
+        }
+    }
     public sealed class Day49FrontendRunner : MonoBehaviour // 실제 버튼과 재시작 시나리오
-    { // 클래스 시작
+    {
         private IEnumerator Start() // 실제 씬 시나리오 실행
-        { // 코루틴 시작
+        {
             Require(Application.productName == "Project-Epsilon-Day48-Isolated", "Test project is not isolated."); // 실제 사용자 저장 격리 확인
             PlayerPrefs.DeleteKey("ProjectEpsilon.MetaProgress.v1"); // 실제 격리 메타 초기화
             PlayerPrefs.SetString(FrontendOptions.SaveKey, "{}"); // 실제 손상 화면 설정 재현
@@ -116,19 +116,19 @@ namespace ProjectEpsilon.Editor // 배치 시험 영역
             int mobile = -1; // 실제 기동형 번호
             int heavy = -1; // 실제 중장형 번호
             for (int index = 0; index < characters.CharacterCount; index++) // 실제 여섯 캐릭터 순회
-            { // 반복 시작
+            {
                 CharacterData candidate = characters.GetCharacter(index); // 실제 캐릭터 데이터
                 Require(candidate != null && candidate.StartingWeapons != null && candidate.StartingWeapons.Weapons != null && candidate.StartingWeapons.Weapons.Length == 3, "Character data or three starting candidates missing."); // 실제 후보 구성 확인
                 if (candidate.Id == "prototype_mobile") // 실제 기동형 확인
-                { // 조건 시작
+                {
                     mobile = index; // 실제 기동형 번호 기록
-                } // 조건 끝
+                }
                 if (candidate.Id == "prototype_heavy") // 실제 중장형 확인
-                { // 조건 시작
+                {
                     heavy = index; // 실제 중장형 번호 기록
-                } // 조건 끝
+                }
                 Require(FindButton("FrontendCharacterButton" + index) != null, "Character button missing."); // 실제 캐릭터 버튼 확인
-            } // 반복 끝
+            }
             Require(mobile >= 0 && heavy >= 0 && !FindButton("FrontendCharacterButton" + mobile).interactable && !characters.TryApply(characters.GetCharacter(mobile)), "Locked character was selectable."); // 실제 캐릭터 잠금 확인
             Click("FrontendCharacterButton" + heavy); // 실제 중장형 선택
             Require(CharacterRunInitializer.ActiveCharacter == characters.GetCharacter(heavy) && FindFirstObjectByType<SnakeHealth>().MaximumHealth == Mathf.RoundToInt(characters.GetCharacter(heavy).BodyMaxHealth), "Selected character stats not applied."); // 실제 선택 능력 적용
@@ -189,7 +189,7 @@ namespace ProjectEpsilon.Editor // 배치 시험 영역
             yield return null; // 실제 결과 표시 대기
             Require(GameManager.Instance.CurrentState == GameState.Defeated && frontend.Stage == FrontendStage.Results && meta.LastAward == 1 && meta.Service.Cores == 6, "Abandon result or core reward failed."); // 실제 성과 저장 확인
             Text result = GameObject.Find("FrontendResultDetails").GetComponent<Text>(); // 실제 결과 문구
-            Require(result.text.Contains("02:00") && result.text.Contains("CORES  +1") && result.text.Contains("Physical TURRET") && result.text.Contains("SAVED") && meta.Service.IsTurretAttributeUnlocked(0), "Result details do not match actual saved reward and unlock."); // 실제 시간과 저장 해금 확인
+            Require(result.text.Contains("02:00") && result.text.Contains("CORES  +1") && result.text.Contains("물리 포탑") && result.text.Contains("SAVED") && meta.Service.IsTurretAttributeUnlocked(0), "Result details do not match actual saved reward and unlock."); // 실제 시간과 저장 해금 확인
             Click("FrontendRetryButton"); // 실제 같은 캐릭터 재도전
             yield return WaitForStage(FrontendStage.Weapons); // 실제 씬 재시작 대기
             frontend = RunFrontendController.Instance; // 실제 새 화면 관리자
@@ -211,50 +211,50 @@ namespace ProjectEpsilon.Editor // 배치 시험 영역
             Require(RunFrontendController.Instance.Stage == FrontendStage.Main && MetaProgressionController.Instance.Service.Cores == 6, "Main menu return or saved progress failed."); // 실제 주 메뉴와 저장 확인
             InputSystem.RemoveDevice(keyboard); // 실제 가상 키보드 제거
             if (originalSettings != null) // 실제 이전 입력 설정 유효성 확인
-            { // 조건 시작
+            {
                 InputSystem.settings = originalSettings; // 실제 이전 입력 설정 복구
-            } // 조건 끝
+            }
             Application.runInBackground = previousBackground; // 실제 이전 백그라운드 복구
             if (testSettings != null && InputSystem.settings != testSettings) // 실제 임시 설정 사용 여부 확인
-            { // 조건 시작
+            {
                 Destroy(testSettings); // 사용하지 않는 임시 입력 설정 제거
-            } // 조건 끝
+            }
             AutomatedDay49FrontendVerification.Finish(0, "Six characters, locked maps, settings, merge priority, pause, abandon, result, retry and menu persistence passed."); // 실제 전체 시험 성공
-        } // 코루틴 끝
+        }
         private static IEnumerator Tap(Keyboard keyboard, Key key) // 실제 키 입력과 해제
-        { // 메서드 시작
+        {
             InputSystem.QueueStateEvent(keyboard, new KeyboardState(key)); // 실제 키 누름 전달
             yield return null; // 실제 입력 프레임 대기
             InputSystem.QueueStateEvent(keyboard, new KeyboardState()); // 실제 키 해제 전달
             yield return null; // 실제 입력 해제 대기
-        } // 코루틴 끝
+        }
         private static IEnumerator WaitForStage(FrontendStage stage) // 실제 새 씬 단계 대기
-        { // 메서드 시작
+        {
             float deadline = Time.realtimeSinceStartup + 15f; // 실제 단계 제한 시간
             while (Time.realtimeSinceStartup < deadline && (RunFrontendController.Instance == null || RunFrontendController.Instance.Stage != stage)) // 실제 새 단계 확인
-            { // 반복 시작
+            {
                 yield return null; // 실제 씬과 초기화 대기
-            } // 반복 끝
+            }
             Require(RunFrontendController.Instance != null && RunFrontendController.Instance.Stage == stage, "Scene restart stage timed out."); // 실제 단계 전환 확인
-        } // 코루틴 끝
+        }
         private static Button FindButton(string name) // 실제 활성 버튼 조회
-        { // 메서드 시작
+        {
             GameObject item = GameObject.Find(name); // 실제 이름으로 조회
             return item == null ? null : item.GetComponent<Button>(); // 실제 버튼 반환
-        } // 메서드 끝
+        }
         private static void Click(string name) // 실제 버튼 이벤트 호출
-        { // 메서드 시작
+        {
             Button button = FindButton(name); // 실제 버튼 조회
             Require(button != null && button.IsActive() && button.interactable, "Missing or disabled button: " + name); // 실제 사용 가능 확인
             button.onClick.Invoke(); // 실제 버튼 이벤트 실행
-        } // 메서드 끝
+        }
         private static void Require(bool condition, string message) // 실제 시험 조건 확인
-        { // 메서드 시작
+        {
             if (!condition) // 실제 실패 여부 확인
-            { // 조건 시작
+            {
                 AutomatedDay49FrontendVerification.Finish(1, message); // 실제 실패 기록
                 throw new InvalidOperationException(message); // 실제 후속 시험 중단
-            } // 조건 끝
-        } // 메서드 끝
-    } // 클래스 끝
-} // 영역 끝
+            }
+        }
+    }
+}

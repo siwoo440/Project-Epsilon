@@ -1,295 +1,295 @@
-using ProjectEpsilon.Core;
-using ProjectEpsilon.Player;
-using UnityEngine;
+using ProjectEpsilon.Core; // 대상 기능 연결
+using ProjectEpsilon.Player; // 플레이어 기능 연결
+using UnityEngine; // Unity 엔진 기능 연결
 
-namespace ProjectEpsilon.Progression
+namespace ProjectEpsilon.Progression // 프로젝트 기능 영역
 {
-    public enum RecoveryPickupType
+    public enum RecoveryPickupType // 회복·형식 자료 구조
     {
-        Heal,
-        BodyRepair
+        Heal, // 회복 항목 전달
+        BodyRepair // 몸통 처리
     }
 
-    [RequireComponent(typeof(SpriteRenderer))]
-    public sealed class RecoveryPickup : MonoBehaviour
+    [RequireComponent(typeof(SpriteRenderer))] // 구성 요소·이미지 설정
+    public sealed class RecoveryPickup : MonoBehaviour // 회복·행동 자료 구조
     {
-        [SerializeField] private Transform receiver;
-        [SerializeField] private SnakeHealth health;
-        [SerializeField] private SnakeBodyManager bodyManager;
-        [SerializeField] private RecoveryPickupType pickupType =
-            RecoveryPickupType.Heal;
+        [SerializeField] private Transform receiver; // 필드·위치 설정
+        [SerializeField] private SnakeHealth health; // 필드·체력 설정
+        [SerializeField] private SnakeBodyManager bodyManager; // 필드·몸통 설정
+        [SerializeField] private RecoveryPickupType pickupType = // 필드·회복 설정
+            RecoveryPickupType.Heal; // 회복·형식 처리
 
-        [Min(1)]
-        [SerializeField] private int value = 15;
+        [Min(1)] // 최소 설정
+        [SerializeField] private int value = 15; // 필드·값 설정
 
-        [Min(0.1f)]
-        [SerializeField] private float attractionRange = 2.6f;
+        [Min(0.1f)] // 최소 설정
+        [SerializeField] private float attractionRange = 2.6f; // 필드·범위 설정
 
-        [Min(0.1f)]
-        [SerializeField] private float attractionSpeed = 6f;
+        [Min(0.1f)] // 최소 설정
+        [SerializeField] private float attractionSpeed = 6f; // 필드·속도 설정
 
-        [Min(0.01f)]
-        [SerializeField] private float collectDistance = 0.22f;
+        [Min(0.01f)] // 최소 설정
+        [SerializeField] private float collectDistance = 0.22f; // 필드·거리 설정
 
-        private SpriteRenderer spriteRenderer;
-        private bool collected;
+        private SpriteRenderer spriteRenderer; // 이미지·렌더러 구성 선언
+        private bool collected; // 대상 구성 선언
         public bool IsBodyRepair => pickupType == RecoveryPickupType.BodyRepair; // 몸통 복구 아이템 여부
 
-        private void Awake()
+        private void Awake() // 초기화 기능 선언
         {
-            spriteRenderer =
-                GetComponent<SpriteRenderer>();
+            spriteRenderer = // 이미지·렌더러 값 설정
+                GetComponent<SpriteRenderer>(); // 조회·구성 요소 기능 실행
         }
 
-        public void Configure(
-            Transform target,
-            SnakeHealth snakeHealth,
-            SnakeBodyManager manager,
-            RecoveryPickupType type,
-            int amount,
-            Sprite visual
-        )
+        public void Configure( // 구성 호출 시작
+            Transform target, // 위치·대상 항목 전달
+            SnakeHealth snakeHealth, // 체력 항목 전달
+            SnakeBodyManager manager, // 몸통·관리자 항목 전달
+            RecoveryPickupType type, // 회복·형식 항목 전달
+            int amount, // 수량 항목 전달
+            Sprite visual // 이미지·시각 효과 처리
+        ) // 앞선 항목 종료
         {
-            receiver = target;
-            health = snakeHealth;
-            bodyManager = manager;
-            pickupType = type;
-            value = Mathf.Max(1, amount);
-            collected = false;
+            receiver = target; // 대상 값 설정
+            health = snakeHealth; // 체력 값 설정
+            bodyManager = manager; // 몸통·관리자 값 설정
+            pickupType = type; // 형식 값 설정
+            value = Mathf.Max(1, amount); // 값·최대 값 설정
+            collected = false; // 대상 값 설정
 
-            if (spriteRenderer == null)
+            if (spriteRenderer == null) // 이미지·렌더러 조건 확인
             {
-                spriteRenderer =
-                    GetComponent<SpriteRenderer>();
+                spriteRenderer = // 이미지·렌더러 값 설정
+                    GetComponent<SpriteRenderer>(); // 조회·구성 요소 기능 실행
             }
 
-            spriteRenderer.sprite =
-                visual;
+            spriteRenderer.sprite = // 이미지·렌더러 값 설정
+                visual; // 시각 효과 처리
 
-            spriteRenderer.sortingOrder =
-                17;
+            spriteRenderer.sortingOrder = // 이미지·렌더러 값 설정
+                17; // 대상 처리
 
-            if (pickupType ==
-                RecoveryPickupType.Heal)
+            if (pickupType == // 형식 조건 확인
+                RecoveryPickupType.Heal) // 회복·형식 처리
             {
-                spriteRenderer.color =
-                    new Color(
-                        0.35f,
-                        1f,
-                        0.45f,
-                        1f
-                    );
+                spriteRenderer.color = // 이미지·렌더러 값 설정
+                    new Color( // 색상 객체 생성
+                        0.35f, // 대상 항목 전달
+                        1f, // 대상 항목 전달
+                        0.45f, // 대상 항목 전달
+                        1f // 대상 처리
+                    ); // 앞선 항목 종료
 
-                transform.localScale =
-                    new Vector3(
-                        0.27f,
-                        0.27f,
-                        1f
-                    );
+                transform.localScale = // 위치·크기 값 설정
+                    new Vector3( // 벡터 객체 생성
+                        0.27f, // 대상 항목 전달
+                        0.27f, // 대상 항목 전달
+                        1f // 대상 처리
+                    ); // 앞선 항목 종료
             }
-            else
+            else // 다른 조건 처리
             {
-                spriteRenderer.color =
-                    new Color(
-                        0.35f,
-                        0.85f,
-                        1f,
-                        1f
-                    );
+                spriteRenderer.color = // 이미지·렌더러 값 설정
+                    new Color( // 색상 객체 생성
+                        0.35f, // 대상 항목 전달
+                        0.85f, // 대상 항목 전달
+                        1f, // 대상 항목 전달
+                        1f // 대상 처리
+                    ); // 앞선 항목 종료
 
-                transform.localScale =
-                    new Vector3(
-                        0.31f,
-                        0.31f,
-                        1f
-                    );
-            }
-        }
-
-        private void Update()
-        {
-            if (collected ||
-                !CanApply())
-            {
-                return;
-            }
-
-            if (GameManager.Instance != null &&
-                !GameManager.Instance.IsPlaying)
-            {
-                return;
-            }
-
-            ResolveReceiver();
-
-            if (receiver == null)
-            {
-                return;
-            }
-
-            Vector3 targetPosition =
-                receiver.position;
-
-            Vector3 delta =
-                targetPosition -
-                transform.position;
-
-            float collectDistanceSquared =
-                collectDistance *
-                collectDistance;
-
-            if (delta.sqrMagnitude <=
-                collectDistanceSquared)
-            {
-                Collect();
-                return;
-            }
-
-            float attractionRangeSquared =
-                attractionRange *
-                attractionRange;
-
-            if (delta.sqrMagnitude >
-                attractionRangeSquared)
-            {
-                return;
-            }
-
-            transform.position =
-                Vector3.MoveTowards(
-                    transform.position,
-                    targetPosition,
-                    attractionSpeed *
-                    Time.deltaTime
-                );
-
-            if ((targetPosition -
-                transform.position)
-                .sqrMagnitude <=
-                collectDistanceSquared)
-            {
-                Collect();
+                transform.localScale = // 위치·크기 값 설정
+                    new Vector3( // 벡터 객체 생성
+                        0.31f, // 대상 항목 전달
+                        0.31f, // 대상 항목 전달
+                        1f // 대상 처리
+                    ); // 앞선 항목 종료
             }
         }
 
-        private bool CanApply()
+        private void Update() // 갱신 기능 선언
         {
-            ResolveSystems();
-
-            if (pickupType ==
-                RecoveryPickupType.Heal)
+            if (collected || // 대상 조건 확인
+                !CanApply()) // 가능 여부·적용 기능 실행
             {
-                return
-                    health != null &&
-                    health.CurrentHealth <
-                        health.MaximumHealth &&
-                    bodyManager != null &&
-                    bodyManager.CurrentBodyCount > 0;
+                return; // 현재 기능 종료
             }
 
-            return
+            if (GameManager.Instance != null && // 게임·관리자 조건 확인
+                !GameManager.Instance.IsPlaying) // 게임·관리자 처리
+            {
+                return; // 현재 기능 종료
+            }
+
+            ResolveReceiver(); // 대상 기능 실행
+
+            if (receiver == null) // 대상 조건 확인
+            {
+                return; // 현재 기능 종료
+            }
+
+            Vector3 targetPosition = // 벡터·대상 값 설정
+                receiver.position; // 위치 처리
+
+            Vector3 delta = // 벡터·변화량 값 설정
+                targetPosition - // 대상·위치 처리
+                transform.position; // 위치 처리
+
+            float collectDistanceSquared = // 거리 값 설정
+                collectDistance * // 거리 처리
+                collectDistance; // 거리 처리
+
+            if (delta.sqrMagnitude <= // 변화량 조건 확인
+                collectDistanceSquared) // 거리 처리
+            {
+                Collect(); // 대상 기능 실행
+                return; // 현재 기능 종료
+            }
+
+            float attractionRangeSquared = // 범위 값 설정
+                attractionRange * // 범위 처리
+                attractionRange; // 범위 처리
+
+            if (delta.sqrMagnitude > // 변화량 조건 확인
+                attractionRangeSquared) // 범위 처리
+            {
+                return; // 현재 기능 종료
+            }
+
+            transform.position = // 위치 값 설정
+                Vector3.MoveTowards( // 벡터 호출 시작
+                    transform.position, // 위치 항목 전달
+                    targetPosition, // 대상·위치 항목 전달
+                    attractionSpeed * // 속도 처리
+                    Time.deltaTime // 시간·변화량 처리
+                ); // 앞선 항목 종료
+
+            if ((targetPosition - // 대상·위치 조건 확인
+                transform.position) // 위치 처리
+                .sqrMagnitude <= // 대상 처리
+                collectDistanceSquared) // 거리 처리
+            {
+                Collect(); // 대상 기능 실행
+            }
+        }
+
+        private bool CanApply() // 가능 여부·적용 기능 선언
+        {
+            ResolveSystems(); // 대상 기능 실행
+
+            if (pickupType == // 형식 조건 확인
+                RecoveryPickupType.Heal) // 회복·형식 처리
+            {
+                return // 대상 결과 반환
+                    health != null && // 체력 처리
+                    health.CurrentHealth < // 체력·현재 처리
+                        health.MaximumHealth && // 체력·최대 처리
+                    bodyManager != null && // 몸통·관리자 처리
+                    bodyManager.CurrentBodyCount > 0; // 몸통·관리자 처리
+            }
+
+            return // 대상 결과 반환
                 (GameManager.Instance == null || !GameManager.Instance.IsFinalBossPhase) && // 보스전 별도 복구 제한
-                bodyManager != null &&
-                bodyManager.MissingRepairableBodyCount > 0;
+                bodyManager != null && // 몸통·관리자 처리
+                bodyManager.MissingRepairableBodyCount > 0; // 몸통·관리자 처리
         }
 
-        private void Collect()
+        private void Collect() // 대상 기능 선언
         {
-            if (collected)
+            if (collected) // 대상 조건 확인
             {
-                return;
+                return; // 현재 기능 종료
             }
 
-            bool applied;
+            bool applied; // 대상 처리
 
-            if (pickupType ==
-                RecoveryPickupType.Heal)
+            if (pickupType == // 형식 조건 확인
+                RecoveryPickupType.Heal) // 회복·형식 처리
             {
-                applied =
-                    health != null &&
-                    health.Heal(value);
+                applied = // 대상 값 설정
+                    health != null && // 체력 처리
+                    health.Heal(value); // 체력·회복 기능 실행
             }
-            else
+            else // 다른 조건 처리
             {
-                applied =
-                    bodyManager != null &&
-                    bodyManager.TryRepairBody();
-            }
-
-            if (!applied)
-            {
-                return;
+                applied = // 대상 값 설정
+                    bodyManager != null && // 몸통·관리자 처리
+                    bodyManager.TryRepairBody(); // 몸통·관리자 기능 실행
             }
 
-            collected = true;
-            Destroy(gameObject);
+            if (!applied) // 대상 조건 확인
+            {
+                return; // 현재 기능 종료
+            }
+
+            collected = true; // 대상 값 설정
+            Destroy(gameObject); // 제거·게임 기능 실행
         }
 
-        private void ResolveReceiver()
+        private void ResolveReceiver() // 대상 기능 선언
         {
-            if (receiver != null)
+            if (receiver != null) // 대상 조건 확인
             {
-                return;
+                return; // 현재 기능 종료
             }
 
-            ResolveSystems();
+            ResolveSystems(); // 대상 기능 실행
 
-            if (health != null)
+            if (health != null) // 체력 조건 확인
             {
-                receiver =
-                    health.transform;
-            }
-        }
-
-        private void ResolveSystems()
-        {
-            if (health == null)
-            {
-                health =
-                    Object.FindFirstObjectByType<SnakeHealth>();
-            }
-
-            if (bodyManager == null)
-            {
-                bodyManager =
-                    Object.FindFirstObjectByType<SnakeBodyManager>();
+                receiver = // 대상 값 설정
+                    health.transform; // 체력·위치 처리
             }
         }
 
-        public static RecoveryPickup Spawn(
-            Vector3 position,
-            Transform receiver,
-            SnakeHealth health,
-            SnakeBodyManager bodyManager,
-            RecoveryPickupType type,
-            int value,
-            Sprite visual
-        )
+        private void ResolveSystems() // 대상 기능 선언
         {
-            GameObject pickupObject =
-                new GameObject(
-                    type ==
-                    RecoveryPickupType.Heal
-                        ? "Pickup_Heal"
-                        : "Pickup_BodyRepair"
-                );
+            if (health == null) // 체력 조건 확인
+            {
+                health = // 체력 값 설정
+                    Object.FindFirstObjectByType<SnakeHealth>(); // 객체·검색 기능 실행
+            }
 
-            pickupObject.transform.position =
-                position;
+            if (bodyManager == null) // 몸통·관리자 조건 확인
+            {
+                bodyManager = // 몸통·관리자 값 설정
+                    Object.FindFirstObjectByType<SnakeBodyManager>(); // 객체·검색 기능 실행
+            }
+        }
 
-            RecoveryPickup pickup =
-                pickupObject.AddComponent<RecoveryPickup>();
+        public static RecoveryPickup Spawn( // 회복·생성 호출 시작
+            Vector3 position, // 벡터·위치 항목 전달
+            Transform receiver, // 위치 항목 전달
+            SnakeHealth health, // 체력 항목 전달
+            SnakeBodyManager bodyManager, // 몸통·관리자 항목 전달
+            RecoveryPickupType type, // 회복·형식 항목 전달
+            int value, // 값 항목 전달
+            Sprite visual // 이미지·시각 효과 처리
+        ) // 앞선 항목 종료
+        {
+            GameObject pickupObject = // 게임·객체 값 설정
+                new GameObject( // 게임·객체 객체 생성
+                    type == // 형식 처리
+                    RecoveryPickupType.Heal // 회복·형식 처리
+                        ? "Pickup_Heal" // 회복 처리
+                        : "Pickup_BodyRepair" // 몸통 처리
+                ); // 앞선 항목 종료
 
-            pickup.Configure(
-                receiver,
-                health,
-                bodyManager,
-                type,
-                value,
-                visual
-            );
+            pickupObject.transform.position = // 객체·위치 값 설정
+                position; // 위치 처리
 
-            return pickup;
+            RecoveryPickup pickup = // 회복 값 설정
+                pickupObject.AddComponent<RecoveryPickup>(); // 객체·추가 기능 실행
+
+            pickup.Configure( // 구성 호출 시작
+                receiver, // 대상 항목 전달
+                health, // 체력 항목 전달
+                bodyManager, // 몸통·관리자 항목 전달
+                type, // 형식 항목 전달
+                value, // 값 항목 전달
+                visual // 시각 효과 처리
+            ); // 앞선 항목 종료
+
+            return pickup; // 대상 결과 반환
         }
     }
 }

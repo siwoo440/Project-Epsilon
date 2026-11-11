@@ -10,67 +10,67 @@ using UnityEditor.SceneManagement; // 실제 씬 열기
 using UnityEngine; // 유니티 기능
 
 namespace ProjectEpsilon.Editor // 배치 시험 영역
-{ // 영역 시작
+{
     [InitializeOnLoad] // 도메인 재시작 연결
     public static class AutomatedDay40StatusVerification // 실제 독과 폭발 시험
-    { // 클래스 시작
+    {
         private const string Key = "EpsilonDay40StatusVerification"; // 시험 진행 표식
         private static bool injected; // 실행기 생성 여부
         private static double started; // 시험 시작 시각
         static AutomatedDay40StatusVerification() // 도메인 재시작 처리
-        { // 생성자 시작
+        {
             if (SessionState.GetBool(Key, false)) // 진행 상태 확인
-            { // 조건 시작
+            {
                 EditorApplication.update += Tick; // 플레이 감시 연결
-            } // 조건 끝
-        } // 생성자 끝
+            }
+        }
         public static void Run() // 실제 씬 시험 진입
-        { // 메서드 시작
+        {
             EditorSceneManager.OpenScene("Assets/Scenes/Game.unity"); // 실제 씬 열기
             SessionState.SetBool(Key, true); // 시험 진행 기록
             EditorApplication.update -= Tick; // 중복 감시 제거
             EditorApplication.update += Tick; // 플레이 감시 연결
             EditorApplication.isPlaying = true; // 실제 플레이 시작
-        } // 메서드 끝
+        }
         private static void Tick() // 실제 초기화 감시
-        { // 메서드 시작
+        {
             if (!EditorApplication.isPlaying) // 플레이 진입 확인
-            { // 조건 시작
+            {
                 return; // 플레이 대기
-            } // 조건 끝
+            }
             if (started <= 0d) // 시험 시작 시각 확인
-            { // 조건 시작
+            {
                 started = EditorApplication.timeSinceStartup; // 시작 시각 저장
-            } // 조건 끝
+            }
             if (EditorApplication.timeSinceStartup - started > 90d) // 시험 제한 시간 확인
-            { // 조건 시작
+            {
                 Finish(1, "Timed out."); // 시간 초과 실패
                 return; // 시험 중단
-            } // 조건 끝
+            }
             if (StartingWeaponBatchHelper.HandleStartingSelection() || injected) // 시작 선택과 실행 여부 확인
-            { // 조건 시작
+            {
                 return; // 시작 또는 결과 대기
-            } // 조건 끝
+            }
             SnakeMovement player = UnityEngine.Object.FindFirstObjectByType<SnakeMovement>(); // 실제 플레이어 조회
             if (player == null || GameManager.Instance == null || !GameManager.Instance.IsPlaying || Time.time < 0.35f) // 실제 초기화 확인
-            { // 조건 시작
+            {
                 return; // 초기화 대기
-            } // 조건 끝
+            }
             injected = true; // 실행 중복 방지
             player.gameObject.AddComponent<Day40StatusRunner>(); // 실제 시험 실행
-        } // 메서드 끝
+        }
         public static void Finish(int code, string message) // 실제 시험 종료
-        { // 메서드 시작
+        {
             SessionState.SetBool(Key, false); // 시험 표식 제거
             EditorApplication.update -= Tick; // 플레이 감시 제거
             Debug.Log($"[Day40StatusVerification] {(code == 0 ? "PASS" : "FAIL")}: {message}"); // 시험 결과 기록
             EditorApplication.Exit(code); // 실제 종료 코드
-        } // 메서드 끝
-    } // 클래스 끝
+        }
+    }
     public sealed class Day40StatusRunner : MonoBehaviour // 실제 속성 효과 시험 실행기
-    { // 클래스 시작
+    {
         private IEnumerator Start() // 실제 독과 폭발 시험
-        { // 코루틴 시작
+        {
             GetComponent<SnakeMovement>().enabled = false; // 플레이어 이동 중지
             UnityEngine.Object.FindFirstObjectByType<EarlyEnemyWaveSpawner>().enabled = false; // 자연 적 출현 중지
             UnityEngine.Object.FindFirstObjectByType<SnakeWeaponManager>().enabled = false; // 자동 공격 중지
@@ -82,9 +82,9 @@ namespace ProjectEpsilon.Editor // 배치 시험 영역
             WeaponTarget poisoned = CreateTarget("PoisonTarget", new Vector3(100f, 100f, 0f)); // 실제 독 표적
             WeaponAttributeAttackSnapshot poison = new WeaponAttributeAttackSnapshot(poisonWeapon, WeaponAttribute.Poison, 2, 2, 1, poisoned.transform.position, 1f); // 실제 독 명중 정보
             for (int index = 0; index < 8; index++) // 최대 중첩 초과 명중 순회
-            { // 반복 시작
+            {
                 effects.ApplyHit(poison, poisoned, poisoned.transform.position); // 실제 독 명중 처리
-            } // 반복 끝
+            }
             WeaponTargetPoisonStatus status = poisoned.GetComponent<WeaponTargetPoisonStatus>(); // 실제 독 상태 조회
             Require(status != null && status.StackCount == 5 && status.IsActive, "Poison did not cap at five stacks."); // 독 최대 다섯 중첩 확인
             WeaponTarget low = CreateTarget("ExplosionLow", new Vector3(200f, 100f, 0f)); // 실제 낮은 단계 표적
@@ -101,27 +101,27 @@ namespace ProjectEpsilon.Editor // 배치 시험 영역
             Require(!immune.GetComponent<WeaponTargetKnockbackController>().IsActive, "Explosion ignored boss immunity."); // 보스 넉백 면역 확인
             yield return null; // 실제 프레임 대기
             AutomatedDay40StatusVerification.Finish(0, "Actual poison stack cap and explosion stage four knockback with boss immunity."); // 전체 성공 기록
-        } // 코루틴 끝
+        }
         private static WeaponTarget CreateTarget(string name, Vector3 position) // 실제 공격 대상 생성
-        { // 메서드 시작
+        {
             GameObject item = new GameObject(name); // 통제 표적 객체
             item.transform.position = position; // 다른 적과 떨어진 표적 위치
             WeaponTarget target = item.AddComponent<WeaponTarget>(); // 실제 공격 대상
             target.Configure(1000f); // 실제 표적 체력
             return target; // 실제 표적 반환
-        } // 메서드 끝
+        }
         private static void HitExplosion(WeaponAttributeCombatEffects effects, WeaponData weapon, WeaponTarget target, int stage) // 실제 폭발 명중
-        { // 메서드 시작
+        {
             WeaponAttributeAttackSnapshot attack = new WeaponAttributeAttackSnapshot(weapon, WeaponAttribute.Explosion, stage, stage, 1, target.transform.position, 10f); // 실제 폭발 공격 정보
             effects.ApplyHit(attack, target, target.transform.position); // 실제 폭발과 넉백 처리
-        } // 메서드 끝
+        }
         private static void Require(bool condition, string message) // 시험 조건 확인
-        { // 메서드 시작
+        {
             if (!condition) // 실패 조건 확인
-            { // 조건 시작
+            {
                 AutomatedDay40StatusVerification.Finish(1, message); // 실패 기록
                 throw new InvalidOperationException(message); // 후속 시험 중단
-            } // 조건 끝
-        } // 메서드 끝
-    } // 클래스 끝
-} // 영역 끝
+            }
+        }
+    }
+}

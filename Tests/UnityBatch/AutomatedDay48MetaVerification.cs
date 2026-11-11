@@ -13,109 +13,109 @@ using UnityEditor.SceneManagement; // 실제 씬 열기
 using UnityEngine; // Unity 기능
 
 namespace ProjectEpsilon.Editor // 배치 시험 영역
-{ // 영역 시작
+{
     [InitializeOnLoad] // 실제 도메인 갱신 처리
     public static class AutomatedDay48MetaVerification // 실제 영구 성장과 재시작 검증
-    { // 클래스 시작
+    {
         private const string Key = "EpsilonDay48MetaVerification"; // 실제 시험 표식
         private const string Phase = "EpsilonDay48MetaPhase"; // 실제 재시작 단계
         private static bool injected; // 시험 실행기 생성 여부
         private static double started; // 실제 시험 시작 시각
         static AutomatedDay48MetaVerification() // 실제 도메인 재시작
-        { // 생성자 시작
+        {
             if (SessionState.GetBool(Key, false)) // 실제 진행 중 시험 확인
-            { // 조건 시작
+            {
                 EditorApplication.update += Tick; // 실제 시험 감시
-            } // 조건 끝
-        } // 생성자 끝
+            }
+        }
         public static void Run() // 실제 Unity 배치 진입
-        { // 메서드 시작
+        {
             EditorSceneManager.OpenScene("Assets/Scenes/Game.unity"); // 실제 게임 씬 열기
             SessionState.SetBool(Key, true); // 실제 시험 진행 기록
             SessionState.SetInt(Phase, 0); // 실제 시험 단계 초기화
             EditorApplication.update -= Tick; // 기존 감시 제거
             EditorApplication.update += Tick; // 실제 시작 감시
             EditorApplication.isPlaying = true; // 실제 플레이 시작
-        } // 메서드 끝
+        }
         private static void Tick() // 실제 시작과 재시작 확인
-        { // 메서드 시작
+        {
             if (!EditorApplication.isPlaying) // 실제 플레이 진입 확인
-            { // 조건 시작
+            {
                 return; // 실제 진입 대기
-            } // 조건 끝
+            }
             if (started <= 0d) // 실제 시험 시작 확인
-            { // 조건 시작
+            {
                 started = EditorApplication.timeSinceStartup; // 실제 시작 시각 기록
-            } // 조건 끝
+            }
             if (EditorApplication.timeSinceStartup - started > 90d) // 실제 시험 시간 제한
-            { // 조건 시작
+            {
                 Finish(1, "Timed out."); // 실제 시간 초과
                 return; // 실제 감시 종료
-            } // 조건 끝
+            }
             if (SessionState.GetInt(Phase, 0) == 1) // 실제 씬 재시작 대기 확인
-            { // 조건 시작
+            {
                 GameManager game = GameManager.Instance; // 새 실제 게임 관리자
                 MetaProgressionController meta = MetaProgressionController.Instance; // 새 실제 메타 관리자
                 if (game == null || meta == null || game.GetInstanceID() == SessionState.GetInt("EpsilonDay48OldManager", 0) || game.CurrentState != GameState.Starting || meta.Service == null) // 새 시작 씬 준비 확인
-                { // 조건 시작
+                {
                     return; // 실제 씬 재시작 대기
-                } // 조건 끝
+                }
                 if (!meta.Service.FinishedFirstRun || meta.Service.Cores != 7 || !meta.IsMapUnlocked(1) || meta.IsMapUnlocked(2) || !meta.IsCharacterUnlocked("prototype_mobile") || !meta.Service.IsTurretAttributeUnlocked(0) || InputBindingManager.Instance == null) // 실제 재시작 저장과 입력 확인
-                { // 조건 시작
+                {
                     Finish(1, $"Restart persistence failed: finished={meta.Service.FinishedFirstRun}, cores={meta.Service.Cores}, ruins={meta.IsMapUnlocked(1)}, mobile={meta.IsCharacterUnlocked("prototype_mobile")}, input={InputBindingManager.Instance != null}."); // 실제 재시작 실패
                     return; // 추가 처리 중단
-                } // 조건 끝
+                }
                 Finish(0, "Isolated storage, real kills and boss rewards, duplicate prevention and scene restart persistence passed."); // 실제 재시작 성공
                 return; // 실제 시험 종료
-            } // 조건 끝
+            }
             if (StartingWeaponBatchHelper.HandleStartingSelection() || injected) // 실제 시작 후보 확인
-            { // 조건 시작
+            {
                 return; // 실제 선택 또는 시험 대기
-            } // 조건 끝
+            }
             SnakeMovement player = UnityEngine.Object.FindFirstObjectByType<SnakeMovement>(); // 실제 플레이어 조회
             if (player == null || GameManager.Instance == null || !GameManager.Instance.IsPlaying || Time.time < 0.35f) // 실제 런 초기화 확인
-            { // 조건 시작
+            {
                 return; // 실제 시작 대기
-            } // 조건 끝
+            }
             injected = true; // 실제 중복 시험 방지
             player.gameObject.AddComponent<Day48MetaRunner>(); // 실제 시험 실행기 생성
-        } // 메서드 끝
+        }
         public static void ExpectRestart(GameManager old) // 실제 재시작 감시 등록
-        { // 메서드 시작
+        {
             SessionState.SetInt("EpsilonDay48OldManager", old.GetInstanceID()); // 이전 관리자 식별자
             SessionState.SetInt(Phase, 1); // 실제 재시작 대기 단계
-        } // 메서드 끝
+        }
         public static void Finish(int code, string message) // 실제 시험 결과 기록
-        { // 메서드 시작
+        {
             SessionState.SetBool(Key, false); // 실제 시험 표식 제거
             EditorApplication.update -= Tick; // 실제 시험 감시 해제
             Debug.Log($"[Day48MetaVerification] {(code == 0 ? "PASS" : "FAIL")}: {message}"); // 실제 시험 결과
             EditorApplication.Exit(code); // 실제 프로세스 종료 코드
-        } // 메서드 끝
-    } // 클래스 끝
+        }
+    }
     public sealed class Day48MemoryStorage : IMetaStorage // 외부 저장과 분리한 시험 저장소
-    { // 클래스 시작
+    {
         public string Content; // 실제 시험 저장 내용
         public bool FailWrite; // 실제 시험 저장 실패 설정
         public bool TryRead(out string json) // 실제 시험 저장 읽기
-        { // 메서드 시작
+        {
             json = Content; // 실제 시험 저장 반환
             return true; // 실제 시험 읽기 성공
-        } // 메서드 끝
+        }
         public bool TryWrite(string json) // 실제 시험 저장 기록
-        { // 메서드 시작
+        {
             if (FailWrite) // 실제 실패 설정 확인
-            { // 조건 시작
+            {
                 return false; // 실제 쓰기 실패 재현
-            } // 조건 끝
+            }
             Content = json; // 실제 시험 저장 갱신
             return true; // 실제 시험 쓰기 성공
-        } // 메서드 끝
-    } // 클래스 끝
+        }
+    }
     public sealed class Day48MetaRunner : MonoBehaviour // 실제 서비스와 씬 시나리오
-    { // 클래스 시작
+    {
         private IEnumerator Start() // 실제 저장과 성과 시험
-        { // 코루틴 시작
+        {
             Require(Application.productName == "Project-Epsilon-Day48-Isolated", "Batch project is not isolated from user save data."); // 실제 사용자 저장 격리 확인
             Day48MemoryStorage store = new Day48MemoryStorage(); // 실제 메모리 시험 저장소
             MetaProgressionService service = new MetaProgressionService(store); // 실제 제품 서비스
@@ -155,15 +155,15 @@ namespace ProjectEpsilon.Editor // 배치 시험 영역
             GetComponent<SnakeMovement>().enabled = false; // 실제 플레이어 이동 중지
             SnakeBodyFollower follower = UnityEngine.Object.FindFirstObjectByType<SnakeBodyFollower>(); // 실제 몸통 추적기
             if (follower != null) // 실제 추적기 확인
-            { // 조건 시작
+            {
                 follower.enabled = false; // 실제 몸통 이동 통제
-            } // 조건 끝
+            }
             wave.enabled = false; // 실제 자연 적 출현 통제
             weapons.enabled = false; // 실제 자동 공격 통제
             foreach (SnakeWeaponSlot slot in weapons.Slots) // 실제 시작 슬롯 순회
-            { // 반복 시작
+            {
                 slot.Clear(); // 실제 시작 포탑 제거
-            } // 반복 끝
+            }
             WeaponData blade = AssetDatabase.LoadAssetAtPath<WeaponData>("Assets/Data/Weapons/DebugBlade.asset"); // 실제 물리 포탑
             WeaponData needle = AssetDatabase.LoadAssetAtPath<WeaponData>("Assets/Data/Weapons/DebugNeedle.asset"); // 실제 두 번째 물리 포탑
             Require(weapons.TryEquipAt(0, blade) && weapons.TryEquipAt(1, needle) && meta.IsTurretUnlocked(gated), "Actual synergy did not unlock its configured turret."); // 실제 속성 해금 확인
@@ -188,14 +188,14 @@ namespace ProjectEpsilon.Editor // 배치 시험 영역
             AutomatedDay48MetaVerification.ExpectRestart(game); // 실제 재시작 감시 등록
             Require(game.RestartRun(), "Actual scene restart was rejected."); // 실제 재시작 요청
             yield return null; // 실제 재시작 프레임 대기
-        } // 코루틴 끝
+        }
         private static void Require(bool condition, string message) // 실제 시험 조건
-        { // 메서드 시작
+        {
             if (!condition) // 실제 실패 확인
-            { // 조건 시작
+            {
                 AutomatedDay48MetaVerification.Finish(1, message); // 실제 실패 기록
                 throw new InvalidOperationException(message); // 실제 시험 중단
-            } // 조건 끝
-        } // 메서드 끝
-    } // 클래스 끝
-} // 영역 끝
+            }
+        }
+    }
+}

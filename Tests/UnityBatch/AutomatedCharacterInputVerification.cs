@@ -16,69 +16,69 @@ using UnityEditor.SceneManagement; // 실제 씬 열기
 using UnityEngine; // 유니티 기능
 
 namespace ProjectEpsilon.Editor // 배치 시험 영역
-{ // 영역 시작
+{
     [InitializeOnLoad] // 도메인 재시작 연결
     public static class AutomatedCharacterInputVerification // 시작 화면 실제 캐릭터 선택 시험
-    { // 클래스 시작
+    {
         private const string Key = "EpsilonCharacterInputVerification"; // 시험 진행 표식
         private static bool injected; // 실행기 생성 여부
         private static double started; // 시험 시작 시각
         static AutomatedCharacterInputVerification() // 도메인 재시작 처리
-        { // 생성자 시작
+        {
             if (SessionState.GetBool(Key, false)) // 진행 상태 확인
-            { // 조건 시작
+            {
                 EditorApplication.update += Tick; // 플레이 감시 연결
-            } // 조건 끝
-        } // 생성자 끝
+            }
+        }
         public static void Run() // 실제 씬 시험 진입
-        { // 메서드 시작
+        {
             EditorSceneManager.OpenScene("Assets/Scenes/Game.unity"); // 실제 씬 열기
             SessionState.SetBool(Key, true); // 시험 진행 기록
             EditorApplication.update -= Tick; // 중복 감시 제거
             EditorApplication.update += Tick; // 플레이 감시 연결
             EditorApplication.isPlaying = true; // 실제 플레이 시작
-        } // 메서드 끝
+        }
         private static void Tick() // 실제 시작 화면 감시
-        { // 메서드 시작
+        {
             if (!EditorApplication.isPlaying) // 플레이 진입 확인
-            { // 조건 시작
+            {
                 return; // 플레이 대기
-            } // 조건 끝
+            }
             if (started <= 0d) // 시험 시작 시각 확인
-            { // 조건 시작
+            {
                 started = EditorApplication.timeSinceStartup; // 시작 시각 저장
-            } // 조건 끝
+            }
             if (EditorApplication.timeSinceStartup - started > 90d) // 시험 제한 시간 확인
-            { // 조건 시작
+            {
                 Finish(1, "Timed out."); // 시간 초과 실패
                 return; // 시험 중단
-            } // 조건 끝
+            }
             RunFrontendController frontend = RunFrontendController.Instance; // 실제 시작 화면 단계
             if (frontend != null && frontend.Stage != FrontendStage.Weapons) // 실제 포탑 선택 전 단계 확인
-            { // 조건 시작
+            {
                 StartingWeaponBatchHelper.HandleStartingSelection(); // 실제 메뉴 단계 진행
                 return; // 실제 포탑 화면 대기
-            } // 조건 끝
+            }
             StartingWeaponSelection selection = UnityEngine.Object.FindFirstObjectByType<StartingWeaponSelection>(); // 실제 시작 선택기
             if (injected || selection == null || !selection.IsSelecting || GameManager.Instance == null || GameManager.Instance.CurrentState != GameState.Starting) // 시작 상태와 실행 여부 확인
-            { // 조건 시작
+            {
                 return; // 실제 시작 화면 대기
-            } // 조건 끝
+            }
             injected = true; // 실행 중복 방지
             selection.gameObject.AddComponent<CharacterInputVerificationRunner>(); // 실제 시험 실행
-        } // 메서드 끝
+        }
         public static void Finish(int code, string message) // 실제 시험 종료
-        { // 메서드 시작
+        {
             SessionState.SetBool(Key, false); // 시험 표식 제거
             EditorApplication.update -= Tick; // 플레이 감시 제거
             Debug.Log($"[CharacterInputVerification] {(code == 0 ? "PASS" : "FAIL")}: {message}"); // 실제 시험 결과 기록
             EditorApplication.Exit(code); // 실제 프로세스 종료
-        } // 메서드 끝
-    } // 클래스 끝
+        }
+    }
     public sealed class CharacterInputVerificationRunner : MonoBehaviour // 실제 시작 캐릭터 입력 실행기
-    { // 클래스 시작
+    {
         private IEnumerator Start() // 실제 시작 화면 입력 검증
-        { // 코루틴 시작
+        {
             InputSettings originalSettings = InputSystem.settings; // 이전 입력 설정
             InputSettings testSettings = UnityEngine.Object.Instantiate(originalSettings); // 메모리 입력 설정 사본
             testSettings.hideFlags = HideFlags.HideAndDontSave; // 실제 설정 파일 보존
@@ -140,30 +140,30 @@ namespace ProjectEpsilon.Editor // 배치 시험 영역
             Require(!maps.SelectMap(1) && maps.SelectedIndex == 0, "Map changed after the run started."); // 전투 중 맵 변경 차단 확인
             InputSystem.RemoveDevice(keyboard); // 실제 가상 키보드 제거
             if (originalSettings != null) // 이전 입력 설정 유효성 확인
-            { // 조건 시작
+            {
                 InputSystem.settings = originalSettings; // 이전 입력 설정 복구
-            } // 조건 끝
+            }
             Application.runInBackground = originalBackground; // 이전 백그라운드 설정 복구
             if (testSettings != null && InputSystem.settings != testSettings) // 임시 설정 사용 여부 확인
-            { // 조건 시작
+            {
                 Destroy(testSettings); // 사용하지 않는 임시 입력 설정 제거
-            } // 조건 끝
+            }
             AutomatedCharacterInputVerification.Finish(0, "Actual starting-screen arrow selection and character-specific weapon start."); // 실제 전체 성공 기록
-        } // 코루틴 끝
+        }
         private static IEnumerator Tap(Keyboard keyboard, Key key) // 실제 키 누름과 해제
-        { // 메서드 시작
+        {
             InputSystem.QueueStateEvent(keyboard, new KeyboardState(key)); // 가상 키 누름 전달
             yield return null; // 실제 입력 프레임 대기
             InputSystem.QueueStateEvent(keyboard, new KeyboardState()); // 가상 키 해제 전달
             yield return null; // 실제 입력 해제 대기
-        } // 메서드 끝
+        }
         private static void Require(bool condition, string message) // 실제 시험 조건 확인
-        { // 메서드 시작
+        {
             if (!condition) // 실패 조건 확인
-            { // 조건 시작
+            {
                 AutomatedCharacterInputVerification.Finish(1, message); // 실제 실패 기록
                 throw new InvalidOperationException(message); // 후속 시험 중단
-            } // 조건 끝
-        } // 메서드 끝
-    } // 클래스 끝
-} // 영역 끝
+            }
+        }
+    }
+}

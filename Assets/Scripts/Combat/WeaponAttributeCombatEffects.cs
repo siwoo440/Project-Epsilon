@@ -31,10 +31,10 @@ namespace ProjectEpsilon.Combat // 전투 영역
         }
 
         public void Configure(WeaponAttributeSynergyManager manager, WeaponAttributeEffectHooks hooks, Sprite visual, WeaponAttributePlayerEffects effects) // Day18 참조 구성
-        { // 메서드 시작
+        {
             Configure(manager, hooks, visual); // 기존 전투 참조 유지
             playerEffects = effects; // 플레이어 효과 저장
-        } // 메서드 끝
+        }
 
         public WeaponAttributeAttackSnapshot CreateAttackSnapshot(WeaponData weapon, int grade, Vector3 origin, float gradeDamage) // 공격 정보 생성
         {
@@ -61,15 +61,15 @@ namespace ProjectEpsilon.Combat // 전투 영역
 
             WeaponAttributeAttackSnapshot resolvedAttack = ResolveTargetAttack(attack, target); // 대상 상태 반영 공격 계산
             if (resolvedAttack.Attribute == WeaponAttribute.Physical && resolvedAttack.SynergyStage >= 4) // 물리 치명타 적용 확인
-            { // 조건 시작
+            {
                 float criticalDamage = WeaponAttributeDamageRules.CalculatePhysicalCriticalDamage(resolvedAttack.DirectDamage, resolvedAttack.SynergyStage, Random.value); // 개별 명중 치명타 판정
                 resolvedAttack = new WeaponAttributeAttackSnapshot(resolvedAttack.Weapon, resolvedAttack.Attribute, resolvedAttack.AttributeCount, resolvedAttack.SynergyStage, resolvedAttack.Grade, resolvedAttack.Origin, criticalDamage); // 명중 피해 갱신
-            } // 조건 끝
+            }
             int darkCurseStacks = ResolveDarkCurseStacks(target); // 명중 전 저주 중첩 조회
             if (resolvedAttack.Attribute == WeaponAttribute.Fire && resolvedAttack.Grade >= 5 && resolvedAttack.Weapon != null && resolvedAttack.Weapon.GradeFiveBurnExplosionRadius > 0f) // 실제 화염탄 오 등급 효과 확인
-            { // 조건 시작
+            {
                 WeaponBurnDeathExplosion.Attach(target, resolvedAttack, pulseSprite); // 화상 상태의 처치 폭발 연결
-            } // 조건 끝
+            }
             float dealtDamage = target.TakeDamageAndReport(resolvedAttack.DirectDamage); // 직접 피해와 실제 피해량 적용
 
             if (resolvedAttack.Attribute == WeaponAttribute.Fire && target.IsAlive) // 생존 화염 명중 확인
@@ -88,14 +88,14 @@ namespace ProjectEpsilon.Combat // 전투 영역
             }
 
             if (resolvedAttack.Attribute == WeaponAttribute.Holy) // 신성 명중 확인
-            { // 조건 시작
+            {
                 playerEffects?.HandleHolyHit(resolvedAttack); // 회복과 보호막 처리
-            } // 조건 끝
+            }
 
             if (resolvedAttack.Attribute == WeaponAttribute.Dark) // 암흑 명중 확인
-            { // 조건 시작
+            {
                 ApplyDark(resolvedAttack, target, dealtDamage, darkCurseStacks, hitPosition); // 저주와 흡수 처리
-            } // 조건 끝
+            }
 
             WeaponAttributeHitContext hit = new WeaponAttributeHitContext(resolvedAttack, target, hitPosition); // 주 대상 명중 정보 생성
             effectHooks?.NotifyHit(hit); // 주 대상 명중 Hook 전달
@@ -108,47 +108,47 @@ namespace ProjectEpsilon.Combat // 전투 영역
         }
 
         private static WeaponAttributeAttackSnapshot ResolveTargetAttack(WeaponAttributeAttackSnapshot attack, WeaponTarget target) // 대상 상태 반영 공격 생성
-        { // 메서드 시작
+        {
             if (attack.Attribute != WeaponAttribute.Dark) // 암흑 속성 여부 확인
-            { // 조건 시작
+            {
                 return attack; // 원래 공격 반환
-            } // 조건 끝
+            }
 
             int curseStacks = ResolveDarkCurseStacks(target); // 현재 저주 중첩 조회
             float directDamage = WeaponAttributeDarkRules.CalculateDirectDamage(attack.DirectDamage, attack.SynergyStage, curseStacks); // 저주 증폭 피해 계산
             return new WeaponAttributeAttackSnapshot(attack.Weapon, attack.Attribute, attack.AttributeCount, attack.SynergyStage, attack.Grade, attack.Origin, directDamage); // 갱신 공격 반환
-        } // 메서드 끝
+        }
 
         private static int ResolveDarkCurseStacks(WeaponTarget target) // 대상 저주 중첩 조회
-        { // 메서드 시작
+        {
             WeaponTargetDarkCurseStatus curse = target == null ? null : target.GetComponent<WeaponTargetDarkCurseStatus>(); // 저주 상태 조회
             return curse == null || !curse.IsActive ? 0 : curse.Stacks; // 활성 중첩 반환
-        } // 메서드 끝
+        }
 
         private void ApplyDark(WeaponAttributeAttackSnapshot attack, WeaponTarget target, float dealtDamage, int previousCurseStacks, Vector3 hitPosition) // 암흑 명중 처리
-        { // 메서드 시작
+        {
             playerEffects?.HandleDarkDamage(attack.SynergyStage, dealtDamage); // 실제 피해 흡수 처리
 
             if (!target.IsAlive) // 처치 여부 확인
-            { // 조건 시작
+            {
                 playerEffects?.HandleDarkKill(attack.SynergyStage, previousCurseStacks, hitPosition); // 처치 회복과 전파 처리
                 return; // 저주 적용 생략
-            } // 조건 끝
+            }
 
             if (attack.SynergyStage < 2) // 저주 활성 단계 확인
-            { // 조건 시작
+            {
                 return; // 저주 적용 생략
-            } // 조건 끝
+            }
 
             WeaponTargetDarkCurseStatus curse = target.GetComponent<WeaponTargetDarkCurseStatus>(); // 기존 저주 조회
 
             if (curse == null) // 저주 없음 확인
-            { // 조건 시작
+            {
                 curse = target.gameObject.AddComponent<WeaponTargetDarkCurseStatus>(); // 저주 컴포넌트 추가
-            } // 조건 끝
+            }
 
             curse.Apply(attack.SynergyStage, 1); // 저주 한 중첩 적용
-        } // 메서드 끝
+        }
 
         private static void ApplyFire(WeaponAttributeAttackSnapshot attack, WeaponTarget target) // 화상 적용
         {
@@ -340,7 +340,7 @@ namespace ProjectEpsilon.Combat // 전투 영역
 
                 bestDistanceSquared = distanceSquared; // 최근접 거리 갱신
                 closest = candidate; // 최근접 대상 갱신
-            });
+            }); // 대상 처리
 
             return closest; // 최근접 대상 반환
         }
@@ -393,14 +393,14 @@ namespace ProjectEpsilon.Combat // 전투 영역
             }
 
             if (attribute == WeaponAttribute.Holy) // 신성 속성 확인
-            { // 조건 시작
+            {
                 return new Color(1f, 0.95f, 0.55f, 0.85f); // 신성 금빛 반환
-            } // 조건 끝
+            }
 
             if (attribute == WeaponAttribute.Dark) // 암흑 속성 확인
-            { // 조건 시작
+            {
                 return new Color(0.55f, 0.2f, 0.85f, 0.85f); // 암흑 보라색 반환
-            } // 조건 끝
+            }
 
             return new Color(0.95f, 0.95f, 1f, 0.8f); // 물리 밝은 회색 반환
         }

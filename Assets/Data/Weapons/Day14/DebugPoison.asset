@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: DebugPoison
   m_EditorClassIdentifier: Assembly-CSharp::ProjectEpsilon.Data.WeaponData
   id: debug_day14_poison
-  displayName: Debug Poison
+  displayName: 독 포탑
   attribute: 4
   attackType: 1
   baseDamage: 12

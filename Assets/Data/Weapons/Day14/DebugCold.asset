@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: DebugCold
   m_EditorClassIdentifier: Assembly-CSharp::ProjectEpsilon.Data.WeaponData
   id: debug_day14_cold
-  displayName: Debug Cold
+  displayName: 냉기 포탑
   attribute: 2
   attackType: 3
   baseDamage: 12

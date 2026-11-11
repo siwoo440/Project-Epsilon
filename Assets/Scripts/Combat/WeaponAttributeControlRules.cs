@@ -13,11 +13,11 @@ namespace ProjectEpsilon.Combat // 전투 영역
         }
 
         public static float GetColdMovementMultiplier(int synergyStage, int stackCount) // 냉기 누적별 이동 배율
-        { // 메서드 시작
+        {
             float slow = ClampColdStacks(stackCount) * 0.1f; // 기본 누적당 감속량
             float synergyMultiplier = IsActiveSynergy(synergyStage) ? 1.15f : 1f; // 감속량 15퍼센트 강화 임시 해석
             return 1f - slow * synergyMultiplier; // 실제 이동 배율 반환
-        } // 메서드 끝
+        }
 
         public static float GetColdDuration(int synergyStage) // 냉기 지속 시간 계산
         {

@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: DebugPhysical
   m_EditorClassIdentifier: Assembly-CSharp::ProjectEpsilon.Data.WeaponData
   id: debug_day14_physical
-  displayName: Debug Physical
+  displayName: 물리 포탑
   attribute: 0
   attackType: 0
   baseDamage: 12

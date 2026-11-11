@@ -1,51 +1,51 @@
-using UnityEngine;
+using UnityEngine; // Unity 엔진 기능 연결
 
-namespace ProjectEpsilon.UI
+namespace ProjectEpsilon.UI // 프로젝트 기능 영역
 {
-    public static class HUDTextFormatter
+    public static class HUDTextFormatter // 대상 자료 구조
     {
-        public static string FormatHealth(int current, int maximum)
+        public static string FormatHealth(int current, int maximum) // 체력·현재 기능 선언
         {
-            return $"HP {Mathf.Max(0, current)} / {Mathf.Max(0, maximum)}";
+            return $"HP {Mathf.Max(0, current)} / {Mathf.Max(0, maximum)}"; // 체력·최대 결과 반환
         }
 
         public static string FormatHealth(int current, int maximum, int shield) // 보호막 포함 체력 문구 생성
-        { // 메서드 시작
-            return $"HP {Mathf.Max(0, current)} / {Mathf.Max(0, maximum)}  Shield {Mathf.Max(0, shield)}"; // 체력과 보호막 반환
-        } // 메서드 끝
-
-        public static string FormatBodyCount(int current, int maximum)
         {
-            return $"Body {Mathf.Max(0, current)} / {Mathf.Max(0, maximum)}";
+            return $"HP {Mathf.Max(0, current)} / {Mathf.Max(0, maximum)}  Shield {Mathf.Max(0, shield)}"; // 체력과 보호막 반환
+        }
+
+        public static string FormatBodyCount(int current, int maximum) // 몸통·개수 기능 선언
+        {
+            return $"Body {Mathf.Max(0, current)} / {Mathf.Max(0, maximum)}"; // 몸통·최대 결과 반환
         }
 
         public static string FormatBodyCount(int current, int earned, int maximum) // 몸통 현재 수와 두 상한 표시
-        { // 메서드 시작
+        {
             return $"Body {Mathf.Max(0, current)} / {Mathf.Max(0, earned)} (max {Mathf.Max(0, maximum)})"; // 현재 수와 상한 문구
-        } // 메서드 끝
-
-        public static string FormatExperience(int current, int required)
-        {
-            return $"XP {Mathf.Max(0, current)} / {Mathf.Max(0, required)}";
         }
 
-        public static string FormatLevel(int level)
+        public static string FormatExperience(int current, int required) // 경험치·현재 기능 선언
         {
-            return $"Lv. {Mathf.Max(1, level)}";
+            return $"XP {Mathf.Max(0, current)} / {Mathf.Max(0, required)}"; // 경험치·최대 결과 반환
         }
 
-        public static string FormatStamina(int current, int maximum)
+        public static string FormatLevel(int level) // 레벨 기능 선언
         {
-            return $"Stamina {Mathf.Max(0, current)} / {Mathf.Max(0, maximum)}";
+            return $"Lv. {Mathf.Max(1, level)}"; // 최대·레벨 결과 반환
         }
 
-        public static string FormatTime(float elapsedSeconds)
+        public static string FormatStamina(int current, int maximum) // 스태미나·현재 기능 선언
         {
-            int totalSeconds = Mathf.Max(0, Mathf.FloorToInt(elapsedSeconds));
-            int minutes = totalSeconds / 60;
-            int seconds = totalSeconds % 60;
+            return $"Stamina {Mathf.Max(0, current)} / {Mathf.Max(0, maximum)}"; // 스태미나·최대 결과 반환
+        }
 
-            return $"{minutes:00}:{seconds:00}";
+        public static string FormatTime(float elapsedSeconds) // 시간 기능 선언
+        {
+            int totalSeconds = Mathf.Max(0, Mathf.FloorToInt(elapsedSeconds)); // 최대 값 설정
+            int minutes = totalSeconds / 60; // 대상 값 설정
+            int seconds = totalSeconds % 60; // 대상 값 설정
+
+            return $"{minutes:00}:{seconds:00}"; // 대상 결과 반환
         }
     }
 }

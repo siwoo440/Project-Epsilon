@@ -9,74 +9,74 @@ using UnityEditor.SceneManagement; // 실제 씬 열기
 using UnityEngine; // 유니티 기능
 
 namespace ProjectEpsilon.Editor // 배치 시험 영역
-{ // 영역 시작
+{
     [InitializeOnLoad] // 도메인 재시작 연결
     public static class AutomatedChunkMapVerification // 실제 청크 맵 검증
-    { // 클래스 시작
+    {
         private const string ActiveKey = "EpsilonChunkMapVerification"; // 시험 진행 표식
         private static bool injected; // 실행기 생성 여부
         private static bool finished; // 중복 종료 방지
         private static double started; // 실제 시작 시각
         static AutomatedChunkMapVerification() // 도메인 재시작 처리
-        { // 생성자 시작
+        {
             if (SessionState.GetBool(ActiveKey, false)) // 시험 진행 확인
-            { // 조건 시작
+            {
                 EditorApplication.update += Tick; // 실제 시작 감시
-            } // 조건 끝
-        } // 생성자 끝
+            }
+        }
         public static void Run() // 실제 씬 배치 진입
-        { // 메서드 시작
+        {
             EditorSceneManager.OpenScene("Assets/Scenes/Game.unity"); // 실제 게임 씬 열기
             SessionState.SetBool(ActiveKey, true); // 시험 진행 표식
             EditorApplication.update -= Tick; // 기존 감시 제거
             EditorApplication.update += Tick; // 실제 시작 감시
             EditorApplication.isPlaying = true; // 실제 플레이 모드 시작
-        } // 메서드 끝
+        }
         private static void Tick() // 실제 시작과 시간 제한 감시
-        { // 메서드 시작
+        {
             if (!EditorApplication.isPlaying) // 실제 플레이 진입 확인
-            { // 조건 시작
+            {
                 return; // 실제 진입 대기
-            } // 조건 끝
+            }
             if (started <= 0d) // 시험 시작 시각 확인
-            { // 조건 시작
+            {
                 started = EditorApplication.timeSinceStartup; // 실제 시작 시각 기록
-            } // 조건 끝
+            }
             if (EditorApplication.timeSinceStartup - started > 90d) // 실제 시험 시간 제한
-            { // 조건 시작
+            {
                 Finish(1, "Timed out waiting for chunk map test."); // 시간 초과 실패
                 return; // 감시 종료
-            } // 조건 끝
+            }
             if (StartingWeaponBatchHelper.HandleStartingSelection() || injected) // 실제 시작과 실행 확인
-            { // 조건 시작
+            {
                 return; // 실제 시작 또는 결과 대기
-            } // 조건 끝
+            }
             SnakeMovement player = UnityEngine.Object.FindFirstObjectByType<SnakeMovement>(); // 실제 플레이어 조회
             if (player == null || GameManager.Instance == null || !GameManager.Instance.IsPlaying || Time.time < 0.35f) // 실제 초기화 확인
-            { // 조건 시작
+            {
                 return; // 실제 초기화 대기
-            } // 조건 끝
+            }
             injected = true; // 실행기 중복 방지
             player.gameObject.AddComponent<ChunkMapVerificationRunner>(); // 실제 청크 시험 시작
-        } // 메서드 끝
+        }
         public static void Finish(int code, string message) // 실제 결과 기록
-        { // 메서드 시작
+        {
             if (finished) // 중복 종료 확인
-            { // 조건 시작
+            {
                 return; // 중복 처리 방지
-            } // 조건 끝
+            }
             finished = true; // 종료 상태 저장
             SessionState.SetBool(ActiveKey, false); // 시험 표식 해제
             EditorApplication.update -= Tick; // 실제 감시 해제
             Debug.Log($"[ChunkMapVerification] {(code == 0 ? "PASS" : "FAIL")}: {message}"); // 실제 시험 결과
             EditorApplication.Exit(code); // 실제 프로세스 종료
-        } // 메서드 끝
-    } // 클래스 끝
+        }
+    }
 
     public sealed class ChunkMapVerificationRunner : MonoBehaviour // 실제 청크 이동 시나리오
-    { // 클래스 시작
+    {
         private IEnumerator Start() // 실제 생성과 제거 검증
-        { // 코루틴 시작
+        {
             SnakeMovement player = GetComponent<SnakeMovement>(); // 실제 플레이어 이동
             EarlyEnemyWaveSpawner wave = UnityEngine.Object.FindFirstObjectByType<EarlyEnemyWaveSpawner>(); // 실제 일반 출현기
             player.enabled = false; // 실제 플레이어 이동 통제
@@ -109,14 +109,14 @@ namespace ProjectEpsilon.Editor // 배치 시험 영역
             yield return null; // 실제 청크 갱신 대기
             Require((int)count.GetValue(map) == 9 && getChunk.Invoke(map, new object[] { new Vector2Int(5, 5) }) != null, "Actual distant movement did not rebuild 3 by 3 chunks."); // 실제 먼 이동 확인
             AutomatedChunkMapVerification.Finish(0, "Actual 3 by 3 chunks, shared retention, pause and negative coordinates passed."); // 실제 전체 결과
-        } // 코루틴 끝
+        }
         private static void Require(bool condition, string message) // 실제 시험 조건 확인
-        { // 메서드 시작
+        {
             if (!condition) // 실제 실패 조건 확인
-            { // 조건 시작
+            {
                 AutomatedChunkMapVerification.Finish(1, message); // 실제 실패 기록
                 throw new InvalidOperationException(message); // 후속 시험 중단
-            } // 조건 끝
-        } // 메서드 끝
-    } // 클래스 끝
-} // 영역 끝
+            }
+        }
+    }
+}

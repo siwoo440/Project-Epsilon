@@ -58,11 +58,11 @@ namespace ProjectEpsilon.Debugging // 디버그 영역
         }
 
         public void Configure(SnakeBodyManager body, SnakeWeaponManager weapons, WeaponData fire, WeaponData fallback, WeaponData cold, WeaponData electric, WeaponData poison, WeaponData explosion, WeaponData holy, WeaponData dark) // Day18 연결 구성
-        { // 메서드 시작
+        {
             Configure(body, weapons, fire, fallback, cold, electric, poison, explosion); // 기존 Day17 연결 유지
             holyWeapon = holy; // 신성 무기 저장
             darkWeapon = dark; // 암흑 무기 저장
-        } // 메서드 끝
+        }
 
         private void Update() // 매 프레임 입력 처리
         {
@@ -133,12 +133,12 @@ namespace ProjectEpsilon.Debugging // 디버그 영역
         private void ApplyExtendedAttributeCount(bool controlPressed, bool shiftPressed, bool altPressed, int requestedCount) // Day16부터 Day18 속성 선택
         {
             if (altPressed) // Day18 조합 확인
-            { // 조건 시작
+            {
                 WeaponData selectedWeapon = shiftPressed ? darkWeapon : holyWeapon; // 신성 또는 암흑 선택
                 string label = shiftPressed ? "Dark" : "Holy"; // Day18 로그 이름 선택
                 ApplyAttributeCount(selectedWeapon, label, requestedCount); // Day18 속성 개수 구성
                 return; // 이전 일차 처리 방지
-            } // 조건 끝
+            }
 
             if (controlPressed) // Day17 조합 확인
             {

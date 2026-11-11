@@ -11,117 +11,117 @@ using UnityEngine; // 유니티 기능
 using UnityEngine.LowLevel; // 플레이어루프 조회
 
 namespace ProjectEpsilon.Editor // 편집기 영역
-{ // 영역 시작
+{
     [InitializeOnLoad] // 도메인 갱신 연결
     public static class AutomatedCollisionPriorityVerification // 충돌 우선순위 배치 시험
-    { // 클래스 시작
+    {
         private const string ActiveKey = "EpsilonCollisionPriorityVerification"; // 시험 진행 표식
         private static double started; // 대기 시작 시간
         private static bool injected; // 실행기 추가 여부
 
         static AutomatedCollisionPriorityVerification() // 도메인 연결
-        { // 생성자 시작
+        {
             if (SessionState.GetBool(ActiveKey, false)) // 진행 여부 확인
-            { // 조건 시작
+            {
                 EditorApplication.update += Tick; // 진입 감시 연결
-            } // 조건 끝
-        } // 생성자 끝
+            }
+        }
 
         public static void Run() // 배치 실행 진입점
-        { // 메서드 시작
+        {
             EditorSceneManager.OpenScene("Assets/Scenes/Game.unity"); // 실제 게임 씬 열기
             SessionState.SetBool(ActiveKey, true); // 시험 진행 기록
             EditorApplication.update -= Tick; // 중복 연결 해제
             EditorApplication.update += Tick; // 진입 감시 연결
             EditorApplication.isPlaying = true; // 플레이 모드 진입
-        } // 메서드 끝
+        }
 
         private static void Tick() // 플레이 진입 감시
-        { // 메서드 시작
+        {
             if (!EditorApplication.isPlaying) // 진입 상태 확인
-            { // 조건 시작
+            {
                 return; // 플레이 시작 대기
-            } // 조건 끝
+            }
             if (StartingWeaponBatchHelper.HandleStartingSelection()) // 시작 무기 화면 처리
-            { // 조건 시작
+            {
                 return; // 전투 시작 대기
-            } // 조건 끝
+            }
             if (started <= 0d) // 최초 시간 확인
-            { // 조건 시작
+            {
                 started = EditorApplication.timeSinceStartup; // 대기 시간 저장
-            } // 조건 끝
+            }
             if (EditorApplication.timeSinceStartup - started > 120d) // 전체 실행 제한 확인
-            { // 조건 시작
+            {
                 Finish(1, "Collision verification timed out."); // 시간 초과 기록
                 return; // 추가 처리 중단
-            } // 조건 끝
+            }
             if (injected) // 실행기 동작 확인
-            { // 조건 시작
+            {
                 return; // 실행기 완료 대기
-            } // 조건 끝
+            }
             SnakeMovement player = UnityEngine.Object.FindFirstObjectByType<SnakeMovement>(); // 실제 플레이어 조회
             if (player == null || GameManager.Instance == null || Time.time < 0.25f) // 초기화 완료 확인
-            { // 조건 시작
+            {
                 return; // 필수 구성 대기
-            } // 조건 끝
+            }
             injected = true; // 실행기 중복 방지
             player.gameObject.AddComponent<CollisionVerificationRunner>(); // 실제 물리 검증 시작
-        } // 메서드 끝
+        }
 
         public static void Finish(int code, string message) // 배치 종료 처리
-        { // 메서드 시작
+        {
             SessionState.SetBool(ActiveKey, false); // 진행 표식 해제
             EditorApplication.update -= Tick; // 진입 감시 해제
             if (code == 0) // 성공 여부 확인
-            { // 조건 시작
+            {
                 Debug.Log("[CollisionVerification] PASS: " + message); // 성공 기록
-            } // 조건 끝
+            }
             else // 실패 처리
-            { // 대안 시작
+            {
                 Debug.LogError("[CollisionVerification] FAIL: " + message); // 실패 기록
-            } // 대안 끝
+            }
             EditorApplication.Exit(code); // 결과 코드 반환
-        } // 메서드 끝
-    } // 클래스 끝
+        }
+    }
 
     public sealed class CollisionVerificationProbe : MonoBehaviour // 실제 콜백 순서 기록
-    { // 클래스 시작
+    {
         public readonly List<string> Entries = new List<string>(); // 실제 진입 목록
         public readonly List<float> Steps = new List<float>(); // 진입 물리 시간
         public bool PauseOnEntry; // 충돌 중 정지 여부
         public bool DestroyOnEntry; // 접촉 원본 제거 여부
 
         private void OnTriggerEnter2D(Collider2D other) // 물리 엔진 진입 콜백
-        { // 메서드 시작
+        {
             SnakeContactHazard hazard = other.GetComponent<SnakeContactHazard>(); // 외부 위험 조회
             if (hazard != null) // 외부 위험 확인
-            { // 조건 시작
+            {
                 Entries.Add(hazard.HazardType.ToString()); // 콜백 순서 기록
                 Steps.Add(Time.fixedTime); // 물리 스텝 기록
                 if (DestroyOnEntry) // 접촉 원본 제거 시험
-                { // 조건 시작
+                {
                     Destroy(other.gameObject); // 접촉 객체 지연 제거
-                } // 조건 끝
-            } // 조건 끝
+                }
+            }
             if (PauseOnEntry && GameManager.Instance != null) // 충돌 중 정지 시험
-            { // 조건 시작
+            {
                 PauseOnEntry = false; // 중복 정지 방지
                 GameManager.Instance.PauseGame(); // 동일 스텝 정지 요청
-            } // 조건 끝
-        } // 메서드 끝
+            }
+        }
 
         public void Clear() // 시험 기록 초기화
-        { // 메서드 시작
+        {
             Entries.Clear(); // 콜백 목록 초기화
             Steps.Clear(); // 물리 스텝 목록 초기화
             PauseOnEntry = false; // 정지 시험 해제
             DestroyOnEntry = false; // 원본 제거 시험 해제
-        } // 메서드 끝
-    } // 클래스 끝
+        }
+    }
 
     [DefaultExecutionOrder(-1000)] // 물리 시뮬레이션 전 실행
     public sealed class CollisionVerificationSequencer : MonoBehaviour // 물리 단계별 접촉 생성기
-    { // 클래스 시작
+    {
         public CollisionVerificationRunner Runner; // 시험 실행기
         public int FirstFrame = -1; // 첫 물리 단계의 렌더 프레임
         public int SecondFrame = -1; // 둘째 물리 단계의 렌더 프레임
@@ -130,30 +130,30 @@ namespace ProjectEpsilon.Editor // 편집기 영역
         private int step; // 생성 단계
 
         private void FixedUpdate() // 물리 단계별 위험 생성
-        { // 메서드 시작
+        {
             if (step == 0) // 첫 물리 단계 확인
-            { // 조건 시작
+            {
                 FirstFrame = Time.frameCount; // 첫 프레임 기록
                 FirstTime = Time.fixedTime; // 첫 물리 시간 기록
                 Runner.SpawnHazard(SnakeContactHazardType.Obstacle, true); // 첫 스텝 장애물 진입
                 Physics2D.SyncTransforms(); // 장애물 위치 동기화
                 step = 1; // 둘째 단계 대기
                 return; // 중복 처리 방지
-            } // 조건 끝
+            }
             if (step == 1) // 둘째 물리 단계 확인
-            { // 조건 시작
+            {
                 SecondFrame = Time.frameCount; // 둘째 프레임 기록
                 SecondTime = Time.fixedTime; // 둘째 물리 시간 기록
                 Runner.SpawnHazard(SnakeContactHazardType.EnemyDirect, true); // 다음 스텝 적 진입
                 Physics2D.SyncTransforms(); // 적 위치 동기화
                 step = 2; // 시험 생성 완료
                 enabled = false; // 추가 물리 단계 중단
-            } // 조건 끝
-        } // 메서드 끝
-    } // 클래스 끝
+            }
+        }
+    }
 
     public sealed class CollisionVerificationRunner : MonoBehaviour // 실제 충돌 시나리오 실행기
-    { // 클래스 시작
+    {
         private SnakeMovement player; // 머리 이동 구성
         private SnakeBodyManager body; // 몸통 관리자
         private SnakeBodyFollower follower; // 몸통 위치 추적기
@@ -167,7 +167,7 @@ namespace ProjectEpsilon.Editor // 편집기 영역
         private static readonly BindingFlags PrivateInstance = BindingFlags.NonPublic | BindingFlags.Instance; // 비공개 멤버 검색 조건
 
         private IEnumerator Start() // 시험 코루틴
-        { // 메서드 시작
+        {
             player = GetComponent<SnakeMovement>(); // 머리 이동 조회
             body = UnityEngine.Object.FindFirstObjectByType<SnakeBodyManager>(); // 몸통 조회
             follower = UnityEngine.Object.FindFirstObjectByType<SnakeBodyFollower>(); // 몸통 추적기 조회
@@ -176,147 +176,147 @@ namespace ProjectEpsilon.Editor // 편집기 영역
             external = GetComponent<SnakeExternalCollision>(); // 외부 충돌 조회
             shield = health == null ? null : health.ShieldController; // 체력에 연결된 보호막 조회
             if (!Check(player != null && body != null && follower != null && health != null && invulnerability != null && external != null && shield != null, "Missing Game scene components.")) // 필수 참조 확인
-            { // 조건 시작
+            {
                 yield break; // 실패 후 중단
-            } // 조건 끝
+            }
             EarlyEnemyWaveSpawner spawner = UnityEngine.Object.FindFirstObjectByType<EarlyEnemyWaveSpawner>(); // 자연 출현기 조회
             if (spawner != null) // 출현기 연결 확인
-            { // 조건 시작
+            {
                 spawner.enabled = false; // 자연 적 생성 중지
-            } // 조건 끝
+            }
             player.enabled = false; // 머리 자동 이동 중지
             follower.enabled = false; // 시험 몸통 위치 고정
             foreach (EarlyEnemyBehaviour enemy in UnityEngine.Object.FindObjectsByType<EarlyEnemyBehaviour>(FindObjectsSortMode.None)) // 기존 시험 적 순회
-            { // 반복 시작
+            {
                 Destroy(enemy.gameObject); // 자연 생성 적 정리
-            } // 반복 끝
+            }
             probe = gameObject.AddComponent<CollisionVerificationProbe>(); // 머리 충돌 순서 기록기
             Debug.Log("[CollisionVerification] Conditions: real Game scene; player motion and wave spawning disabled; controlled colliders; fixed simulation."); // 시험 조건 기록
             yield return null; // 기존 적 제거 대기
             yield return ResetFixture(); // 초기 상태 준비
             yield return SimultaneousContacts(true); // 장애물 우선 생성 물리 시험
             if (!enabled) // 이전 시험 실패 확인
-            { // 조건 시작
+            {
                 yield break; // 남은 시험 중단
-            } // 조건 끝
+            }
             yield return ResetFixture(); // 상태 초기화
             yield return SimultaneousContacts(false); // 적 우선 생성 물리 시험
             if (!enabled) // 이전 시험 실패 확인
-            { // 조건 시작
+            {
                 yield break; // 남은 시험 중단
-            } // 조건 끝
+            }
             yield return ResetFixture(); // 상태 초기화
             yield return SyntheticOrder(true); // 장애물 선행 인위 콜백
             if (!enabled) // 이전 시험 실패 확인
-            { // 조건 시작
+            {
                 yield break; // 남은 시험 중단
-            } // 조건 끝
+            }
             yield return ResetFixture(); // 상태 초기화
             yield return SyntheticOrder(false); // 적 선행 인위 콜백
             if (!enabled) // 이전 시험 실패 확인
-            { // 조건 시작
+            {
                 yield break; // 남은 시험 중단
-            } // 조건 끝
+            }
             yield return ResetFixture(); // 상태 초기화
             yield return ExistingInvulnerability(); // 기존 전체 무적 시험
             if (!enabled) // 이전 시험 실패 확인
-            { // 조건 시작
+            {
                 yield break; // 남은 시험 중단
-            } // 조건 끝
+            }
             yield return ResetFixture(); // 상태 초기화
             yield return BodyAndObstacle(); // 자기충돌 우선 시험
             if (!enabled) // 이전 시험 실패 확인
-            { // 조건 시작
+            {
                 yield break; // 남은 시험 중단
-            } // 조건 끝
+            }
             yield return ResetFixture(); // 상태 초기화
             yield return ProjectileAndObstacle(false); // 장애물과 실제 투사체 시험
             if (!enabled) // 이전 시험 실패 확인
-            { // 조건 시작
+            {
                 yield break; // 남은 시험 중단
-            } // 조건 끝
+            }
             yield return ResetFixture(); // 상태 초기화
             yield return ProjectileAndObstacle(true); // 보호막과 동일 피해 시험
             if (!enabled) // 이전 시험 실패 확인
-            { // 조건 시작
+            {
                 yield break; // 남은 시험 중단
-            } // 조건 끝
+            }
             yield return ResetFixture(); // 상태 초기화
             yield return MeleeAndObstacle(); // 기존 근접 접촉과 신규 장애물 시험
             if (!enabled) // 이전 시험 실패 확인
-            { // 조건 시작
+            {
                 yield break; // 남은 시험 중단
-            } // 조건 끝
+            }
             yield return ResetFixture(); // 상태 초기화
             yield return EliteCutAndObstacle(); // 엘리트 절단과 장애물 시험
             if (!enabled) // 이전 시험 실패 확인
-            { // 조건 시작
+            {
                 yield break; // 남은 시험 중단
-            } // 조건 끝
+            }
             yield return ResetFixture(); // 상태 초기화
             yield return PersistentEnemyContact(); // 기존 적 접촉과 신규 장애물 시험
             if (!enabled) // 이전 시험 실패 확인
-            { // 조건 시작
+            {
                 yield break; // 남은 시험 중단
-            } // 조건 끝
+            }
             yield return ResetFixture(); // 상태 초기화
             yield return DestroyedHazards(); // 접촉 직후 객체 제거 시험
             if (!enabled) // 이전 시험 실패 확인
-            { // 조건 시작
+            {
                 yield break; // 남은 시험 중단
-            } // 조건 끝
+            }
             yield return ResetFixture(); // 상태 초기화
             yield return MultiplePhysicsSteps(); // 동일 렌더 프레임의 여러 물리 단계 시험
             if (!enabled) // 이전 시험 실패 확인
-            { // 조건 시작
+            {
                 yield break; // 남은 시험 중단
-            } // 조건 끝
+            }
             yield return ResetFixture(); // 상태 초기화
             yield return DisabledPendingCancellation(); // 비활성화 시 절단 예약 취소 시험
             if (!enabled) // 이전 시험 실패 확인
-            { // 조건 시작
+            {
                 yield break; // 남은 시험 중단
-            } // 조건 끝
+            }
             yield return ResetFixture(); // 상태 초기화
             yield return DispatcherLifecycle(); // 실행 순서와 재등록 시험
             if (!enabled) // 이전 시험 실패 확인
-            { // 조건 시작
+            {
                 yield break; // 남은 시험 중단
-            } // 조건 끝
+            }
             yield return ResetFixture(); // 상태 초기화
             yield return PausedDuringContact(); // 충돌 중 일시정지 시험
             if (!enabled) // 이전 시험 실패 확인
-            { // 조건 시작
+            {
                 yield break; // 남은 시험 중단
-            } // 조건 끝
+            }
             yield return ResetFixture(); // 상태 초기화
             yield return LastBodyDefeat(); // 마지막 몸통 패배 시험
             if (!enabled) // 이전 시험 실패 확인
-            { // 조건 시작
+            {
                 yield break; // 남은 시험 중단
-            } // 조건 끝
+            }
             AutomatedCollisionPriorityVerification.Finish(0, "Actual 2D triggers, both synthetic callback orders, invulnerability, self, projectile, shield, melee, elite cut, persistent contact, destroyed hazards, multiple physics steps, disabled cancellation, dispatcher lifecycle, pause, defeat. Actual callback orders: " + string.Join(",", observedOrders)); // 전체 성공 기록
-        } // 코루틴 끝
+        }
 
         private IEnumerator ResetFixture() // 충돌 시험 초기화
-        { // 메서드 시작
+        {
             foreach (GameObject item in spawned) // 시험 객체 순회
-            { // 반복 시작
+            {
                 if (item != null) // 객체 존재 확인
-                { // 조건 시작
+                {
                     Collider2D collider = item.GetComponent<Collider2D>(); // 시험 충돌체 조회
                     if (collider != null) // 충돌체 존재 확인
-                    { // 조건 시작
+                    {
                         collider.enabled = false; // 남은 충돌 차단
-                    } // 조건 끝
+                    }
                     Destroy(item); // 시험 객체 제거
-                } // 조건 끝
-            } // 반복 끝
+                }
+            }
             spawned.Clear(); // 시험 객체 목록 초기화
             if (GameManager.Instance.IsPaused || GameManager.Instance.CurrentState == GameState.Defeated) // 진행 정지 여부
-            { // 조건 시작
+            {
                 GameManager.Instance.StartGame(); // 다음 시험 진행 복구
-            } // 조건 끝
+            }
             invulnerability.ClearInvulnerability(); // 무적 초기화
             shield.Clear(); // 보호막 초기화
             body.ResetBody(); // 시작 몸통 복구
@@ -327,27 +327,27 @@ namespace ProjectEpsilon.Editor // 편집기 영역
             yield return null; // 지연 객체 제거 대기
             yield return new WaitForFixedUpdate(); // 충돌 해제 물리 스텝 대기
             yield return null; // 후속 플레이어루프 대기
-        } // 코루틴 끝
+        }
 
         private IEnumerator SimultaneousContacts(bool obstacleFirst) // 실제 동시 트리거 시험
-        { // 메서드 시작
+        {
             SpawnHazard(obstacleFirst ? SnakeContactHazardType.Obstacle : SnakeContactHazardType.EnemyDirect, true); // 첫 위험 생성
             SpawnHazard(obstacleFirst ? SnakeContactHazardType.EnemyDirect : SnakeContactHazardType.Obstacle, true); // 둘째 위험 생성
             Physics2D.SyncTransforms(); // 새 충돌체 동기화
             yield return new WaitForFixedUpdate(); // 실제 물리 스텝 대기
             yield return null; // 물리 후 처리 대기
             if (!Check(probe.Entries.Count == 2 && probe.Steps.Count == 2 && Mathf.Approximately(probe.Steps[0], probe.Steps[1]), "Real hazards did not enter in one physical step.")) // 실제 동시 진입 확인
-            { // 조건 시작
+            {
                 yield break; // 실패 처리
-            } // 조건 끝
+            }
             string order = string.Join("->", probe.Entries); // 실제 콜백 순서
             observedOrders.Add(order); // 관측 순서 저장
             Debug.Log("[CollisionVerification] Real callbacks: " + order); // 실제 순서 기록
             Check(body.CurrentBodyCount == 2 && health.CurrentHealth == 75 && external.EnemyContactProtected && invulnerability.IsInvulnerable, $"Real simultaneous contact mismatch: body={body.CurrentBodyCount}, hp={health.CurrentHealth}, direct={external.EnemyContactProtected}, full={invulnerability.IsInvulnerable}."); // 몸통 우선 및 보호 확인
-        } // 코루틴 끝
+        }
 
         private IEnumerator SyntheticOrder(bool obstacleFirst) // 인위적 순서 콜백 시험
-        { // 메서드 시작
+        {
             Collider2D obstacle = SpawnHazard(SnakeContactHazardType.Obstacle, false); // 비활성 장애물
             Collider2D enemy = SpawnHazard(SnakeContactHazardType.EnemyDirect, false); // 비활성 적
             MethodInfo enter = typeof(SnakeExternalCollision).GetMethod("OnTriggerEnter2D", PrivateInstance); // 실제 콜백 조회
@@ -359,10 +359,10 @@ namespace ProjectEpsilon.Editor // 편집기 영역
             yield return null; // 후속 플레이어루프 대기
             Check(body.CurrentBodyCount == 2 && health.CurrentHealth == 75 && external.EnemyContactProtected && invulnerability.IsInvulnerable, $"Synthetic duplicate or priority mismatch: {(obstacleFirst ? "obstacle-first" : "enemy-first")}, body={body.CurrentBodyCount}, hp={health.CurrentHealth}."); // 중복 및 순서 확인
             Debug.Log("[CollisionVerification] Synthetic callback order: " + (obstacleFirst ? "obstacle-first" : "enemy-first")); // 인위 시험 구분 기록
-        } // 코루틴 끝
+        }
 
         private IEnumerator ExistingInvulnerability() // 기존 전체 무적 시험
-        { // 메서드 시작
+        {
             invulnerability.StartInvulnerability(5f); // 기존 무적 적용
             SpawnHazard(SnakeContactHazardType.Obstacle, true); // 장애물 접촉 생성
             SpawnHazard(SnakeContactHazardType.EnemyDirect, true); // 적 접촉 생성
@@ -370,24 +370,24 @@ namespace ProjectEpsilon.Editor // 편집기 영역
             yield return new WaitForFixedUpdate(); // 물리 처리 대기
             yield return null; // 후속 처리 대기
             Check(body.CurrentBodyCount == 3 && health.CurrentHealth == 100, "Existing full invulnerability did not block contacts."); // 기존 무적 우선 확인
-        } // 코루틴 끝
+        }
 
         private IEnumerator BodyAndObstacle() // 자기충돌과 장애물 시험
-        { // 메서드 시작
+        {
             body.BodySegments[2].transform.position = player.transform.position; // 꼬리 몸통 머리 위치 이동
             SpawnHazard(SnakeContactHazardType.Obstacle, true); // 같은 위치 장애물 생성
             Physics2D.SyncTransforms(); // 움직인 몸통 물리 동기화
             yield return new WaitForFixedUpdate(); // 실제 접촉 대기
             yield return null; // 물리 후 해결 대기
             Check(body.CurrentBodyCount == 1 && health.CurrentHealth == 100 && invulnerability.IsInvulnerable, $"Self collision priority mismatch: body={body.CurrentBodyCount}, hp={health.CurrentHealth}, full={invulnerability.IsInvulnerable}."); // 몸통 손실 및 신규 무적 확인
-        } // 코루틴 끝
+        }
 
         private IEnumerator ProjectileAndObstacle(bool withShield) // 투사체 및 보호막 시험
-        { // 메서드 시작
+        {
             if (withShield) // 보호막 시험 확인
-            { // 조건 시작
+            {
                 shield.Apply(50, 10f, 2, 10f); // 공용 보호막 적용
-            } // 조건 끝
+            }
             SpawnHazard(SnakeContactHazardType.Obstacle, true); // 장애물 생성
             GameObject shot = new GameObject("CollisionVerificationProjectile"); // 실제 시험 투사체
             spawned.Add(shot); // 시험 객체 등록
@@ -398,36 +398,36 @@ namespace ProjectEpsilon.Editor // 편집기 영역
             yield return new WaitForFixedUpdate(); // 실제 충돌 대기
             yield return null; // 투사체 제거와 해결 대기
             if (withShield) // 보호막 결과 확인
-            { // 조건 시작
+            {
                 Check(body.CurrentBodyCount == 3 && health.CurrentHealth == 100 && shield.CurrentShield == 25 && invulnerability.IsInvulnerable, $"Shielded obstacle mismatch: body={body.CurrentBodyCount}, hp={health.CurrentHealth}, shield={shield.CurrentShield}."); // 보호막 흡수와 투사체 차단 확인
-            } // 조건 끝
+            }
             else // 보호막 없는 결과 확인
-            { // 대안 시작
+            {
                 Check(body.CurrentBodyCount == 3 && health.CurrentHealth == 75 && invulnerability.IsInvulnerable, $"Obstacle/projectile mismatch: body={body.CurrentBodyCount}, hp={health.CurrentHealth}."); // 장애물 피해와 신규 무적 확인
-            } // 대안 끝
+            }
             Check(shot == null, "Projectile was not destroyed after contact."); // 투사체 파괴 확인
-        } // 코루틴 끝
+        }
 
         private IEnumerator PersistentEnemyContact() // 지속 접촉 재적용 방지 시험
-        { // 메서드 시작
+        {
             SpawnHazard(SnakeContactHazardType.EnemyDirect, true); // 지속 적 접촉 생성
             Physics2D.SyncTransforms(); // 물리 동기화
             yield return new WaitForFixedUpdate(); // 첫 접촉 대기
             yield return null; // 직접 충돌 해결 대기
             if (!Check(body.CurrentBodyCount == 2, "Initial direct enemy contact did not remove one body.")) // 최초 적 피해 확인
-            { // 조건 시작
+            {
                 yield break; // 실패 중단
-            } // 조건 끝
+            }
             yield return new WaitForSeconds(1.2f); // 직접 보호 종료 대기
             SpawnHazard(SnakeContactHazardType.Obstacle, true); // 기존 적 접촉 중 장애물 진입
             Physics2D.SyncTransforms(); // 장애물 물리 동기화
             yield return new WaitForFixedUpdate(); // 신규 장애물 접촉 대기
             yield return null; // 후속 해결 대기
             Check(body.CurrentBodyCount == 2 && health.CurrentHealth == 75, $"Persistent enemy overlap mismatch: body={body.CurrentBodyCount}, hp={health.CurrentHealth}."); // 기존 접촉 재적용 방지 확인
-        } // 코루틴 끝
+        }
 
         private IEnumerator MeleeAndObstacle() // 근접 피해와 장애물 시험
-        { // 메서드 시작
+        {
             EarlyEnemyBehaviour enemy = SpawnStationaryEnemy(EarlyEnemyKind.Chaser); // 정지 추적자 생성
             Physics2D.SyncTransforms(); // 적 물리 위치 동기화
             yield return new WaitForFixedUpdate(); // 초기 적 진입 대기
@@ -438,10 +438,10 @@ namespace ProjectEpsilon.Editor // 편집기 영역
             yield return new WaitForFixedUpdate(); // 근접 유지와 장애물 물리 처리
             yield return null; // 물리 후 피해 해결 대기
             Check(body.CurrentBodyCount == 3 && health.CurrentHealth == 75 && invulnerability.IsInvulnerable, $"Melee/obstacle mismatch: body={body.CurrentBodyCount}, hp={health.CurrentHealth}."); // 장애물 우선 및 근접 차단 확인
-        } // 코루틴 끝
+        }
 
         private IEnumerator EliteCutAndObstacle() // 엘리트 돌진 절단과 장애물 시험
-        { // 메서드 시작
+        {
             EarlyEnemyBehaviour enemy = SpawnStationaryEnemy(EarlyEnemyKind.Elite); // 정지 엘리트 생성
             Physics2D.SyncTransforms(); // 적 위치 동기화
             yield return new WaitForFixedUpdate(); // 초기 적 진입 대기
@@ -455,10 +455,10 @@ namespace ProjectEpsilon.Editor // 편집기 영역
             yield return null; // 물리 후 피해 해결 대기
             bool cutRecorded = (bool)typeof(EarlyEnemyBehaviour).GetField("chargeCut", PrivateInstance).GetValue(enemy); // 절단 완료 상태 조회
             Check(body.CurrentBodyCount == 2 && health.CurrentHealth == 75 && cutRecorded, $"Elite/obstacle mismatch: body={body.CurrentBodyCount}, hp={health.CurrentHealth}, cut={cutRecorded}."); // 절단 우선과 완료 확인
-        } // 코루틴 끝
+        }
 
         private EarlyEnemyBehaviour SpawnStationaryEnemy(EarlyEnemyKind kind) // 정지 적 접촉 생성
-        { // 메서드 시작
+        {
             GameObject enemy = new GameObject("CollisionVerificationEnemy_" + kind); // 시험 적 객체
             spawned.Add(enemy); // 시험 객체 등록
             enemy.transform.position = player.transform.position; // 머리와 같은 위치
@@ -476,25 +476,25 @@ namespace ProjectEpsilon.Editor // 편집기 영역
             EarlyEnemyBehaviour behaviour = enemy.AddComponent<EarlyEnemyBehaviour>(); // 실제 적 행동 추가
             behaviour.Configure(settings, player, body, health, null, 4f, 5f, 3f, 1f, 0.6f, 3f); // 실제 적 동작 연결
             return behaviour; // 시험 적 반환
-        } // 메서드 끝
+        }
 
         private IEnumerator PausedDuringContact() // 같은 물리 단계의 일시정지 시험
-        { // 메서드 시작
+        {
             probe.PauseOnEntry = true; // 첫 물리 콜백 중 정지 요청
             SpawnHazard(SnakeContactHazardType.Obstacle, true); // 장애물 생성
             SpawnHazard(SnakeContactHazardType.EnemyDirect, true); // 직접 충돌 생성
             Physics2D.SyncTransforms(); // 충돌체 물리 동기화
             float deadline = Time.realtimeSinceStartup + 3f; // 접촉 대기 제한
             while (!GameManager.Instance.IsPaused && Time.realtimeSinceStartup < deadline) // 물리 콜백의 정지 대기
-            { // 반복 시작
+            {
                 yield return null; // 렌더 프레임 대기
-            } // 반복 끝
+            }
             yield return null; // 정지 상태의 물리 후 해결 대기
             Check(GameManager.Instance.IsPaused && body.CurrentBodyCount == 2 && health.CurrentHealth == 75, $"Paused contact mismatch: paused={GameManager.Instance.IsPaused}, body={body.CurrentBodyCount}, hp={health.CurrentHealth}."); // 정지 전 접촉 해결 확인
-        } // 코루틴 끝
+        }
 
         private IEnumerator DestroyedHazards() // 접촉 직후 제거되는 위험 시험
-        { // 메서드 시작
+        {
             probe.DestroyOnEntry = true; // 접촉 원본의 지연 제거 요청
             SpawnHazard(SnakeContactHazardType.Obstacle, true); // 장애물 생성
             SpawnHazard(SnakeContactHazardType.EnemyDirect, true); // 직접 충돌 생성
@@ -502,10 +502,10 @@ namespace ProjectEpsilon.Editor // 편집기 영역
             yield return new WaitForFixedUpdate(); // 실제 접촉 처리 대기
             yield return null; // 물리 해결과 객체 제거 대기
             Check(probe.Entries.Count == 2 && body.CurrentBodyCount == 2 && health.CurrentHealth == 75, $"Destroyed hazard mismatch: callbacks={probe.Entries.Count}, body={body.CurrentBodyCount}, hp={health.CurrentHealth}."); // 수집된 접촉 보존 확인
-        } // 코루틴 끝
+        }
 
         private IEnumerator MultiplePhysicsSteps() // 같은 렌더 프레임의 물리 스텝 분리 시험
-        { // 메서드 시작
+        {
             CollisionVerificationSequencer sequence = gameObject.AddComponent<CollisionVerificationSequencer>(); // 물리 단계 생성기
             sequence.Runner = this; // 시험 실행기 연결
             float previousMaximum = Time.maximumDeltaTime; // 최대 프레임 시간 보관
@@ -519,14 +519,14 @@ namespace ProjectEpsilon.Editor // 편집기 영역
             Debug.Log($"[CollisionVerification] Multiple fixed steps: frames={sequence.FirstFrame},{sequence.SecondFrame} times={sequence.FirstTime:F3},{sequence.SecondTime:F3}"); // 실제 스텝 기록
             Destroy(sequence); // 시험 생성기 제거
             if (!Check(distinctSteps && sameFrame, "The test did not observe two physical steps in one render frame.")) // 실제 시험 조건 확인
-            { // 조건 시작
+            {
                 yield break; // 조건 실패 중단
-            } // 조건 끝
+            }
             Check(body.CurrentBodyCount == 3 && health.CurrentHealth == 75 && invulnerability.IsInvulnerable, $"Separated steps mismatch: body={body.CurrentBodyCount}, hp={health.CurrentHealth}."); // 첫 스텝 무적의 다음 스텝 적용 확인
-        } // 코루틴 끝
+        }
 
         private IEnumerator DisabledPendingCancellation() // 처리기 비활성화 예약 취소 시험
-        { // 메서드 시작
+        {
             EarlyEnemyBehaviour enemy = SpawnStationaryEnemy(EarlyEnemyKind.Elite); // 시험 엘리트 생성
             enemy.GetComponent<Collider2D>().enabled = false; // 실제 충돌 대신 인위 콜백 선택
             typeof(EarlyEnemyBehaviour).GetField("chargePhase", PrivateInstance).SetValue(enemy, 2); // 돌진 단계 설정
@@ -534,108 +534,108 @@ namespace ProjectEpsilon.Editor // 편집기 영역
             typeof(EarlyEnemyBehaviour).GetField("nextAttack", PrivateInstance).SetValue(enemy, Time.time + 10f); // 일반 공격 차단
             FieldInfo pending = typeof(EarlyEnemyBehaviour).GetField("chargeCutPending", PrivateInstance); // 절단 대기 필드 조회
             if (!Check(pending != null, "Elite queued-cut state is missing.")) // 대기 상태 확인
-            { // 조건 시작
+            {
                 yield break; // 실패 중단
-            } // 조건 끝
+            }
             MethodInfo stay = typeof(EarlyEnemyBehaviour).GetMethod("OnTriggerStay2D", PrivateInstance); // 실제 적 유지 콜백 조회
             object[] arguments = new object[] { player.GetComponent<Collider2D>() }; // 머리 충돌 인자
             stay.Invoke(enemy, arguments); // 인위적인 돌진 접촉
             if (!Check((bool)pending.GetValue(enemy), "Elite cut was not queued before disabling.")) // 예약 상태 확인
-            { // 조건 시작
+            {
                 yield break; // 실패 중단
-            } // 조건 끝
+            }
             external.enabled = false; // 대기 충돌 처리기 비활성화
             bool cut = (bool)typeof(EarlyEnemyBehaviour).GetField("chargeCut", PrivateInstance).GetValue(enemy); // 절단 성공 상태
             if (!Check(!(bool)pending.GetValue(enemy) && !cut && body.CurrentBodyCount == 3, "Disabling did not cancel the pending elite cut.")) // 취소와 몸통 유지 확인
-            { // 조건 시작
+            {
                 yield break; // 실패 중단
-            } // 조건 끝
+            }
             external.enabled = true; // 처리기 재활성화
             stay.Invoke(enemy, arguments); // 동일 엘리트 접촉 재시도
             yield return new WaitForFixedUpdate(); // 다음 물리 단계 해결 대기
             yield return null; // 물리 후 콜백 대기
             cut = (bool)typeof(EarlyEnemyBehaviour).GetField("chargeCut", PrivateInstance).GetValue(enemy); // 절단 성공 상태 재조회
             Check(body.CurrentBodyCount == 2 && cut && !(bool)pending.GetValue(enemy), "Re-enabled handler did not resolve the next elite cut."); // 재활성화와 정상 절단 확인
-        } // 코루틴 끝
+        }
 
         private IEnumerator DispatcherLifecycle() // 물리 직후 실행 단계와 재등록 시험
-        { // 메서드 시작
+        {
             Type dispatcher = typeof(SnakeExternalCollision).Assembly.GetType("ProjectEpsilon.Player.SnakePhysicsStepDispatcher"); // 물리 완료 처리기 형식
             if (!Check(dispatcher != null, "Physics dispatcher type is missing.")) // 처리기 존재 확인
-            { // 조건 시작
+            {
                 yield break; // 실패 중단
-            } // 조건 끝
+            }
             Type marker = dispatcher.GetNestedType("AfterPhysics2D", BindingFlags.NonPublic); // 물리 직후 단계 표식
             if (!Check(marker != null && HasSinglePhysicsMarker(marker), "Physics dispatcher is missing, duplicated, or not immediately after Physics2DFixedUpdate.")) // 초기 플레이어루프 확인
-            { // 조건 시작
+            {
                 yield break; // 실패 중단
-            } // 조건 끝
+            }
             MethodInfo reset = dispatcher.GetMethod("ResetState", BindingFlags.NonPublic | BindingFlags.Static); // 구독 세대 초기화 조회
             if (!Check(reset != null, "Dispatcher lifecycle reset is missing.")) // 재설정 메서드 확인
-            { // 조건 시작
+            {
                 yield break; // 실패 중단
-            } // 조건 끝
+            }
             reset.Invoke(null, null); // 도메인 재사용 초기화 모사
             yield return new WaitForFixedUpdate(); // 처리기 재등록 물리 단계
             yield return null; // 물리 후 등록 대기
             if (!Check(HasSinglePhysicsMarker(marker), "Dispatcher was duplicated after lifecycle reset.")) // 재등록 단계 중복 확인
-            { // 조건 시작
+            {
                 yield break; // 실패 중단
-            } // 조건 끝
+            }
             SpawnHazard(SnakeContactHazardType.EnemyDirect, true); // 재등록 이후 실제 적 진입
             Physics2D.SyncTransforms(); // 충돌체 동기화
             yield return new WaitForFixedUpdate(); // 실제 접촉 대기
             yield return null; // 물리 후 처리 대기
             Check(body.CurrentBodyCount == 2 && health.CurrentHealth == 100, "Dispatcher did not process contact after lifecycle reset."); // 재등록 후 실제 처리 확인
             Debug.Log("[CollisionVerification] Dispatcher marker and synthetic lifecycle reset verified."); // 인위적 수명주기 시험 기록
-        } // 코루틴 끝
+        }
 
         private static bool HasSinglePhysicsMarker(Type marker) // 물리 직후 단계 위치 확인
-        { // 메서드 시작
+        {
             int count = 0; // 전체 표식 수
             bool correctlyPlaced = false; // 물리 직후 여부
             InspectLoop(PlayerLoop.GetCurrentPlayerLoop(), marker, ref count, ref correctlyPlaced); // 실행 순서 트리 검사
             return count == 1 && correctlyPlaced; // 유일성과 위치 반환
-        } // 메서드 끝
+        }
 
         private static void InspectLoop(PlayerLoopSystem node, Type marker, ref int count, ref bool correctlyPlaced) // 실행 순서 재귀 검사
-        { // 메서드 시작
+        {
             if (node.type == marker) // 현재 표식 확인
-            { // 조건 시작
+            {
                 count++; // 표식 수 증가
-            } // 조건 끝
+            }
             if (node.subSystemList == null) // 하위 단계 부재 확인
-            { // 조건 시작
+            {
                 return; // 탐색 종료
-            } // 조건 끝
+            }
             for (int index = 0; index < node.subSystemList.Length; index++) // 하위 단계 순회
-            { // 반복 시작
+            {
                 PlayerLoopSystem child = node.subSystemList[index]; // 현재 하위 단계
                 if (child.type == typeof(UnityEngine.PlayerLoop.FixedUpdate.Physics2DFixedUpdate) && index + 1 < node.subSystemList.Length && node.subSystemList[index + 1].type == marker) // 물리 직후 표식 확인
-                { // 조건 시작
+                {
                     correctlyPlaced = true; // 정상 위치 기록
-                } // 조건 끝
+                }
                 InspectLoop(child, marker, ref count, ref correctlyPlaced); // 하위 트리 탐색
-            } // 반복 끝
-        } // 메서드 끝
+            }
+        }
 
         private IEnumerator LastBodyDefeat() // 동시 충돌 패배 시험
-        { // 메서드 시작
+        {
             body.RemoveBodies(2); // 마지막 몸통만 유지
             SpawnHazard(SnakeContactHazardType.Obstacle, true); // 장애물 생성
             SpawnHazard(SnakeContactHazardType.EnemyDirect, true); // 직접 충돌 생성
             Physics2D.SyncTransforms(); // 충돌체 동기화
             float deadline = Time.realtimeSinceStartup + 3f; // 패배 대기 제한
             while (GameManager.Instance.CurrentState != GameState.Defeated && Time.realtimeSinceStartup < deadline) // 실제 패배 대기
-            { // 반복 시작
+            {
                 yield return null; // 렌더 프레임 대기
-            } // 반복 끝
+            }
             yield return null; // 패배 후 해결 대기
             Check(body.CurrentBodyCount == 0 && health.CurrentHealth == 0 && GameManager.Instance.CurrentState == GameState.Defeated, "Last body direct contact did not cause defeat."); // 마지막 몸통 우선 확인
-        } // 코루틴 끝
+        }
 
         public Collider2D SpawnHazard(SnakeContactHazardType type, bool enabledCollider) // 시험 위험 생성
-        { // 메서드 시작
+        {
             GameObject item = new GameObject("CollisionVerification_" + type); // 시험 위험 객체
             spawned.Add(item); // 시험 객체 저장
             item.transform.position = player.transform.position; // 머리와 같은 위치
@@ -646,17 +646,17 @@ namespace ProjectEpsilon.Editor // 편집기 영역
             SnakeContactHazard hazard = item.AddComponent<SnakeContactHazard>(); // 위험 종류 구성
             hazard.Configure(type); // 충돌 종류 설정
             return collider; // 생성 충돌체 반환
-        } // 메서드 끝
+        }
 
         private bool Check(bool condition, string message) // 결과 확인
-        { // 메서드 시작
+        {
             if (condition) // 성공 조건 확인
-            { // 조건 시작
+            {
                 return true; // 정상 진행
-            } // 조건 끝
+            }
             enabled = false; // 남은 시험 중단
             AutomatedCollisionPriorityVerification.Finish(1, message); // 실패 종료 요청
             return false; // 검증 실패
-        } // 메서드 끝
-    } // 클래스 끝
-} // 영역 끝
+        }
+    }
+}

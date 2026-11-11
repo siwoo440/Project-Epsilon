@@ -8,11 +8,11 @@ using ProjectEpsilon.UI; // 설정 화면
 using UnityEngine.InputSystem; // 키보드 상태
 
 public static class Program // 회귀 검증기
-{ // 클래스 시작
+{
     public static int Main() // 검증 시작
-    { // 메서드 시작
+    {
         try // 검증 실패 처리
-        { // 보호 시작
+        {
             GameManager manager = new GameManager(); // 게임 관리자
             GameManager.Instance = manager; // 현재 관리자 등록
             InputBindingManager binding = new InputBindingManager(); // 키 설정 관리자
@@ -66,18 +66,18 @@ public static class Program // 회귀 검증기
             Require(!merge.IsMergeOpen, "레벨업 우선 합성 종료 실패"); // 레벨업 우선 확인
             Console.WriteLine("Pause and settings priority passed."); // 성공 기록
             return 0; // 성공 종료
-        } // 보호 끝
+        }
         catch (Exception exception) // 실패 예외 처리
-        { // 예외 시작
+        {
             Console.Error.WriteLine(exception.GetBaseException().Message); // 실패 내용 기록
             return 1; // 실패 종료
-        } // 예외 끝
-    } // 메서드 끝
+        }
+    }
     private static void Require(bool condition, string message) // 조건 검증
-    { // 메서드 시작
+    {
         if (!condition) // 실패 조건
-        { // 조건 시작
+        {
             throw new InvalidOperationException(message); // 실패 보고
-        } // 조건 끝
-    } // 메서드 끝
-} // 클래스 끝
+        }
+    }
+}

@@ -1,221 +1,221 @@
-using System;
-using System.Collections.Generic;
-using ProjectEpsilon.Combat;
-using ProjectEpsilon.Data;
+using System; // C# 기본 기능 연결
+using System.Collections.Generic; // C# 기본 기능 연결
+using ProjectEpsilon.Combat; // 전투 기능 연결
+using ProjectEpsilon.Data; // 데이터 기능 연결
 using ProjectEpsilon.Player; // 현재 캐릭터 패시브
-using UnityEngine;
+using UnityEngine; // Unity 엔진 기능 연결
 
-namespace ProjectEpsilon.Progression
+namespace ProjectEpsilon.Progression // 프로젝트 기능 영역
 {
-    [Serializable]
-    public sealed class WeaponRewardEntry
+    [Serializable] // 대상 설정
+    public sealed class WeaponRewardEntry // 포탑·보상 자료 구조
     {
-        [SerializeField] private WeaponData weapon;
-        [SerializeField] private bool unlocked = true;
+        [SerializeField] private WeaponData weapon; // 필드·포탑 설정
+        [SerializeField] private bool unlocked = true; // 필드 설정
 
-        public WeaponData Weapon => weapon;
-        public bool Unlocked => unlocked;
+        public WeaponData Weapon => weapon; // 포탑·데이터 값 반환
+        public bool Unlocked => unlocked; // 대상 값 반환
 
-        public WeaponRewardEntry(
-            WeaponData weaponData,
-            bool isUnlocked
-        )
+        public WeaponRewardEntry( // 포탑·보상 호출 시작
+            WeaponData weaponData, // 포탑·데이터 항목 전달
+            bool isUnlocked // 대상 처리
+        ) // 앞선 항목 종료
         {
-            weapon = weaponData;
-            unlocked = isUnlocked;
+            weapon = weaponData; // 포탑·데이터 값 설정
+            unlocked = isUnlocked; // 대상 값 설정
         }
     }
 
-    [CreateAssetMenu(
-        fileName = "WeaponRewardPool",
-        menuName = "Project Epsilon/Progression/Weapon Reward Pool"
-    )]
-    public sealed class WeaponRewardPool : ScriptableObject
+    [CreateAssetMenu( // 생성 설정
+        fileName = "WeaponRewardPool", // 파일·이름 값 설정
+        menuName = "Project Epsilon/Progression/Weapon Reward Pool" // 이름·프로젝트 값 설정
+    )] // 대상 처리
+    public sealed class WeaponRewardPool : ScriptableObject // 포탑·보상 자료 구조
     {
-        [SerializeField] private List<WeaponRewardEntry> entries =
-            new List<WeaponRewardEntry>();
+        [SerializeField] private List<WeaponRewardEntry> entries = // 필드·목록 설정
+            new List<WeaponRewardEntry>(); // 목록·포탑 객체 생성
 
-        public IReadOnlyList<WeaponRewardEntry> Entries => entries;
+        public IReadOnlyList<WeaponRewardEntry> Entries => entries; // 목록·포탑 값 반환
 
-        public void Configure(
-            IReadOnlyList<WeaponData> weapons
-        )
+        public void Configure( // 구성 호출 시작
+            IReadOnlyList<WeaponData> weapons // 목록·포탑 처리
+        ) // 앞선 항목 종료
         {
-            entries.Clear();
+            entries.Clear(); // 대상 기능 실행
 
-            if (weapons == null)
+            if (weapons == null) // 포탑 조건 확인
             {
-                return;
+                return; // 현재 기능 종료
             }
 
-            for (int index = 0; index < weapons.Count; index++)
+            for (int index = 0; index < weapons.Count; index++) // 순서·포탑 반복 처리
             {
-                WeaponData weapon = weapons[index];
+                WeaponData weapon = weapons[index]; // 포탑·데이터 값 설정
 
-                if (weapon == null)
+                if (weapon == null) // 포탑 조건 확인
                 {
-                    continue;
+                    continue; // 다음 반복 진행
                 }
 
-                entries.Add(
-                    new WeaponRewardEntry(
-                        weapon,
-                        true
-                    )
-                );
+                entries.Add( // 추가 호출 시작
+                    new WeaponRewardEntry( // 포탑·보상 객체 생성
+                        weapon, // 포탑 항목 전달
+                        true // 대상 처리
+                    ) // 앞선 항목 종료
+                ); // 앞선 항목 종료
             }
         }
 
-        public List<WeaponRewardCandidate> BuildCandidates(
-            int level,
-            SnakeWeaponManager weaponManager,
-            int requestedCount
-        )
+        public List<WeaponRewardCandidate> BuildCandidates( // 목록·포탑 호출 시작
+            int level, // 레벨 항목 전달
+            SnakeWeaponManager weaponManager, // 포탑·관리자 항목 전달
+            int requestedCount // 개수 처리
+        ) // 앞선 항목 종료
         {
-            int safeCount =
-                Mathf.Max(0, requestedCount);
+            int safeCount = // 개수 값 설정
+                Mathf.Max(0, requestedCount); // 최대·개수 기능 실행
 
-            List<WeaponRewardEntry> available =
-                BuildAvailableEntries(
-                    weaponManager
-                );
+            List<WeaponRewardEntry> available = // 목록·포탑 값 설정
+                BuildAvailableEntries( // 구성 호출 시작
+                    weaponManager // 포탑·관리자 처리
+                ); // 앞선 항목 종료
 
-            List<WeaponRewardCandidate> candidates =
-                new List<WeaponRewardCandidate>(
-                    safeCount
-                );
+            List<WeaponRewardCandidate> candidates = // 목록·포탑 값 설정
+                new List<WeaponRewardCandidate>( // 목록·포탑 객체 생성
+                    safeCount // 개수 처리
+                ); // 앞선 항목 종료
 
-            while (candidates.Count < safeCount &&
-                available.Count > 0)
+            while (candidates.Count < safeCount && // 후보·개수 반복 조건
+                available.Count > 0) // 개수 처리
             {
                 int selectedIndex = SelectCandidateIndex(available, weaponManager, CharacterRunInitializer.ActiveCharacter); // 실제 캐릭터 가중치 추첨
 
-                WeaponRewardEntry selected =
-                    available[selectedIndex];
+                WeaponRewardEntry selected = // 포탑·보상 값 설정
+                    available[selectedIndex]; // 선택 값·순서 처리
 
-                available.RemoveAt(selectedIndex);
+                available.RemoveAt(selectedIndex); // 제거·선택 값 기능 실행
 
-                WeaponData weapon =
-                    selected.Weapon;
+                WeaponData weapon = // 포탑·데이터 값 설정
+                    selected.Weapon; // 선택 값·포탑 처리
 
-                int grade =
-                    WeaponRewardRules.RollGrade(
-                        level,
-                        weapon.MaxGrade,
-                        UnityEngine.Random.value
-                    );
+                int grade = // 등급 값 설정
+                    WeaponRewardRules.RollGrade( // 포탑·보상 호출 시작
+                        level, // 레벨 항목 전달
+                        weapon.MaxGrade, // 포탑·최대 항목 전달
+                        UnityEngine.Random.value // Unity·난수 처리
+                    ); // 앞선 항목 종료
 
-                candidates.Add(
-                    new WeaponRewardCandidate(
-                        weapon,
-                        grade
-                    )
-                );
+                candidates.Add( // 후보·추가 호출 시작
+                    new WeaponRewardCandidate( // 포탑·보상 객체 생성
+                        weapon, // 포탑 항목 전달
+                        grade // 등급 처리
+                    ) // 앞선 항목 종료
+                ); // 앞선 항목 종료
             }
 
-            return candidates;
+            return candidates; // 후보 결과 반환
         }
 
         public static float GetCandidateWeight(WeaponData weapon, SnakeWeaponManager weapons, CharacterData character) // 캐릭터별 실제 후보 가중치
-        { // 메서드 시작
+        {
             if (weapon == null || character == null) // 무기와 캐릭터 확인
-            { // 조건 시작
+            {
                 return 1f; // 기본 균등 가중치
-            } // 조건 끝
+            }
             if (character.Passive == CharacterPassive.HolySpecialization && weapon.Attribute == WeaponAttribute.Holy) // 신성 특화 후보 확인
-            { // 조건 시작
+            {
                 return character.PreferredCandidateWeight; // 신성 후보 가중치
-            } // 조건 끝
+            }
             if (character.Passive == CharacterPassive.DarkSpecialization && weapon.Attribute == WeaponAttribute.Dark) // 암흑 특화 후보 확인
-            { // 조건 시작
+            {
                 return character.PreferredCandidateWeight; // 암흑 후보 가중치
-            } // 조건 끝
+            }
             if (character.Passive == CharacterPassive.FusionCandidates && weapons != null) // 합성형 보유 무기 확인
-            { // 조건 시작
+            {
                 foreach (SnakeWeaponSlot slot in weapons.Slots) // 실제 장착 슬롯 순회
-                { // 반복 시작
+                {
                     if (slot != null && !slot.IsEmpty && slot.Weapon == weapon) // 동일 보유 무기 확인
-                    { // 조건 시작
+                    {
                         return character.PreferredCandidateWeight; // 보유 무기 후보 가중치
-                    } // 조건 끝
-                } // 반복 끝
-            } // 조건 끝
+                    }
+                }
+            }
             return 1f; // 기본 균등 가중치
-        } // 메서드 끝
+        }
 
         private static int SelectCandidateIndex(List<WeaponRewardEntry> available, SnakeWeaponManager weapons, CharacterData character) // 중복 없는 가중 무기 추첨
-        { // 메서드 시작
+        {
             List<WeaponData> candidates = new List<WeaponData>(available.Count); // 실제 무기 후보 목록
             foreach (WeaponRewardEntry entry in available) // 실제 후보 순회
-            { // 반복 시작
+            {
                 candidates.Add(entry.Weapon); // 공통 추첨에 무기 전달
-            } // 반복 끝
+            }
             return SelectWeaponIndex(candidates, weapons, character); // 레벨과 엘리트 공통 추첨
-        } // 메서드 끝
+        }
 
         public static int SelectWeaponIndex(IReadOnlyList<WeaponData> available, SnakeWeaponManager weapons, CharacterData character) // 실제 후보 가중 추첨
-        { // 메서드 시작
+        {
             if (available == null || available.Count == 0) // 후보 목록 확인
-            { // 조건 시작
+            {
                 return -1; // 선택 가능한 무기 없음
-            } // 조건 끝
+            }
             if (character == null || (character.Passive != CharacterPassive.FusionCandidates && character.Passive != CharacterPassive.HolySpecialization && character.Passive != CharacterPassive.DarkSpecialization)) // 가중 특화 캐릭터 확인
-            { // 조건 시작
+            {
                 return UnityEngine.Random.Range(0, available.Count); // 기존 균등 추첨 유지
-            } // 조건 끝
+            }
             float total = 0f; // 전체 후보 가중치
             foreach (WeaponData weapon in available) // 실제 후보 순회
-            { // 반복 시작
+            {
                 total += GetCandidateWeight(weapon, weapons, character); // 실제 후보 가중치 누적
-            } // 반복 끝
+            }
             float selected = UnityEngine.Random.value * total; // 실제 가중 추첨값
             for (int index = 0; index < available.Count; index++) // 실제 후보 순회
-            { // 반복 시작
+            {
                 selected -= GetCandidateWeight(available[index], weapons, character); // 현재 후보 가중치 차감
                 if (selected < 0f) // 현재 후보 선택 확인
-                { // 조건 시작
-                    return index; // 실제 후보 위치 반환
-                } // 조건 끝
-            } // 반복 끝
-            return available.Count - 1; // 난수 상한의 마지막 후보
-        } // 메서드 끝
-
-        private List<WeaponRewardEntry> BuildAvailableEntries(
-            SnakeWeaponManager weaponManager
-        )
-        {
-            List<WeaponRewardEntry> result =
-                new List<WeaponRewardEntry>();
-
-            for (int index = 0; index < entries.Count; index++)
-            {
-                WeaponRewardEntry entry =
-                    entries[index];
-
-                if (entry == null ||
-                    !entry.Unlocked ||
-                    entry.Weapon == null)
                 {
-                    continue;
+                    return index; // 실제 후보 위치 반환
+                }
+            }
+            return available.Count - 1; // 난수 상한의 마지막 후보
+        }
+
+        private List<WeaponRewardEntry> BuildAvailableEntries( // 목록·포탑 호출 시작
+            SnakeWeaponManager weaponManager // 포탑·관리자 처리
+        ) // 앞선 항목 종료
+        {
+            List<WeaponRewardEntry> result = // 목록·포탑 값 설정
+                new List<WeaponRewardEntry>(); // 목록·포탑 객체 생성
+
+            for (int index = 0; index < entries.Count; index++) // 순서·개수 반복 처리
+            {
+                WeaponRewardEntry entry = // 포탑·보상 값 설정
+                    entries[index]; // 순서 처리
+
+                if (entry == null || // 대상 조건 확인
+                    !entry.Unlocked || // 대상 처리
+                    entry.Weapon == null) // 포탑 처리
+                {
+                    continue; // 다음 반복 진행
                 }
 
                 if (MetaProgressionController.Instance != null && !MetaProgressionController.Instance.IsTurretUnlocked(entry.Weapon)) // 실제 포탑 해금 확인
-                { // 조건 시작
-                    continue; // 미해금 포탑 제외
-                } // 조건 끝
-
-                if (weaponManager != null &&
-                    weaponManager.HasCompletedGradeFive(
-                        entry.Weapon
-                    ))
                 {
-                    continue;
+                    continue; // 미해금 포탑 제외
                 }
 
-                result.Add(entry);
+                if (weaponManager != null && // 포탑·관리자 조건 확인
+                    weaponManager.HasCompletedGradeFive( // 포탑·관리자 호출 시작
+                        entry.Weapon // 포탑 처리
+                    )) // 대상 처리
+                {
+                    continue; // 다음 반복 진행
+                }
+
+                result.Add(entry); // 결과·추가 기능 실행
             }
 
-            return result;
+            return result; // 결과 결과 반환
         }
     }
 }

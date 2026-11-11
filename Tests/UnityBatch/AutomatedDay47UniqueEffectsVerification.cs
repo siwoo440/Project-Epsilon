@@ -14,67 +14,67 @@ using UnityEngine; // 유니티 기능
 using UnityEngine.UI; // 실제 HUD 텍스트
 
 namespace ProjectEpsilon.Editor // 배치 시험 영역
-{ // 영역 시작
+{
     [InitializeOnLoad] // 도메인 재시작 연결
     public static class AutomatedDay47UniqueEffectsVerification // 실제 오 등급 시험 효과
-    { // 클래스 시작
+    {
         private const string Key = "EpsilonDay47UniqueEffectsVerification"; // 시험 진행 표식
         private static bool injected; // 실행기 생성 여부
         private static double started; // 시험 시작 시각
         static AutomatedDay47UniqueEffectsVerification() // 도메인 재시작 처리
-        { // 생성자 시작
+        {
             if (SessionState.GetBool(Key, false)) // 진행 상태 확인
-            { // 조건 시작
+            {
                 EditorApplication.update += Tick; // 플레이 감시 연결
-            } // 조건 끝
-        } // 생성자 끝
+            }
+        }
         public static void Run() // 실제 씬 시험 진입
-        { // 메서드 시작
+        {
             EditorSceneManager.OpenScene("Assets/Scenes/Game.unity"); // 실제 씬 열기
             SessionState.SetBool(Key, true); // 시험 진행 기록
             EditorApplication.update -= Tick; // 중복 감시 제거
             EditorApplication.update += Tick; // 플레이 감시 연결
             EditorApplication.isPlaying = true; // 실제 플레이 시작
-        } // 메서드 끝
+        }
         private static void Tick() // 실제 초기화 감시
-        { // 메서드 시작
+        {
             if (!EditorApplication.isPlaying) // 플레이 진입 확인
-            { // 조건 시작
+            {
                 return; // 플레이 대기
-            } // 조건 끝
+            }
             if (started <= 0d) // 시험 시작 시각 확인
-            { // 조건 시작
+            {
                 started = EditorApplication.timeSinceStartup; // 시작 시각 저장
-            } // 조건 끝
+            }
             if (EditorApplication.timeSinceStartup - started > 120d) // 시험 제한 시간 확인
-            { // 조건 시작
+            {
                 Finish(1, "Timed out."); // 시간 초과 실패
                 return; // 시험 중단
-            } // 조건 끝
+            }
             if (StartingWeaponBatchHelper.HandleStartingSelection() || injected) // 시작 선택과 실행 여부 확인
-            { // 조건 시작
+            {
                 return; // 시작 또는 결과 대기
-            } // 조건 끝
+            }
             SnakeMovement player = UnityEngine.Object.FindFirstObjectByType<SnakeMovement>(); // 실제 플레이어 조회
             if (player == null || GameManager.Instance == null || !GameManager.Instance.IsPlaying || Time.time < 0.35f) // 실제 초기화 확인
-            { // 조건 시작
+            {
                 return; // 초기화 대기
-            } // 조건 끝
+            }
             injected = true; // 실행 중복 방지
             player.gameObject.AddComponent<Day47UniqueEffectsRunner>(); // 실제 시험 실행
-        } // 메서드 끝
+        }
         public static void Finish(int code, string message) // 실제 시험 종료
-        { // 메서드 시작
+        {
             SessionState.SetBool(Key, false); // 시험 표식 제거
             EditorApplication.update -= Tick; // 플레이 감시 제거
             Debug.Log($"[Day47UniqueEffectsVerification] {(code == 0 ? "PASS" : "FAIL")}: {message}"); // 시험 결과 기록
             EditorApplication.Exit(code); // 실제 종료 코드
-        } // 메서드 끝
-    } // 클래스 끝
+        }
+    }
     public sealed class Day47UniqueEffectsRunner : MonoBehaviour // 실제 고유 효과 검증
-    { // 클래스 시작
+    {
         private IEnumerator Start() // 실제 표적과 등급 효과 시험
-        { // 코루틴 시작
+        {
             GetComponent<SnakeMovement>().enabled = false; // 플레이어 이동 통제
             UnityEngine.Object.FindFirstObjectByType<EarlyEnemyWaveSpawner>().enabled = false; // 자연 적 출현 중지
             UnityEngine.Object.FindFirstObjectByType<SnakeBodyFollower>().enabled = false; // 몸통 위치 통제
@@ -86,13 +86,13 @@ namespace ProjectEpsilon.Editor // 배치 시험 영역
             Require(typeof(WeaponData).GetProperty("GradeFiveWideStrikeInterval") != null && typeof(WeaponData).GetProperty("GradeFiveBurnExplosionRadius") != null, "Per-turret grade-five effects missing."); // 실제 고유 설정 계약 확인
             weapons.enabled = false; // 반복 자동 공격 통제
             foreach (SnakeWeaponSlot slot in weapons.Slots) // 기존 포탑 순회
-            { // 반복 시작
+            {
                 slot.Clear(); // 기존 포탑 제거
-            } // 반복 끝
+            }
             foreach (WeaponTarget enemy in UnityEngine.Object.FindObjectsByType<WeaponTarget>(FindObjectsSortMode.None)) // 기존 적 순회
-            { // 반복 시작
+            {
                 enemy.gameObject.SetActive(false); // 시험 외 적 차단
-            } // 반복 끝
+            }
             Vector3 origin = new Vector3(100f, 100f, 0f); // 실제 통제 몸통 위치
             weapons.Slots[2].Origin.position = origin; // 실제 몸통 이동
             Require(weapons.TryEquipAt(2, steel, 5), "Steel grade five equip failed."); // 실제 강철 포탑 장착
@@ -103,9 +103,9 @@ namespace ProjectEpsilon.Editor // 배치 시험 영역
             MethodInfo melee = typeof(SnakeWeaponManager).GetMethod("TryMeleeAttack", BindingFlags.Instance | BindingFlags.NonPublic); // 실제 근접 공격 경로
             Require(melee != null, "Actual melee attack missing."); // 실제 공격 경로 확인
             for (int index = 0; index < 3; index++) // 최초 세 공격 반복
-            { // 반복 시작
+            {
                 Require((bool)melee.Invoke(weapons, new object[] { weapons.Slots[2], steel }), "Steel attack failed."); // 실제 강철 공격
-            } // 반복 끝
+            }
             Require(Mathf.Approximately(first.CurrentHealth, 934f) && Mathf.Approximately(second.CurrentHealth, 934f) && Mathf.Approximately(third.CurrentHealth, 1000f), "Steel ordinary attacks did not preserve two-target behavior."); // 강타 전 두 대상 유지
             melee.Invoke(weapons, new object[] { weapons.Slots[2], steel }); // 실제 네 번째 강타
             Require(Mathf.Approximately(first.CurrentHealth, 901f) && Mathf.Approximately(second.CurrentHealth, 901f) && Mathf.Approximately(third.CurrentHealth, 967f) && Mathf.Approximately(outside.CurrentHealth, 1000f), "Fourth steel attack did not deliver a bounded wide strike."); // 실제 강타 대상과 피해 확인
@@ -116,24 +116,24 @@ namespace ProjectEpsilon.Editor // 배치 시험 영역
             weapons.Slots[2].ApplyUpgrade(WeaponMergeUpgrade.Range); // 실제 합성 범위 강화
             WeaponTarget edge = Target(origin + Vector3.right * 12.05f, 1000f); // 기본 강타 밖 강화 반경 안 표적
             for (int index = 0; index < 3; index++) // 다음 강타까지 세 공격
-            { // 반복 시작
+            {
                 melee.Invoke(weapons, new object[] { weapons.Slots[2], steel }); // 실제 강화 포탑 공격
-            } // 반복 끝
+            }
             Require(Mathf.Approximately(edge.CurrentHealth, 967f), "Steel wide strike ignored the inherited range upgrade."); // 실제 합성 범위 강화 확인
             edge.gameObject.SetActive(false); // 낮은 등급 시험 간섭 차단
             Destroy(edge.gameObject); // 실제 경계 표적 제거
             Require(weapons.TryEquipAt(2, steel, 4), "Steel grade-four equip failed."); // 실제 사 등급 포탑 장착
             thirdBefore = third.CurrentHealth; // 실제 셋째 대상 체력
             for (int index = 0; index < 4; index++) // 사 등급 네 공격 반복
-            { // 반복 시작
+            {
                 melee.Invoke(weapons, new object[] { weapons.Slots[2], steel }); // 실제 사 등급 공격
-            } // 반복 끝
+            }
             Require(Mathf.Approximately(third.CurrentHealth, thirdBefore), "Steel wide strike activated below grade five."); // 낮은 등급 강타 방지
             foreach (WeaponTarget item in new[] { first, second, third, outside }) // 강철 표적 순회
-            { // 반복 시작
+            {
                 item.gameObject.SetActive(false); // 화염 시험 간섭 차단
                 Destroy(item.gameObject); // 실제 표적 제거
-            } // 반복 끝
+            }
             Vector3 fireOrigin = new Vector3(200f, 200f, 0f); // 화염 시험 위치
             WeaponAttributeAttackSnapshot gradeFour = effects.CreateAttackSnapshot(fire, 4, fireOrigin, 1f); // 실제 사 등급 화염 공격
             WeaponTarget fourVictim = Target(fireOrigin, 10f); // 사 등급 화상 대상
@@ -205,31 +205,31 @@ namespace ProjectEpsilon.Editor // 배치 시험 영역
             weapons.enabled = false; // 추가 발사 차단
             float deadline = Time.time + 2f; // 실제 탄 명중 제한
             while (projectileVictim != null && projectileVictim.GetComponent<WeaponTargetBurnStatus>() == null && Time.time < deadline) // 실제 화상 대기
-            { // 반복 시작
+            {
                 yield return null; // 실제 투사체 비행
-            } // 반복 끝
+            }
             Require(projectileVictim != null && projectileVictim.GetComponent<WeaponTargetBurnStatus>() != null, "Actual fired projectile did not apply grade-five burn."); // 실제 탄 명중과 화상 확인
             float neighborBefore = projectileNeighbor.CurrentHealth; // 폭발 전 실제 주변 체력
             projectileVictim.TakeDamage(1000f); // 실제 화상 표적 처치
             Require(Mathf.Abs(projectileNeighbor.CurrentHealth - (neighborBefore - 7.7f)) < 0.1f, "Actual fired grade-five projectile did not arm its burn explosion."); // 실제 발사 경로의 폭발 확인
             yield return null; // 실제 파괴 프레임 대기
             AutomatedDay47UniqueEffectsVerification.Finish(0, "Steel periodic strike and fireball burn-death explosion passed under controlled conditions."); // 실제 전체 성공
-        } // 코루틴 끝
+        }
         private static WeaponTarget Target(Vector3 position, float hp) // 실제 표적 생성
-        { // 메서드 시작
+        {
             GameObject item = new GameObject("Day47Target"); // 실제 표적 객체
             item.transform.position = position; // 실제 표적 위치
             WeaponTarget target = item.AddComponent<WeaponTarget>(); // 실제 피해 대상
             target.Configure(hp); // 실제 표적 체력
             return target; // 실제 표적 반환
-        } // 메서드 끝
+        }
         private static void Require(bool condition, string message) // 실제 시험 조건
-        { // 메서드 시작
+        {
             if (!condition) // 실제 실패 확인
-            { // 조건 시작
+            {
                 AutomatedDay47UniqueEffectsVerification.Finish(1, message); // 실제 실패 기록
                 throw new InvalidOperationException(message); // 시험 중단
-            } // 조건 끝
-        } // 메서드 끝
-    } // 클래스 끝
-} // 영역 끝
+            }
+        }
+    }
+}

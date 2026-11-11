@@ -5,11 +5,11 @@ using ProjectEpsilon.UI; // 실제 표시 코드
 using UnityEngine.UI; // 텍스트 대체
 
 public static class Program // 몸통 HUD 검증기
-{ // 클래스 시작
+{
     public static int Main() // 검증 시작
-    { // 메서드 시작
+    {
         try // 실패 처리
-        { // 보호 시작
+        {
             Text label = new Text(); // 몸통 표시 문구
             HUDController hud = new HUDController(); // 실제 HUD 관리자
             hud.Bind(null, label, null, null, null); // 몸통 문구 연결
@@ -36,22 +36,22 @@ public static class Program // 몸통 HUD 검증기
             Require(HUDTextFormatter.FormatBodyCount(3, 20) == "Body 3 / 20", "기존 포매터 API 호환 오류"); // 기존 포매터 확인
             Console.WriteLine("Body HUD growth and recovery passed."); // 성공 기록
             return 0; // 성공 종료
-        } // 보호 끝
+        }
         catch (Exception exception) // 실패 처리
-        { // 예외 시작
+        {
             Console.Error.WriteLine(exception.GetBaseException().Message); // 실패 내용 출력
             return 1; // 실패 종료
-        } // 예외 끝
-    } // 메서드 끝
+        }
+    }
     private static void Invoke(SnakeBodyHUDPresenter presenter, string method) // 생명 주기 실행
-    { // 메서드 시작
+    {
         typeof(SnakeBodyHUDPresenter).GetMethod(method, BindingFlags.NonPublic | BindingFlags.Instance).Invoke(presenter, null); // 실제 메서드 호출
-    } // 메서드 끝
+    }
     private static void Require(bool condition, string message) // 검증 조건
-    { // 메서드 시작
+    {
         if (!condition) // 실패 조건
-        { // 조건 시작
+        {
             throw new InvalidOperationException(message); // 실패 보고
-        } // 조건 끝
-    } // 메서드 끝
-} // 클래스 끝
+        }
+    }
+}

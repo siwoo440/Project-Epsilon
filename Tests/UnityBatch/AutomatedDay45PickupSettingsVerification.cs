@@ -14,67 +14,67 @@ using UnityEngine; // 유니티 기능
 using UnityEngine.UI; // 실제 HUD 텍스트
 
 namespace ProjectEpsilon.Editor // 배치 시험 영역
-{ // 영역 시작
+{
     [InitializeOnLoad] // 도메인 재시작 연결
     public static class AutomatedDay45PickupSettingsVerification // 경험치 획득 설정 시험
-    { // 클래스 시작
+    {
         private const string Key = "EpsilonDay45PickupSettingsVerification"; // 시험 진행 표식
         private static bool injected; // 실행기 생성 여부
         private static double started; // 시험 시작 시각
         static AutomatedDay45PickupSettingsVerification() // 도메인 재시작 처리
-        { // 생성자 시작
+        {
             if (SessionState.GetBool(Key, false)) // 진행 상태 확인
-            { // 조건 시작
+            {
                 EditorApplication.update += Tick; // 플레이 감시 연결
-            } // 조건 끝
-        } // 생성자 끝
+            }
+        }
         public static void Run() // 실제 씬 시험 진입
-        { // 메서드 시작
+        {
             EditorSceneManager.OpenScene("Assets/Scenes/Game.unity"); // 실제 씬 열기
             SessionState.SetBool(Key, true); // 시험 진행 기록
             EditorApplication.update -= Tick; // 중복 감시 제거
             EditorApplication.update += Tick; // 플레이 감시 연결
             EditorApplication.isPlaying = true; // 실제 플레이 시작
-        } // 메서드 끝
+        }
         private static void Tick() // 실제 초기화 감시
-        { // 메서드 시작
+        {
             if (!EditorApplication.isPlaying) // 플레이 진입 확인
-            { // 조건 시작
+            {
                 return; // 플레이 대기
-            } // 조건 끝
+            }
             if (started <= 0d) // 시험 시작 시각 확인
-            { // 조건 시작
+            {
                 started = EditorApplication.timeSinceStartup; // 시작 시각 저장
-            } // 조건 끝
+            }
             if (EditorApplication.timeSinceStartup - started > 120d) // 시험 제한 시간 확인
-            { // 조건 시작
+            {
                 Finish(1, "Timed out."); // 시간 초과 실패
                 return; // 시험 중단
-            } // 조건 끝
+            }
             if (StartingWeaponBatchHelper.HandleStartingSelection() || injected) // 시작 선택과 실행 여부 확인
-            { // 조건 시작
+            {
                 return; // 시작 또는 결과 대기
-            } // 조건 끝
+            }
             SnakeMovement player = UnityEngine.Object.FindFirstObjectByType<SnakeMovement>(); // 실제 플레이어 조회
             if (player == null || GameManager.Instance == null || !GameManager.Instance.IsPlaying || Time.time < 0.35f) // 실제 초기화 확인
-            { // 조건 시작
+            {
                 return; // 초기화 대기
-            } // 조건 끝
+            }
             injected = true; // 실행 중복 방지
             player.gameObject.AddComponent<Day45PickupSettingsVerificationRunner>(); // 실제 시험 실행
-        } // 메서드 끝
+        }
         public static void Finish(int code, string message) // 실제 시험 종료
-        { // 메서드 시작
+        {
             SessionState.SetBool(Key, false); // 시험 표식 제거
             EditorApplication.update -= Tick; // 플레이 감시 제거
             Debug.Log($"[Day45PickupSettingsVerification] {(code == 0 ? "PASS" : "FAIL")}: {message}"); // 시험 결과 기록
             EditorApplication.Exit(code); // 실제 종료 코드
-        } // 메서드 끝
-    } // 클래스 끝
+        }
+    }
     public sealed class Day45PickupSettingsVerificationRunner : MonoBehaviour // 실제 보석 설정 검증
-    { // 클래스 시작
+    {
         private IEnumerator Start() // 실제 설정과 보석 시험
-        { // 코루틴 시작
+        {
             SnakeMovement player = GetComponent<SnakeMovement>(); // 실제 플레이어 이동기
             SnakeExperience experience = GetComponent<SnakeExperience>(); // 실제 경험치 수신기
             EarlyEnemyWaveSpawner spawner = UnityEngine.Object.FindFirstObjectByType<EarlyEnemyWaveSpawner>(); // 실제 적 출현기
@@ -110,14 +110,14 @@ namespace ProjectEpsilon.Editor // 배치 시험 영역
             Destroy(fallback.gameObject); // 비교 보석 제거
             Destroy(settings); // 메모리 설정 사본 제거
             AutomatedDay45PickupSettingsVerification.Finish(0, "Actual pickup settings changed attraction without changing XP; missing settings retained existing behavior."); // 실제 전체 성공 기록
-        } // 코루틴 끝
+        }
         private static void Require(bool condition, string message) // 실제 시험 조건 확인
-        { // 메서드 시작
+        {
             if (!condition) // 실패 조건 확인
-            { // 조건 시작
+            {
                 AutomatedDay45PickupSettingsVerification.Finish(1, message); // 실제 실패 기록
                 throw new InvalidOperationException(message); // 후속 시험 중단
-            } // 조건 끝
-        } // 메서드 끝
-    } // 클래스 끝
-} // 영역 끝
+            }
+        }
+    }
+}

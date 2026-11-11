@@ -15,67 +15,67 @@ using UnityEditor.SceneManagement; // 실제 씬 열기
 using UnityEngine; // 유니티 기능
 
 namespace ProjectEpsilon.Editor // 배치 시험 영역
-{ // 영역 시작
+{
     [InitializeOnLoad] // 도메인 재시작 연결
     public static class AutomatedRewardLayoutVerification // 실제 보상 카드 배치 시험
-    { // 클래스 시작
+    {
         private const string Key = "EpsilonRewardLayoutVerification"; // 시험 진행 표식
         private static bool injected; // 실행기 생성 여부
         private static double started; // 시험 시작 시각
         static AutomatedRewardLayoutVerification() // 도메인 재시작 처리
-        { // 생성자 시작
+        {
             if (SessionState.GetBool(Key, false)) // 진행 상태 확인
-            { // 조건 시작
+            {
                 EditorApplication.update += Tick; // 플레이 감시 연결
-            } // 조건 끝
-        } // 생성자 끝
+            }
+        }
         public static void Run() // 실제 씬 시험 진입
-        { // 메서드 시작
+        {
             EditorSceneManager.OpenScene("Assets/Scenes/Game.unity"); // 실제 씬 열기
             SessionState.SetBool(Key, true); // 시험 진행 기록
             EditorApplication.update -= Tick; // 중복 감시 제거
             EditorApplication.update += Tick; // 플레이 감시 연결
             EditorApplication.isPlaying = true; // 실제 플레이 시작
-        } // 메서드 끝
+        }
         private static void Tick() // 실제 초기화 감시
-        { // 메서드 시작
+        {
             if (!EditorApplication.isPlaying) // 플레이 진입 확인
-            { // 조건 시작
+            {
                 return; // 플레이 대기
-            } // 조건 끝
+            }
             if (started <= 0d) // 시험 시작 시각 확인
-            { // 조건 시작
+            {
                 started = EditorApplication.timeSinceStartup; // 시작 시각 저장
-            } // 조건 끝
+            }
             if (EditorApplication.timeSinceStartup - started > 90d) // 시험 제한 시간 확인
-            { // 조건 시작
+            {
                 Finish(1, "Timed out."); // 시간 초과 실패
                 return; // 시험 중단
-            } // 조건 끝
+            }
             if (StartingWeaponBatchHelper.HandleStartingSelection() || injected) // 시작 선택과 실행 여부 확인
-            { // 조건 시작
+            {
                 return; // 시작 또는 결과 대기
-            } // 조건 끝
+            }
             SnakeMovement player = UnityEngine.Object.FindFirstObjectByType<SnakeMovement>(); // 실제 플레이어 조회
             if (player == null || GameManager.Instance == null || !GameManager.Instance.IsPlaying || Time.time < 0.35f) // 실제 초기화 확인
-            { // 조건 시작
+            {
                 return; // 초기화 대기
-            } // 조건 끝
+            }
             injected = true; // 실행 중복 방지
             player.gameObject.AddComponent<RewardLayoutRunner>(); // 실제 시험 실행
-        } // 메서드 끝
+        }
         public static void Finish(int code, string message) // 실제 시험 종료
-        { // 메서드 시작
+        {
             SessionState.SetBool(Key, false); // 시험 표식 제거
             EditorApplication.update -= Tick; // 플레이 감시 제거
             Debug.Log($"[RewardLayoutVerification] {(code == 0 ? "PASS" : "FAIL")}: {message}"); // 시험 결과 기록
             EditorApplication.Exit(code); // 실제 종료 코드
-        } // 메서드 끝
-    } // 클래스 끝
+        }
+    }
     public sealed class RewardLayoutRunner : MonoBehaviour // 실제 보상 카드 시험 실행기
-    { // 클래스 시작
+    {
         private IEnumerator Start() // 실제 보상 배치 시험
-        { // 코루틴 시작
+        {
             LevelUpPanelController panel = UnityEngine.Object.FindFirstObjectByType<LevelUpPanelController>(FindObjectsInactive.Include); // 실제 보상 화면 조회
             WeaponData weapon = AssetDatabase.LoadAssetAtPath<WeaponData>("Assets/Data/Weapons/DebugBlade.asset"); // 실제 시작 무기 조회
             Require(panel != null && weapon != null, "Reward panel or weapon missing."); // 실제 시험 구성 확인
@@ -88,14 +88,14 @@ namespace ProjectEpsilon.Editor // 배치 시험 영역
             Require(Mathf.Abs(panelRect.anchorMin.x - 0.1f) < 0.001f && Mathf.Abs(panelRect.anchorMax.x - 0.9f) < 0.001f, "Reward panel width is not responsive."); // 실제 화면 기준 패널 너비 확인
             Button[] buttons = new Button[3]; // 실제 세 카드 버튼
             for (int index = 0; index < buttons.Length; index++) // 실제 카드 순회
-            { // 반복 시작
+            {
                 FieldInfo field = typeof(LevelUpPanelController).GetField("candidateButton0" + (index + 1), BindingFlags.Instance | BindingFlags.NonPublic); // 실제 후보 필드 조회
                 buttons[index] = field.GetValue(panel) as Button; // 실제 카드 버튼 저장
                 Require(buttons[index] != null && buttons[index].interactable, "Reward button missing or disabled."); // 실제 카드 입력 확인
                 RectTransform image = buttons[index].transform.Find("WeaponArtwork") as RectTransform; // 실제 무기 이미지 영역
                 Require(image != null && image.gameObject.activeSelf && Mathf.Abs(image.sizeDelta.x - 96f) < 0.001f && Mathf.Abs(image.sizeDelta.y - 96f) < 0.001f, "Reward artwork is not double size."); // 기존 사십팔 대비 두 배 크기 확인
                 Require(!image.GetComponent<Image>().raycastTarget, "Reward artwork blocks button input."); // 이미지 입력 차단 방지 확인
-            } // 반복 끝
+            }
             Require(buttons[1].transform.Find("WeaponArtwork").GetComponent<Image>().color == fire.ArtworkTint, "Reward icon did not show turret attribute color."); // 실제 화염 포탑 후보 색상 확인
             RectTransform first = (RectTransform)buttons[0].transform; // 실제 첫 카드 영역
             RectTransform second = (RectTransform)buttons[1].transform; // 실제 둘째 카드 영역
@@ -107,14 +107,14 @@ namespace ProjectEpsilon.Editor // 배치 시험 영역
             Require(!buttons[0].transform.Find("WeaponArtwork").gameObject.activeSelf, "Weapon artwork remained on elite reward."); // 엘리트 화면의 무기 그림 숨김 확인
             yield return null; // 실제 프레임 대기
             AutomatedRewardLayoutVerification.Finish(0, "Responsive reward card group, doubled images and elite transition."); // 전체 성공 기록
-        } // 코루틴 끝
+        }
         private static void Require(bool condition, string message) // 시험 조건 확인
-        { // 메서드 시작
+        {
             if (!condition) // 실패 조건 확인
-            { // 조건 시작
+            {
                 AutomatedRewardLayoutVerification.Finish(1, message); // 실패 기록
                 throw new InvalidOperationException(message); // 후속 시험 중단
-            } // 조건 끝
-        } // 메서드 끝
-    } // 클래스 끝
-} // 영역 끝
+            }
+        }
+    }
+}

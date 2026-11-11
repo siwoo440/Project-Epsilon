@@ -11,76 +11,76 @@ using UnityEditor.SceneManagement; // 실제 씬 열기
 using UnityEngine; // 유니티 기능
 
 namespace ProjectEpsilon.Editor // 편집기 영역
-{ // 영역 시작
+{
     [InitializeOnLoad] // 플레이 전환 연결
     public static class AutomatedExperienceMergeVerification // 실제 보석 병합 통제 시험
-    { // 클래스 시작
+    {
         private const string ActiveKey = "EpsilonExperienceMergeVerification"; // 배치 진행 표식
         private static double started; // 실시간 시작 시각
         private static bool injected; // 시험 실행기 생성 여부
         private static bool finished; // 중복 종료 방지
 
         static AutomatedExperienceMergeVerification() // 도메인 재시작 처리
-        { // 생성자 시작
+        {
             if (SessionState.GetBool(ActiveKey, false)) // 배치 진행 확인
-            { // 조건 시작
+            {
                 EditorApplication.update += Tick; // 플레이 진입 감시
-            } // 조건 끝
-        } // 생성자 끝
+            }
+        }
 
         public static void Run() // 배치 진입점
-        { // 메서드 시작
+        {
             EditorSceneManager.OpenScene("Assets/Scenes/Game.unity"); // 실제 게임 씬 열기
             SessionState.SetBool(ActiveKey, true); // 배치 진행 저장
             EditorApplication.update -= Tick; // 중복 구독 방지
             EditorApplication.update += Tick; // 플레이 진입 감시
             EditorApplication.isPlaying = true; // 플레이 모드 진입
-        } // 메서드 끝
+        }
 
         private static void Tick() // 시작 선택 및 제한 시간 확인
-        { // 메서드 시작
+        {
             if (started <= 0d) // 실시간 시작 확인
-            { // 조건 시작
+            {
                 started = EditorApplication.timeSinceStartup; // 시작 시각 기록
-            } // 조건 끝
+            }
             if (EditorApplication.timeSinceStartup - started > 120d) // 전체 시험 제한
-            { // 조건 시작
+            {
                 Finish(1, "Timed out waiting for the actual Game scene test."); // 제한 시간 실패
                 return; // 후속 처리 중지
-            } // 조건 끝
+            }
             if (!EditorApplication.isPlaying || StartingWeaponBatchHelper.HandleStartingSelection()) // 실제 시작 버튼 처리
-            { // 조건 시작
+            {
                 return; // 게임 시작 대기
-            } // 조건 끝
+            }
             if (injected || GameManager.Instance == null || !GameManager.Instance.IsPlaying || Time.time < 0.35f) // 씬 초기화 확인
-            { // 조건 시작
+            {
                 return; // 초기화 또는 결과 대기
-            } // 조건 끝
+            }
             SnakeExperience experience = UnityEngine.Object.FindFirstObjectByType<SnakeExperience>(); // 실제 경험치 관리자 조회
             if (experience == null) // 경험치 관리자 존재 확인
-            { // 조건 시작
+            {
                 return; // 초기화 대기
-            } // 조건 끝
+            }
             injected = true; // 실행기 중복 방지
             experience.gameObject.AddComponent<ExperienceMergeVerificationRunner>(); // 실제 씬 시험 실행
-        } // 메서드 끝
+        }
 
         public static void Finish(int code, string message) // 결과와 종료 코드 기록
-        { // 메서드 시작
+        {
             if (finished) // 중복 종료 확인
-            { // 조건 시작
+            {
                 return; // 중복 종료 방지
-            } // 조건 끝
+            }
             finished = true; // 종료 상태 기록
             SessionState.SetBool(ActiveKey, false); // 진행 표식 제거
             EditorApplication.update -= Tick; // 감시 해제
             Debug.Log($"[ExperienceMergeVerification] {(code == 0 ? "PASS" : "FAIL")}: {message}"); // 결과 기록
             EditorApplication.Exit(code); // Unity 종료
-        } // 메서드 끝
-    } // 클래스 끝
+        }
+    }
 
     public sealed class ExperienceMergeVerificationRunner : MonoBehaviour // 실제 씬 통제 시험 실행기
-    { // 클래스 시작
+    {
         private static readonly BindingFlags Fields = BindingFlags.Instance | BindingFlags.NonPublic; // 직렬화 설정 조회
         private Type controllerType; // 실제 병합 관리자 형식
         private Behaviour controller; // 실제 병합 관리자
@@ -88,7 +88,7 @@ namespace ProjectEpsilon.Editor // 편집기 영역
         private Vector3 playerPosition; // 통제 플레이어 위치
 
         private IEnumerator Start() // 실제 시험 순서
-        { // 코루틴 시작
+        {
             controllerType = Type.GetType("ProjectEpsilon.Progression.ExperienceGemMergeController, Assembly-CSharp"); // 제품 관리자 형식 조회
             Require(controllerType != null, "Actual Game scene has no experience gem merge controller type."); // 28일차 기능 부재 확인
             controller = UnityEngine.Object.FindFirstObjectByType(controllerType) as Behaviour; // 실제 씬 관리자 조회
@@ -103,14 +103,14 @@ namespace ProjectEpsilon.Editor // 편집기 영역
             spawner.enabled = false; // 자연 적 출현 정지
             SnakeWeaponManager weapons = UnityEngine.Object.FindFirstObjectByType<SnakeWeaponManager>(); // 실제 포탑 관리자 조회
             if (weapons != null) // 포탑 관리자 존재 확인
-            { // 조건 시작
+            {
                 weapons.enabled = false; // 시험 중 적 처치 방지
-            } // 조건 끝
+            }
             foreach (EarlyEnemyBehaviour enemy in UnityEngine.Object.FindObjectsByType<EarlyEnemyBehaviour>(FindObjectsSortMode.None)) // 시험 전 생성된 적 순회
-            { // 반복 시작
+            {
                 enemy.gameObject.SetActive(false); // 적 사망 보상 없는 시험 격리
                 UnityEngine.Object.Destroy(enemy.gameObject); // 이전 적 정리
-            } // 반복 끝
+            }
             playerPosition = experience.transform.position; // 실제 수신자 위치 기록
             controller.enabled = false; // 시험 준비 중 병합 중지
             ClearPickups(); // 기존 보석 정리
@@ -122,10 +122,10 @@ namespace ProjectEpsilon.Editor // 편집기 영역
             yield return VerifyInactiveAndDestroyed(); // 비활성화와 지연 파괴 검증
             yield return VerifyCollection(); // 실제 수집과 병합 경합 검증
             AutomatedExperienceMergeVerification.Finish(0, "Actual automatic gem conversions, priority, budgets, pause, inactive/destroyed pickups and collection preserved experience under controlled conditions."); // 시험 결과 기록
-        } // 코루틴 끝
+        }
 
         private IEnumerator VerifyPriorityAndBudgets() // 실제 최초 검사 우선순위와 예산
-        { // 코루틴 시작
+        {
             controller.enabled = false; // 시험 준비 중 검사 정지
             ClearPickups(); // 이전 보석 정리
             yield return null; // 지연 파괴 완료 대기
@@ -151,10 +151,10 @@ namespace ProjectEpsilon.Editor // 편집기 영역
             Require(TotalExperience() == 15, "Priority test lost or duplicated experience."); // 실제 총량 확인
             Require(ReadMetric("LastNeighborInspections") <= 512 && ReadMetric("LastBudgetedDistanceChecks") <= 512, "Distance inspection budget was exceeded."); // 거리 비교 예산 확인
             Debug.Log($"[ExperienceMergeVerification] first pass offscreen/farthest, group budget=1, neighbor inspections={ReadMetric("LastNeighborInspections")}, distance checks={ReadMetric("LastBudgetedDistanceChecks")}, head checks={ReadMetric("LastCandidateHeadDistanceChecks")}."); // 최초 검사 계측 기록
-        } // 코루틴 끝
+        }
 
         private IEnumerator VerifyConversion(int value, int count, int expected) // 실제 자동 병합 검증
-        { // 코루틴 시작
+        {
             controller.enabled = false; // 보석 준비 중 검사 정지
             ClearPickups(); // 이전 보석 정리
             yield return null; // 지연 파괴 완료 대기
@@ -166,18 +166,18 @@ namespace ProjectEpsilon.Editor // 편집기 영역
             controller.enabled = true; // 실제 Update 검사 재개
             float deadline = Time.time + 3f; // 병합 대기 제한
             while (Time.time < deadline && CountPickups(expected) != 1) // 실제 주기 검사 대기
-            { // 반복 시작
+            {
                 yield return null; // 실제 프레임 진행
-            } // 반복 끝
+            }
             controller.enabled = false; // 검증 중 추가 검사 정지
             yield return null; // 지연 파괴 완료 대기
             Require(CountPickups(expected) == 1 && CountAllPickups() == 1, "Actual automatic conversion produced an incorrect pickup count."); // 결과 개수 확인
             Require(TotalExperience() == value * count, "Automatic conversion changed total experience."); // 경험치 보존 확인
             Debug.Log($"[ExperienceMergeVerification] actual automatic conversion {count}x{value} -> {expected}, total={TotalExperience()}."); // 통제 시험 결과
-        } // 코루틴 끝
+        }
 
         private IEnumerator VerifyPause() // 실제 일시정지 중 검사 확인
-        { // 코루틴 시작
+        {
             controller.enabled = false; // 보석 준비 중 검사 정지
             ClearPickups(); // 이전 보석 정리
             yield return null; // 지연 파괴 완료 대기
@@ -194,10 +194,10 @@ namespace ProjectEpsilon.Editor // 편집기 영역
             yield return null; // 지연 파괴 완료 대기
             Require(CountPickups(5) == 1 && TotalExperience() == 5, "Resumed game did not merge correctly."); // 재개 후 경험치 확인
             Debug.Log("[ExperienceMergeVerification] actual pause stopped passes; resume preserved five experience."); // 정지 결과 기록
-        } // 코루틴 끝
+        }
 
         private IEnumerator VerifyInactiveAndDestroyed() // 비활성과 외부 파괴 검증
-        { // 코루틴 시작
+        {
             controller.enabled = false; // 보석 준비 중 검사 정지
             ClearPickups(); // 이전 보석 정리
             yield return null; // 지연 파괴 완료 대기
@@ -232,15 +232,15 @@ namespace ProjectEpsilon.Editor // 편집기 영역
             yield return WaitForPass(previous); // 실제 검사 대기
             controller.enabled = false; // 추가 검사 정지
             foreach (ExperiencePickup remaining in UnityEngine.Object.FindObjectsByType<ExperiencePickup>(FindObjectsSortMode.None)) // 실제 잔여 보석 순회
-            { // 반복 시작
+            {
                 Debug.Log($"[ExperienceMergeVerification] destruction remaining id={remaining.GetInstanceID()} position={remaining.transform.position} value={remaining.ExperienceValue}"); // 예상 밖 보석 위치 기록
-            } // 반복 끝
+            }
             Require(CountPickups(1) == 4 && CountPickups(5) == 0 && TotalExperience() == 4, $"Destroyed pickup boundary mismatch: small={CountPickups(1)}, medium={CountPickups(5)}, total={TotalExperience()}, destroyed={fifth == null}, xp={experience.CurrentExperience}."); // 파괴 완료 후보와 수량 확인
             Debug.Log("[ExperienceMergeVerification] inactive exclusion, reactivation and external destruction after frame boundary passed."); // 객체 경계 결과 기록
-        } // 코루틴 끝
+        }
 
         private IEnumerator VerifyCollection() // 실제 보석 수집과 병합 경합
-        { // 코루틴 시작
+        {
             controller.enabled = false; // 보석 준비 중 검사 정지
             ClearPickups(); // 이전 보석 정리
             yield return null; // 지연 파괴 완료 대기
@@ -253,122 +253,122 @@ namespace ProjectEpsilon.Editor // 편집기 영역
             controller.enabled = false; // 추가 검사 정지
             Require(experience.CurrentExperience == 5 && CountAllPickups() == 0 && TotalExperience() == 5, "Simultaneous actual collection lost or duplicated experience."); // 실제 수집 총량 확인
             Debug.Log("[ExperienceMergeVerification] actual simultaneous nearby collection: XP=5, remaining pickups=0."); // 수집 결과 기록
-        } // 코루틴 끝
+        }
 
         private void ConfigureController(int threshold) // 메모리 내 임시 검사 설정
-        { // 메서드 시작
+        {
             SetField("mergeThreshold", threshold); // 발동 임계 임시 설정
             SetField("mergeDistance", 1.5f); // 인접 거리 임시 설정
             SetField("mergeInterval", 0.2f); // 게임 시간 검사 간격
             SetField("maximumGroupsPerPass", 1); // 검사당 병합 예산
             SetField("maximumAnchorsPerPass", 32); // 기준 보석 검사 예산
             SetField("maximumNeighborChecksPerPass", 512); // 이웃 거리 검사 예산
-        } // 메서드 끝
+        }
 
         private void SpawnGroup(Vector3 anchor, int value, int count) // 실제 보석 그룹 생성
-        { // 메서드 시작
+        {
             for (int index = 0; index < count; index++) // 그룹 보석 순회
-            { // 반복 시작
+            {
                 ExperiencePickup.Spawn(anchor + Vector3.up * (index * 0.04f), value, null, experience); // 실제 보석 생성
-            } // 반복 끝
-        } // 메서드 끝
+            }
+        }
 
         private IEnumerator WaitForPass(int previous) // 자동 검사 완료 대기
-        { // 코루틴 시작
+        {
             float deadline = Time.realtimeSinceStartup + 5f; // 실시간 제한 시각
             while (ReadMetric("CompletedPassCount") <= previous && Time.realtimeSinceStartup < deadline) // 실제 검사 대기
-            { // 반복 시작
+            {
                 yield return null; // 실제 프레임 진행
-            } // 반복 끝
+            }
             Require(ReadMetric("CompletedPassCount") == previous + 1, "A single automatic merge pass did not complete in time."); // 정확한 검사 수 확인
-        } // 코루틴 끝
+        }
 
         private int ReadMetric(string name) // 관리자 읽기 전용 계측 조회
-        { // 메서드 시작
+        {
             PropertyInfo property = controllerType.GetProperty(name, BindingFlags.Public | BindingFlags.Instance); // 실제 계측 속성 조회
             Require(property != null, "Missing merge observation property: " + name); // 관찰 계약 확인
             return Convert.ToInt32(property.GetValue(controller)); // 실제 계측값 반환
-        } // 메서드 끝
+        }
 
         private static bool IsVisible(Camera camera, Vector3 position) // 실제 카메라 뷰포트 확인
-        { // 메서드 시작
+        {
             Vector3 viewport = camera.WorldToViewportPoint(position); // 월드 좌표 변환
             return viewport.z > 0f && viewport.x >= 0f && viewport.x <= 1f && viewport.y >= 0f && viewport.y <= 1f; // 화면 안 여부 반환
-        } // 메서드 끝
+        }
 
         private static ExperiencePickup FindPickup(int value) // 실제 결과 보석 조회
-        { // 메서드 시작
+        {
             foreach (ExperiencePickup pickup in UnityEngine.Object.FindObjectsByType<ExperiencePickup>(FindObjectsSortMode.None)) // 활성 보석 순회
-            { // 반복 시작
+            {
                 if (pickup.isActiveAndEnabled && ReadValue(pickup) == value) // 실제 값 확인
-                { // 조건 시작
+                {
                     return pickup; // 일치 보석 반환
-                } // 조건 끝
-            } // 반복 끝
+                }
+            }
             return null; // 일치 보석 부재
-        } // 메서드 끝
+        }
 
         private void SetField(string name, object value) // 직렬화된 임시 설정 변경
-        { // 메서드 시작
+        {
             FieldInfo field = controllerType.GetField(name, Fields); // 실제 설정 필드 조회
             Require(field != null, "Missing serialized merge setting: " + name); // 설정 계약 확인
             field.SetValue(controller, value); // 시험용 메모리 설정
-        } // 메서드 끝
+        }
 
         private static int ReadValue(ExperiencePickup pickup) // 실제 보석 값 조회
-        { // 메서드 시작
+        {
             FieldInfo field = typeof(ExperiencePickup).GetField("experienceValue", Fields); // 기존 직렬화 값 조회
             Require(field != null, "Actual pickup experience field is missing."); // 값 조회 계약 확인
             return (int)field.GetValue(pickup); // 보석 경험치 반환
-        } // 메서드 끝
+        }
 
         private int TotalExperience() // 실제 획득 및 활성 보석 총량
-        { // 메서드 시작
+        {
             int total = experience.CurrentExperience; // 플레이어 획득 경험치
             foreach (ExperiencePickup pickup in UnityEngine.Object.FindObjectsByType<ExperiencePickup>(FindObjectsSortMode.None)) // 활성 보석 순회
-            { // 반복 시작
+            {
                 if (pickup.isActiveAndEnabled) // 유효 보석 확인
-                { // 조건 시작
+                {
                     total += ReadValue(pickup); // 활성 보석 경험치 합산
-                } // 조건 끝
-            } // 반복 끝
+                }
+            }
             return total; // 실제 총량 반환
-        } // 메서드 끝
+        }
 
         private static int CountPickups(int value) // 특정 값의 활성 보석 수
-        { // 메서드 시작
+        {
             int count = 0; // 결과 개수
             foreach (ExperiencePickup pickup in UnityEngine.Object.FindObjectsByType<ExperiencePickup>(FindObjectsSortMode.None)) // 실제 보석 순회
-            { // 반복 시작
+            {
                 if (pickup.isActiveAndEnabled && ReadValue(pickup) == value) // 활성 상태와 값 확인
-                { // 조건 시작
+                {
                     count++; // 일치 개수 증가
-                } // 조건 끝
-            } // 반복 끝
+                }
+            }
             return count; // 일치 개수 반환
-        } // 메서드 끝
+        }
 
         private static int CountAllPickups() // 모든 활성 보석 수
-        { // 메서드 시작
+        {
             return UnityEngine.Object.FindObjectsByType<ExperiencePickup>(FindObjectsSortMode.None).Length; // 활성 보석 개수 반환
-        } // 메서드 끝
+        }
 
         private static void ClearPickups() // 실제 보석 정리
-        { // 메서드 시작
+        {
             foreach (ExperiencePickup pickup in UnityEngine.Object.FindObjectsByType<ExperiencePickup>(FindObjectsSortMode.None)) // 기존 보석 순회
-            { // 반복 시작
+            {
                 pickup.gameObject.SetActive(false); // 즉시 시험 후보 제외
                 UnityEngine.Object.Destroy(pickup.gameObject); // 지연 파괴 예약
-            } // 반복 끝
-        } // 메서드 끝
+            }
+        }
 
         private static void Require(bool condition, string message) // 시험 조건 확인
-        { // 메서드 시작
+        {
             if (!condition) // 실패 조건 확인
-            { // 조건 시작
+            {
                 AutomatedExperienceMergeVerification.Finish(1, message); // 실패 기록과 종료
                 throw new InvalidOperationException(message); // 후속 시험 중단
-            } // 조건 끝
-        } // 메서드 끝
-    } // 클래스 끝
-} // 영역 끝
+            }
+        }
+    }
+}

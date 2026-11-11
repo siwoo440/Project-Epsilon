@@ -7,11 +7,11 @@ using ProjectEpsilon.Player; // 플레이어 상태 대체
 using UnityEngine; // 위치와 카메라 대체
 
 internal static class Program // 출현 및 조준 시험
-{ // 클래스 시작
+{
     private static readonly BindingFlags Private = BindingFlags.Instance | BindingFlags.NonPublic; // 비공개 범위
     private static int failures; // 실패 횟수
     private static int Main() // 시험 시작
-    { // 메서드 시작
+    {
         Check("사수의 최근접 몸통 발사", VerifyShooterBody); // 몸통 조준 검사
         Check("몸통 부재 시 머리 발사", VerifyShooterFallback); // 머리 대체 검사
         Check("보스 부채꼴과 일반 사수 발사", VerifyProjectileFan); // 다방향 사격 검사
@@ -28,47 +28,47 @@ internal static class Program // 출현 및 조준 시험
         Check("일시정지 중 시간과 출현 정지", VerifyPause); // 일시정지 출현 검사
         Console.WriteLine(failures == 0 ? "PASS" : $"FAIL: {failures}"); // 최종 결과
         return failures == 0 ? 0 : 1; // 종료 코드
-    } // 메서드 끝
+    }
     private static void Check(string label, Action action) // 개별 시험 실행
-    { // 메서드 시작
+    {
         try { action(); Console.WriteLine($"PASS: {label}"); } // 성공 기록
         catch (Exception error) { failures++; Console.WriteLine($"FAIL: {label}: {error.GetBaseException().Message}"); } // 실패 기록
-    } // 메서드 끝
+    }
     private static object Invoke(object instance, string name, params object[] args) // 실제 내부 메서드 실행
-    { // 메서드 시작
+    {
         if (instance is EarlyEnemyWaveSpawner && name == "Start") // 실제 출현기 시작 확인
-        { // 조건 시작
+        {
             instance.GetType().GetMethod("OnEnable", Private).Invoke(instance, null); // 실제 활성화 순서 재현
-        } // 조건 끝
+        }
         if (instance is EarlyEnemyWaveSpawner && name == "LateUpdate" && ProjectEpsilon.Core.GameManager.Instance.IsPlaying) // 실제 진행 프레임 확인
-        { // 조건 시작
+        {
             Time.timeAsDouble += Time.deltaTime; // 시험 게임 시간 누적
-        } // 조건 끝
+        }
         return instance.GetType().GetMethod(name, Private).Invoke(instance, args); // 실제 내부 메서드 실행
-    } // 메서드 끝
+    }
     private static void Set(object instance, string name, object value) => instance.GetType().GetField(name, Private).SetValue(instance, value); // 직렬화 값 설정
     private static void Require(bool condition, string message) { if (!condition) { throw new InvalidOperationException(message); } } // 검증 조건
     private static (SnakeMovement player, SnakeBodyManager body, SnakeHealth health) Player() // 플레이어 구성
-    { // 메서드 시작
+    {
         GameObject.Objects.Clear(); // 기존 객체 초기화
         Camera.main = null; // 카메라 초기화
         UnityEngine.Random.Selected = 0; // 추첨 순번 초기화
         GameObject root = new GameObject("Player"); // 플레이어 객체
         root.transform.position = new Vector3(5f, 0f, 0f); // 머리 위치
         return (root.AddComponent<SnakeMovement>(), root.AddComponent<SnakeBodyManager>(), root.AddComponent<SnakeHealth>()); // 플레이어 구성 반환
-    } // 메서드 끝
+    }
     private static void VerifyProjectileFan() // 실제 사격 코드의 부채꼴 방향 확인
-    { // 메서드 시작
+    {
         var fixture = Player(); // 실제 플레이어 대체 구성
         GameObject enemy = new GameObject("FanShooter"); // 시험용 사수 객체
         enemy.AddComponent<Rigidbody2D>(); // 실제 이동체 대체
         EarlyEnemyBehaviour behaviour = enemy.AddComponent<EarlyEnemyBehaviour>(); // 실제 사격 행동
         EarlyEnemySettings settings = new EarlyEnemySettings // 실제 적 능력 설정
-        { // 설정 시작
+        {
             kind = EarlyEnemyKind.Shooter, // 사격 행동
             attackInterval = 1f, // 임시 공격 간격
             damage = 8 // 임시 피해
-        }; // 설정 끝
+        };
         FieldInfo count = typeof(EarlyEnemySettings).GetField("projectileCount"); // 실제 투사체 수 설정 조회
         FieldInfo spread = typeof(EarlyEnemySettings).GetField("projectileSpreadDegrees"); // 실제 부채꼴 각도 조회
         Require(count != null && spread != null, "부채꼴 투사체 설정 누락"); // 실제 설정 존재 확인
@@ -83,9 +83,9 @@ internal static class Program // 출현 및 조준 시험
         EnemyTestProjectile.Directions.Clear(); // 이전 발사 기록 제거
         Invoke(behaviour, "FireProjectile", new Vector2(1f, 0f)); // 실제 일반 사격 실행
         Require(EnemyTestProjectile.Directions.Count == 1 && Math.Abs(EnemyTestProjectile.Directions[0].y) < 0.001f, "기존 사수 단일 발사 변경"); // 기존 발사 유지 확인
-    } // 메서드 끝
+    }
     private static void VerifyShooterBody() // 사수 몸통 조준 확인
-    { // 메서드 시작
+    {
         var fixture = Player(); // 플레이어 구성
         GameObject near = new GameObject("NearBody"); // 가까운 몸통
         near.transform.position = new Vector3(0f, 3f, 0f); // 가까운 몸통 위치
@@ -106,15 +106,15 @@ internal static class Program // 출현 및 조준 시험
         fixture.body.BodySegments.Add(far.AddComponent<SnakeSegment>()); // 먼 몸통 등록
         Vector2 aim = Fire(fixture.player, fixture.body, fixture.health); // 실제 사수 발사
         Require(MathF.Abs(aim.x) < 0.001f && aim.y > 0.999f, "사수가 가장 가까운 몸통 대신 머리를 조준"); // 몸통 조준 확인
-    } // 메서드 끝
+    }
     private static void VerifyShooterFallback() // 몸통 부재 시 머리 대체 확인
-    { // 메서드 시작
+    {
         var fixture = Player(); // 몸통 없는 플레이어
         Vector2 aim = Fire(fixture.player, fixture.body, fixture.health); // 실제 사수 발사
         Require(aim.x > 0.999f && MathF.Abs(aim.y) < 0.001f, "몸통 부재 시 머리 조준 누락"); // 머리 대체 확인
-    } // 메서드 끝
+    }
     private static Vector2 Fire(SnakeMovement player, SnakeBodyManager body, SnakeHealth health) // 실제 사수 이동과 발사
-    { // 메서드 시작
+    {
         GameObject enemy = new GameObject("Shooter"); // 사수 객체
         enemy.AddComponent<Rigidbody2D>(); // 물리체 연결
         enemy.AddComponent<WeaponTargetStatusController>(); // 상태 연결
@@ -128,9 +128,9 @@ internal static class Program // 출현 및 조준 시험
         Rigidbody2D movement = enemy.GetComponent<Rigidbody2D>(); // 실제 이동 물리체
         Require(movement.position.x > 0f && MathF.Abs(movement.position.y) < 0.001f, "사수의 머리 기준 이동 방향 변경" ); // 기존 이동 방향 확인
         return EnemyTestProjectile.LastDirection; // 투사체 발사 방향
-    } // 메서드 끝
+    }
     private static void VerifyPause() // 출현 갱신의 일시정지 확인
-    { // 메서드 시작
+    {
         Player(); // 플레이어 구성
         GameObject owner = new GameObject("Spawner"); // 출현기 객체
         EarlyEnemyWaveSpawner spawner = owner.AddComponent<EarlyEnemyWaveSpawner>(); // 실제 출현기
@@ -144,9 +144,9 @@ internal static class Program // 출현 및 조준 시험
         ProjectEpsilon.Core.GameManager.Instance.IsPlaying = true; // 게임 재개
         Invoke(spawner, "LateUpdate"); // 재개 후 갱신
         Require(GameObject.Objects.Count(value => value.name == "EarlyEnemy_Elite") == 1, "재개 후 엘리트 출현 누락"); // 재개 출현 확인
-    } // 메서드 끝
+    }
     private static void VerifyCameraLateMovement() // 카메라 추적 후 출현 확인
-    { // 메서드 시작
+    {
         var fixture = Player(); // 플레이어 구성
         fixture.player.transform.position = new Vector3(); // 플레이어 기준점
         GameObject cameraObject = new GameObject("Camera"); // 카메라 객체
@@ -164,12 +164,12 @@ internal static class Program // 출현 및 조준 시험
         float horizontal = 0.5f / (2f * Camera.main.orthographicSize * Camera.main.aspect); // 가로 화면 여유
         float vertical = 0.5f / (2f * Camera.main.orthographicSize); // 세로 화면 여유
         Require(viewport.x < -horizontal || viewport.x > 1f + horizontal || viewport.y < -vertical || viewport.y > 1f + vertical, "카메라 이동 뒤 화면 내부 출현"); // 최종 화면 여유 확인
-    } // 메서드 끝
+    }
     private static void VerifyViewportSweep() // 다양한 카메라와 방향 확인
-    { // 메서드 시작
+    {
         float[] aspects = { 0.5625f, 16f / 9f, 2.4f, 6f }; // 세로와 가로 화면 비율
         foreach (float aspect in aspects) // 화면 비율 순회
-        { // 반복 시작
+        {
             var fixture = Player(); // 플레이어 구성
             fixture.player.transform.position = new Vector3(); // 플레이어 기준점
             GameObject cameraObject = new GameObject("Camera"); // 카메라 객체
@@ -180,7 +180,7 @@ internal static class Program // 출현 및 조준 시험
             EarlyEnemyWaveSpawner spawner = owner.AddComponent<EarlyEnemyWaveSpawner>(); // 실제 출현기
             Invoke(spawner, "Start"); // 참조 초기화
             for (int index = 0; index < 16; index++) // 원주 방향 검사
-            { // 반복 시작
+            {
                 float angle = index * MathF.PI / 8f; // 출현 각도
                 UnityEngine.Random.insideUnitCircle = new Vector2(MathF.Cos(angle), MathF.Sin(angle)); // 시험 방향
                 Invoke(spawner, "Spawn", new EarlyEnemySettings { kind = EarlyEnemyKind.Chaser, health = 25f, experience = 1, attackInterval = 1f }); // 실제 적 생성
@@ -194,11 +194,11 @@ internal static class Program // 출현 및 조준 시험
                 int before = spawner.ActiveEnemies; // 정리 전 생존 수
                 Invoke(spawner, "CleanupDistantEnemies"); // 실제 거리 정리
                 Require(spawner.ActiveEnemies == before, "화면 밖 출현 적 즉시 정리"); // 생성 직후 보존 확인
-            } // 반복 끝
-        } // 반복 끝
-    } // 메서드 끝
+            }
+        }
+    }
     private static void VerifyFarCleanup() // 카메라 부재와 기본 거리 정리 확인
-    { // 메서드 시작
+    {
         Player(); // 플레이어 구성
         GameObject owner = new GameObject("Spawner"); // 출현기 객체
         EarlyEnemyWaveSpawner spawner = owner.AddComponent<EarlyEnemyWaveSpawner>(); // 실제 출현기
@@ -208,9 +208,9 @@ internal static class Program // 출현 및 조준 시험
         enemy.transform.position = new Vector3(100f, 100f, 0f); // 먼 적 위치
         Invoke(spawner, "CleanupDistantEnemies"); // 거리 정리 실행
         Require(spawner.ActiveEnemies == 0, "카메라 부재 시 먼 적 정리 누락"); // 거리 정리 확인
-    } // 메서드 끝
+    }
     private static void VerifySchedule() // 시간대별 적 종류와 간격 확인
-    { // 메서드 시작
+    {
         Player(); // 플레이어 구성
         GameObject owner = new GameObject("Spawner"); // 출현기 객체
         EarlyEnemyWaveSpawner spawner = owner.AddComponent<EarlyEnemyWaveSpawner>(); // 실제 출현기
@@ -233,9 +233,9 @@ internal static class Program // 출현 및 조준 시험
         Require(GameObject.Objects.Count(value => value.name == "EarlyEnemy_Elite") == 1, "4분 엘리트 출현 누락"); // 엘리트 확인
         Invoke(spawner, "LateUpdate"); // 다음 갱신
         Require(GameObject.Objects.Count(value => value.name == "EarlyEnemy_Elite") == 1, "엘리트 중복 출현"); // 단회 출현 확인
-    } // 메서드 끝
+    }
     private static void VerifyEliteAtCapacity() // 만석에서도 엘리트 자리 확보 확인
-    { // 메서드 시작
+    {
         Player(); // 플레이어 구성
         GameObject owner = new GameObject("Spawner"); // 출현기 객체
         EarlyEnemyWaveSpawner spawner = owner.AddComponent<EarlyEnemyWaveSpawner>(); // 실제 출현기
@@ -246,9 +246,9 @@ internal static class Program // 출현 및 조준 시험
         Time.deltaTime = 0.02f; // 프레임 시간
         Invoke(spawner, "LateUpdate"); // 엘리트 출현 갱신
         Require(spawner.ActiveEnemies == 40 && GameObject.Objects.Count(value => value.name == "EarlyEnemy_Elite") == 1, "만석 엘리트 또는 적 상한 오류"); // 적 수와 엘리트 확인
-    } // 메서드 끝
+    }
     private static void VerifyWideSpawnSurvivesCleanup() // 넓은 화면의 생성 직후 정리 확인
-    { // 메서드 시작
+    {
         var fixture = Player(); // 플레이어 구성
         fixture.player.transform.position = new Vector3(); // 플레이어 원점
         GameObject cameraObject = new GameObject("Camera"); // 카메라 객체
@@ -261,18 +261,18 @@ internal static class Program // 출현 및 조준 시험
         Invoke(spawner, "Spawn", new EarlyEnemySettings { kind = EarlyEnemyKind.Chaser, health = 25f, experience = 1, attackInterval = 1f }); // 실제 적 생성
         Invoke(spawner, "CleanupDistantEnemies"); // 다음 갱신 거리 정리
         Require(spawner.ActiveEnemies == 1, "화면 밖에 생성한 적이 즉시 거리 정리됨"); // 생성 직후 생존 확인
-    } // 메서드 끝
+    }
     private static void VerifySpawn(EarlyEnemyKind kind, float aspect, Vector3 cameraPosition, bool cameraPresent) // 실제 출현 경로 확인
-    { // 메서드 시작
+    {
         var fixture = Player(); // 플레이어 구성
         fixture.player.transform.position = new Vector3(); // 출현 기준 원점
         if (cameraPresent) // 카메라 설정 여부
-        { // 조건 시작
+        {
             GameObject cameraObject = new GameObject("Camera"); // 카메라 객체
             cameraObject.transform.position = cameraPosition; // 이동 카메라 위치
             Camera.main = cameraObject.AddComponent<Camera>(); // 주 카메라 지정
             Camera.main.aspect = aspect; // 화면 종횡비
-        } // 조건 끝
+        }
         GameObject owner = new GameObject("Spawner"); // 출현기 객체
         EarlyEnemyWaveSpawner spawner = owner.AddComponent<EarlyEnemyWaveSpawner>(); // 실제 출현기
         Invoke(spawner, "Start"); // 참조 초기화
@@ -282,11 +282,11 @@ internal static class Program // 출현 및 조준 시험
         Vector3 point = enemy.transform.position; // 출현 위치
         Require(point.sqrMagnitude >= 80.999f, "기존 최소 출현 거리 미달"); // 최소 거리 확인
         if (cameraPresent) // 카메라 존재 확인
-        { // 조건 시작
+        {
             Vector3 viewport = Camera.main.WorldToViewportPoint(point); // 출현 뷰포트 위치
             float horizontal = 0.5f / (2f * Camera.main.orthographicSize * Camera.main.aspect); // 임시 가로 여유
             float vertical = 0.5f / (2f * Camera.main.orthographicSize); // 임시 세로 여유
             Require(viewport.x < -horizontal || viewport.x > 1f + horizontal || viewport.y < -vertical || viewport.y > 1f + vertical, $"화면 여유 내부 출현: ({viewport.x:F3}, {viewport.y:F3})"); // 여유 밖 출현 확인
-        } // 조건 끝
-    } // 메서드 끝
-} // 클래스 끝
+        }
+    }
+}

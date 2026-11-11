@@ -49,12 +49,12 @@ namespace ProjectEpsilon.Combat // 전투 영역
         }
 
         public bool Apply(WeaponTarget damageTarget, int incomingStage) // 냉기 적용 요청
-        { // 메서드 시작
+        {
             return Apply(damageTarget, incomingStage, 1f, 1); // 기존 호출의 임시 빙결 설정
-        } // 메서드 끝
+        }
 
         public bool Apply(WeaponTarget damageTarget, int incomingStage, float freezeDuration, int requiredAdditionalHits) // 조정 가능한 냉기 적용
-        { // 메서드 시작
+        {
             if (damageTarget == null || !damageTarget.IsAlive) // 대상 유효성 확인
             {
                 return false; // 적용 실패
@@ -91,18 +91,18 @@ namespace ProjectEpsilon.Combat // 전투 영역
             stackCount = nextStacks; // 실제 냉기 누적 저장
             remainingDuration = duration; // 냉기 시간 갱신
             if (resolvedStage >= 6 && WeaponAttributeControlRules.IsFreezeReady(previousStacks)) // 최대 누적 이후 고단계 냉기 확인
-            { // 조건 시작
+            {
                 int required = Mathf.Max(1, requiredAdditionalHits); // 안전한 추가 명중 조건
                 additionalColdHits = Mathf.Min(additionalColdHits, required - 1) + 1; // 추가 명중 수 누적
                 if (additionalColdHits >= required && statusController.ApplyColdFreeze(priority, freezeDuration)) // 추가 조건과 실제 빙결 적용 확인
-                { // 조건 시작
+                {
                     additionalColdHits = 0; // 적용 이후 추가 조건 초기화
-                } // 조건 끝
-            } // 조건 끝
+                }
+            }
             else if (!WeaponAttributeControlRules.IsFreezeReady(previousStacks)) // 최대 누적 전 명중 확인
-            { // 조건 시작
+            {
                 additionalColdHits = 0; // 이전 추가 명중 초기화
-            } // 조건 끝
+            }
             return true; // 적용 성공
         }
 

@@ -101,17 +101,17 @@ namespace ProjectEpsilon.Combat // 전투 영역
         }
 
         public static WeaponTarget FindClosest(Vector3 origin, float maximumRange) // 최근접 대상 탐색
-        { // 메서드 시작
+        {
             return FindClosest(origin, maximumRange, null); // 제외 대상 없는 탐색
-        } // 메서드 끝
+        }
 
         public static WeaponTarget FindClosest(Vector3 origin, float maximumRange, WeaponTarget excluded) // 제외 대상을 고려한 탐색
-        { // 메서드 시작
+        {
             return FindClosest(origin, maximumRange, excluded, null); // 단일 제외 대상을 전달
-        } // 메서드 끝
+        }
 
         public static WeaponTarget FindClosest(Vector3 origin, float maximumRange, WeaponTarget excluded, WeaponTarget secondExcluded) // 두 제외 대상을 고려한 탐색
-        { // 메서드 시작
+        {
             float safeRange = Mathf.Max(0f, maximumRange); // 탐색 범위 정규화
             float bestDistanceSquared = safeRange * safeRange; // 최대 거리 제곱 저장
             WeaponTarget closest = null; // 최근접 대상 초기화

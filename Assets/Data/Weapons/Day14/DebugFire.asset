@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: DebugFire
   m_EditorClassIdentifier: Assembly-CSharp::ProjectEpsilon.Data.WeaponData
   id: debug_day14_fire
-  displayName: Debug Fire
+  displayName: 화염 포탑
   attribute: 1
   attackType: 1
   baseDamage: 12

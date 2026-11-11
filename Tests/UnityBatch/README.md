@@ -232,3 +232,11 @@
 `AutomatedDay49FrontendVerification.Run`은 `StartingWeaponBatchHelper.cs` 및 `AutomatedDay48MetaVerification.cs`의 메모리 저장소와 함께 격리 사본에서 실행한다. 제품 이름이 `Project-Epsilon-Day48-Isolated`인지 검사한 후에만 전용 메타·화면 설정 키를 초기화한다. 실제 버튼 이벤트와 가상 키로 메뉴·선택·설정·합성 우선·정지·결과·저장 실패·재도전을 검증한다. 화면 그림과 입력 위치는 직접 확인해야 한다.
 
 기존 시작 포탑 회귀 도우미는 실제 주 메뉴와 캐릭터·맵 단계를 거쳐 시작한다. 검사 결과와 별도 프로필 사용 범위는 `Devlogs/Day49/README.md`에 기록한다.
+
+---
+
+## 50일차 전투 기록과 표시 이름
+
+`AutomatedDay50RecordingVerification.Run`은 `-epsilonRecord -epsilonSeed 13579`와 공용 시작 도우미를 사용해 격리된 제품 프로필에서 실행한다. 실제 승패 시에만 기록 파일이 생성된다. `AutomatedDay50NoRecordingVerification.Run`은 기록 인수 없이 실행해 기본 기록 비활성을 확인한다. `AutomatedDay50NamingVerification.Run`은 포탑 에셋과 실제 보상 문구를 검사하고 `AutomatedDay50FontVerification.Run`은 관련 텍스트의 공용 글꼴 연결을 검사한다. 각 진입점 앞에는 `ProjectEpsilon.Editor.`를 붙인다.
+
+`python Tools/compare_run_records.py 첫번째.json 두번째.json`은 기록된 시작 조건과 결과를 비교한다. 같은 시드로 완전히 동일한 전투가 재생된다는 뜻은 아니다. 통제된 시험 결과와 실제 화면에서 남은 확인은 `Devlogs/Day50/README.md`에 기록한다.

@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: DebugElectric
   m_EditorClassIdentifier: Assembly-CSharp::ProjectEpsilon.Data.WeaponData
   id: debug_day14_electric
-  displayName: Debug Electric
+  displayName: 전기 포탑
   attribute: 3
   attackType: 1
   baseDamage: 12

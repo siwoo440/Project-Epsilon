@@ -1,32 +1,32 @@
-using UnityEngine;
+using UnityEngine; // Unity 엔진 기능 연결
 
-namespace ProjectEpsilon.Data
+namespace ProjectEpsilon.Data // 프로젝트 기능 영역
 {
-    [CreateAssetMenu(fileName = "WeaponData", menuName = "Project Epsilon/Data/Weapon")]
-    public sealed class WeaponData : ScriptableObject
+    [CreateAssetMenu(fileName = "WeaponData", menuName = "Project Epsilon/Data/Weapon")] // 생성·파일 설정
+    public sealed class WeaponData : ScriptableObject // 포탑·데이터 자료 구조
     {
-        [Header("Identity")]
-        [SerializeField] private string id = "weapon_id";
-        [SerializeField] private string displayName = "Weapon";
+        [Header("Identity")] // 대상 설정
+        [SerializeField] private string id = "weapon_id"; // 필드·식별자 설정
+        [SerializeField] private string displayName = "포탑"; // 필드·이름 설정
         [SerializeField] private Sprite artwork; // 무기 장착 이미지
 
-        [Header("Classification")]
-        [SerializeField] private WeaponAttribute attribute = WeaponAttribute.Physical;
-        [SerializeField] private WeaponAttackType attackType = WeaponAttackType.Melee;
+        [Header("Classification")] // 대상 설정
+        [SerializeField] private WeaponAttribute attribute = WeaponAttribute.Physical; // 필드·포탑 설정
+        [SerializeField] private WeaponAttackType attackType = WeaponAttackType.Melee; // 필드·포탑 설정
 
-        [Header("Base Stats")]
-        [Min(0f)] [SerializeField] private float baseDamage = 10f;
-        [Min(0.01f)] [SerializeField] private float attackInterval = 1f;
-        [Min(0f)] [SerializeField] private float range = 5f;
-        [Range(1, 5)] [SerializeField] private int maxGrade = 5;
+        [Header("Base Stats")] // 대상 설정
+        [Min(0f)] [SerializeField] private float baseDamage = 10f; // 최소·필드 설정
+        [Min(0.01f)] [SerializeField] private float attackInterval = 1f; // 최소·필드 설정
+        [Min(0f)] [SerializeField] private float range = 5f; // 최소·필드 설정
+        [Range(1, 5)] [SerializeField] private int maxGrade = 5; // 범위·필드 설정
         [Range(1, 2)] [SerializeField] private int gradeThreeMeleeTargetLimit = 1; // 삼 등급 근접 최대 대상 수
         [Min(1f)] [SerializeField] private float gradeThreeAreaRangeMultiplier = 1f; // 삼 등급 범위 배율 임시값
         [Range(1, 3)] [SerializeField] private int gradeFiveMeleeTargetLimit = 2; // 오 등급 근접 최대 대상 수
         [Min(1f)] [SerializeField] private float gradeFiveAreaRangeMultiplier = 1f; // 오 등급 범위 배율 임시값
 
-        [Header("Projectile")]
-        [Min(0.01f)] [SerializeField] private float projectileSpeed = 8f;
-        [Min(0.1f)] [SerializeField] private float projectileLifetime = 3f;
+        [Header("Projectile")] // 투사체 설정
+        [Min(0.01f)] [SerializeField] private float projectileSpeed = 8f; // 최소·필드 설정
+        [Min(0.1f)] [SerializeField] private float projectileLifetime = 3f; // 최소·필드 설정
         [Min(1)] [SerializeField] private int projectileHitLimit = 1; // 투사체 최대 명중 수
         [Min(0f)] [SerializeField] private float gradeThreeTransferRange = 0f; // 삼 등급 추가 전달 반경 임시값
         [Min(0f)] [SerializeField] private float gradeThreeTransferDamageMultiplier = 1f; // 추가 전달 피해 배율 임시값
@@ -39,15 +39,15 @@ namespace ProjectEpsilon.Data
         [Min(0f)] [SerializeField] private float gradeFiveBurnExplosionRadius; // 화상 적 처치 폭발 반경
         [Min(0f)] [SerializeField] private float gradeFiveBurnExplosionDamageMultiplier; // 화상 적 처치 폭발 피해 배율
 
-        public string Id => id;
-        public string DisplayName => displayName;
+        public string Id => id; // 식별자 값 반환
+        public string DisplayName => displayName; // 이름 값 반환
         public Sprite Artwork => artwork; // 무기 표시 이미지
         public Color ArtworkTint // 속성별 포탑 표시 색상
-        { // 속성 시작
+        {
             get // 색상 조회
-            { // 접근자 시작
+            {
                 switch (attribute) // 무기 속성 확인
-                { // 분기 시작
+                {
                     case WeaponAttribute.Fire: return new Color(1f, 0.55f, 0.4f, 1f); // 화염색
                     case WeaponAttribute.Cold: return new Color(0.5f, 0.85f, 1f, 1f); // 냉기색
                     case WeaponAttribute.Electric: return new Color(1f, 0.95f, 0.45f, 1f); // 전기색
@@ -56,19 +56,19 @@ namespace ProjectEpsilon.Data
                     case WeaponAttribute.Holy: return new Color(1f, 0.95f, 0.65f, 1f); // 신성색
                     case WeaponAttribute.Dark: return new Color(0.7f, 0.5f, 0.95f, 1f); // 암흑색
                     default: return Color.white; // 기본 물리색
-                } // 분기 끝
-            } // 접근자 끝
-        } // 속성 끝
-        public WeaponAttribute Attribute => attribute;
-        public WeaponAttackType AttackType => attackType;
-        public float BaseDamage => baseDamage;
-        public float AttackInterval => attackInterval;
-        public float Range => range;
-        public int MaxGrade => maxGrade;
+                }
+            }
+        }
+        public WeaponAttribute Attribute => attribute; // 포탑·속성 값 반환
+        public WeaponAttackType AttackType => attackType; // 포탑·공격 값 반환
+        public float BaseDamage => baseDamage; // 피해 값 반환
+        public float AttackInterval => attackInterval; // 공격·간격 값 반환
+        public float Range => range; // 범위 값 반환
+        public int MaxGrade => maxGrade; // 최대·등급 값 반환
         public int GetMeleeTargetLimit(int grade) => grade >= 5 ? Mathf.Clamp(gradeFiveMeleeTargetLimit, GetMeleeTargetLimit(3), 3) : grade >= 3 ? Mathf.Clamp(gradeThreeMeleeTargetLimit, 1, 2) : 1; // 등급별 안전한 근접 대상 수
         public float GetAreaRangeMultiplier(int grade) => grade >= 5 ? Mathf.Max(GetAreaRangeMultiplier(3), gradeFiveAreaRangeMultiplier) : grade >= 3 ? Mathf.Max(1f, gradeThreeAreaRangeMultiplier) : 1f; // 등급별 안전한 범위 배율
-        public float ProjectileSpeed => projectileSpeed;
-        public float ProjectileLifetime => projectileLifetime;
+        public float ProjectileSpeed => projectileSpeed; // 투사체·속도 값 반환
+        public float ProjectileLifetime => projectileLifetime; // 투사체 값 반환
         public int ProjectileHitLimit => Mathf.Max(1, projectileHitLimit); // 안전한 최대 명중 수
         public float GradeThreeTransferRange => Mathf.Max(0f, gradeThreeTransferRange); // 안전한 추가 전달 반경
         public float GradeThreeTransferDamageMultiplier => Mathf.Max(0f, gradeThreeTransferDamageMultiplier); // 안전한 추가 전달 피해 배율

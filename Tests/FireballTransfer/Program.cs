@@ -6,12 +6,12 @@ using ProjectEpsilon.Data; // 무기 데이터
 using UnityEngine; // 충돌과 좌표
 
 internal static class Program // 화염탄 등급 전달 시험
-{ // 클래스 시작
+{
     private static int failures; // 실패 횟수
     private static readonly MethodInfo Trigger = typeof(StraightProjectile).GetMethod("OnTriggerEnter2D", BindingFlags.Instance | BindingFlags.NonPublic); // 실제 충돌 콜백
 
     private static int Main() // 시험 시작
-    { // 메서드 시작
+    {
         Check("하위 등급과 다른 무기", VerifyLowerAndOtherWeapons); // 기존 공격 회귀
         Check("상위 등급 추가 한 명과 스냅샷", VerifyTransferAndSnapshot); // 등급 전달 검증
         Check("후보 부재와 범위 제한", VerifyNoCandidate); // 후보 조건 검증
@@ -27,24 +27,24 @@ internal static class Program // 화염탄 등급 전달 시험
         Check("비활성 투사체 충돌 차단", VerifyInactiveTrigger); // 비활성 물리 콜백 경계
         Console.WriteLine(failures == 0 ? "PASS" : $"FAIL: {failures}"); // 전체 결과
         return failures == 0 ? 0 : 1; // 종료 코드
-    } // 메서드 끝
+    }
 
     private static void Check(string name, Action action) // 개별 시험
-    { // 메서드 시작
+    {
         try // 시험 실행
-        { // 시도 시작
+        {
             action(); // 시험 호출
             Console.WriteLine($"PASS: {name}"); // 성공 기록
-        } // 시도 끝
+        }
         catch (Exception error) // 실패 처리
-        { // 예외 시작
+        {
             failures++; // 실패 횟수 증가
             Console.WriteLine($"FAIL: {name}: {error.GetBaseException().Message}"); // 실패 기록
-        } // 예외 끝
-    } // 메서드 끝
+        }
+    }
 
     private static (StraightProjectile projectile, WeaponData weapon, WeaponAttributeCombatEffects effects, WeaponTarget first, WeaponTarget second, WeaponTarget third) Create(int grade, float radius = 2f, float multiplier = 0.5f, int hitLimit = 1, bool useEffects = true) // 시험 구성
-    { // 메서드 시작
+    {
         WeaponTarget.Active.Clear(); // 이전 표적 초기화
         GameManager.Instance = new GameManager(); // 진행 중 게임
         WeaponData weapon = new WeaponData { GradeThreeTransferRange = radius, GradeThreeTransferDamageMultiplier = multiplier, ProjectileHitLimit = hitLimit }; // 임시 무기 설정
@@ -56,39 +56,39 @@ internal static class Program // 화염탄 등급 전달 시험
         WeaponTarget second = Target(10.5f); // 가장 가까운 전달 대상
         WeaponTarget third = Target(11f); // 추가 후보
         return (projectile, weapon, effects, first, second, third); // 시험 객체 반환
-    } // 메서드 끝
+    }
 
     private static WeaponTarget Target(float x) // 시험 표적 생성
-    { // 메서드 시작
+    {
         WeaponTarget target = new WeaponTarget(); // 표적 생성
         target.transform.position = new Vector3(x, 0f, 0f); // 표적 위치 저장
         WeaponTarget.Active.Add(target); // 활성 목록 등록
         return target; // 표적 반환
-    } // 메서드 끝
+    }
 
     private static void Hit(StraightProjectile projectile, WeaponTarget target) // 실제 투사체 충돌
-    { // 메서드 시작
+    {
         Trigger.Invoke(projectile, new object[] { new Collider2D { Target = target } }); // 실제 충돌 콜백 호출
-    } // 메서드 끝
+    }
 
     private static void VerifyLowerAndOtherWeapons() // 기본 등급 및 다른 무기 유지
-    { // 메서드 시작
+    {
         for (int grade = 1; grade <= 2; grade++) // 하위 등급 순회
-        { // 반복 시작
+        {
             var fixture = Create(grade); // 등급별 시험 구성
             Hit(fixture.projectile, fixture.first); // 최초 명중
             Require(fixture.first.Hits == 1 && fixture.second.Hits == 0 && fixture.third.Hits == 0, "하위 등급이 추가 대상 공격"); // 단일 명중 확인
             Require(fixture.first.Burns == 1 && fixture.projectile.gameObject.PendingDestroy, "기존 화상 또는 투사체 종료 오류"); // 기본 경로 확인
-        } // 반복 끝
+        }
         var other = Create(3, 0f); // 전달 비활성 다른 무기
         Hit(other.projectile, other.first); // 최초 명중
         Require(other.first.Hits == 1 && other.second.Hits == 0, "다른 무기의 추가 전달 발생"); // 무기별 설정 확인
-    } // 메서드 끝
+    }
 
     private static void VerifyTransferAndSnapshot() // 상위 등급 추가 전달과 피해 정보
-    { // 메서드 시작
+    {
         for (int grade = 3; grade <= 5; grade++) // 상위 등급 순회
-        { // 반복 시작
+        {
             var fixture = Create(grade); // 등급별 시험 구성
             Hit(fixture.projectile, fixture.first); // 최초 명중
             Require(fixture.first.Hits == 1 && fixture.second.Hits == 1 && fixture.third.Hits == 0, "최근접 추가 대상 한 명 제한 오류"); // 대상 수 확인
@@ -97,11 +97,11 @@ internal static class Program // 화염탄 등급 전달 시험
             WeaponAttributeAttackSnapshot transfer = fixture.effects.Hits[1]; // 전달 명중 정보
             Require(transfer.Weapon == fixture.weapon && transfer.Grade == grade && transfer.AttributeCount == 4 && transfer.SynergyStage == 4 && transfer.Origin.x == 100f && transfer.Origin.y == 2f, "발사 원점 또는 등급·시너지 변경"); // 스냅샷 보존 확인
             Require(fixture.projectile.gameObject.PendingDestroy, "한도 도달 투사체 미파괴"); // 투사체 종료 확인
-        } // 반복 끝
-    } // 메서드 끝
+        }
+    }
 
     private static void VerifyNoCandidate() // 후보 부재 및 거리 경계
-    { // 메서드 시작
+    {
         var fixture = Create(3); // 상위 등급 구성
         fixture.second.isActiveAndEnabled = false; // 가까운 후보 비활성
         fixture.third.transform.position = new Vector3(12.1f, 0f, 0f); // 다른 후보 범위 밖
@@ -112,10 +112,10 @@ internal static class Program // 화염탄 등급 전달 시험
         WeaponTarget.Active.Remove(fixture.third); // 셋째 후보 제거
         Hit(fixture.projectile, fixture.first); // 유일 대상 명중
         Require(fixture.first.Hits == 1 && fixture.effects.Hits.Count == 1, "최초 대상 재선택 또는 중복 피해"); // 최초 대상 제외 확인
-    } // 메서드 끝
+    }
 
     private static void VerifyTargetInvalidation() // 최초 사망 중 전달 대상 소실
-    { // 메서드 시작
+    {
         var fixture = Create(3); // 상위 등급 구성
         fixture.first.Health = 5f; // 최초 적 사망 체력
         fixture.first.OnHit = () => fixture.second.isActiveAndEnabled = false; // 사망 중 둘째 대상 비활성
@@ -125,10 +125,10 @@ internal static class Program // 화염탄 등급 전달 시험
         fixture.first.OnHit = () => fixture.second.Health = 0f; // 최초 명중 중 둘째 사망
         Hit(fixture.projectile, fixture.first); // 최초 명중
         Require(fixture.second.Hits == 0 && fixture.third.Hits == 0, "사망한 전달 대상 또는 대체 대상 공격"); // 사망 대상 제외 확인
-    } // 메서드 끝
+    }
 
     private static void VerifyInvalidatedDirectHit() // 전달 전 비활성된 대상의 후속 직접 명중
-    { // 메서드 시작
+    {
         var fixture = Create(3, 2f, 1f, 2); // 두 번 관통 허용
         fixture.first.OnHit = () => fixture.second.isActiveAndEnabled = false; // 최초 명중 중 전달 대상 비활성
         Hit(fixture.projectile, fixture.first); // 최초 명중과 전달 취소
@@ -136,10 +136,10 @@ internal static class Program // 화염탄 등급 전달 시험
         fixture.second.isActiveAndEnabled = true; // 대상 재활성
         Hit(fixture.projectile, fixture.second); // 같은 투사체의 후속 직접 명중
         Require(fixture.second.Hits == 1 && fixture.projectile.gameObject.PendingDestroy, "실제 명중하지 않은 대상의 직접 충돌 차단"); // 미명중 대상 재진입 확인
-    } // 메서드 끝
+    }
 
     private static void VerifyPenetration() // 관통 중 전달 대상 재명중 방지
-    { // 메서드 시작
+    {
         var fixture = Create(3, 1f, 1f, 2); // 관통 두 번 허용
         fixture.third.transform.position = new Vector3(14f, 0f, 0f); // 다른 최초 명중 위치
         WeaponTarget fourth = Target(14.5f); // 다른 명중의 주변 후보
@@ -148,27 +148,27 @@ internal static class Program // 화염탄 등급 전달 시험
         Require(!fixture.projectile.gameObject.PendingDestroy && fixture.second.Hits == 1, "전달 대상 재명중 또는 관통 횟수 소비"); // 중복 명중 차단
         Hit(fixture.projectile, fixture.third); // 둘째 관통 명중
         Require(fixture.third.Hits == 1 && fourth.Hits == 0 && fixture.projectile.gameObject.PendingDestroy, "관통 중 전달 재발동 또는 파괴 오류"); // 투사체당 한 번 전달 확인
-    } // 메서드 끝
+    }
 
     private static void VerifyReentrantHit() // 최초 명중 중 동일 투사체 재진입
-    { // 메서드 시작
+    {
         var fixture = Create(3); // 단일 관통 시험 구성
         fixture.first.OnHit = () => Hit(fixture.projectile, fixture.third); // 명중 도중 다른 충돌 재진입
         Hit(fixture.projectile, fixture.first); // 최초 명중
         Require(fixture.first.Hits == 1 && fixture.second.Hits == 1 && fixture.third.Hits == 0, "명중 한도 확정 전 재진입 공격"); // 조기 명중 한도 확인
-    } // 메서드 끝
+    }
 
     private static void VerifyDataSnapshot() // 발사 후 에셋 수정 경계
-    { // 메서드 시작
+    {
         var fixture = Create(3, 2f, 0.5f); // 전달 반경과 피해 설정
         fixture.weapon.GradeThreeTransferRange = 0f; // 발사 후 에셋 반경 변경
         fixture.weapon.GradeThreeTransferDamageMultiplier = 2f; // 발사 후 에셋 배율 변경
         Hit(fixture.projectile, fixture.first); // 기존 발사체 명중
         Require(fixture.second.Hits == 1 && Math.Abs(fixture.second.Health - 93f) < 0.001f, "발사 후 에셋 변경이 기존 투사체에 반영"); // 발사 시점 수치 확인
-    } // 메서드 끝
+    }
 
     private static void VerifyReconfigureDuringHit() // 최초 명중 중 투사체 재설정
-    { // 메서드 시작
+    {
         var fixture = Create(3); // 상위 등급 투사체 구성
         WeaponAttributeAttackSnapshot replacement = new WeaponAttributeAttackSnapshot(fixture.weapon, WeaponAttribute.Fire, 1, 0, 1, new Vector3(200f, 0f, 0f), 3f); // 새 발사 정보
         fixture.first.OnHit = () => fixture.projectile.Configure(Vector2.up, replacement, fixture.effects, 8f, 3f, new Sprite()); // 최초 명중 중 재설정
@@ -176,18 +176,18 @@ internal static class Program // 화염탄 등급 전달 시험
         Require(fixture.second.Hits == 0 && !fixture.projectile.gameObject.PendingDestroy, "재설정 뒤 이전 발사의 전달 또는 파괴 실행"); // 이전 발사 처리 종료 확인
         Hit(fixture.projectile, fixture.second); // 새 발사체 직접 명중
         Require(fixture.second.Hits == 1 && Math.Abs(fixture.second.Health - 97f) < 0.001f && fixture.projectile.gameObject.PendingDestroy, "재설정된 발사체 동작 오류"); // 새 발사 상태 확인
-    } // 메서드 끝
+    }
 
     private static void VerifyDisableDuringHit() // 최초 명중 중 투사체 비활성
-    { // 메서드 시작
+    {
         var fixture = Create(3); // 상위 등급 투사체 구성
         fixture.first.OnHit = () => fixture.projectile.isActiveAndEnabled = false; // 최초 명중 중 비활성
         Hit(fixture.projectile, fixture.first); // 최초 명중
         Require(fixture.second.Hits == 0 && !fixture.projectile.gameObject.PendingDestroy, "비활성 투사체의 후속 전달 또는 파괴 실행"); // 수명주기 변경 확인
-    } // 메서드 끝
+    }
 
     private static void VerifyReconfigureDuringTransfer() // 추가 대상 명중 중 재설정
-    { // 메서드 시작
+    {
         var fixture = Create(3); // 상위 등급 투사체 구성
         WeaponAttributeAttackSnapshot replacement = new WeaponAttributeAttackSnapshot(fixture.weapon, WeaponAttribute.Fire, 1, 0, 1, new Vector3(200f, 0f, 0f), 3f); // 새 발사 정보
         fixture.second.OnHit = () => fixture.projectile.Configure(Vector2.up, replacement, fixture.effects, 8f, 3f, new Sprite()); // 전달 명중 중 재설정
@@ -195,10 +195,10 @@ internal static class Program // 화염탄 등급 전달 시험
         Require(fixture.second.Hits == 1 && !fixture.projectile.gameObject.PendingDestroy, "전달 중 재설정 후 이전 발사의 파괴 실행"); // 이전 발사 종료 확인
         Hit(fixture.projectile, fixture.third); // 새 발사체 직접 명중
         Require(fixture.third.Hits == 1 && fixture.projectile.gameObject.PendingDestroy, "전달 중 재설정된 발사체 동작 오류"); // 새 발사 상태 확인
-    } // 메서드 끝
+    }
 
     private static void VerifyInactiveTrigger() // 비활성 구성 요소의 물리 콜백
-    { // 메서드 시작
+    {
         var fixture = Create(3); // 상위 등급 구성
         fixture.projectile.isActiveAndEnabled = false; // 투사체 구성 비활성
         Hit(fixture.projectile, fixture.first); // 비활성 상태의 충돌 콜백
@@ -206,20 +206,20 @@ internal static class Program // 화염탄 등급 전달 시험
         fixture.projectile.isActiveAndEnabled = true; // 투사체 재활성
         Hit(fixture.projectile, fixture.first); // 재활성 뒤 같은 대상 명중
         Require(fixture.first.Hits == 1 && fixture.second.Hits == 1 && fixture.projectile.gameObject.PendingDestroy, "비활성 콜백이 재활성 후 명중 횟수 소비"); // 명중 횟수 보존 확인
-    } // 메서드 끝
+    }
 
     private static void VerifyFallback() // 속성 관리자 없는 기본 피해
-    { // 메서드 시작
+    {
         var fixture = Create(3, 2f, 1f, 1, false); // 효과 관리자 없는 구성
         Hit(fixture.projectile, fixture.first); // 최초 명중
         Require(fixture.first.Hits == 1 && fixture.second.Hits == 1 && fixture.third.Hits == 0, "대체 피해 경로의 전달 실패"); // 직접 피해 대체 확인
-    } // 메서드 끝
+    }
 
     private static void Require(bool condition, string message) // 조건 확인
-    { // 메서드 시작
+    {
         if (!condition) // 실패 조건
-        { // 조건 시작
+        {
             throw new InvalidOperationException(message); // 실패 보고
-        } // 조건 끝
-    } // 메서드 끝
-} // 클래스 끝
+        }
+    }
+}

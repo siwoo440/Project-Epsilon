@@ -1,10 +1,10 @@
 using UnityEngine; // Unity 데이터 기능
 
 namespace ProjectEpsilon.World // 맵 영역
-{ // 영역 시작
+{
     [CreateAssetMenu(fileName = "PrototypeMapProfile", menuName = "Project Epsilon/Prototype Map")] // 맵 데이터 생성 메뉴
     public sealed class PrototypeMapProfile : ScriptableObject // 맵별 시험 데이터
-    { // 클래스 시작
+    {
         [SerializeField] private string displayName = "OPEN PLAINS"; // 시작 화면 맵 이름
         [SerializeField] private Sprite ground; // 맵 바닥 이미지
         [SerializeField] private Color bossTint = Color.white; // 임시 보스 구분 색상
@@ -39,5 +39,5 @@ namespace ProjectEpsilon.World // 맵 영역
         public float ZoneTickSeconds => Mathf.Max(0.1f, zoneTickSeconds); // 안전한 효과 간격
         public int ZoneDamage => Mathf.Max(0, zoneDamage); // 안전한 지역 피해
         public int ZoneHealing => Mathf.Max(0, zoneHealing); // 안전한 지역 회복
-    } // 클래스 끝
-} // 영역 끝
+    }
+}

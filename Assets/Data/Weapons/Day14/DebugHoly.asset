@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: DebugHoly
   m_EditorClassIdentifier: Assembly-CSharp::ProjectEpsilon.Data.WeaponData
   id: debug_day14_holy
-  displayName: Debug Holy
+  displayName: 신성 포탑
   attribute: 6
   attackType: 0
   baseDamage: 12

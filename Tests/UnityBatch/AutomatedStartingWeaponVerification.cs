@@ -16,10 +16,10 @@ using UnityEngine.InputSystem.LowLevel; // 키보드 상태
 using UnityEngine.UI; // 실제 UI 버튼
 
 namespace ProjectEpsilon.Editor // 편집기 영역
-{ // 영역 시작
+{
     [InitializeOnLoad] // 도메인 재시작 연결
     public static class AutomatedStartingWeaponVerification // 실제 시작 무기 선택 검증
-    { // 클래스 시작
+    {
         private const string ActiveKey = "EpsilonStartingWeaponVerification"; // 배치 진행 표식
         private const string IndexKey = "EpsilonStartingWeaponOptionIndex"; // 현재 선택 후보
         private const string ReloadKey = "EpsilonStartingWeaponReloadPending"; // 플레이 재진입 대기
@@ -30,26 +30,26 @@ namespace ProjectEpsilon.Editor // 편집기 영역
         private static bool finished; // 중복 종료 방지
 
         static AutomatedStartingWeaponVerification() // 도메인 재시작 처리
-        { // 생성자 시작
+        {
             if (SessionState.GetBool(ActiveKey, false)) // 배치 진행 여부
-            { // 조건 시작
+            {
                 EditorApplication.update -= Tick; // 중복 연결 제거
                 EditorApplication.update += Tick; // 시작 감시 연결
-            } // 조건 끝
-        } // 생성자 끝
+            }
+        }
 
         public static void Run() // Unity 배치 진입점
-        { // 메서드 시작
+        {
             RunScenario(false); // 기본 세 후보 시험
-        } // 메서드 끝
+        }
 
         public static void RunDisabledBeforeStart() // 시작 전 선택기 비활성 시험
-        { // 메서드 시작
+        {
             RunScenario(true); // 비활성 및 재활성 경계 시험
-        } // 메서드 끝
+        }
 
         private static void RunScenario(bool disableBeforeStart) // 시험 종류와 플레이 시작
-        { // 메서드 시작
+        {
             SessionState.SetBool(ActiveKey, true); // 시험 진행 상태 저장
             SessionState.SetInt(IndexKey, 0); // 첫 후보 선택부터 시작
             SessionState.SetBool(ReloadKey, false); // 재진입 상태 초기화
@@ -59,125 +59,125 @@ namespace ProjectEpsilon.Editor // 편집기 영역
             EditorApplication.update += Tick; // 시작 감시 연결
             EditorSceneManager.OpenScene("Assets/Scenes/Game.unity"); // 실제 게임 씬 열기
             if (disableBeforeStart) // 시작 전 비활성 시험 확인
-            { // 조건 시작
+            {
                 Type selector = typeof(SnakeExperience).Assembly.GetType("ProjectEpsilon.Progression.StartingWeaponSelection"); // 실제 선택기 형식 조회
                 SnakeMovement player = UnityEngine.Object.FindFirstObjectByType<SnakeMovement>(); // 씬 플레이어 조회
                 MonoBehaviour component = selector == null || player == null ? null : player.GetComponent(selector) as MonoBehaviour; // 실제 선택기 조회
                 if (component == null) // 선택기 연결 확인
-                { // 조건 시작
+                {
                     Finish(1, "Starting selector is absent before the disabled-start test."); // 구성 오류 기록
                     return; // 플레이 생략
-                } // 조건 끝
+                }
                 component.enabled = false; // 저장하지 않은 씬 메모리에서 시작 전 비활성화
-            } // 조건 끝
+            }
             EditorApplication.isPlaying = true; // 첫 플레이 모드 진입
-        } // 메서드 끝
+        }
 
         private static void Tick() // 플레이 재진입과 제한 시간 감시
-        { // 메서드 시작
+        {
             if (!EditorApplication.isPlaying) // 플레이 정지 상태 확인
-            { // 조건 시작
+            {
                 if (SessionState.GetBool(ReloadKey, false) && !EditorApplication.isPlayingOrWillChangePlaymode) // 재진입 가능 여부
-                { // 조건 시작
+                {
                     SessionState.SetBool(ReloadKey, false); // 재진입 대기 해제
                     EditorSceneManager.OpenScene("Assets/Scenes/Game.unity"); // 실제 씬 다시 열기
                     EditorApplication.isPlaying = true; // 다음 후보 플레이 진입
-                } // 조건 끝
+                }
                 return; // 플레이 진입 대기
-            } // 조건 끝
+            }
             if (started <= 0d) // 개별 실행 최초 시각
-            { // 조건 시작
+            {
                 started = EditorApplication.timeSinceStartup; // 시작 시각 기록
-            } // 조건 끝
+            }
             if (EditorApplication.timeSinceStartup - started > 60d) // 개별 실행 제한 확인
-            { // 조건 시작
+            {
                 Finish(1, "Timed out waiting for start selection."); // 시간 초과 보고
                 return; // 감시 중단
-            } // 조건 끝
+            }
             if (injected) // 실행기 생성 여부
-            { // 조건 시작
+            {
                 return; // 시험 결과 대기
-            } // 조건 끝
+            }
             SnakeMovement player = UnityEngine.Object.FindFirstObjectByType<SnakeMovement>(); // 실제 플레이어 조회
             GameManager game = GameManager.Instance; // 실제 게임 관리자
             if (player == null || game == null) // 씬 초기화 확인
-            { // 조건 시작
+            {
                 return; // 초기화 대기
-            } // 조건 끝
+            }
             Type selectionType = typeof(SnakeExperience).Assembly.GetType("ProjectEpsilon.Progression.StartingWeaponSelection"); // 제품 시작 선택기 형식 조회
             if (selectionType == null && game.IsPlaying) // 기존 자동 시작 여부
-            { // 조건 시작
+            {
                 Finish(1, "Starting weapon selection is absent and gameplay started automatically."); // 기준 버전 실패 기록
                 return; // 실행기 생략
-            } // 조건 끝
+            }
             if (selectionType == null) // 선택기 형식 부재 확인
-            { // 조건 시작
+            {
                 return; // 씬 초기화 대기
-            } // 조건 끝
+            }
             MonoBehaviour selection = player.GetComponent(selectionType) as MonoBehaviour; // 실제 선택기 조회
             PropertyInfo selecting = selectionType.GetProperty("IsSelecting"); // 선택 진행 상태 조회
             if (SessionState.GetBool(DisabledKey, false) && !SessionState.GetBool(ReenabledKey, false) && selection != null) // 시작 전 비활성 경계 확인
-            { // 조건 시작
+            {
                 if (EditorApplication.timeSinceStartup - started < 0.25d) // 실제 시작 시점 대기
-                { // 조건 시작
+                {
                     return; // 게임 시작 처리 대기
-                } // 조건 끝
+                }
                 if (game.CurrentState != GameState.Starting || !Mathf.Approximately(Time.timeScale, 0f)) // 비활성 중 자동 시작 확인
-                { // 조건 시작
+                {
                     Finish(1, $"Disabled selector allowed gameplay before choice: state={game.CurrentState}, scale={Time.timeScale:F2}."); // 시작 우회 실패 기록
                     return; // 후속 시험 중단
-                } // 조건 끝
+                }
                 selection.enabled = true; // 실제 선택기 재활성화
                 SessionState.SetBool(ReenabledKey, true); // 재활성 상태 기록
                 Debug.Log("[StartingWeaponVerification] Disabled-before-Start remained frozen; selector re-enabled."); // 실제 경계 결과 기록
-            } // 조건 끝
+            }
             if (selection == null || selecting == null || !(bool)selecting.GetValue(selection)) // 실제 후보 화면 준비 확인
-            { // 조건 시작
+            {
                 return; // 선택 표시 대기
-            } // 조건 끝
+            }
             injected = true; // 실행기 중복 생성 방지
             player.gameObject.AddComponent<StartingWeaponVerificationRunner>(); // 실제 씬 시험 실행
-        } // 메서드 끝
+        }
 
         public static int OptionIndex => SessionState.GetInt(IndexKey, 0); // 현재 선택 후보 조회
 
         public static void CompleteOption() // 현재 후보 시험 완료
-        { // 메서드 시작
+        {
             int next = OptionIndex + 1; // 다음 후보 번호
             if (SessionState.GetBool(DisabledKey, false)) // 비활성 경계 시험 완료
-            { // 조건 시작
+            {
                 Finish(0, "Disabled selector stayed frozen, reactivated and selected the first weapon in one fresh Game scene."); // 한 후보 경계 성공 기록
                 return; // 추가 플레이 생략
-            } // 조건 끝
+            }
             if (next >= 3) // 세 후보 시험 완료
-            { // 조건 시작
+            {
                 Finish(0, "Three fresh Game scene starts, actual buttons and virtual numeric key, blocked settings, lifecycle and first body weapon."); // 전체 성공 기록
                 return; // 추가 플레이 생략
-            } // 조건 끝
+            }
             SessionState.SetInt(IndexKey, next); // 다음 후보 저장
             SessionState.SetBool(ReloadKey, true); // 플레이 재진입 예약
             injected = false; // 다음 실행기 허용
             started = 0d; // 다음 시작 시각 초기화
             EditorApplication.isPlaying = false; // 현재 플레이 종료
-        } // 메서드 끝
+        }
 
         public static void Finish(int code, string message) // 결과 기록과 배치 종료
-        { // 메서드 시작
+        {
             if (finished) // 중복 종료 확인
-            { // 조건 시작
+            {
                 return; // 중복 처리 방지
-            } // 조건 끝
+            }
             finished = true; // 종료 상태 기록
             SessionState.SetBool(ActiveKey, false); // 진행 표식 제거
             SessionState.SetBool(ReloadKey, false); // 재진입 표식 제거
             EditorApplication.update -= Tick; // 시작 감시 해제
             Debug.Log($"[StartingWeaponVerification] {(code == 0 ? "PASS" : "FAIL")}: {message}"); // 실제 배치 결과
             EditorApplication.Exit(code); // 프로세스 종료 코드
-        } // 메서드 끝
-    } // 클래스 끝
+        }
+    }
 
     public sealed class StartingWeaponVerificationRunner : MonoBehaviour // 실제 시작 선택 실행기
-    { // 클래스 시작
+    {
         private static readonly BindingFlags PrivateInstance = BindingFlags.NonPublic | BindingFlags.Instance; // 내부 필드 검색
         private MonoBehaviour selection; // 실제 시작 선택기
         private SnakeMovement movement; // 실제 플레이어 이동
@@ -195,7 +195,7 @@ namespace ProjectEpsilon.Editor // 편집기 영역
         private bool originalBackground; // 기존 백그라운드 상태
 
         private IEnumerator Start() // 한 후보의 실제 시작 시험
-        { // 코루틴 시작
+        {
             Prepare(); // 실제 씬과 가상 입력 준비
             int option = AutomatedStartingWeaponVerification.OptionIndex; // 이번 실행의 후보 번호
             Vector3 initialPosition = movement.transform.position; // 선택 전 머리 위치
@@ -208,7 +208,7 @@ namespace ProjectEpsilon.Editor // 편집기 영역
             InputSystem.QueueStateEvent(keyboard, new KeyboardState()); // 회전과 가속 해제
             yield return null; // 입력 해제 대기
             if (option == 0) // 첫 실행의 추가 경계
-            { // 조건 시작
+            {
                 ClickSettings("openButton"); // 실제 설정 열기 버튼
                 Require(settings.IsOpen, "Settings could not open during start selection."); // 설정 표시 확인
                 ClickCandidate(2); // 설정 뒤 실제 후보 버튼 이벤트
@@ -230,15 +230,15 @@ namespace ProjectEpsilon.Editor // 편집기 영역
                 yield return KeyTap(Key.Escape); // 실제 ESC 입력
                 yield return KeyTap(Key.E); // 실제 일반 합성 키 입력
                 Require(IsSelecting() && GameManager.Instance.CurrentState == GameState.Starting, "ESC or E started or paused the run before selection."); // 시작 전 입력 우선
-            } // 조건 끝
+            }
             if (option == 1) // 둘째 후보의 키보드 시험
-            { // 조건 시작
+            {
                 yield return KeyTap(Key.Digit2); // 실제 숫자 2 선택
-            } // 조건 끝
+            }
             else // 첫째와 셋째 후보의 버튼 시험
-            { // 대안 시작
+            {
                 ClickCandidate(option); // 실제 UI 버튼 이벤트
-            } // 대안 끝
+            }
             Require(GameManager.Instance.IsPlaying && Mathf.Approximately(Time.timeScale, 1f) && !IsSelecting() && !panel.gameObject.activeInHierarchy, "Starting selection did not start and close correctly: " + option); // 실제 게임 시작 확인
             Require(body.CurrentBodyCount == 3 && body.EarnedBodyCount == 3 && health.CurrentHealth == 100 && weapons.SlotCount == 3 && weapons.OccupiedSlotCount == 1, "Unexpected initial body, health, or equipped count."); // 시작 생존 상태 확인
             Require(weapons.Slots[0].Weapon == candidates[option] && weapons.Slots[0].Grade == 1 && weapons.Slots[0].Origin == body.BodySegments[0].transform && weapons.Slots[1].IsEmpty && weapons.Slots[2].IsEmpty, "Selected weapon was not equipped on first body: " + option); // 실제 첫 몸통 장착 확인
@@ -252,10 +252,10 @@ namespace ProjectEpsilon.Editor // 편집기 영역
             Debug.Log($"[StartingWeaponVerification] option={option + 1} weapon={selected.DisplayName} grade={weapons.Slots[0].Grade} preStartFrozen=true settingsBlocked={(option == 0)} input={(option == 1 ? "digit2" : "button")} bodyOrigin=true resumed=true."); // 실제 후보별 결과
             Cleanup(); // 시험 입력 설정 복구
             AutomatedStartingWeaponVerification.CompleteOption(); // 다음 새 플레이 또는 종료
-        } // 코루틴 끝
+        }
 
         private void Prepare() // 실제 씬 구성과 가상 입력 준비
-        { // 메서드 시작
+        {
             movement = GetComponent<SnakeMovement>(); // 플레이어 이동 조회
             body = UnityEngine.Object.FindFirstObjectByType<SnakeBodyManager>(); // 몸통 관리자 조회
             health = GetComponent<SnakeHealth>(); // 공용 체력 조회
@@ -273,14 +273,14 @@ namespace ProjectEpsilon.Editor // 편집기 영역
             string[] names = { "DebugBlade", "DebugNeedle", "DebugPulse" }; // 기획상 미확정 임시 후보
             Require(candidates != null && candidates.Length == 3 && panel.gameObject.activeInHierarchy && IsSelecting(), "Starting candidate panel is unavailable."); // 시작 후보 수와 표시 확인
             for (int index = 0; index < candidates.Length; index++) // 실제 세 후보 순회
-            { // 반복 시작
+            {
                 WeaponData expected = AssetDatabase.LoadAssetAtPath<WeaponData>("Assets/Data/Weapons/" + names[index] + ".asset"); // 임시 후보 실제 에셋
                 Require(expected != null && candidates[index] == expected && CandidateButton(index).interactable && CandidateButton(index).gameObject.activeInHierarchy && CandidateLabel(index).Contains(expected.DisplayName), "Starting option asset or label mismatch: " + index); // 후보 순서 및 실제 UI 확인
                 for (int previous = 0; previous < index; previous++) // 이전 후보 순회
-                { // 반복 시작
+                {
                     Require(candidates[previous] != candidates[index], "Starting weapon candidates are duplicated."); // 중복 후보 방지 확인
-                } // 반복 끝
-            } // 반복 끝
+                }
+            }
             Require(experience.CurrentLevel == 1 && experience.CurrentExperience == 0, "Starting experience is not level 1 and zero XP."); // 시작 경험치 확인
             originalSettings = InputSystem.settings; // 기존 입력 설정 저장
             testSettings = UnityEngine.Object.Instantiate(originalSettings); // 메모리 입력 설정 복사
@@ -292,74 +292,74 @@ namespace ProjectEpsilon.Editor // 편집기 영역
             Application.runInBackground = true; // 배치 입력 처리 허용
             keyboard = InputSystem.AddDevice<Keyboard>(); // 가상 키보드 생성
             Debug.Log("[StartingWeaponVerification] Actual fresh Game scene; starting options are temporary; virtual keyboard and real UI events; memory-only input settings."); // 시험 조건 기록
-        } // 메서드 끝
+        }
 
         private bool IsSelecting() // 실제 시작 선택 상태 조회
-        { // 메서드 시작
+        {
             return (bool)selection.GetType().GetProperty("IsSelecting").GetValue(selection); // 실제 선택 상태 반환
-        } // 메서드 끝
+        }
 
         private Button CandidateButton(int index) // 실제 후보 버튼 조회
-        { // 메서드 시작
+        {
             string[] names = { "candidateButton01", "candidateButton02", "candidateButton03" }; // 직렬화 버튼 필드
             Button button = (Button)typeof(LevelUpPanelController).GetField(names[index], PrivateInstance).GetValue(panel); // 실제 버튼 조회
             Require(button != null, "Starting candidate button missing: " + index); // 버튼 연결 확인
             return button; // 실제 버튼 반환
-        } // 메서드 끝
+        }
 
         private string CandidateLabel(int index) // 실제 후보 문구 조회
-        { // 메서드 시작
+        {
             string[] names = { "candidateLabel01", "candidateLabel02", "candidateLabel03" }; // 직렬화 문구 필드
             Text label = (Text)typeof(LevelUpPanelController).GetField(names[index], PrivateInstance).GetValue(panel); // 실제 문구 조회
             Require(label != null, "Starting candidate label missing: " + index); // 문구 연결 확인
             return label.text; // 표시 문구 반환
-        } // 메서드 끝
+        }
 
         private void ClickCandidate(int index) // 실제 후보 버튼 이벤트
-        { // 메서드 시작
+        {
             Button button = CandidateButton(index); // 실제 버튼 조회
             Require(button.interactable && button.gameObject.activeInHierarchy, "Starting candidate button unavailable: " + index); // 선택 가능 여부 확인
             button.onClick.Invoke(); // 실제 버튼 이벤트 실행
-        } // 메서드 끝
+        }
 
         private void ClickSettings(string field) // 실제 설정 버튼 이벤트
-        { // 메서드 시작
+        {
             Button button = (Button)typeof(SettingsMenuController).GetField(field, PrivateInstance).GetValue(settings); // 직렬화 설정 버튼 조회
             Require(button != null && button.interactable && button.gameObject.activeInHierarchy, "Settings button unavailable: " + field); // 설정 버튼 확인
             button.onClick.Invoke(); // 실제 설정 버튼 이벤트
-        } // 메서드 끝
+        }
 
         private IEnumerator KeyTap(Key key) // 가상 키 누름과 해제
-        { // 코루틴 시작
+        {
             InputSystem.QueueStateEvent(keyboard, new KeyboardState(key)); // 키 누름 전달
             yield return null; // 첫 입력 프레임
             yield return null; // 실제 입력 처리
             InputSystem.QueueStateEvent(keyboard, new KeyboardState()); // 키 해제 전달
             yield return null; // 키 해제 프레임
             yield return null; // 후속 처리 대기
-        } // 코루틴 끝
+        }
 
         private static void Require(bool condition, string message) // 시험 조건 확인
-        { // 메서드 시작
+        {
             if (!condition) // 실패 조건 확인
-            { // 조건 시작
+            {
                 AutomatedStartingWeaponVerification.Finish(1, message); // 실패 기록과 종료
                 throw new InvalidOperationException(message); // 후속 시험 중단
-            } // 조건 끝
-        } // 메서드 끝
+            }
+        }
 
         private void Cleanup() // 가상 입력과 메모리 설정 정리
-        { // 메서드 시작
+        {
             InputSystem.RemoveDevice(keyboard); // 가상 키보드 제거
             if (originalSettings != null) // 기존 설정 존재 확인
-            { // 조건 시작
+            {
                 InputSystem.settings = originalSettings; // 기존 입력 설정 복원
-            } // 조건 끝
+            }
             Application.runInBackground = originalBackground; // 원래 백그라운드 복원
             if (testSettings != null && InputSystem.settings != testSettings) // 설정 사본 사용 여부 확인
-            { // 조건 시작
+            {
                 UnityEngine.Object.Destroy(testSettings); // 사용하지 않는 설정 사본 제거
-            } // 조건 끝
-        } // 메서드 끝
-    } // 클래스 끝
-} // 영역 끝
+            }
+        }
+    }
+}

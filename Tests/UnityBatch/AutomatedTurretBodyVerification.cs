@@ -14,67 +14,67 @@ using UnityEngine; // 유니티 기능
 using UnityEngine.UI; // 실제 HUD 텍스트
 
 namespace ProjectEpsilon.Editor // 배치 시험 영역
-{ // 영역 시작
+{
     [InitializeOnLoad] // 도메인 재시작 연결
     public static class AutomatedTurretBodyVerification // 실제 포탑과 몸통 시험
-    { // 클래스 시작
+    {
         private const string Key = "EpsilonTurretBodyVerification"; // 시험 진행 표식
         private static bool injected; // 실행기 생성 여부
         private static double started; // 시험 시작 시각
         static AutomatedTurretBodyVerification() // 도메인 재시작 처리
-        { // 생성자 시작
+        {
             if (SessionState.GetBool(Key, false)) // 진행 상태 확인
-            { // 조건 시작
+            {
                 EditorApplication.update += Tick; // 플레이 감시 연결
-            } // 조건 끝
-        } // 생성자 끝
+            }
+        }
         public static void Run() // 실제 씬 시험 진입
-        { // 메서드 시작
+        {
             EditorSceneManager.OpenScene("Assets/Scenes/Game.unity"); // 실제 씬 열기
             SessionState.SetBool(Key, true); // 시험 진행 기록
             EditorApplication.update -= Tick; // 중복 감시 제거
             EditorApplication.update += Tick; // 플레이 감시 연결
             EditorApplication.isPlaying = true; // 실제 플레이 시작
-        } // 메서드 끝
+        }
         private static void Tick() // 실제 초기화 감시
-        { // 메서드 시작
+        {
             if (!EditorApplication.isPlaying) // 플레이 진입 확인
-            { // 조건 시작
+            {
                 return; // 플레이 대기
-            } // 조건 끝
+            }
             if (started <= 0d) // 시험 시작 시각 확인
-            { // 조건 시작
+            {
                 started = EditorApplication.timeSinceStartup; // 시작 시각 저장
-            } // 조건 끝
+            }
             if (EditorApplication.timeSinceStartup - started > 120d) // 시험 제한 시간 확인
-            { // 조건 시작
+            {
                 Finish(1, "Timed out."); // 시간 초과 실패
                 return; // 시험 중단
-            } // 조건 끝
+            }
             if (StartingWeaponBatchHelper.HandleStartingSelection() || injected) // 시작 선택과 실행 여부 확인
-            { // 조건 시작
+            {
                 return; // 시작 또는 결과 대기
-            } // 조건 끝
+            }
             SnakeMovement player = UnityEngine.Object.FindFirstObjectByType<SnakeMovement>(); // 실제 플레이어 조회
             if (player == null || GameManager.Instance == null || !GameManager.Instance.IsPlaying || Time.time < 0.35f) // 실제 초기화 확인
-            { // 조건 시작
+            {
                 return; // 초기화 대기
-            } // 조건 끝
+            }
             injected = true; // 실행 중복 방지
             player.gameObject.AddComponent<TurretBodyVerificationRunner>(); // 실제 시험 실행
-        } // 메서드 끝
+        }
         public static void Finish(int code, string message) // 실제 시험 종료
-        { // 메서드 시작
+        {
             SessionState.SetBool(Key, false); // 시험 표식 제거
             EditorApplication.update -= Tick; // 플레이 감시 제거
             Debug.Log($"[TurretBodyVerification] {(code == 0 ? "PASS" : "FAIL")}: {message}"); // 시험 결과 기록
             EditorApplication.Exit(code); // 실제 종료 코드
-        } // 메서드 끝
-    } // 클래스 끝
+        }
+    }
     public sealed class TurretBodyVerificationRunner : MonoBehaviour // 실제 포탑과 충돌 크기 실행기
-    { // 클래스 시작
+    {
         private IEnumerator Start() // 실제 씬 검증 시작
-        { // 코루틴 시작
+        {
             SnakeMovement player = GetComponent<SnakeMovement>(); // 실제 플레이어 머리
             SnakeBodyManager body = UnityEngine.Object.FindFirstObjectByType<SnakeBodyManager>(); // 실제 몸통 관리자
             SnakeBodyFollower follower = UnityEngine.Object.FindFirstObjectByType<SnakeBodyFollower>(); // 실제 몸통 추적기
@@ -91,13 +91,13 @@ namespace ProjectEpsilon.Editor // 배치 시험 영역
             Require(Mathf.Abs(bodyCollider.radius * Mathf.Abs(bodyCollider.transform.lossyScale.x) - 0.2232f) < 0.001f, "Body hitbox was not halved in world space."); // 실제 몸통 월드 충돌 반경 확인
             Require(Mathf.Abs(follower.SegmentSpacing - 0.58f) < 0.001f, "Body spacing does not match smaller segments."); // 축소 몸통 간격 확인
             foreach (WeaponTarget existing in UnityEngine.Object.FindObjectsByType<WeaponTarget>(FindObjectsSortMode.None)) // 기존 자연 적 순회
-            { // 반복 시작
+            {
                 existing.gameObject.SetActive(false); // 시험 외 표적 비활성화
-            } // 반복 끝
+            }
             foreach (SnakeWeaponSlot slot in weapons.Slots) // 기존 슬롯 순회
-            { // 반복 시작
+            {
                 slot.Clear(); // 기존 무기 제거
-            } // 반복 끝
+            }
             WeaponData steel = AssetDatabase.LoadAssetAtPath<WeaponData>("Assets/Data/Weapons/DebugBlade.asset"); // 실제 강철 근접 포탑
             WeaponData fire = AssetDatabase.LoadAssetAtPath<WeaponData>("Assets/Data/Weapons/DebugBlaster.asset"); // 실제 화염탄 포탑
             Require(steel != null && fire != null && steel.DisplayName == "강철 근접 포탑" && fire.DisplayName == "화염탄 포탑", "Turret names are not synchronized."); // 실제 시험용 포탑 이름 확인
@@ -127,22 +127,22 @@ namespace ProjectEpsilon.Editor // 배치 시험 영역
             Require(Quaternion.Angle(held, firstVisual.rotation) < 0.1f, "Turret did not retain the last direction without targets."); // 대상 없는 마지막 방향 유지 확인
             Require(firstVisual.GetComponent<SpriteRenderer>().color != secondVisual.GetComponent<SpriteRenderer>().color, "Turret attributes have no color distinction."); // 속성별 포탑 색상 구분 확인
             AutomatedTurretBodyVerification.Finish(0, "Halved actual player hitboxes/body and per-body moving-target turret aiming."); // 전체 성공 기록
-        } // 코루틴 끝
+        }
         private static WeaponTarget CreateTarget(string name, Vector3 position) // 실제 전투 표적 생성
-        { // 메서드 시작
+        {
             GameObject item = new GameObject(name); // 표적 객체 생성
             item.transform.position = position; // 실제 표적 위치
             WeaponTarget target = item.AddComponent<WeaponTarget>(); // 실제 무기 대상
             target.Configure(100f); // 실제 표적 체력
             return target; // 실제 표적 반환
-        } // 메서드 끝
+        }
         private static void Require(bool condition, string message) // 시험 조건 확인
-        { // 메서드 시작
+        {
             if (!condition) // 실패 조건 확인
-            { // 조건 시작
+            {
                 AutomatedTurretBodyVerification.Finish(1, message); // 실패 원인 기록
                 throw new InvalidOperationException(message); // 후속 시험 중단
-            } // 조건 끝
-        } // 메서드 끝
-    } // 클래스 끝
-} // 영역 끝
+            }
+        }
+    }
+}

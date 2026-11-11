@@ -15,101 +15,101 @@ using ProjectEpsilon.UI; // 실제 레벨업 화면
 using ProjectEpsilon.Progression; // 실제 보석과 보상
 
 namespace ProjectEpsilon.Editor // 편집기 영역
-{ // 영역 시작
+{
     [InitializeOnLoad] // 도메인 재시작 연결
     public static class AutomatedEliteScheduleVerification // 엘리트 일정과 보상 실제 씬 검증
-    { // 클래스 시작
+    {
         private const string ActiveKey = "EpsilonEliteScheduleVerification"; // 배치 진행 표식
         private static double started; // 플레이 시작 시각
         private static bool injected; // 실행기 생성 여부
         private static bool finished; // 중복 종료 방지
 
         static AutomatedEliteScheduleVerification() // 도메인 재시작 처리
-        { // 생성자 시작
+        {
             if (SessionState.GetBool(ActiveKey, false)) // 배치 진행 확인
-            { // 조건 시작
+            {
                 EditorApplication.update -= Tick; // 중복 연결 제거
                 EditorApplication.update += Tick; // 플레이 시작 감시
-            } // 조건 끝
-        } // 생성자 끝
+            }
+        }
 
         public static void Run() // Unity 배치 진입점
-        { // 메서드 시작
+        {
             SessionState.SetBool("EpsilonEliteExternalDestroy", false); // 일정 통합 시험 선택
             RunScenario(); // 실제 게임 씬 시작
-        } // 메서드 끝
+        }
 
         public static void RunExternalDestroy() // 실제 외부 파괴 경계 진입점
-        { // 메서드 시작
+        {
             SessionState.SetBool("EpsilonEliteExternalDestroy", true); // 외부 파괴 시험 선택
             RunScenario(); // 실제 게임 씬 시작
-        } // 메서드 끝
+        }
 
         private static void RunScenario() // 선택한 시험의 실제 씬 진입
-        { // 메서드 시작
+        {
             EditorSceneManager.OpenScene("Assets/Scenes/Game.unity"); // 실제 게임 씬 열기
             SessionState.SetBool(ActiveKey, true); // 배치 진행 표식
             EditorApplication.update -= Tick; // 기존 감시 제거
             EditorApplication.update += Tick; // 플레이 시작 감시
             EditorApplication.isPlaying = true; // 플레이 모드 진입
-        } // 메서드 끝
+        }
 
         private static void Tick() // 시작 선택과 플레이 진입 감시
-        { // 메서드 시작
+        {
             if (!EditorApplication.isPlaying) // 플레이 진입 확인
-            { // 조건 시작
+            {
                 return; // 진입 대기
-            } // 조건 끝
+            }
             if (started <= 0d) // 최초 갱신 확인
-            { // 조건 시작
+            {
                 started = EditorApplication.timeSinceStartup; // 시작 시각 기록
-            } // 조건 끝
+            }
             if (EditorApplication.timeSinceStartup - started > 240d) // 전체 시험 제한
-            { // 조건 시작
+            {
                 Finish(1, "Timed out waiting for controlled elite schedule test."); // 제한 시간 실패
                 return; // 감시 중단
-            } // 조건 끝
+            }
             if (StartingWeaponBatchHelper.HandleStartingSelection()) // 실제 시작 무기 첫 후보 선택
-            { // 조건 시작
+            {
                 return; // 실제 게임 시작 대기
-            } // 조건 끝
+            }
             if (injected) // 시험 실행기 존재 확인
-            { // 조건 시작
+            {
                 return; // 시험 결과 대기
-            } // 조건 끝
+            }
             SnakeMovement player = UnityEngine.Object.FindFirstObjectByType<SnakeMovement>(); // 실제 플레이어 조회
             if (player == null || GameManager.Instance == null || !GameManager.Instance.IsPlaying || Time.time < 0.35f) // 실제 씬 초기화 확인
-            { // 조건 시작
+            {
                 return; // 초기화 대기
-            } // 조건 끝
+            }
             injected = true; // 실행기 중복 생성 방지
             if (SessionState.GetBool("EpsilonEliteExternalDestroy", false)) // 외부 파괴 시험 확인
-            { // 조건 시작
+            {
                 player.gameObject.AddComponent<EliteExternalDestroyVerificationRunner>(); // 실제 외부 파괴 시험 실행
-            } // 조건 끝
+            }
             else // 전체 일정 시험 확인
-            { // 대안 시작
+            {
                 player.gameObject.AddComponent<EliteScheduleVerificationRunner>(); // 실제 씬 일정 시험 실행
-            } // 대안 끝
-        } // 메서드 끝
+            }
+        }
 
         public static void Finish(int code, string message) // 결과 기록과 프로세스 종료
-        { // 메서드 시작
+        {
             if (finished) // 중복 종료 확인
-            { // 조건 시작
+            {
                 return; // 중복 처리 방지
-            } // 조건 끝
+            }
             finished = true; // 종료 상태 기록
             SessionState.SetBool(ActiveKey, false); // 진행 표식 제거
             SessionState.SetBool("EpsilonEliteExternalDestroy", false); // 시험 종류 표식 제거
             EditorApplication.update -= Tick; // 시작 감시 해제
             Debug.Log($"[EliteScheduleVerification] {(code == 0 ? "PASS" : "FAIL")}: {message}"); // 실제 배치 결과 기록
             EditorApplication.Exit(code); // 종료 코드 반환
-        } // 메서드 끝
-    } // 클래스 끝
+        }
+    }
 
     public sealed class EliteExternalDestroyVerificationRunner : MonoBehaviour // 실제 외부 엘리트 파괴 시험
-    { // 클래스 시작
+    {
         private static readonly BindingFlags Fields = BindingFlags.NonPublic | BindingFlags.Instance; // 실제 출현 시간 조회
         private readonly HashSet<int> seen = new HashSet<int>(); // 실제 출현 적 고유 번호
         private readonly List<WeaponTarget> elites = new List<WeaponTarget>(); // 실제 엘리트 출현 목록
@@ -119,7 +119,7 @@ namespace ProjectEpsilon.Editor // 편집기 영역
         private int deathEvents; // 실제 사망 이벤트 수
 
         private IEnumerator Start() // 실제 외부 파괴와 대기 회차 시험
-        { // 코루틴 시작
+        {
             SnakeMovement player = GetComponent<SnakeMovement>(); // 실제 플레이어 이동 조회
             spawner = UnityEngine.Object.FindFirstObjectByType<EarlyEnemyWaveSpawner>(); // 실제 적 출현기 조회
             rewards = UnityEngine.Object.FindFirstObjectByType<EliteRewardController>(); // 실제 엘리트 보상 관리자 조회
@@ -130,100 +130,100 @@ namespace ProjectEpsilon.Editor // 편집기 영역
             player.enabled = false; // 플레이어 이동 정지
             SnakeBodyFollower follower = UnityEngine.Object.FindFirstObjectByType<SnakeBodyFollower>(); // 실제 몸통 추적 조회
             if (follower != null) // 몸통 추적 구성 확인
-            { // 조건 시작
+            {
                 follower.enabled = false; // 몸통 위치 고정
-            } // 조건 끝
+            }
             SnakeSelfCollision self = GetComponent<SnakeSelfCollision>(); // 실제 자기 충돌 조회
             SnakeExternalCollision external = GetComponent<SnakeExternalCollision>(); // 실제 외부 충돌 조회
             if (self != null) // 자기 충돌 구성 확인
-            { // 조건 시작
+            {
                 self.enabled = false; // 통제 중 자기 충돌 방지
-            } // 조건 끝
+            }
             if (external != null) // 외부 충돌 구성 확인
-            { // 조건 시작
+            {
                 external.enabled = false; // 통제 중 외부 충돌 방지
-            } // 조건 끝
+            }
             foreach (SnakeWeaponSlot slot in weapons.Slots) // 실제 몸통 무기 순회
-            { // 반복 시작
+            {
                 slot.Clear(); // 통제 중 자동 처치 방지
-            } // 반복 끝
+            }
             rewards.enabled = false; // 실제 엘리트 보상 표시 보류
             UnityEngine.Random.InitState(3392); // 실제 출현 방향 재현 시드
             Time.timeScale = 32f; // 실제 출현 누적 시간 가속
             Debug.Log("[EliteScheduleVerification] external destroy case: scale=32, no spawn clock injection, normal enemies retained and enemy actions disabled."); // 실제 시험 조건 기록
             float deadline = Time.realtimeSinceStartup + 120f; // 실제 시험 제한 시간
             while (Elapsed() < 481f && Time.realtimeSinceStartup < deadline) // 실제 8분 경계 대기
-            { // 반복 시작
+            {
                 Observe(); // 실제 엘리트와 일반 적 관찰
                 yield return null; // 실제 게임 프레임 진행
-            } // 반복 끝
+            }
             Observe(); // 실제 마지막 출현 관찰
             Require(Elapsed() >= 481f && elites.Count == 1 && elites[0] != null && elites[0].IsAlive && spawner.ActiveEnemies == 40, "Actual eight-minute occurrence did not wait behind one surviving elite."); // 실제 만석과 대기 확인
             WeaponTarget first = elites[0]; // 실제 미처치 엘리트
             first.Died += ignored => // 실제 사망 이벤트 관찰
-            { // 콜백 시작
+            {
                 deathEvents++; // 실제 사망 이벤트 수 증가
-            }; // 콜백 끝
+            };
             Destroy(first.gameObject); // 실제 Unity 외부 지연 파괴 요청
             yield return null; // 실제 파괴 완료 프레임
             Require(first == null && deathEvents == 0, "Actual externally destroyed elite did not reach Unity fake-null without a death."); // 실제 Unity 파괴 완료 확인
             while (elites.Count < 2 && Elapsed() < 487f) // 실제 대기 회차 재개 대기
-            { // 반복 시작
+            {
                 Observe(); // 실제 출현 적 관찰
                 yield return null; // 실제 게임 프레임 진행
-            } // 반복 끝
+            }
             Observe(); // 실제 재출현 관찰
             Require(elites.Count == 2 && elites[1] != null && elites[1].IsAlive && spawner.ActiveEnemies == 40 && rewards.PendingRewardCount == 0 && UnityEngine.Object.FindObjectsByType<ExperiencePickup>(FindObjectsSortMode.None).Length == 0, "External destruction did not release its count and deferred occurrence without rewards."); // 실제 생존 수와 무보상 재출현 확인
             Debug.Log($"[EliteScheduleVerification] actual external destruction: first target became Unity fake-null, Died={deathEvents}, active={spawner.ActiveEnemies}, deferred elite alive, XP gems=0, rewards=0, elapsed={Elapsed():F3}."); // 실제 외부 파괴 결과
             AutomatedEliteScheduleVerification.Finish(0, "Actual externally destroyed elite released capacity and resumed one deferred occurrence without rewards."); // 실제 경계 성공 기록
-        } // 코루틴 끝
+        }
 
         private void Observe() // 실제 적 출현 관찰과 행동 중지
-        { // 메서드 시작
+        {
             foreach (EarlyEnemyBehaviour enemy in UnityEngine.Object.FindObjectsByType<EarlyEnemyBehaviour>(FindObjectsSortMode.None)) // 실제 활성 적 순회
-            { // 반복 시작
+            {
                 if (!seen.Add(enemy.GetInstanceID())) // 이전 관찰 여부 확인
-                { // 조건 시작
+                {
                     continue; // 중복 기록 제외
-                } // 조건 끝
+                }
                 enemy.enabled = false; // 실제 적 이동과 공격 중지
                 if (enemy.gameObject.name == "EarlyEnemy_Elite") // 실제 엘리트 종류 확인
-                { // 조건 시작
+                {
                     WeaponTarget target = enemy.GetComponent<WeaponTarget>(); // 실제 엘리트 대상 조회
                     Require(target != null && target.IsAlive, "Actual spawned elite is invalid."); // 실제 생존 대상 확인
                     elites.Add(target); // 실제 출현 순서 저장
-                } // 조건 끝
-            } // 반복 끝
-        } // 메서드 끝
+                }
+            }
+        }
 
         private float Elapsed() // 실제 출현기의 경과 시간
-        { // 메서드 시작
+        {
             return (float)elapsedField.GetValue(spawner); // 실제 누적 시간 반환
-        } // 메서드 끝
+        }
 
         private static void Require(bool condition, string message) // 실제 시험 조건 확인
-        { // 메서드 시작
+        {
             if (!condition) // 실패 조건 확인
-            { // 조건 시작
+            {
                 AutomatedEliteScheduleVerification.Finish(1, message); // 실제 실패 기록과 종료
                 throw new InvalidOperationException(message); // 후속 시험 중단
-            } // 조건 끝
-        } // 메서드 끝
-    } // 클래스 끝
+            }
+        }
+    }
 
     [DefaultExecutionOrder(32000)] // 실제 출현기 정리 이후 같은 프레임 관찰
     public sealed class EliteCapacityRemovalProbe : MonoBehaviour // 만석 일반 적 제거 경계 관찰
-    { // 클래스 시작
+    {
         public WeaponTarget Target; // 실제 가장 먼 일반 적
         public bool Attempted; // 비활성 직후 실제 치명 피해 시도
         public bool NoReward; // 같은 프레임 보상 미생성 여부
 
         private void LateUpdate() // 실제 비활성 뒤 지연 파괴 전 확인
-        { // 메서드 시작
+        {
             if (Attempted || Target == null || Target.gameObject.activeInHierarchy) // 실제 제거 예약 대상 확인
-            { // 조건 시작
+            {
                 return; // 다음 실제 프레임 대기
-            } // 조건 끝
+            }
             int xpBefore = UnityEngine.Object.FindObjectsByType<ExperiencePickup>(FindObjectsSortMode.None).Length; // 실제 기존 XP 보석 수
             int recoveryBefore = UnityEngine.Object.FindObjectsByType<RecoveryPickup>(FindObjectsSortMode.None).Length; // 실제 기존 회복 보석 수
             Target.TakeDamage(10000f); // 비활성 직후 같은 프레임 치명 피해
@@ -231,11 +231,11 @@ namespace ProjectEpsilon.Editor // 편집기 영역
             int recoveryAfter = UnityEngine.Object.FindObjectsByType<RecoveryPickup>(FindObjectsSortMode.None).Length; // 실제 이후 회복 보석 수
             Attempted = true; // 실제 피해 시도 기록
             NoReward = !Target.IsAlive && xpAfter == xpBefore && recoveryAfter == recoveryBefore; // 실제 피해와 보상 미생성 확인
-        } // 메서드 끝
-    } // 클래스 끝
+        }
+    }
 
     public sealed class EliteScheduleVerificationRunner : MonoBehaviour // 실제 엘리트 일정과 보상 검증
-    { // 클래스 시작
+    {
         private static readonly BindingFlags Fields = BindingFlags.NonPublic | BindingFlags.Instance; // 실제 내부 설정 조회
         private readonly HashSet<int> seen = new HashSet<int>(); // 실제 출현 적 고유 번호
         private readonly List<WeaponTarget> spawnedElites = new List<WeaponTarget>(); // 실제 출현 엘리트 순서
@@ -254,7 +254,7 @@ namespace ProjectEpsilon.Editor // 편집기 영역
         private int deathEvents; // 실제 엘리트 사망 이벤트 수
 
         private IEnumerator Start() // 실제 씬 일정과 보상 검증
-        { // 코루틴 시작
+        {
             Prepare(); // 실제 씬과 시험 통제 준비
             yield return UntilElapsed(239f); // 실제 누적 시간으로 첫 경계 접근
             WeaponTarget farthest = FindFarthestNormal(); // 만석에서 가장 먼 일반 적 기록
@@ -302,9 +302,9 @@ namespace ProjectEpsilon.Editor // 편집기 영역
             rewards.enabled = true; // 실제 대기 엘리트 보상 재개
             float deadline = Time.realtimeSinceStartup + 5f; // 실제 레벨업 제한 시각
             while (!experience.IsLevelUpPending && Time.realtimeSinceStartup < deadline) // 실제 보석 수집 대기
-            { // 반복 시작
+            {
                 yield return null; // 실제 보석 및 UI Update 진행
-            } // 반복 끝
+            }
             RequireLevel(2, 10); // 실제 대형 보석의 첫 레벨업
             Require(rewards.PendingRewardCount == 4 && !rewards.IsPresentingReward, "Elite rewards did not wait for the first actual level-up."); // 실제 보상 우선순위 확인
             CompleteLevelReward(); // 실제 UI로 첫 레벨업 보상 완료
@@ -312,16 +312,16 @@ namespace ProjectEpsilon.Editor // 편집기 영역
             Require(rewards.PendingRewardCount == 4 && !rewards.IsPresentingReward, "Elite rewards interrupted the consecutive level-up."); // 실제 연속 레벨 우선 확인
             CompleteLevelReward(); // 실제 UI로 둘째 레벨업 보상 완료
             for (int remaining = 4; remaining > 0; remaining--) // 실제 대기 보상 각각 선택
-            { // 반복 시작
+            {
                 yield return SelectOneEliteReward(remaining); // 실제 보상 한 개 선택과 소비 확인
-            } // 반복 끝
+            }
             yield return null; // 실제 다음 프레임 진행
             Require(rewards.PendingRewardCount == 0 && !rewards.IsPresentingReward && !experience.IsLevelUpPending && GameManager.Instance.IsPlaying && Mathf.Approximately(Time.timeScale, 1f) && experience.CurrentLevel == 3 && experience.CurrentExperience == 0 && CountExperience() == 60, "Actual rewards, level-ups or remaining gems were duplicated or lost."); // 실제 완료 상태와 미수집 보석 확인
             AutomatedEliteScheduleVerification.Finish(0, "Actual accelerated 4/8/12/16-minute elite schedule, FIFO, capacity, four deaths, XP gems and reward ordering passed under controlled conditions."); // 실제 통제 시험 성공
-        } // 코루틴 끝
+        }
 
         private void Prepare() // 실제 씬 초기화와 시간 가속 통제
-        { // 메서드 시작
+        {
             player = GetComponent<SnakeMovement>(); // 실제 플레이어 조회
             body = UnityEngine.Object.FindFirstObjectByType<SnakeBodyManager>(); // 실제 몸통 관리자 조회
             health = GetComponent<SnakeHealth>(); // 실제 공용 체력 조회
@@ -338,23 +338,23 @@ namespace ProjectEpsilon.Editor // 편집기 영역
             player.enabled = false; // 실제 머리 이동 정지
             SnakeBodyFollower follower = UnityEngine.Object.FindFirstObjectByType<SnakeBodyFollower>(); // 실제 몸통 추적 조회
             if (follower != null) // 실제 몸통 추적 존재 확인
-            { // 조건 시작
+            {
                 follower.enabled = false; // 실제 몸통 위치 고정
-            } // 조건 끝
+            }
             SnakeSelfCollision self = GetComponent<SnakeSelfCollision>(); // 실제 자기 충돌 조회
             SnakeExternalCollision external = GetComponent<SnakeExternalCollision>(); // 실제 외부 충돌 조회
             if (self != null) // 자기 충돌 존재 확인
-            { // 조건 시작
+            {
                 self.enabled = false; // 통제 중 자기 충돌 제외
-            } // 조건 끝
+            }
             if (external != null) // 외부 충돌 존재 확인
-            { // 조건 시작
+            {
                 external.enabled = false; // 통제 중 외부 충돌 제외
-            } // 조건 끝
+            }
             foreach (SnakeWeaponSlot slot in weapons.Slots) // 실제 모든 무기 슬롯 순회
-            { // 반복 시작
+            {
                 slot.Clear(); // 시험 중 자연 자동 처치 방지
-            } // 반복 끝
+            }
             rewards.enabled = false; // 여러 실제 보상을 후반 경합까지 대기
             experience.Configure(10, 1f); // 시험용 레벨업 요구량
             experience.ResetProgression(); // 실제 시험 경험치 초기화
@@ -362,58 +362,58 @@ namespace ProjectEpsilon.Editor // 편집기 영역
             UnityEngine.Random.InitState(3391); // 출현과 보상 재현 시드
             Time.timeScale = 32f; // 실제 출현 시계의 시험 가속
             Debug.Log($"[EliteScheduleVerification] actual initial spawner time={Elapsed():F3}; scale=32, seed=3391, no clock injection; player/attacks and spawned enemy actions disabled; early cap=1, late cap=2, deferred FIFO is a provisional assumption; XP base=10 multiplier=1.0."); // 실제 통제와 기획 가정 기록
-        } // 메서드 끝
+        }
 
         private IEnumerator UntilElapsed(float required) // 실제 출현기 시각 대기
-        { // 코루틴 시작
+        {
             float realDeadline = Time.realtimeSinceStartup + 150f; // 실제 시간 제한
             while (Elapsed() < required && Time.realtimeSinceStartup < realDeadline) // 실제 누적 시간 대기
-            { // 반복 시작
+            {
                 ObserveEnemies(); // 실제 자동 출현 적 기록
                 yield return null; // 실제 게임 프레임 진행
-            } // 반복 끝
+            }
             ObserveEnemies(); // 마지막 출현 프레임 관찰
             Require(Elapsed() >= required && GameManager.Instance.IsPlaying, "Actual spawner did not reach the requested elapsed time while playing."); // 실제 시간 진행 확인
-        } // 코루틴 끝
+        }
 
         private IEnumerator UntilEliteCount(int count, float latest) // 실제 엘리트 출현 수 대기
-        { // 코루틴 시작
+        {
             while (spawnedElites.Count < count && Elapsed() < latest) // 실제 출현과 시한 확인
-            { // 반복 시작
+            {
                 ObserveEnemies(); // 실제 자동 출현 관찰
                 yield return null; // 실제 프레임 진행
-            } // 반복 끝
+            }
             ObserveEnemies(); // 마지막 실제 출현 관찰
             Require(spawnedElites.Count == count, "Expected actual elite occurrence did not spawn by controlled deadline."); // 실제 회차 출현 확인
-        } // 코루틴 끝
+        }
 
         private void ObserveEnemies() // 실제 출현 적 관찰과 행동 통제
-        { // 메서드 시작
+        {
             Require(GameManager.Instance.IsPlaying, "Game stopped during the accelerated schedule observation."); // 실제 게임 진행 상태 확인
             foreach (EarlyEnemyBehaviour enemy in UnityEngine.Object.FindObjectsByType<EarlyEnemyBehaviour>(FindObjectsSortMode.None)) // 실제 활성 적 순회
-            { // 반복 시작
+            {
                 if (!seen.Add(enemy.GetInstanceID())) // 이미 관찰한 적 확인
-                { // 조건 시작
+                {
                     continue; // 중복 관찰 방지
-                } // 조건 끝
+                }
                 enemy.enabled = false; // 실제 적의 이동과 공격 정지
                 if (enemy.gameObject.name != "EarlyEnemy_Elite") // 실제 엘리트 종류 확인
-                { // 조건 시작
+                {
                     continue; // 일반 적은 만석 상태로 유지
-                } // 조건 끝
+                }
                 WeaponTarget target = enemy.GetComponent<WeaponTarget>(); // 실제 엘리트 전투 대상
                 Require(target != null && target.IsAlive, "Actual spawned elite has no living target."); // 실제 엘리트 생존 확인
                 target.Died += ignored => // 실제 사망 이벤트 구독
-                { // 콜백 시작
+                {
                     deathEvents++; // 실제 엘리트 사망 수 증가
-                }; // 콜백 끝
+                };
                 spawnedElites.Add(target); // 실제 출현 순서 저장
                 eliteTimes.Add(Elapsed()); // 실제 출현 관찰 시각 저장
-            } // 반복 끝
-        } // 메서드 끝
+            }
+        }
 
         private WeaponTarget FindFarthestNormal() // 실제 만석의 가장 먼 일반 적
-        { // 메서드 시작
+        {
             WeaponTarget farthest = null; // 실제 가장 먼 적 초기화
             float greatest = -1f; // 실제 최대 거리 제곱
             FieldInfo targetsField = typeof(EarlyEnemyWaveSpawner).GetField("targets", Fields); // 실제 출현기 관리 대상 필드
@@ -421,23 +421,23 @@ namespace ProjectEpsilon.Editor // 편집기 영역
             List<WeaponTarget> targets = targetsField.GetValue(spawner) as List<WeaponTarget>; // 실제 출현 순서의 대상 목록
             Require(targets != null && targets.Count == 40, "Actual spawner target list is not at full capacity."); // 실제 관리 대상 만석 확인
             foreach (WeaponTarget target in targets) // 실제 출현기 순서로 대상 순회
-            { // 반복 시작
+            {
                 if (target == null || target.gameObject.name == "EarlyEnemy_Elite") // 실제 엘리트 및 제거 대상 제외
-                { // 조건 시작
+                {
                     continue; // 다음 일반 적 확인
-                } // 조건 끝
+                }
                 float distance = (target.transform.position - player.transform.position).sqrMagnitude; // 실제 머리 거리 제곱
                 if (target.IsAlive && distance > greatest) // 실제 가장 먼 생존 일반 적 확인
-                { // 조건 시작
+                {
                     farthest = target; // 실제 제거 예상 대상
                     greatest = distance; // 실제 최대 거리 갱신
-                } // 조건 끝
-            } // 반복 끝
+                }
+            }
             return farthest; // 실제 예상 대상 반환
-        } // 메서드 끝
+        }
 
         private void KillElite(WeaponTarget target, int expectedRewards) // 실제 엘리트 사망과 중복 방지
-        { // 메서드 시작
+        {
             Require(IsAlive(target), "Expected elite was not alive before the controlled defeat."); // 실제 처치 전 생존 확인
             EnemyDropController drop = target.GetComponent<EnemyDropController>(); // 실제 보상 드롭 관리자
             FieldInfo healChance = typeof(EnemyDropController).GetField("healDropChance", Fields); // 실제 회복 드롭 확률
@@ -449,107 +449,107 @@ namespace ProjectEpsilon.Editor // 편집기 영역
             target.TakeDamage(10000f); // 실제 엘리트 강제 처치
             target.TakeDamage(10000f); // 같은 대상 중복 피해 시도
             Require(deathEvents == beforeEvents + 1 && rewards.PendingRewardCount == expectedRewards && CountPickups() == expectedRewards && CountExperience() == expectedRewards * 20, "Elite death produced a missing or duplicate actual reward or gem."); // 실제 한 회 사망과 보상 확인
-        } // 메서드 끝
+        }
 
         private int CountPickups() // 실제 활성 경험치 보석 수
-        { // 메서드 시작
+        {
             return UnityEngine.Object.FindObjectsByType<ExperiencePickup>(FindObjectsSortMode.None).Length; // 실제 보석 수 반환
-        } // 메서드 끝
+        }
 
         private int CountExperience() // 실제 활성 보석의 경험치 총량
-        { // 메서드 시작
+        {
             int total = 0; // 실제 경험치 합계
             foreach (ExperiencePickup pickup in UnityEngine.Object.FindObjectsByType<ExperiencePickup>(FindObjectsSortMode.None)) // 실제 활성 보석 순회
-            { // 반복 시작
+            {
                 total += (int)pickupValueField.GetValue(pickup); // 실제 보석 값 누적
-            } // 반복 끝
+            }
             return total; // 실제 보석 경험치 반환
-        } // 메서드 끝
+        }
 
         private float Elapsed() // 실제 출현기의 누적 시간
-        { // 메서드 시작
+        {
             return (float)elapsedField.GetValue(spawner); // 실제 누적 시간 반환
-        } // 메서드 끝
+        }
 
         private static bool IsAlive(WeaponTarget target) // 실제 대상 생존 확인
-        { // 메서드 시작
+        {
             return target != null && target.isActiveAndEnabled && target.IsAlive; // 실제 생존 및 활성 여부
-        } // 메서드 끝
+        }
 
         private void RequireLevel(int expectedLevel, int remainingXp) // 실제 레벨업 상태 확인
-        { // 메서드 시작
+        {
             Require(experience.CurrentLevel == expectedLevel && experience.CurrentExperience == remainingXp && experience.IsLevelUpPending && experience.RequiredExperience == 10 && level.IsPresentingLevelUp && GameManager.Instance.IsPaused && Mathf.Approximately(Time.timeScale, 0f), "Actual elite gem-to-level UI state mismatch."); // 실제 경험치와 정지 확인
-        } // 메서드 끝
+        }
 
         private void CompleteLevelReward() // 실제 UI로 한 레벨 보상 완료
-        { // 메서드 시작
+        {
             int selectedLevel = experience.CurrentLevel; // 현재 실제 레벨
             for (int attempts = 0; attempts < 4 && level.IsPresentingLevelUp && experience.CurrentLevel == selectedLevel; attempts++) // 실제 보상 단계 순회
-            { // 반복 시작
+            {
                 FieldInfo replacement = typeof(SnakeLevelUpController).GetField("selectingReplacement", Fields); // 실제 교체 화면 상태
                 Require(replacement != null, "Actual level selection state is missing."); // 실제 단계 필드 확인
                 ClickButton((bool)replacement.GetValue(level) ? 1 : 0); // 실제 공용 UI 선택
-            } // 반복 끝
+            }
             Require(!level.IsPresentingLevelUp || experience.CurrentLevel != selectedLevel, "Actual level reward was not completed once."); // 실제 보상 완료 확인
-        } // 메서드 끝
+        }
 
         private IEnumerator SelectOneEliteReward(int expectedPending) // 실제 엘리트 보상 하나 선택
-        { // 코루틴 시작
+        {
             float deadline = Time.realtimeSinceStartup + 5f; // 실제 보상 화면 제한
             while (!rewards.IsPresentingReward && Time.realtimeSinceStartup < deadline) // 실제 보상 표시 대기
-            { // 반복 시작
+            {
                 yield return null; // 실제 보상 Update 진행
-            } // 반복 끝
+            }
             Require(rewards.IsPresentingReward && rewards.PendingRewardCount == expectedPending && GameManager.Instance.IsPaused && rewards.Candidates.Count == 3, "Actual queued elite reward did not present once."); // 실제 보상 대기와 정지 확인
             if (health.CurrentHealth == health.MaximumHealth) // 실제 체력 회복 후보 준비 확인
-            { // 조건 시작
+            {
                 Require(health.TakeDamage(1), "Could not maintain a usable controlled heal candidate."); // 시험용 체력 1 감소
                 yield return null; // 실제 보상 선택 가능 상태 갱신
-            } // 조건 끝
+            }
             int choice = -1; // 실제 선택 가능한 후보 번호
             for (int index = 0; index < rewards.Candidates.Count; index++) // 실제 후보 세 개 순회
-            { // 반복 시작
+            {
                 int kind = rewards.Candidates[index]; // 실제 보상 종류
                 Button button = GetButton(index); // 실제 UI 버튼 조회
                 if ((kind == 0 || kind == 2) && button != null && button.gameObject.activeInHierarchy && button.interactable) // 실제 회복 또는 무기 선택 확인
-                { // 조건 시작
+                {
                     choice = index; // 실제 선택 후보 저장
                     break; // 첫 선택 가능 후보 사용
-                } // 조건 끝
-            } // 반복 끝
+                }
+            }
             Require(choice >= 0, "Actual elite reward has no controlled usable heal or weapon choice."); // 실제 후보 존재 확인
             ClickButton(choice); // 실제 엘리트 보상 버튼 이벤트
             FieldInfo replacing = typeof(EliteRewardController).GetField("selectingReplacement", Fields); // 실제 교체 화면 상태
             Require(replacing != null, "Actual elite replacement state is missing."); // 교체 단계 필드 확인
             if (rewards.IsPresentingReward && (bool)replacing.GetValue(rewards)) // 실제 무기 교체 단계 확인
-            { // 조건 시작
+            {
                 ClickButton(1); // 실제 교체 확정 버튼
-            } // 조건 끝
+            }
             Require(rewards.PendingRewardCount == expectedPending - 1 && !rewards.IsPresentingReward && GameManager.Instance.IsPlaying, "Actual elite reward was not consumed exactly once."); // 실제 단일 보상 소비 확인
             Debug.Log($"[EliteScheduleVerification] actual elite UI consumed one reward: {expectedPending}->{rewards.PendingRewardCount}."); // 실제 보상 소비 기록
-        } // 코루틴 끝
+        }
 
         private void ClickButton(int index) // 실제 공용 보상 버튼 선택
-        { // 메서드 시작
+        {
             Button button = GetButton(index); // 실제 UI 버튼 조회
             Require(button != null && button.gameObject.activeInHierarchy && button.interactable, "Actual reward UI button is unavailable."); // 실제 선택 가능 확인
             button.onClick.Invoke(); // 실제 UI 버튼 이벤트
-        } // 메서드 끝
+        }
 
         private Button GetButton(int index) // 실제 공용 보상 버튼 조회
-        { // 메서드 시작
+        {
             string[] names = { "candidateButton01", "candidateButton02", "candidateButton03" }; // 실제 버튼 필드 이름
             FieldInfo field = typeof(LevelUpPanelController).GetField(names[index], Fields); // 실제 직렬화 버튼 필드
             return field == null ? null : field.GetValue(panel) as Button; // 실제 버튼 반환
-        } // 메서드 끝
+        }
 
         private static void Require(bool condition, string message) // 실제 시험 필수 조건 확인
-        { // 메서드 시작
+        {
             if (!condition) // 실패 조건 확인
-            { // 조건 시작
+            {
                 AutomatedEliteScheduleVerification.Finish(1, message); // 실제 실패 기록과 종료
                 throw new InvalidOperationException(message); // 후속 시험 중단
-            } // 조건 끝
-        } // 메서드 끝
-    } // 클래스 끝
-} // 영역 끝
+            }
+        }
+    }
+}

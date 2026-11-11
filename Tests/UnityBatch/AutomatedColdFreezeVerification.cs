@@ -11,74 +11,74 @@ using UnityEditor.SceneManagement; // 실제 씬 열기
 using UnityEngine; // 유니티 기능
 
 namespace ProjectEpsilon.Editor // 배치 시험 영역
-{ // 영역 시작
+{
     [InitializeOnLoad] // 도메인 재시작 연결
     public static class AutomatedColdFreezeVerification // 실제 냉기 빙결 검증
-    { // 클래스 시작
+    {
         private const string ActiveKey = "EpsilonColdFreezeVerification"; // 시험 진행 표식
         private static bool injected; // 실행기 생성 여부
         private static bool finished; // 중복 종료 방지
         private static double started; // 실제 시험 시작 시각
         static AutomatedColdFreezeVerification() // 도메인 재시작 처리
-        { // 생성자 시작
+        {
             if (SessionState.GetBool(ActiveKey, false)) // 시험 진행 확인
-            { // 조건 시작
+            {
                 EditorApplication.update += Tick; // 실제 시작 감시
-            } // 조건 끝
-        } // 생성자 끝
+            }
+        }
         public static void Run() // 실제 씬 배치 진입
-        { // 메서드 시작
+        {
             EditorSceneManager.OpenScene("Assets/Scenes/Game.unity"); // 실제 게임 씬 열기
             SessionState.SetBool(ActiveKey, true); // 시험 진행 표식
             EditorApplication.update -= Tick; // 기존 감시 제거
             EditorApplication.update += Tick; // 실제 시작 감시
             EditorApplication.isPlaying = true; // 실제 플레이 모드 시작
-        } // 메서드 끝
+        }
         private static void Tick() // 실제 시작과 결과 감시
-        { // 메서드 시작
+        {
             if (!EditorApplication.isPlaying) // 실제 플레이 진입 확인
-            { // 조건 시작
+            {
                 return; // 실제 진입 대기
-            } // 조건 끝
+            }
             if (started <= 0d) // 실제 시험 시작 시각 확인
-            { // 조건 시작
+            {
                 started = EditorApplication.timeSinceStartup; // 실제 시작 시각 기록
-            } // 조건 끝
+            }
             if (EditorApplication.timeSinceStartup - started > 90d) // 실제 시험 시간 제한
-            { // 조건 시작
+            {
                 Finish(1, "Timed out waiting for cold freeze test."); // 시간 초과 실패
                 return; // 감시 종료
-            } // 조건 끝
+            }
             if (StartingWeaponBatchHelper.HandleStartingSelection() || injected) // 실제 시작과 실행 확인
-            { // 조건 시작
+            {
                 return; // 실제 시작 또는 결과 대기
-            } // 조건 끝
+            }
             SnakeMovement player = UnityEngine.Object.FindFirstObjectByType<SnakeMovement>(); // 실제 플레이어 조회
             if (player == null || GameManager.Instance == null || !GameManager.Instance.IsPlaying || Time.time < 0.35f) // 실제 씬 초기화 확인
-            { // 조건 시작
+            {
                 return; // 실제 초기화 대기
-            } // 조건 끝
+            }
             injected = true; // 실행기 중복 방지
             player.gameObject.AddComponent<ColdFreezeVerificationRunner>(); // 실제 냉기 시험 실행
-        } // 메서드 끝
+        }
         public static void Finish(int code, string message) // 실제 결과 기록과 종료
-        { // 메서드 시작
+        {
             if (finished) // 중복 종료 확인
-            { // 조건 시작
+            {
                 return; // 중복 처리 방지
-            } // 조건 끝
+            }
             finished = true; // 종료 상태 저장
             SessionState.SetBool(ActiveKey, false); // 시험 표식 해제
             EditorApplication.update -= Tick; // 실제 시작 감시 해제
             Debug.Log($"[ColdFreezeVerification] {(code == 0 ? "PASS" : "FAIL")}: {message}"); // 실제 시험 결과
             EditorApplication.Exit(code); // 실제 프로세스 종료
-        } // 메서드 끝
-    } // 클래스 끝
+        }
+    }
 
     public sealed class ColdFreezeVerificationRunner : MonoBehaviour // 실제 냉기 상태 시나리오
-    { // 클래스 시작
+    {
         private IEnumerator Start() // 실제 냉기 명중과 보스 저항
-        { // 코루틴 시작
+        {
             SnakeMovement player = GetComponent<SnakeMovement>(); // 실제 플레이어 이동
             EarlyEnemyWaveSpawner spawner = UnityEngine.Object.FindFirstObjectByType<EarlyEnemyWaveSpawner>(); // 실제 적 출현기
             PrototypeBossEncounter encounter = UnityEngine.Object.FindFirstObjectByType<PrototypeBossEncounter>(); // 실제 보스 관리자
@@ -87,15 +87,15 @@ namespace ProjectEpsilon.Editor // 배치 시험 영역
             player.enabled = false; // 실제 플레이어 이동 통제
             spawner.enabled = false; // 실제 적 출현 통제
             foreach (EarlyEnemyBehaviour existing in UnityEngine.Object.FindObjectsByType<EarlyEnemyBehaviour>(FindObjectsSortMode.None)) // 실제 기존 적 순회
-            { // 반복 시작
+            {
                 existing.gameObject.SetActive(false); // 기존 적 접촉 차단
                 Destroy(existing.gameObject); // 기존 적 제거
-            } // 반복 끝
+            }
             SnakeWeaponManager weapons = UnityEngine.Object.FindFirstObjectByType<SnakeWeaponManager>(); // 실제 무기 관리자
             foreach (SnakeWeaponSlot slot in weapons.Slots) // 실제 무기 슬롯 순회
-            { // 반복 시작
+            {
                 slot.Clear(); // 시험 중 자동 공격 방지
-            } // 반복 끝
+            }
             WeaponTarget low = CreateTarget("ColdLowStage"); // 실제 낮은 단계 일반 적
             WeaponTarget normal = CreateTarget("ColdNormal"); // 실제 고단계 일반 적
             MethodInfo spawn = typeof(PrototypeBossEncounter).GetMethod("TrySpawnBoss", BindingFlags.Instance | BindingFlags.NonPublic); // 실제 보스 생성 경로
@@ -175,30 +175,30 @@ namespace ProjectEpsilon.Editor // 배치 시험 영역
             Require(!bossStatus.IsStopActive && Mathf.Abs(bossStatus.CurrentMovementMultiplier - 0.655f) < 0.001f, "Boss strong slow did not expire into its existing slow."); // 실제 보스 강한 감속 종료 확인
             Debug.Log($"[ColdFreezeVerification] actual cold hits: stage2 slow only; stage6 three stacks plus one additional hit froze ordinary target and strongly slowed actual boss; boss moved {movedDistance:F4}; configurable threshold and duration, pause and expiry passed."); // 실제 통제 조건과 결과 기록
             AutomatedColdFreezeVerification.Finish(0, "Actual cold freeze, boss resistance, pause and expiry passed."); // 실제 전체 결과
-        } // 코루틴 끝
+        }
         private static WeaponTarget CreateTarget(string name) // 실제 일반 전투 대상 생성
-        { // 메서드 시작
+        {
             GameObject item = new GameObject(name); // 실제 일반 적 대체 객체
             item.transform.position = Vector3.right * 100f; // 실제 플레이어 접촉 밖 위치
             WeaponTarget target = item.AddComponent<WeaponTarget>(); // 실제 무기 공격 대상
             target.Configure(100f); // 실제 체력 설정
             return target; // 실제 전투 대상 반환
-        } // 메서드 끝
+        }
         private static void Hit(WeaponAttributeCombatEffects effects, WeaponTarget target, int stage, int count) // 실제 냉기 명중 경로 실행
-        { // 메서드 시작
+        {
             WeaponAttributeAttackSnapshot attack = new WeaponAttributeAttackSnapshot(null, WeaponAttribute.Cold, stage, stage, 1, Vector3.zero, 0f); // 실제 냉기 명중 정보
             for (int index = 0; index < count; index++) // 실제 냉기 명중 반복
-            { // 반복 시작
+            {
                 effects.ApplyHit(attack, target, target.transform.position); // 실제 속성 명중 처리
-            } // 반복 끝
-        } // 메서드 끝
+            }
+        }
         private static void Require(bool condition, string message) // 실제 시험 조건 확인
-        { // 메서드 시작
+        {
             if (!condition) // 실제 실패 조건 확인
-            { // 조건 시작
+            {
                 AutomatedColdFreezeVerification.Finish(1, message); // 실제 실패 기록
                 throw new InvalidOperationException(message); // 후속 시험 중단
-            } // 조건 끝
-        } // 메서드 끝
-    } // 클래스 끝
-} // 영역 끝
+            }
+        }
+    }
+}
