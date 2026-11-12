@@ -47,6 +47,23 @@ def summarize(path):  # 자연 전투 로그 요약
         retained = [sample['currentBodies'] / sample['earnedBodies'] for sample in samples if sample.get('reason') == 'interval' and 600 <= sample.get('seconds', 0) <= 901 and sample.get('earnedBodies', 0) > 0]  # 실제 성장 최대 대비 몸통 비율
         if retained:  # 실제 몸통 표본 존재 확인
             print(f"  10~15분 몸통 유지율 {len(retained)}회: 최소={min(retained):.1%}, 평균={statistics.mean(retained):.1%}")  # 실제 몸통 유지 상태 출력
+    twenty = [sample for sample in samples if sample.get("reason") == "twenty_minutes"]  # 실제 20분 표본 검색
+    if len(twenty) > 1 or (twenty and (twenty[0].get("seconds", 0) < 1200 or not fifteen or twenty[0].get("seconds", 0) < fifteen[0].get("seconds", 0))):  # 실제 20분과 이전 표본 순서 확인
+        raise ValueError("유효한 15분·20분 상태 표본이 아님")  # 중복 또는 누락 표본 차단
+    if twenty:  # 실제 20분 표본 존재 확인
+        end = twenty[0]  # 실제 20분 최종 상태
+        equipped = sum(1 for weapon in end.get("weapons", []) if weapon.get("weaponId"))  # 실제 장착 포탑 수
+        print(f"  20분: 시간={end['seconds']:.1f}초 레벨={end['level']} 획득XP={end['totalExperience']} 처치={end['kills']} 몸통={end['currentBodies']} 체력={end['health']} 포탑={equipped}")  # 실제 20분 상태 출력
+        print(f"  15~20분 변화: 레벨={end['level'] - final['level']:+} 획득XP={end['totalExperience'] - final['totalExperience']:+} 처치={end['kills'] - final['kills']:+} 몸통={end['currentBodies'] - final['currentBodies']:+}")  # 실제 구간 변화 출력
+        print(f"  15~20분 엘리트 처치={end.get('elites', 0) - final.get('elites', 0)}")  # 실제 구간 엘리트 처치 수 출력
+        window = [match for match in observed if match and 900 <= float(match.group(1)) <= 1201]  # 실제 15~20분 상태 표본
+        if window:  # 실제 상태 표본 존재 확인
+            enemies = [int(match.group(5)) for match in window]  # 실제 동시 적 수
+            gems = [int(match.group(4)) for match in window]  # 실제 씬 전체 미수집 보석 수
+            print(f"  15~20분 상태 {len(window)}회: 동시 적 최소/평균/최대={min(enemies)}/{statistics.mean(enemies):.1f}/{max(enemies)}, 미수집 보석 최소/최대={min(gems)}/{max(gems)}")  # 실제 출현과 보석 표본 출력
+        retained = [sample['currentBodies'] / sample['earnedBodies'] for sample in samples if sample.get('reason') == 'interval' and 900 <= sample.get('seconds', 0) <= 1201 and sample.get('earnedBodies', 0) > 0]  # 실제 성장 최대 대비 몸통 비율
+        if retained:  # 실제 몸통 표본 존재 확인
+            print(f"  15~20분 몸통 유지율 {len(retained)}회: 최소={min(retained):.1%}, 평균={statistics.mean(retained):.1%}")  # 실제 몸통 유지 상태 출력
     intervals = [sample for sample in samples if sample.get("reason") == "interval"]  # 실제 정기 표본
     for seconds in range(30, 301, 30):  # 30초별 상태 비교
         available = [sample for sample in intervals if abs(sample["seconds"] - seconds) < 1.0]  # 유효 시간 표본 선택

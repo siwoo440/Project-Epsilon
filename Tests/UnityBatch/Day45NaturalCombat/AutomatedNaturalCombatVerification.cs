@@ -76,6 +76,7 @@ namespace ProjectEpsilon.Editor // 편집기 영역
         private static float targetSurvivalSeconds = 300f; // 실제 생존 관찰 목표
         private static bool fiveMinuteCaptured; // 실제 5분 표본 저장 여부
         private static bool tenMinuteCaptured; // 실제 10분 표본 저장 여부
+        private static bool fifteenMinuteCaptured; // 실제 15분 표본 저장 여부
         private static bool recordingLogged; // 실제 기록 중복 출력 여부
         private static bool automaticMergeRequested; // 자동 합성 시험 요청
         private static SnakeWeaponMergeController trackedMerge; // 실제 합성 결과 구독 대상
@@ -134,7 +135,7 @@ namespace ProjectEpsilon.Editor // 편집기 영역
                             {
                                 seed = requestedSeed; // 시험 시드 적용
                             }
-                            if (arguments[index] == "-epsilonSurvivalSeconds" && float.TryParse(arguments[index + 1], System.Globalization.NumberStyles.Float, System.Globalization.CultureInfo.InvariantCulture, out float requestedSeconds) && requestedSeconds >= 300f && requestedSeconds <= 900f) // 실제 관찰 시간 범위 확인
+                            if (arguments[index] == "-epsilonSurvivalSeconds" && float.TryParse(arguments[index + 1], System.Globalization.NumberStyles.Float, System.Globalization.CultureInfo.InvariantCulture, out float requestedSeconds) && requestedSeconds >= 300f && requestedSeconds <= 1200f) // 실제 관찰 시간 범위 확인
                             {
                                 targetSurvivalSeconds = requestedSeconds; // 실제 관찰 목표 적용
                             }
@@ -389,14 +390,28 @@ namespace ProjectEpsilon.Editor // 편집기 영역
                 }
                 tenMinuteCaptured = true; // 실제 10분 표본 중복 방지
             }
-            if (elapsed >= targetSurvivalSeconds && game.IsPlaying && (merge == null || !merge.IsMergeOpen)) // 실제 전투 재개 및 목표 생존 시간 확인
+            if (!fifteenMinuteCaptured && elapsed >= 900f && game.IsPlaying && (merge == null || !merge.IsMergeOpen)) // 실제 15분 표본 시점 확인
             {
                 RunTelemetry telemetry = RunTelemetry.Instance; // 선택적 실제 전투 기록기
                 if (telemetry != null && telemetry.Current != null) // 실제 기록 활성 확인
                 {
-                    if (targetSurvivalSeconds >= 900f) // 실제 15분 목표 확인
+                    telemetry.Capture("fifteen_minutes"); // 실제 15분 상태 표본
+                }
+                fifteenMinuteCaptured = true; // 실제 15분 표본 중복 방지
+            }
+            if (elapsed >= targetSurvivalSeconds && game.IsPlaying && (merge == null || !merge.IsMergeOpen)) // 실제 전투 재개 및 목표 생존 시간 확인
+            {
+                if (targetSurvivalSeconds >= 1200f && (!spawner.HasEnteredBossTransition || !game.IsFinalBossPhase)) // 실제 20분 보스 전환 확인
+                {
+                    Fail("Twenty-minute survival reached without the final boss transition."); // 보스 전환 누락 기록
+                    return; // 성공 처리 중단
+                }
+                RunTelemetry telemetry = RunTelemetry.Instance; // 선택적 실제 전투 기록기
+                if (telemetry != null && telemetry.Current != null) // 실제 기록 활성 확인
+                {
+                    if (targetSurvivalSeconds >= 1200f) // 실제 20분 목표 확인
                     {
-                        telemetry.Capture("fifteen_minutes"); // 실제 15분 상태 표본
+                        telemetry.Capture("twenty_minutes"); // 실제 20분 상태 표본
                     }
                     LogRecording(); // 실제 관측 기록 출력
                 }
