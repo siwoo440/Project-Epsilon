@@ -1,6 +1,7 @@
 using System; // 기본 형식
 using System.Reflection; // 물리 콜백 호출
 using ProjectEpsilon.Player; // 실제 충돌 처리
+using ProjectEpsilon.Recording; // 실제 피해 원인
 using UnityEngine; // 충돌체 대체
 
 public static class Program // 충돌 순서 검증기
@@ -131,7 +132,7 @@ public static class Program // 충돌 순서 검증기
                 }
                 else // 새 피해 큐 확인
                 {
-                    queueDamage.Invoke(collision, new object[] { health, 10 }); // 대상과 일반 피해 예약
+                    queueDamage.Invoke(collision, new object[] { health, 10, DamageOrigin.Unknown }); // 대상과 피해 원인 예약
                 }
             }
             if (mode == "self-callback-first") // 자기 충돌 선행 예약

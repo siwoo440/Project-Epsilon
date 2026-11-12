@@ -401,6 +401,12 @@ namespace ProjectEpsilon.Player // 프로젝트 기능 영역
 
         private void ResolvePendingContacts() // 같은 물리 스텝 충돌 우선 처리
         {
+            GameManager game = GameManager.Instance; // 실제 게임 종료 상태 조회
+            if (game != null && (game.CurrentState == GameState.Victory || game.CurrentState == GameState.Defeated)) // 이미 확정된 승패 확인
+            {
+                CancelPendingContacts(); // 종료 후 충돌 취소와 절단 결과 반환
+                return; // 종료된 전투의 피해 차단
+            }
             if (pendingSelfCollision == null && !pendingEnemyContact && !pendingObstacleContact && pendingEliteCuts.Count == 0 && pendingHealthDamage.Count == 0) // 빈 물리 스텝 확인
             {
                 return; // 불필요한 목록 복사 방지
@@ -474,7 +480,13 @@ namespace ProjectEpsilon.Player // 프로젝트 기능 영역
 
         private bool IsUnavailable() // 충돌 처리 대상 상태 확인
         {
-            return this == null || !isActiveAndEnabled || IsBodyDepleted(); // 파괴·비활성 또는 몸통 소진 여부
+            return this == null || !isActiveAndEnabled || IsBodyDepleted() || IsRunEnded(); // 파괴·비활성·몸통 소진 또는 종료 여부
+        }
+
+        private static bool IsRunEnded() // 실제 확정된 승패 확인
+        {
+            GameManager game = GameManager.Instance; // 실제 게임 관리자 조회
+            return game != null && (game.CurrentState == GameState.Victory || game.CurrentState == GameState.Defeated); // 실제 종료 상태 반환
         }
 
         private bool CanQueueContacts() // 현재 물리 예약 가능 여부
@@ -515,7 +527,7 @@ namespace ProjectEpsilon.Player // 프로젝트 기능 영역
 
         public bool TryApplyEnemyDirectContact() // 시도·적용 기능 선언
         {
-            if (IsFullInvulnerable()) // 전체 무적 확인
+            if (IsRunEnded() || IsFullInvulnerable()) // 종료 상태와 전체 무적 확인
             {
                 return false; // 실패 결과 반환
             }
@@ -550,7 +562,7 @@ namespace ProjectEpsilon.Player // 프로젝트 기능 영역
 
         public bool TryApplyEliteCut(DamageOrigin origin = DamageOrigin.EliteCut) // 엘리트 예고 절단 처리
         {
-            if (IsFullInvulnerable() || bodyManager == null) // 전체 무적과 몸통 확인
+            if (IsRunEnded() || IsFullInvulnerable() || bodyManager == null) // 종료 상태와 전체 무적 및 몸통 확인
             {
                 return false; // 절단 차단
             }

@@ -84,6 +84,11 @@ namespace ProjectEpsilon.Player // 프로젝트 기능 영역
 
         public bool TakeDamage(int damage, DamageOrigin origin = DamageOrigin.Unknown) // 받기·피해 기능 선언
         {
+            GameManager game = GameManager.Instance; // 실제 게임 종료 상태 조회
+            if (game != null && (game.CurrentState == GameState.Victory || game.CurrentState == GameState.Defeated)) // 이미 확정된 승패 확인
+            {
+                return false; // 종료된 전투의 직접 피해 차단
+            }
             int remainingDamage = // 남은 값·피해 값 설정
                 Mathf.Max( // 최대 호출 시작
                     0, // 대상 항목 전달

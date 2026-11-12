@@ -1,5 +1,6 @@
 using System.Collections.Generic; // 유예 중인 몸통 목록
 using UnityEngine; // Unity 엔진 기능 연결
+using ProjectEpsilon.Core; // 실제 게임 종료 상태
 using ProjectEpsilon.Recording; // 실제 자기 충돌 기록
 
 namespace ProjectEpsilon.Player // 프로젝트 기능 영역
@@ -171,6 +172,11 @@ namespace ProjectEpsilon.Player // 프로젝트 기능 영역
 
         public bool TryApplySelfCollisionPenalty() // 시도·적용 기능 선언
         {
+            GameManager game = GameManager.Instance; // 실제 게임 관리자 조회
+            if (game != null && (game.CurrentState == GameState.Victory || game.CurrentState == GameState.Defeated)) // 이미 확정된 승패 확인
+            {
+                return false; // 종료 이후 자기 충돌 차단
+            }
             if (bodyManager == null) // 몸통·관리자 조건 확인
             {
                 return false; // 실패 결과 반환

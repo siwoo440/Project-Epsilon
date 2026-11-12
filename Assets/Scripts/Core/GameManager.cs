@@ -90,6 +90,10 @@ namespace ProjectEpsilon.Core // 프로젝트 기능 영역
 
         public void StartGame() // 시작·게임 기능 선언
         {
+            if (currentState == GameState.Defeated || currentState == GameState.Victory) // 이미 종료된 전투 확인
+            {
+                return; // 종료된 전투의 재시작 차단
+            }
             if (currentState == GameState.Starting) // 실제 새 런 시작 확인
             {
                 actualBossDefeated = false; // 새 런의 보스 처치 초기화
@@ -120,6 +124,10 @@ namespace ProjectEpsilon.Core // 프로젝트 기능 영역
 
         public void SetState(GameState nextState) // 설정·상태 기능 선언
         {
+            if ((currentState == GameState.Defeated || currentState == GameState.Victory) && nextState != currentState) // 이미 확정된 종료 결과 확인
+            {
+                return; // 종료 이후 결과 변경 차단
+            }
             if ((nextState == GameState.Defeated || nextState == GameState.Victory) && currentState != GameState.Defeated && currentState != GameState.Victory) // 실제 첫 종료 상태 확인
             {
                 MetaProgressionController.Instance?.CompleteRun(actualBossDefeated && nextState == GameState.Victory); // 실제 성과 저장과 중복 지급 방지
@@ -159,13 +167,14 @@ namespace ProjectEpsilon.Core // 프로젝트 기능 영역
                 return; // 다른 대상 무시
             }
             finalBoss.Died -= HandleFinalBossDied; // 중복 승리 연결 해제
+            finalBoss = null; // 보스 참조 해제
+            if (currentState == GameState.Defeated || currentState == GameState.Victory) // 이미 종료된 전투 확인
+            {
+                return; // 종료 후 보스 처치 성과 차단
+            }
             actualBossDefeated = true; // 등록 보스의 실제 처치 기록
             telemetry?.RecordBossKill(); // 실제 최종 보스 처치 기록
-            finalBoss = null; // 보스 참조 해제
-            if (currentState != GameState.Defeated && currentState != GameState.Victory) // 종료 상태 확인
-            {
-                SetState(GameState.Victory); // 승리 상태 전환
-            }
+            SetState(GameState.Victory); // 승리 상태 전환
         }
 
         private void HandleBodyDepleted() // 몸통 소진 처리
