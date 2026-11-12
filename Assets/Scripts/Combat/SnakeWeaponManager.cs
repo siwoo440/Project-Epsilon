@@ -430,7 +430,7 @@ namespace ProjectEpsilon.Combat // 프로젝트 기능 영역
 
                 if (slot == null || // 슬롯 조건 확인
                     slot.IsEmpty || // 슬롯·빈 상태 처리
-                    slot.Weapon != weapon) // 슬롯·포탑 처리
+                    !string.Equals(slot.Weapon.Id, weapon.Id, StringComparison.Ordinal)) // 동일 식별자 포탑 확인
                 {
                     continue; // 다음 반복 진행
                 }

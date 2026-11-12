@@ -37,6 +37,7 @@ namespace ProjectEpsilon.UI // 실제 화면 흐름 영역
         public Sprite HeadSprite => headSprite; // 실제 머리 이미지
         public Sprite BodySprite => bodySprite; // 실제 몸통 이미지
         public static bool UsesSeparateScenes => separateFlow; // 실제 분리 씬 출격 여부
+        public static bool HasPendingStart => pendingStart; // 실제 준비 화면의 출격 예약 여부
         public CharacterData SelectedCharacter => selectedCharacter; // 실제 선택한 캐릭터 조회
         [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.SubsystemRegistration)] // 실제 플레이 세션 시작 시 초기화
         private static void InitializeSession() // 이전 플레이 세션의 정적 상태 정리

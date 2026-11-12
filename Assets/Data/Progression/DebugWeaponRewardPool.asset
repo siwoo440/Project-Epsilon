@@ -12,6 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b0eb5fd0aca14fbaae7b6550870891e4, type: 3}
   m_Name: DebugWeaponRewardPool
   m_EditorClassIdentifier: Assembly-CSharp::ProjectEpsilon.Progression.WeaponRewardPool
+  focusedCandidateChance: 0.4
   entries:
   - weapon: {fileID: 11400000, guid: 267b5f63f7994c24091e6effd8a230f1, type: 2}
     unlocked: 1

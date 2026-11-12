@@ -1,0 +1,11 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <TargetFramework>net10.0</TargetFramework>
+  </PropertyGroup>
+  <ItemGroup>
+    <Compile Include="../../Assets/Scripts/Progression/WeaponRewardPool.cs" Link="WeaponRewardPool.cs" />
+    <Compile Include="../../Assets/Scripts/Progression/WeaponRewardRules.cs" Link="WeaponRewardRules.cs" />
+    <Compile Include="../../Assets/Scripts/Progression/WeaponRewardCandidate.cs" Link="WeaponRewardCandidate.cs" />
+  </ItemGroup>
+</Project>

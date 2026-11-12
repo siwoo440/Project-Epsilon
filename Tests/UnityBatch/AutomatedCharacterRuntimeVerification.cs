@@ -79,6 +79,12 @@ namespace ProjectEpsilon.Editor // 배치 시험 영역
         }
         private void Verify() // 실제 여섯 캐릭터 적용 확인
         {
+            Require(Application.productName.EndsWith("-Isolated", StringComparison.Ordinal), "Character test requires an isolated save profile."); // 실제 사용자 저장 보호 확인
+            MetaProgressionController meta = MetaProgressionController.Instance; // 실제 해금 관리자
+            if (meta != null && !meta.IsCharacterUnlocked("mobile")) // 실제 기동형 해금 상태 확인
+            {
+                Require(meta.Service != null && meta.Service.TryCompleteRun("character-runtime-unlock", 0d, 0, 0, true, 0) && meta.IsCharacterUnlocked("mobile"), "Could not prepare the isolated character unlock."); // 독립 시험 프로필의 보스 해금 준비
+            }
             Type runtimeType = typeof(CharacterData).Assembly.GetType("ProjectEpsilon.Player.CharacterRunInitializer"); // 실제 캐릭터 시작 처리기 형식
             Require(runtimeType != null, "Character run initializer is missing."); // 실제 적용 구성 존재 확인
             Component initializer = UnityEngine.Object.FindFirstObjectByType(runtimeType) as Component; // 실제 씬 캐릭터 처리기

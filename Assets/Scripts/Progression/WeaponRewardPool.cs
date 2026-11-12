@@ -32,6 +32,7 @@ namespace ProjectEpsilon.Progression // 프로젝트 기능 영역
     )] // 대상 처리
     public sealed class WeaponRewardPool : ScriptableObject // 포탑·보상 자료 구조
     {
+        [SerializeField] private float focusedCandidateChance = 0.4f; // 첫 카드의 최다 보유 포탑 집중 확률
         [SerializeField] private List<WeaponRewardEntry> entries = // 필드·목록 설정
             new List<WeaponRewardEntry>(); // 목록·포탑 객체 생성
 
@@ -88,7 +89,15 @@ namespace ProjectEpsilon.Progression // 프로젝트 기능 영역
             while (candidates.Count < safeCount && // 후보·개수 반복 조건
                 available.Count > 0) // 개수 처리
             {
-                int selectedIndex = SelectCandidateIndex(available, weaponManager, CharacterRunInitializer.ActiveCharacter); // 실제 캐릭터 가중치 추첨
+                int selectedIndex = -1; // 실제 선택 후보 초기화
+                if (candidates.Count == 0 && UnityEngine.Random.value < Mathf.Clamp01(focusedCandidateChance)) // 첫 카드의 집중 추첨 확률 확인
+                {
+                    selectedIndex = SelectFocusedCandidateIndex(available, weaponManager); // 최다 보유 포탑 집중 추첨
+                }
+                if (selectedIndex < 0) // 집중 대상이 없거나 일반 추첨인 경우
+                {
+                    selectedIndex = SelectCandidateIndex(available, weaponManager, CharacterRunInitializer.ActiveCharacter); // 기존 캐릭터 가중치 추첨
+                }
 
                 WeaponRewardEntry selected = // 포탑·보상 값 설정
                     available[selectedIndex]; // 선택 값·순서 처리
@@ -134,7 +143,7 @@ namespace ProjectEpsilon.Progression // 프로젝트 기능 영역
             {
                 foreach (SnakeWeaponSlot slot in weapons.Slots) // 실제 장착 슬롯 순회
                 {
-                    if (slot != null && !slot.IsEmpty && slot.Weapon == weapon) // 동일 보유 무기 확인
+                    if (slot != null && !slot.IsEmpty && string.Equals(slot.Weapon.Id, weapon.Id, StringComparison.Ordinal)) // 동일 식별자 보유 포탑 확인
                     {
                         return character.PreferredCandidateWeight; // 보유 무기 후보 가중치
                     }
@@ -151,6 +160,39 @@ namespace ProjectEpsilon.Progression // 프로젝트 기능 영역
                 candidates.Add(entry.Weapon); // 공통 추첨에 무기 전달
             }
             return SelectWeaponIndex(candidates, weapons, character); // 레벨과 엘리트 공통 추첨
+        }
+
+        private static int SelectFocusedCandidateIndex(List<WeaponRewardEntry> available, SnakeWeaponManager weapons) // 최다 보유 포탑의 균등 집중 추첨
+        {
+            if (weapons == null || available == null || available.Count == 0) // 실제 장착 슬롯과 후보 확인
+            {
+                return -1; // 집중 대상 없는 일반 추첨
+            }
+            int maximum = 0; // 실제 최다 보유 개수
+            List<int> tied = new List<int>(); // 실제 최다 보유 동률 후보
+            for (int index = 0; index < available.Count; index++) // 실제 선택 가능한 포탑 순회
+            {
+                string id = available[index].Weapon.Id; // 실제 후보 포탑 식별자
+                int count = 0; // 현재 종류의 보유 개수
+                foreach (SnakeWeaponSlot slot in weapons.Slots) // 실제 장착 슬롯 순회
+                {
+                    if (slot != null && !slot.IsEmpty && string.Equals(slot.Weapon.Id, id, StringComparison.Ordinal)) // 등급과 무관한 동일 포탑 확인
+                    {
+                        count++; // 실제 보유 개수 증가
+                    }
+                }
+                if (count > maximum) // 더 많이 보유한 종류 확인
+                {
+                    maximum = count; // 실제 최다 보유 개수 갱신
+                    tied.Clear(); // 이전 동률 후보 제거
+                    tied.Add(index); // 실제 새 최다 후보 기록
+                }
+                else if (count > 0 && count == maximum) // 같은 최다 보유 종류 확인
+                {
+                    tied.Add(index); // 실제 동률 후보 추가
+                }
+            }
+            return tied.Count == 0 ? -1 : tied[UnityEngine.Random.Range(0, tied.Count)]; // 실제 동률 균등 선택 또는 일반 추첨
         }
 
         public static int SelectWeaponIndex(IReadOnlyList<WeaponData> available, SnakeWeaponManager weapons, CharacterData character) // 실제 후보 가중 추첨
@@ -186,6 +228,7 @@ namespace ProjectEpsilon.Progression // 프로젝트 기능 영역
         {
             List<WeaponRewardEntry> result = // 목록·포탑 값 설정
                 new List<WeaponRewardEntry>(); // 목록·포탑 객체 생성
+            HashSet<string> includedIds = new HashSet<string>(StringComparer.Ordinal); // 실제 후보 식별자 중복 제거
 
             for (int index = 0; index < entries.Count; index++) // 순서·개수 반복 처리
             {
@@ -210,6 +253,11 @@ namespace ProjectEpsilon.Progression // 프로젝트 기능 영역
                     )) // 대상 처리
                 {
                     continue; // 다음 반복 진행
+                }
+
+                if (!includedIds.Add(entry.Weapon.Id ?? string.Empty)) // 실제 동일 식별자 중복 확인
+                {
+                    continue; // 중복 포탑 후보 제외
                 }
 
                 result.Add(entry); // 결과·추가 기능 실행

@@ -191,6 +191,8 @@ namespace ProjectEpsilon.UI // 실제 메뉴 영역
         {
             Stage = next; // 실제 현재 단계 기록
             bool showPanel = next != FrontendStage.Playing && (next != FrontendStage.Weapons || sceneContext != null && sceneContext.Kind == SceneFrontendKind.Preparation); // 실제 전체 화면 필요 여부
+            bool opaque = next == FrontendStage.Main || next == FrontendStage.Characters || next == FrontendStage.Maps || next == FrontendStage.Results || next == FrontendStage.Weapons && sceneContext != null; // 실제 전투와 분리할 전체 화면 확인
+            panel.GetComponent<Image>().color = new Color(0.025f, 0.05f, 0.085f, opaque ? 1f : 0.97f); // 실제 선택·결과 화면 불투명 배경
             panel.gameObject.SetActive(showPanel); // 실제 메뉴 배경 표시
             backButton.SetActive(next == FrontendStage.Weapons && sceneContext == null); // 기존 포탑 화면 뒤로 버튼 표시
             if (!showPanel) // 실제 전투나 포탑 화면 확인
@@ -202,6 +204,10 @@ namespace ProjectEpsilon.UI // 실제 메뉴 영역
                 child.gameObject.SetActive(false); // 실제 이전 입력 즉시 차단
                 Destroy(child.gameObject); // 실제 이전 화면 제거
             }
+            if (next == FrontendStage.Characters || next == FrontendStage.Maps || next == FrontendStage.Weapons) // 실제 출격 전 선택 화면 확인
+            {
+                CreateSelectionBackground(); // 승인된 이미지의 불투명 선택 배경
+            }
             switch (next) // 실제 화면 종류 확인
             {
                 case FrontendStage.Main: BuildMain(); break; // 실제 주 메뉴 구성
@@ -212,6 +218,25 @@ namespace ProjectEpsilon.UI // 실제 메뉴 영역
                 case FrontendStage.Settings: BuildSettings(); break; // 실제 설정 구성
                 case FrontendStage.Results: BuildResults(); break; // 실제 결과 구성
             }
+        }
+        private void CreateSelectionBackground() // 실제 출격 선택 배경 구성
+        {
+            Texture2D background = Resources.Load<Texture2D>("MenuBackground_Casual"); // 실제 승인된 메뉴 배경 이미지
+            if (background == null) // 실제 이미지 존재 확인
+            {
+                return; // 기존 불투명 패널 유지
+            }
+            GameObject artwork = new GameObject("FrontendBackground", typeof(RectTransform), typeof(RawImage)); // 실제 선택 배경 객체
+            artwork.transform.SetParent(panel, false); // 실제 선택 패널에 배경 연결
+            RectTransform rect = artwork.GetComponent<RectTransform>(); // 실제 전체 화면 영역
+            rect.anchorMin = Vector2.zero; // 실제 왼쪽 아래 기준
+            rect.anchorMax = Vector2.one; // 실제 오른쪽 위 기준
+            rect.offsetMin = Vector2.zero; // 실제 왼쪽 아래 여백 제거
+            rect.offsetMax = Vector2.zero; // 실제 오른쪽 위 여백 제거
+            RawImage image = artwork.GetComponent<RawImage>(); // 실제 배경 이미지 표시기
+            image.texture = background; // 실제 승인 배경 적용
+            image.color = new Color(0.28f, 0.28f, 0.28f, 1f); // 실제 선택 글자의 대비 확보
+            image.raycastTarget = false; // 실제 선택 버튼 입력 보존
         }
         private void BuildMain() // 실제 주 메뉴 구성
         {

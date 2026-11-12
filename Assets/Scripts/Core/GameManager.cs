@@ -50,6 +50,12 @@ namespace ProjectEpsilon.Core // 프로젝트 기능 영역
 
         private void Start() // 시작 기능 선언
         {
+            if (currentState == GameState.Starting && UnityEngine.SceneManagement.SceneManager.GetActiveScene().path == SceneFrontendContext.GamePath && !SceneFrontendContext.HasPendingStart && !AllowsDirectBatchGame()) // 준비 화면을 거치지 않은 게임 씬 직접 실행 확인
+            {
+                GameObject loader = new GameObject("GameEntryReloader"); // 실제 메인 메뉴 이동 보조 객체
+                loader.AddComponent<RunSceneReloader>().Begin(gameObject, SceneFrontendContext.MainMenuPath, true); // 전투 씬 가림과 기존 관리자 제거
+                return; // 직접 실행의 단일 씬 메뉴 차단
+            }
             HUDController hud = FindFirstObjectByType<HUDController>(); // 실제 전투 HUD 조회
             if (hud != null && hud.GetComponent<Canvas>() != null && hud.GetComponent<BodySidebarController>() == null) // 실제 전투 캔버스와 패널 확인
             {
@@ -69,6 +75,11 @@ namespace ProjectEpsilon.Core // 프로젝트 기능 영역
                     StartGame(); // 기존 씬 자동 시작
                 }
             }
+        }
+
+        private static bool AllowsDirectBatchGame() // 내부 배치의 게임 씬 직접 검증 확인
+        {
+            return Application.isBatchMode && System.Array.IndexOf(System.Environment.GetCommandLineArgs(), "-epsilonDirectGame") >= 0; // 명시적 배치 시험 옵션만 허용
         }
 
         private void OnDestroy() // 제거 기능 선언
