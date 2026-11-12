@@ -97,6 +97,9 @@ namespace ProjectEpsilon.Core // 게임 상태 대체 형식
 
 namespace ProjectEpsilon.Data // 무기 데이터 대체 형식
 {
+    public sealed class CharacterData // 시험 캐릭터 데이터
+    {
+    }
     public sealed class WeaponData // 시험 무기
     {
         public string DisplayName = "Weapon"; // 무기 이름
@@ -106,6 +109,10 @@ namespace ProjectEpsilon.Data // 무기 데이터 대체 형식
 
 namespace ProjectEpsilon.Player // 플레이어 대체 형식
 {
+    public static class CharacterRunInitializer // 시험 시작 캐릭터
+    {
+        public static ProjectEpsilon.Data.CharacterData ActiveCharacter; // 현재 캐릭터
+    }
     public sealed class SnakeHealth // 시험 체력
     {
         public int CurrentHealth = 100; // 현재 체력
@@ -188,6 +195,11 @@ namespace ProjectEpsilon.Combat // 무기 대체 형식
 
 namespace ProjectEpsilon.Progression // 진행 대체 형식
 {
+    public sealed class MetaProgressionController // 시험 해금 상태
+    {
+        public static MetaProgressionController Instance; // 현재 성장 관리자
+        public bool IsTurretUnlocked(ProjectEpsilon.Data.WeaponData weapon) => true; // 포탑 해금 상태 대체
+    }
     public sealed class SnakeExperience // 시험 경험치
     {
         public bool IsLevelUpPending; // 레벨업 대기 상태
@@ -204,6 +216,10 @@ namespace ProjectEpsilon.Progression // 진행 대체 형식
     public sealed class WeaponRewardPool // 시험 무기 풀
     {
         public readonly List<WeaponRewardEntry> Entries = new List<WeaponRewardEntry>(); // 무기 목록
+        public static int SelectWeaponIndex(IReadOnlyList<ProjectEpsilon.Data.WeaponData> available, ProjectEpsilon.Combat.SnakeWeaponManager weapons, ProjectEpsilon.Data.CharacterData character) // 기본 캐릭터 추첨 대체
+        {
+            return UnityEngine.Random.Range(0, available.Count); // 균등 추첨 대체
+        }
     }
     public readonly struct WeaponRewardCandidate // 시험 무기 보상
     {

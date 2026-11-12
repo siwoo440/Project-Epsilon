@@ -266,3 +266,9 @@
 ## 51-C 화면 한국어 정리
 
 `AutomatedKoreanUiVerification.Run`은 `StartingWeaponBatchHelper.cs`와 함께 제품 이름이 `Project-Epsilon-KoreanUI-Isolated`인 별도 Unity 사본에서 실행한다. 실제 메뉴와 전투 화면을 진행하며 활성 UI 문구의 영문과 글꼴 연결을 검사한다. 키 문자는 허용하며 글꼴의 화면상 렌더링은 직접 확인해야 한다. 상세 결과는 `Devlogs/KoreanUI/README.md`를 참조한다.
+
+---
+
+## 52일차 엘리트 전투
+
+`AutomatedEarlyWaveVerification.Run`은 실제 출현기를 가속해 4분 엘리트의 예고·방향 고정·돌진 이동을 확인한 후 강제 처치와 연속 레벨·엘리트 보상을 검증한다. 테스트 중 플레이어와 일반 적의 이동·충돌, 보상 전 경험치 설정을 통제한다. `AutomatedEliteRewardVerification.Run`은 시각을 강제로 240초로 설정하고 포탑 보상 선택과 장착을 검사한다. 실제 정상 속도 자연 전투 및 제한 사항은 `Devlogs/Day52/README.md`를 참조한다.

@@ -128,8 +128,9 @@ namespace ProjectEpsilon.Editor // 편집기 영역
             }
             Require(counts[3] == 1 && GameManager.Instance.IsPlaying, "Elite duplicated or gameplay stopped before controlled defeat."); // 실제 단회 출현 확인
             Time.timeScale = 1f; // 보상 경합 전 정상 시험 속도
+            yield return VerifyEliteCharge(); // 실제 예고와 돌진 전환 확인
             Require(health.TakeDamage(health.MaximumHealth + 1), "Could not prepare controlled repair and heal reward availability."); // 회복 후보 준비용 통제 피해
-            Require(body.CurrentBodyCount == 2 && body.EarnedBodyCount == 3 && health.CurrentHealth == health.MaximumHealth - 1, "Controlled pre-reward fixture mismatch."); // 보상 전 몸통과 체력 확인
+            Require(body.CurrentBodyCount == 2 && body.EarnedBodyCount == 3 && health.CurrentHealth == health.MaximumHealth - 1, $"Controlled pre-reward fixture mismatch: body={body.CurrentBodyCount}, earned={body.EarnedBodyCount}, health={health.CurrentHealth}/{health.MaximumHealth}."); // 보상 전 몸통과 체력 확인
             Collider2D eliteCollider = elite.GetComponent<Collider2D>(); // 실제 엘리트 충돌체 조회
             if (eliteCollider != null) // 실제 충돌체 존재 확인
             {
@@ -186,7 +187,52 @@ namespace ProjectEpsilon.Editor // 편집기 영역
             Require(eliteReward.PendingRewardCount == 0 && !eliteReward.IsPresentingReward && !experience.IsLevelUpPending && GameManager.Instance.IsPlaying && Mathf.Approximately(Time.timeScale, 1f), "Actual elite reward was not consumed once or gameplay did not resume."); // 실제 보상 소비와 시간 복구 확인
             yield return null; // 실제 다음 프레임 관찰
             Require(eliteReward.PendingRewardCount == 0 && !eliteReward.IsPresentingReward && experience.CurrentLevel == 3 && experience.CurrentExperience == 0 && GameManager.Instance.IsPlaying, "An extra reward or level-up appeared after completion."); // 중복 보상과 레벨업 방지
-            AutomatedEarlyWaveVerification.Finish(0, "Actual 0-to-240-second accelerated wave scheduling, forced elite death, 20-XP gem, two level rewards and one elite reward completed under controlled conditions."); // 실제 통제 시험 성공
+            AutomatedEarlyWaveVerification.Finish(0, "Actual accelerated four-minute spawn, warned charge, forced elite death, 20-XP gem, two level rewards and one elite reward completed under controlled conditions."); // 실제 통제 시험 성공
+        }
+
+        private IEnumerator VerifyEliteCharge() // 실제 엘리트 예고와 돌진 확인
+        {
+            spawner.enabled = false; // 추가 일반 적 출현 차단
+            EarlyEnemyBehaviour behaviour = elite.GetComponent<EarlyEnemyBehaviour>(); // 실제 출현 엘리트 행동
+            FieldInfo phase = typeof(EarlyEnemyBehaviour).GetField("chargePhase", PrivateFields); // 실제 돌진 단계 필드
+            FieldInfo direction = typeof(EarlyEnemyBehaviour).GetField("chargeDirection", PrivateFields); // 실제 고정 방향 필드
+            FieldInfo next = typeof(EarlyEnemyBehaviour).GetField("nextAttack", PrivateFields); // 실제 다음 공격 시각
+            Require(behaviour != null && phase != null && direction != null && next != null, "Elite charge fields are missing."); // 실제 공격 구성 확인
+            elite.transform.position = player.transform.position + Vector3.left * 10f; // 실제 충돌 밖 출현 위치
+            Physics2D.SyncTransforms(); // 물리 위치 동기화
+            next.SetValue(behaviour, Time.time); // 공격 주기 시작 시각 통제
+            behaviour.enabled = true; // 실제 엘리트 행동 재개
+            float deadline = Time.realtimeSinceStartup + 5f; // 실제 예고 대기 제한
+            while ((int)phase.GetValue(behaviour) != 1 && Time.realtimeSinceStartup < deadline) // 예고 단계 대기
+            {
+                yield return new WaitForFixedUpdate(); // 실제 물리 단계 진행
+            }
+            LineRenderer warning = elite.GetComponent<LineRenderer>(); // 실제 예고선 조회
+            Require((int)phase.GetValue(behaviour) == 1 && warning != null && warning.enabled, "Elite warning did not start."); // 예고 단계와 선 확인
+            Vector2 locked = (Vector2)direction.GetValue(behaviour); // 실제 고정 방향 저장
+            player.transform.position += Vector3.up * 4f; // 예고 후 목표 위치 변경
+            Physics2D.SyncTransforms(); // 변경된 물리 위치 반영
+            deadline = Time.realtimeSinceStartup + 5f; // 실제 돌진 대기 제한
+            while ((int)phase.GetValue(behaviour) == 1 && Time.realtimeSinceStartup < deadline) // 예고 종료 대기
+            {
+                yield return new WaitForFixedUpdate(); // 실제 물리 단계 진행
+            }
+            Require((int)phase.GetValue(behaviour) == 2 && !warning.enabled && Vector2.Dot(locked, (Vector2)direction.GetValue(behaviour)) > 0.99f, "Elite did not charge in the warned direction."); // 실제 돌진 전환과 방향 고정 확인
+            Vector2 start = elite.transform.position; // 실제 돌진 시작 위치
+            for (int index = 0; index < 5; index++) // 실제 돌진 물리 단계 반복
+            {
+                yield return new WaitForFixedUpdate(); // 실제 돌진 이동 대기
+            }
+            Vector2 movement = (Vector2)elite.transform.position - start; // 실제 돌진 이동량
+            Require(movement.magnitude > 0.01f && Vector2.Dot(movement.normalized, locked) > 0.95f, "Elite charge did not move in its locked direction."); // 실제 이동 거리와 방향 확인
+            deadline = Time.realtimeSinceStartup + 5f; // 실제 돌진 종료 제한
+            while ((int)phase.GetValue(behaviour) == 2 && Time.realtimeSinceStartup < deadline) // 실제 돌진 종료 대기
+            {
+                yield return new WaitForFixedUpdate(); // 실제 물리 단계 진행
+            }
+            Require((int)phase.GetValue(behaviour) == 0, "Elite charge did not finish."); // 실제 대기 단계 복귀 확인
+            behaviour.enabled = false; // 강제 처치 전 엘리트 이동 정지
+            Debug.Log("[EarlyWaveVerification] controlled elite attack: warning, locked direction, movement and recovery observed."); // 실제 통제 공격 기록
         }
 
         private void Prepare() // 실제 씬 확인과 시간 가속 통제
@@ -226,6 +272,19 @@ namespace ProjectEpsilon.Editor // 편집기 영역
             {
                 external.enabled = false; // 시험 중 외부 접촉 제외
             }
+            Collider2D headCollider = player.GetComponent<Collider2D>(); // 실제 머리 충돌체
+            if (headCollider != null) // 머리 충돌체 존재 확인
+            {
+                headCollider.enabled = false; // 통제 시험 중 투사체 접촉 차단
+            }
+            foreach (SnakeSegment segment in body.BodySegments) // 실제 몸통 충돌체 순회
+            {
+                Collider2D segmentCollider = segment == null ? null : segment.GetComponent<Collider2D>(); // 각 몸통 충돌체
+                if (segmentCollider != null) // 몸통 충돌체 존재 확인
+                {
+                    segmentCollider.enabled = false; // 통제 시험 중 몸통 접촉 차단
+                }
+            }
             foreach (SnakeWeaponSlot slot in weapons.Slots) // 실제 몸통 무기 슬롯 순회
             {
                 slot.Clear(); // 통제 중 자연 자동 처치 방지
@@ -235,7 +294,7 @@ namespace ProjectEpsilon.Editor // 편집기 영역
             Require(experience.RequiredExperience == 10, "Controlled experience requirement is not ten."); // 실제 통제 요구량 확인
             UnityEngine.Random.InitState(3191); // 출현 추첨 시험 시드
             Time.timeScale = 8f; // 제품 수정 없는 임시 게임 시간 가속
-            Debug.Log($"[EarlyWaveVerification] actual spawner start={Elapsed():F3}, configured interval={intervalField.GetValue(spawner)}, appearance=0/60/120/240; accelerated scale=8; seed=3191; no spawn clock injection; movement, combat and normal enemies controlled; XP base=10 multiplier=1.0."); // 실제 설정과 통제 조건 기록
+            Debug.Log($"[EarlyWaveVerification] actual spawner start={Elapsed():F3}, configured interval={intervalField.GetValue(spawner)}, appearance=0/60/120/240; accelerated scale=8; seed=3191; no spawn clock injection; movement, player colliders, combat and normal enemies controlled; XP base=10 multiplier=1.0."); // 실제 설정과 통제 조건 기록
         }
 
         private void ObserveWaves() // 실제 출현 적 관찰과 일반 적 정리
