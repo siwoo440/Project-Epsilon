@@ -1,6 +1,7 @@
 using System.Collections.Generic; // 명중 대상 목록
 using ProjectEpsilon.Core; // 대상 기능 연결
 using ProjectEpsilon.Data; // 무기 전달 설정
+using ProjectEpsilon.Player; // 장애물 엄폐 판정
 using UnityEngine; // Unity 엔진 기능 연결
 
 namespace ProjectEpsilon.Combat // 프로젝트 기능 영역
@@ -123,6 +124,13 @@ namespace ProjectEpsilon.Combat // 프로젝트 기능 영역
 
         private void OnTriggerEnter2D(Collider2D other) // 투사체 명중 처리
         {
+            SnakeContactHazard cover = other.GetComponent<SnakeContactHazard>(); // 기존 장애물 엄폐 조회
+            if (isActiveAndEnabled && remainingHits > 0 && cover != null && cover.BlocksProjectiles) // 활성 탄과 실제 엄폐 확인
+            {
+                gameObject.SetActive(false); // 지연 파괴 전 후속 명중 차단
+                Destroy(gameObject); // 엄폐물에 막힌 포탑 탄 제거
+                return; // 적 명중 처리 중단
+            }
             WeaponTarget target = other.GetComponent<WeaponTarget>(); // 최초 명중 대상
             if (!isActiveAndEnabled || remainingHits <= 0 || target == null || !target.isActiveAndEnabled || !target.IsAlive || !hitTargets.Add(target)) // 활성 상태와 명중 한도 확인
             {

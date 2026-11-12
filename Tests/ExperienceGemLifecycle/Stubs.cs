@@ -14,6 +14,10 @@ namespace UnityEngine // Unity 대체 형식
         private readonly int id = nextId++; // 객체 고유 번호
         public static readonly List<ProjectEpsilon.Progression.ExperiencePickup> Pickups = new List<ProjectEpsilon.Progression.ExperiencePickup>(); // 생성된 보석
         public int GetInstanceID() => id; // 객체 번호 조회
+        public static T FindFirstObjectByType<T>() where T : class // 선택적 시각 설정 검색
+        {
+            return null; // 별도 이미지 설정 없음
+        }
         public static T[] FindObjectsByType<T>(FindObjectsSortMode sort) where T : class // 활성 객체 검색
         {
             List<T> result = new List<T>(); // 검색 결과
@@ -113,6 +117,7 @@ namespace UnityEngine // Unity 대체 형식
     }
     public readonly struct Color // 색상 대체
     {
+        public static Color white => new Color(1f, 1f, 1f, 1f); // 원본 이미지 색상
         public Color(float r, float g, float b, float a) // 색상 구성
         {
         }
@@ -181,14 +186,53 @@ namespace ProjectEpsilon.Core // 게임 상태 대체
 
 namespace ProjectEpsilon.Progression // 경험치 수신자 대체
 {
+    public sealed class ExperiencePickupSettings // 보석 공용 설정 대체
+    {
+        public float AttractionRange = 2.6f; // 기본 획득 범위
+        public float AttractionSpeed = 6f; // 기본 흡수 속도
+        public float CollectDistance = 0.22f; // 기본 획득 거리
+    }
+    public static class MetaModifiers // 영구 성장 배율 대체
+    {
+        public static float PickupRangeMultiplier = 1f; // 기본 획득 범위 배율
+    }
+    public sealed class ExperienceGemVisualPalette // 보석 이미지 설정 대체
+    {
+        public bool isActiveAndEnabled; // 이미지 설정 활성 상태
+        public UnityEngine.Sprite Resolve(int value) => null; // 대체 이미지 사용
+    }
     public sealed class SnakeExperience // 경험치 상태
     {
         public static SnakeExperience Current; // 현재 수신자
         public UnityEngine.Transform transform = new UnityEngine.Transform(); // 머리 위치
+        public ProjectEpsilon.Player.SnakeMovement Movement; // 실제 획득 범위 효과 대체
+        public ExperiencePickupSettings PickupSettings; // 보석 공용 설정 대체
+        public T GetComponent<T>() where T : class => Movement as T; // 플레이어 이동 효과 조회
         public int Experience; // 누적 경험치
         public void AddExperience(int amount) // 경험치 획득
         {
             Experience += amount; // 경험치 누적
+        }
+    }
+}
+
+namespace ProjectEpsilon.Player // 플레이어 이동 효과 대체
+{
+    public sealed class SnakeMovement // 임시 획득 범위 대체
+    {
+        public float PickupRangeMultiplier = 1f; // 실제 범위 배율
+    }
+}
+
+namespace ProjectEpsilon.Recording // 경험치 기록 대체
+{
+    public static class RunTelemetry // 선택적 보석 기록
+    {
+        public static void RecordGemSpawn(int amount) // 보석 생성 기록 대체
+        {
+        }
+        public static void RecordGemCollection(int amount) // 보석 획득 기록 대체
+        {
         }
     }
 }

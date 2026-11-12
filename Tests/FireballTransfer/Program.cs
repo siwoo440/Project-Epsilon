@@ -12,6 +12,7 @@ internal static class Program // 화염탄 등급 전달 시험
 
     private static int Main() // 시험 시작
     {
+        Check("엄폐와 일반 장애물", VerifyCover); // 엄폐 판정 회귀
         Check("하위 등급과 다른 무기", VerifyLowerAndOtherWeapons); // 기존 공격 회귀
         Check("상위 등급 추가 한 명과 스냅샷", VerifyTransferAndSnapshot); // 등급 전달 검증
         Check("후보 부재와 범위 제한", VerifyNoCandidate); // 후보 조건 검증
@@ -69,6 +70,18 @@ internal static class Program // 화염탄 등급 전달 시험
     private static void Hit(StraightProjectile projectile, WeaponTarget target) // 실제 투사체 충돌
     {
         Trigger.Invoke(projectile, new object[] { new Collider2D { Target = target } }); // 실제 충돌 콜백 호출
+    }
+
+    private static void VerifyCover() // 실제 투사체 엄폐 판정
+    {
+        var blocked = Create(3); // 실제 삼 등급 포탑 탄 생성
+        Collider2D wall = new Collider2D { Cover = new ProjectEpsilon.Player.SnakeContactHazard { BlocksProjectiles = true } }; // 실제 엄폐 충돌 대체
+        Trigger.Invoke(blocked.projectile, new object[] { wall }); // 실제 엄폐 충돌 콜백
+        Require(blocked.projectile.gameObject.PendingDestroy && !blocked.projectile.gameObject.activeSelf && blocked.first.Hits == 0, "엄폐물에서 투사체가 즉시 차단되지 않음"); // 제거와 중복 명중 차단 확인
+        var ordinary = Create(1); // 일반 장애물 시험 포탑 탄
+        Collider2D debris = new Collider2D { Cover = new ProjectEpsilon.Player.SnakeContactHazard { BlocksProjectiles = false } }; // 일반 장애물 충돌 대체
+        Trigger.Invoke(ordinary.projectile, new object[] { debris }); // 실제 일반 장애물 충돌 콜백
+        Require(!ordinary.projectile.gameObject.PendingDestroy && ordinary.projectile.gameObject.activeSelf, "일반 장애물이 포탑 탄을 막음"); // 기존 일반 장애물 통과 확인
     }
 
     private static void VerifyLowerAndOtherWeapons() // 기본 등급 및 다른 무기 유지

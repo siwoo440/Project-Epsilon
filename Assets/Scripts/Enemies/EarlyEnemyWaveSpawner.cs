@@ -271,6 +271,21 @@ namespace ProjectEpsilon.Enemies // 적 영역
             }
             return SpawnAt(enemies[0], position, true); // 기존 추적자 행동 재사용
         }
+        public WeaponTarget SpawnMapChaser(Vector3 position) // 맵 요소의 보상 가능 추적자 소환
+        {
+            if (player == null || body == null || health == null || enemies == null || GameManager.Instance == null || !GameManager.Instance.IsPlaying || hasEnteredBossTransition || GameManager.Instance.IsFinalBossPhase || CurrentNormalEnemyCount >= CurrentNormalEnemyLimit) // 기존 전투 상태와 일반 적 상한 확인
+            {
+                return null; // 소환 불가 상태 유지
+            }
+            foreach (EarlyEnemySettings setting in enemies) // 기존 적 설정 순회
+            {
+                if (setting != null && setting.kind == EarlyEnemyKind.Chaser && elapsed >= setting.firstAppearance) // 해금된 추적자 설정 확인
+                {
+                    return SpawnAt(setting, position, false); // 기존 경험치와 체력 배율을 가진 일반 적 생성
+                }
+            }
+            return null; // 실제 추적자 설정 부재
+        }
         public void RemoveBossSummon(WeaponTarget target) // 생존 소환 적 무보상 제거
         {
             if (target == null || !targets.Remove(target)) // 관리 대상 확인

@@ -17,6 +17,12 @@ namespace ProjectEpsilon.Player // 프로젝트 기능 영역
 
         private PlayerInputReader inputReader; // 플레이어·입력 구성 선언
         private SnakeBodyManager bodyManager; // 마지막 몸통의 실제 상태
+        private float windUntil; // 바람길 효과 종료 시각
+        private float windMultiplier = 1f; // 바람길 이동 배율
+        private float pollenUntil; // 꽃가루 효과 종료 시각
+        private float pollenMultiplier = 1f; // 꽃가루 획득 범위 배율
+        private float terrainImmunityUntil; // 지형 감속 면역 종료 시각
+        private bool cleanseUntilTerrainExit; // 현재 지형 이탈까지 정화 유지
 
         public float BaseMoveSpeed => moveSpeed; // 캐릭터 보정 전 기본 이동 속도
         public float MoveSpeed => moveSpeed * CharacterRunInitializer.MoveSpeedMultiplier; // 캐릭터 이동 배율 적용
@@ -26,10 +32,53 @@ namespace ProjectEpsilon.Player // 프로젝트 기능 영역
         public float CurrentMoveSpeed => // 현재·속도 값 반환
             MoveSpeed * // 캐릭터 이동 속도 적용
             ProjectEpsilon.Progression.MetaModifiers.LastBodySpeedMultiplier(bodyManager) * // 마지막 몸통 영구 효과
-            ProjectEpsilon.World.PrototypeSpecialZone.SpeedMultiplierAt(transform.position) * // 현재 지역 감속 적용
+            ResolveTerrainMultiplier() * // 지형 전용 감속과 면역 적용
+            (Time.time < windUntil ? windMultiplier : 1f) * // 일시적 바람길 이동 배율
             (stamina == null // 스태미나 기능 실행
                 ? 1f // 대상 처리
                 : stamina.CurrentSpeedMultiplier); // 합성 감속은 전체 시간에만 적용
+
+        public float PickupRangeMultiplier => Time.time < pollenUntil ? pollenMultiplier : 1f; // 꽃가루의 임시 획득 범위 배율
+
+        public void ApplyWind(float duration, float multiplier) // 바람길 이동 효과 갱신
+        {
+            windUntil = Time.time + Mathf.Max(0f, duration); // 안전한 바람 효과 종료 시각
+            windMultiplier = Mathf.Max(1f, multiplier); // 안전한 바람 이동 배율
+        }
+
+        public void ApplyPollen(float duration, float multiplier) // 꽃가루 획득 범위 효과 갱신
+        {
+            pollenUntil = Time.time + Mathf.Max(0f, duration); // 안전한 꽃가루 종료 시각
+            pollenMultiplier = Mathf.Max(1f, multiplier); // 안전한 획득 범위 배율
+        }
+
+        public void IgnoreTerrainSlow(float duration) // 지형 감속 면역 적용
+        {
+            terrainImmunityUntil = Mathf.Max(terrainImmunityUntil, Time.time + Mathf.Max(0f, duration)); // 기존 면역을 보존한 종료 시각
+        }
+
+        public void CleanseTerrainSlow() // 현재 지형 감속만 정화
+        {
+            cleanseUntilTerrainExit = true; // 현재 감속 지형 이탈까지 정화 유지
+        }
+
+        public void RefreshTerrainCleanse() // 실제 감속 지형 이탈 확인
+        {
+            if (cleanseUntilTerrainExit && ProjectEpsilon.World.PrototypeSpecialZone.SpeedMultiplierAt(transform.position) >= 1f) // 모든 감속 지형 이탈 확인
+            {
+                cleanseUntilTerrainExit = false; // 이전 지형의 정화 상태 해제
+            }
+        }
+
+        private float ResolveTerrainMultiplier() // 현재 지형 감속과 면역 계산
+        {
+            float terrain = ProjectEpsilon.World.PrototypeSpecialZone.SpeedMultiplierAt(transform.position); // 실제 지형 감속 배율
+            if (terrain >= 1f) // 모든 감속 지형에서 이탈 확인
+            {
+                cleanseUntilTerrainExit = false; // 현재 지형에 대한 정화 종료
+            }
+            return Time.time < terrainImmunityUntil || cleanseUntilTerrainExit ? 1f : terrain; // 지형에만 면역 적용
+        }
 
         private void Awake() // 초기화 기능 선언
         {

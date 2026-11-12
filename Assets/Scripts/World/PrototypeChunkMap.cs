@@ -11,6 +11,9 @@ namespace ProjectEpsilon.World // 맵 영역
         [SerializeField] private Sprite groundSprite; // 개방 평원 바닥 이미지
         private readonly Dictionary<Vector2Int, GameObject> chunks = new Dictionary<Vector2Int, GameObject>(); // 실제 활성 청크
         private readonly List<Vector2Int> removed = new List<Vector2Int>(); // 이탈 청크 임시 목록
+        private readonly HashSet<Vector3Int> claimedFeatures = new HashSet<Vector3Int>(); // 런당 획득한 지역 보상
+        private readonly Dictionary<Vector3Int, float> featureCooldowns = new Dictionary<Vector3Int, float>(); // 청크 재생성 뒤에도 유지할 대기 시간
+        private readonly Dictionary<Vector3Int, float> featureSuppression = new Dictionary<Vector3Int, float>(); // 청크 재생성 뒤에도 유지할 비활성 시간
         private SnakeMovement player; // 실제 플레이어 위치
         private Vector2Int center; // 현재 중심 청크
         private bool initialized; // 최초 청크 생성 여부
@@ -29,6 +32,48 @@ namespace ProjectEpsilon.World // 맵 영역
             profile = data; // 실제 맵 데이터 저장
             groundSprite = data.Ground; // 실제 맵 바닥 적용
             return true; // 실제 바닥 설정 완료
+        }
+
+        public bool TryActivateFeature(Vector3 position, PrototypeZoneKind kind, float cooldown, bool singleUse) // 지역별 재사용과 일회 보상 확인
+        {
+            Vector3Int key = new Vector3Int(Mathf.FloorToInt(position.x / ChunkSize), Mathf.FloorToInt(position.y / ChunkSize), (int)kind); // 청크 좌표와 지역 종류
+            if (claimedFeatures.Contains(key)) // 이미 획득한 일회 보상 확인
+            {
+                return false; // 같은 런의 중복 획득 차단
+            }
+            if (featureCooldowns.TryGetValue(key, out float readyAt) && Time.time < readyAt) // 기존 재사용 대기 확인
+            {
+                return false; // 대기 중 재발동 차단
+            }
+            if (singleUse) // 일회성 지역 확인
+            {
+                claimedFeatures.Add(key); // 런 종료까지 획득 기록
+            }
+            featureCooldowns[key] = Time.time + Mathf.Max(0f, cooldown); // 안전한 다음 사용 시각 저장
+            return true; // 지역 효과 발동 허용
+        }
+
+        public bool IsFeatureClaimed(Vector3 position, PrototypeZoneKind kind) // 이미 획득한 일회 보상 확인
+        {
+            Vector3Int key = new Vector3Int(Mathf.FloorToInt(position.x / ChunkSize), Mathf.FloorToInt(position.y / ChunkSize), (int)kind); // 실제 보상의 청크와 종류
+            return claimedFeatures.Contains(key); // 같은 런의 획득 여부 반환
+        }
+
+        public void SuppressFeature(Vector3 position, PrototypeZoneKind kind, float duration) // 청크 재방문을 포함한 장치 비활성
+        {
+            Vector3Int key = new Vector3Int(Mathf.FloorToInt(position.x / ChunkSize), Mathf.FloorToInt(position.y / ChunkSize), (int)kind); // 실제 장치의 청크와 종류
+            float until = Time.time + Mathf.Max(0f, duration); // 안전한 비활성 종료 시각
+            if (featureSuppression.TryGetValue(key, out float previous)) // 기존 비활성 시각 확인
+            {
+                until = Mathf.Max(until, previous); // 더 긴 기존 비활성 보존
+            }
+            featureSuppression[key] = until; // 실제 비활성 종료 시각 저장
+        }
+
+        public float FeatureSuppressedUntil(Vector3 position, PrototypeZoneKind kind) // 장치의 비활성 종료 시각 조회
+        {
+            Vector3Int key = new Vector3Int(Mathf.FloorToInt(position.x / ChunkSize), Mathf.FloorToInt(position.y / ChunkSize), (int)kind); // 실제 장치의 청크와 종류
+            return featureSuppression.TryGetValue(key, out float until) ? until : 0f; // 기존 비활성 또는 기본 시각
         }
 
         public GameObject GetChunk(Vector2Int coordinate) // 실제 청크 좌표 조회
@@ -92,16 +137,30 @@ namespace ProjectEpsilon.World // 맵 영역
             {
                 return; // 기존 빈 청크 유지
             }
+            CreateDecoration(chunk); // 전투 표시를 가리지 않는 맵 장식
             if (profile.ObstacleChance >= 1f || Random.value < profile.ObstacleChance) // 장애물 임시 확률 확인
             {
-                CreateObstacle(chunk, 0.25f); // 첫 번째 사전 배치 장애물
-                CreateObstacle(chunk, 0.75f); // 통로를 남긴 두 번째 장애물
+                int firstQuadrant = Random.Range(0, 4); // 첫 장애물 사분면 추첨
+                int obstacleCount = Random.Range(profile.ObstacleMinimumCount, profile.ObstacleMaximumCount + 1); // 맵 데이터의 장애물 수 추첨
+                for (int index = 0; index < obstacleCount; index++) // 서로 다른 사분면 순회
+                {
+                    CreateObstacle(chunk, (firstQuadrant + index) % 4); // 안전 통로 밖 무작위 장애물 생성
+                }
             }
             if (profile.SpecialZoneChance <= 0f || profile.SpecialZoneChance < 1f && Random.value >= profile.SpecialZoneChance) // 지역 임시 확률 확인
             {
                 return; // 지역 없는 청크 유지
             }
-            Vector3 position = chunk.position + new Vector3(ChunkSize * 0.5f, ChunkSize * 0.5f, 0f); // 실제 청크 중심
+            PrototypeZoneKind[] kinds = profile.ObstaclePattern == 2 // 습지 지역 확인
+                ? new[] { PrototypeZoneKind.Mud, PrototypeZoneKind.Bridge, PrototypeZoneKind.Purify, PrototypeZoneKind.ToxicSpore } // 실제 습지 지역 목록
+                : profile.ObstaclePattern == 1 // 폐허 지역 확인
+                    ? new[] { PrototypeZoneKind.ElectricFloor, PrototypeZoneKind.Supply, PrototypeZoneKind.Collapse } // 실제 폐허 장치와 보상 목록
+                    : new[] { PrototypeZoneKind.Wind, PrototypeZoneKind.Pollen, PrototypeZoneKind.Flower, PrototypeZoneKind.GemTrail, PrototypeZoneKind.AntHill }; // 실제 평원 지역 목록
+            PrototypeZoneKind kind = kinds[Random.Range(0, kinds.Length)]; // 실제 맵별 지역 추첨
+            if (!TryFindFeaturePosition(chunk, out Vector3 position)) // 안전한 지역 위치 확인
+            {
+                return; // 안전한 사분면 부재 시 생성 생략
+            }
             foreach (PrototypeSpecialZone existing in GetComponentsInChildren<PrototypeSpecialZone>()) // 기존 활성 지역 순회
             {
                 if (existing != null && Vector2.Distance(existing.transform.position, position) < existing.Radius + profile.ZoneRadius + 2f) // 지역 간 최소 거리 확인
@@ -109,28 +168,127 @@ namespace ProjectEpsilon.World // 맵 영역
                     return; // 인접 지역 중첩 방지
                 }
             }
-            PrototypeZoneKind kind = (PrototypeZoneKind)Random.Range(0, 4); // 시험 지역 종류 선택
             PrototypeSpecialZone.Create(chunk, position, kind, profile); // 실제 청크 지역 생성
-        }
-        private void CreateObstacle(Transform chunk, float offset) // 실제 장애물 하나 생성
-        {
-            GameObject obstacle = new GameObject("PrototypeObstacle"); // 실제 장애물 객체
-            obstacle.transform.SetParent(chunk, false); // 실제 청크와 수명 연결
-            bool vertical = profile.ObstaclePattern == 1; // 회랑형 사전 패턴 확인
-            obstacle.transform.localPosition = vertical ? new Vector3(ChunkSize * 0.5f, ChunkSize * offset, 0f) : new Vector3(ChunkSize * offset, ChunkSize * 0.5f, 0f); // 실제 패턴 좌표
-            SpriteRenderer renderer = obstacle.AddComponent<SpriteRenderer>(); // 실제 장애물 표시기
-            if (obstacleVisual == null) // 공용 이미지 생성 여부 확인
+            if (kind == PrototypeZoneKind.ElectricFloor) // 방전 바닥의 스위치 배치
             {
-                obstacleVisual = Sprite.Create(Texture2D.whiteTexture, new Rect(0f, 0f, Texture2D.whiteTexture.width, Texture2D.whiteTexture.height), new Vector2(0.5f, 0.5f), Texture2D.whiteTexture.width); // 시험용 사각 이미지 생성
+                float direction = position.x - chunk.position.x < ChunkSize * 0.5f ? 1f : -1f; // 같은 사분면의 중앙 방향
+                Vector3 switchPosition = position + Vector3.right * direction * (profile.ZoneRadius + 1.5f); // 위험 범위 밖의 인접 스위치 위치
+                PrototypeSpecialZone.Create(chunk, switchPosition, PrototypeZoneKind.CircuitSwitch, profile); // 실제 회로 스위치 생성
             }
-            renderer.sprite = obstacleVisual; // 실제 공용 장애물 이미지
-            renderer.color = profile.ObstaclePattern == 2 ? new Color(0.17f, 0.34f, 0.27f) : new Color(0.36f, 0.32f, 0.28f); // 맵별 임시 장애물 색상
-            renderer.sortingOrder = 4; // 바닥 위 장애물 표시
+        }
+        private void CreateDecoration(Transform chunk) // 충돌 없는 맵별 바닥 장식
+        {
+            if (Random.value >= profile.DecorationChance) // 데이터의 장식 생성 확률 확인
+            {
+                return; // 장식 없는 청크 유지
+            }
+            string folder = profile.ObstaclePattern == 1 ? "Ruins" : profile.ObstaclePattern == 2 ? "Swamp" : "Plains"; // 현재 맵 이미지 폴더
+            string[] names = profile.ObstaclePattern == 1 // 폐허 장식 확인
+                ? new[] { "균열_경계선", "점멸_경고등_먼지" } // 폐허 바닥 장식 목록
+                : profile.ObstaclePattern == 2 // 습지 장식 확인
+                    ? new[] { "얕은_수로", "징검돌_길", "발광_포자_물결_안개" } // 습지의 안전 수로와 장식 목록
+                    : new[] { "꽃잎_풀결_곤충_그림자" }; // 평원 바닥 장식 목록
+            string selectedName = names[Random.Range(0, names.Length)]; // 실제 장식 종류 추첨
+            Sprite sprite = Resources.Load<Sprite>("MapElements/" + folder + "/" + selectedName); // 실제 장식 스프라이트
+            if (sprite == null) // 장식 이미지 부재 확인
+            {
+                return; // 다른 맵 요소 유지
+            }
+            GameObject decoration = new GameObject("MapDecoration"); // 충돌 없는 장식 객체
+            decoration.transform.SetParent(chunk, false); // 청크와 수명 연결
+            bool safePath = selectedName == "얕은_수로" || selectedName == "징검돌_길"; // 습지 안전 경로 이미지 확인
+            float x = safePath ? ChunkSize * 0.5f : Random.Range(3f, ChunkSize - 3f); // 안전 수로의 중앙 연결 통로 위치
+            decoration.transform.localPosition = new Vector3(x, Random.Range(3f, ChunkSize - 3f), 0f); // 청크 내부 무작위 위치
+            SpriteRenderer renderer = decoration.AddComponent<SpriteRenderer>(); // 실제 바닥 장식 표시기
+            renderer.sprite = sprite; // 실제 맵별 이미지 적용
+            renderer.sortingOrder = 0; // 전투 요소와 위험 예고 아래 표시
+        }
+        private bool TryFindFeaturePosition(Transform chunk, out Vector3 position) // 장애물과 연결 통로를 피한 지역 위치
+        {
+            position = Vector3.zero; // 기본 위치 초기화
+            float quarter = ChunkSize * 0.25f; // 사분면 중심 좌표
+            float corridorHalf = profile.SafeCorridorWidth * 0.5f; // 안전 통로의 반폭
+            if (quarter - profile.ZoneRadius < corridorHalf) // 지역과 통로의 최소 간격 확인
+            {
+                return false; // 안전 공간이 부족한 청크 제외
+            }
+            int first = Random.Range(0, 4); // 최초 사분면 추첨
+            for (int offset = 0; offset < 4; offset++) // 실제 사분면 후보 순회
+            {
+                int quadrant = (first + offset) % 4; // 현재 사분면 번호
+                float x = (quadrant & 1) == 0 ? quarter : ChunkSize - quarter; // 가로 중심 위치
+                float y = (quadrant & 2) == 0 ? quarter : ChunkSize - quarter; // 세로 중심 위치
+                Vector3 candidate = chunk.position + new Vector3(x, y, 0f); // 실제 월드 후보 위치
+                bool blocked = false; // 장애물 겹침 상태 초기화
+                foreach (SnakeContactHazard hazard in chunk.GetComponentsInChildren<SnakeContactHazard>()) // 현재 청크의 장애물 순회
+                {
+                    if (hazard != null && Vector2.Distance(hazard.transform.position, candidate) < profile.ZoneRadius + 1.2f) // 지역과 실제 장애물 간격 확인
+                    {
+                        blocked = true; // 장애물과 겹친 후보 제외
+                        break; // 나머지 장애물 검사 종료
+                    }
+                }
+                if (!blocked) // 안전한 후보 확인
+                {
+                    position = candidate; // 실제 지역 위치 저장
+                    return true; // 지역 생성 허용
+                }
+            }
+            return false; // 안전한 지역 후보 부재
+        }
+
+        private void CreateObstacle(Transform chunk, int quadrant) // 안전한 사분면의 장애물 생성
+        {
+            float half = ChunkSize * 0.5f; // 청크 중심 위치
+            float visualPadding = 1.2f; // 그림과 충돌 범위의 안전 여유
+            float corridorHalf = profile.SafeCorridorWidth * 0.5f; // 설정된 안전 통로의 반폭
+            float edge = corridorHalf + visualPadding; // 청크 경계 연결 통로 여유
+            float inner = half - corridorHalf - visualPadding; // 중앙 연결 통로 바깥 경계
+            if (inner <= edge) // 안전한 배치 공간 확인
+            {
+                return; // 작은 청크의 장애물 생략
+            }
+            float x = Random.Range(edge, inner); // 사분면의 가로 위치 추첨
+            float y = Random.Range(edge, inner); // 사분면의 세로 위치 추첨
+            if ((quadrant & 1) != 0) // 오른쪽 사분면 확인
+            {
+                x = ChunkSize - x; // 좌우 대칭 위치
+            }
+            if ((quadrant & 2) != 0) // 위쪽 사분면 확인
+            {
+                y = ChunkSize - y; // 상하 대칭 위치
+            }
+            Vector3 position = chunk.position + new Vector3(x, y, 0f); // 실제 장애물 위치
+            if (player != null && Vector2.Distance(player.transform.position, position) < profile.PlayerObstacleClearance) // 플레이어 주변 안전 영역 확인
+            {
+                return; // 출현 지점과 현재 머리 주변 보호
+            }
+            string folder = profile.ObstaclePattern == 1 ? "Ruins" : profile.ObstaclePattern == 2 ? "Swamp" : "Plains"; // 현재 맵의 이미지 폴더
+            string[] names = profile.ObstaclePattern == 1 // 폐허 장애물 목록 확인
+                ? new[] { "부서진_석주", "녹슨_배관", "무너진_벽체", "정지_톱니_잔해", "엄폐_잔해" } // 폐허 장애물 이미지
+                : profile.ObstaclePattern == 2 // 습지 장애물 목록 확인
+                    ? new[] { "비틀린_고사목", "거대_버섯_줄기", "노출_뿌리_군락", "암반_섬" } // 습지 장애물 이미지
+                    : new[] { "바위_군락", "쓰러진_고목", "울타리_잔해", "개미굴_흙무더기", "바위_엄폐" }; // 평원 장애물 이미지
+            string selectedName = names[Random.Range(0, names.Length)]; // 실제 장애물 종류 추첨
+            Sprite artwork = Resources.Load<Sprite>("MapElements/" + folder + "/" + selectedName); // 실제 맵별 이미지 조회
+            GameObject obstacle = new GameObject("PrototypeObstacle"); // 기존 장애물 객체
+            obstacle.transform.SetParent(chunk, false); // 실제 청크와 수명 연결
+            obstacle.transform.localPosition = new Vector3(x, y, 0f); // 실제 사분면 위치
+            SpriteRenderer renderer = obstacle.AddComponent<SpriteRenderer>(); // 실제 장애물 표시기
+            if (obstacleVisual == null) // 공용 대체 이미지 생성 확인
+            {
+                obstacleVisual = Sprite.Create(Texture2D.whiteTexture, new Rect(0f, 0f, Texture2D.whiteTexture.width, Texture2D.whiteTexture.height), new Vector2(0.5f, 0.5f), Texture2D.whiteTexture.width); // 기존 사각 대체 이미지
+            }
+            renderer.sprite = artwork != null ? artwork : obstacleVisual; // 맵별 이미지 또는 기존 대체 이미지
+            renderer.color = artwork != null ? Color.white : new Color(0.36f, 0.32f, 0.28f); // 원본 이미지 색상 유지
+            renderer.sortingOrder = 4; // 바닥 위와 적 아래 표시
             BoxCollider2D collider = obstacle.AddComponent<BoxCollider2D>(); // 실제 장애물 충돌체
             collider.isTrigger = true; // 기존 장애물 피해 판정 사용
-            obstacle.transform.localScale = Vector3.one * 1.4f; // 실제 장애물 시각 크기
-            collider.size = Vector2.one; // 표시 크기와 실제 충돌 일치
-            obstacle.AddComponent<SnakeContactHazard>().Configure(SnakeContactHazardType.Obstacle); // 기존 장애물 충돌 처리 연결
+            collider.size = new Vector2(1f, 0.7f); // 그림 전체보다 작은 충돌 범위
+            collider.offset = new Vector2(0f, -0.15f); // 지면에 가까운 충돌 위치
+            SnakeContactHazard hazard = obstacle.AddComponent<SnakeContactHazard>(); // 기존 장애물 충돌 처리 생성
+            hazard.Configure(SnakeContactHazardType.Obstacle); // 기존 장애물 충돌 처리 연결
+            hazard.SetProjectileCover(selectedName == "바위_엄폐" || selectedName == "엄폐_잔해"); // 실제 엄폐 이미지의 투사체 차단 설정
         }
         private void CreateGround(Transform chunk, Vector2Int coordinate) // 실제 청크 바닥 생성
         {

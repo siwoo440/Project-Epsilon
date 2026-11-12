@@ -21,6 +21,10 @@ MonoBehaviour:
   bossProjectileCount: 3
   bossPhaseTwoProjectileCount: 5
   obstacleChance: 0.32
+  obstacleMinimumCount: 1
+  obstacleMaximumCount: 3
+  safeCorridorWidth: 4
+  playerObstacleClearance: 5.5
   specialZoneChance: 0.18
   obstaclePattern: 1
   zoneRadius: 2.5
@@ -29,3 +33,32 @@ MonoBehaviour:
   zoneTickSeconds: 2
   zoneDamage: 5
   zoneHealing: 2
+  windDuration: 2
+  windSpeedMultiplier: 1.1
+  windCooldown: 8
+  pollenDuration: 6
+  pollenPickupMultiplier: 1.2
+  mapFlowerHealing: 15
+  mudSpeedMultiplier: 0.85
+  bridgeImmunityDuration: 5
+  electricWarningDuration: 1
+  electricActiveDuration: 2
+  electricDamageInterval: 1
+  electricDamage: 8
+  circuitDisableDuration: 10
+  circuitCooldown: 20
+  circuitRange: 12
+  sporeWarningDuration: 1.2
+  decorationChance: 0.5
+  mapGemCount: 3
+  mapGemValue: 1
+  supplyHealing: 5
+  antHillStartTime: 300
+  antHillWarning: 1
+  antHillInterval: 0.5
+  antHillCooldown: 25
+  collapseWarning: 1
+  collapseDuration: 2.5
+  sporeActiveDuration: 3
+  sporeDamageInterval: 2
+  sporeDamage: 5

@@ -5,6 +5,7 @@ using ProjectEpsilon.Combat; // 실제 보스 대상
 using ProjectEpsilon.Core; // 실제 게임 상태
 using ProjectEpsilon.Enemies; // 실제 보스와 적
 using ProjectEpsilon.Player; // 실제 플레이어
+using ProjectEpsilon.Progression; // 격리된 맵 해금 시험
 using ProjectEpsilon.World; // 실제 청크 맵
 using UnityEditor; // 배치 실행
 using UnityEditor.SceneManagement; // 실제 씬 로드
@@ -75,6 +76,15 @@ namespace ProjectEpsilon.Editor // 배치 시험 영역
                     return; // 선택 불가 처리
                 }
                 selected = SessionState.GetInt("EpsilonDay46MapIndex", 0); // 저장된 맵 번호
+                if (selected > 0 && Application.productName.StartsWith("Project-Epsilon-MapVerification-", StringComparison.Ordinal)) // 격리된 시험의 추가 맵 확인
+                {
+                    MetaProgressionService service = MetaProgressionController.Instance == null ? null : MetaProgressionController.Instance.Service; // 실제 격리된 진행 데이터
+                    if (service == null || !service.TryCompleteRun("map-test-plains", 0d, 0, 0, true, 0) || !service.TryCompleteRun("map-test-ruins", 0d, 0, 0, true, 1)) // 실제 해금 조건 준비
+                    {
+                        Finish(1, "Could not prepare isolated map unlocks."); // 격리된 해금 실패
+                        return; // 실제 맵 선택 중단
+                    }
+                }
                 if (!(bool)choose.Invoke(selection, new object[] { selected })) // 실제 선택 적용
                 {
                     Finish(1, "Selected map was rejected before the run."); // 선택 실패
@@ -138,11 +148,15 @@ namespace ProjectEpsilon.Editor // 배치 시험 영역
             yield return null; // 실제 새 청크 생성 대기
             yield return null; // 실제 지연 제거 대기
             GameObject generated = map.GetChunk(new Vector2Int(30, 30)); // 실제 맵별 청크
-            SnakeContactHazard[] obstacles = generated == null ? null : generated.GetComponentsInChildren<SnakeContactHazard>(); // 실제 장애물 패턴
+            SnakeContactHazard[] obstacles = map.GetComponentsInChildren<SnakeContactHazard>(); // 아홉 청크의 실제 장애물
             PrototypeSpecialZone[] zones = generated == null ? null : generated.GetComponentsInChildren<PrototypeSpecialZone>(); // 실제 특수 지역
-            Require(obstacles != null && obstacles.Length == 2 && zones != null && zones.Length == 1, "Selected map did not generate its obstacle pattern and special zone."); // 실제 맵별 확률 적용 확인
-            Vector3 difference = obstacles[0].transform.position - obstacles[1].transform.position; // 사전 패턴 간 방향
-            Require(index == 1 ? Mathf.Abs(difference.y) > Mathf.Abs(difference.x) : Mathf.Abs(difference.x) > Mathf.Abs(difference.y), "Selected map obstacle pattern orientation is wrong."); // 맵별 실제 배치 차이 확인
+            Require(obstacles != null && obstacles.Length > 0 && zones != null && zones.Length >= 1 && zones.Length == (zones[0].Kind == PrototypeZoneKind.ElectricFloor ? 2 : 1), "Selected map did not generate its obstacles and special zone."); // 실제 맵별 확률 적용 확인
+            string[] folders = { "Plains", "Ruins", "Swamp" }; // 실제 맵별 이미지 폴더
+            foreach (SnakeContactHazard obstacle in obstacles) // 실제 생성 장애물 순회
+            {
+                SpriteRenderer artwork = obstacle.GetComponent<SpriteRenderer>(); // 실제 장애물 표시기
+                Require(artwork != null && artwork.sprite != null && AssetDatabase.GetAssetPath(artwork.sprite).StartsWith("Assets/Resources/MapElements/" + folders[index] + "/", StringComparison.Ordinal), "Selected map obstacle artwork is wrong."); // 실제 선택 맵의 장애물 이미지 확인
+            }
             MethodInfo spawn = typeof(PrototypeBossEncounter).GetMethod("TrySpawnBoss", BindingFlags.Instance | BindingFlags.NonPublic); // 실제 보스 생성
             Require(spawn != null, "Boss spawn path missing."); // 실제 생성 경로 확인
             spawn.Invoke(encounter, null); // 실제 보스 강제 생성

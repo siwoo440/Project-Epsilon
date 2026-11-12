@@ -11,6 +11,7 @@ internal static class Program // 보석 병합 수명주기 시험
 
     private static int Main() // 시험 시작
     {
+        Check("꽃가루 획득 범위와 경험치 값", VerifyPickupRangeMultiplier); // 실제 범위 배율 검사
         Check("소형·중형 가치 보존과 지연 파괴", VerifyConservationAndDestroy); // 경험치 보존 검사
         Check("일시정지와 검사 간격", VerifyPauseAndInterval); // 게임 상태 검사
         Check("흡수·수집과 병합 경합", VerifyCollectionRace); // 수집 경합 검사
@@ -23,6 +24,14 @@ internal static class Program // 보석 병합 수명주기 시험
         Check("씬 전환 부분 그룹 정리", VerifySceneChange); // 씬 전환 검사
         Console.WriteLine(failures == 0 ? "PASS" : $"FAIL: {failures}"); // 최종 결과
         return failures == 0 ? 0 : 1; // 종료 코드
+    }
+
+    private static void VerifyPickupRangeMultiplier() // 실제 꽃가루 획득 범위 검사
+    {
+        var fixture = Create(); // 실제 수신자와 보석 환경
+        fixture.receiver.Movement = new ProjectEpsilon.Player.SnakeMovement { PickupRangeMultiplier = 1.2f }; // 꽃가루 범위 배율 적용
+        ExperiencePickup pickup = ExperiencePickup.Spawn(new Vector3(10f, 0f, 0f), 1, null, fixture.receiver); // 실제 경험치 보석 생성
+        Require(Math.Abs(pickup.MergeAttractionRange - 3.12f) < 0.001f && pickup.ExperienceValue == 1, "꽃가루가 범위 대신 경험치 값을 변경함"); // 실제 범위와 원본 경험치 확인
     }
 
     private static void Check(string name, Action action) // 개별 시험
@@ -92,7 +101,7 @@ internal static class Program // 보석 병합 수명주기 시험
         Require(fixture.manager.ProcessMergePass() == 1, "소형 병합 누락"); // 첫 병합 확인
         Require(AvailableValue() == 5, "소형 병합 시 경험치 변화"); // 경험치 보존 확인
         ExperiencePickup result = Array.Find(small, pickup => pickup.IsMergeAvailable); // 병합 결과 조회
-        Require(result != null && result.gameObject.name == "XP_Gem_5" && Math.Abs(result.transform.localScale.x - 0.26f) < 0.0001f, "중형 보석 이름 또는 크기 오류"); // 결과 표현 확인
+        Require(result != null && result.gameObject.name == "XP_Gem_5" && Math.Abs(result.transform.localScale.x - 0.78f) < 0.0001f, "중형 보석 이름 또는 크기 오류"); // 세 배 표시 크기 확인
         Require(fixture.manager.ProcessMergePass() == 0 && AvailableValue() == 5, "파괴 전 재료 중복 병합"); // 지연 파괴 중복 방지
         int pending = 0; // 제거 예약 수
         foreach (ExperiencePickup pickup in small) // 원래 보석 순회

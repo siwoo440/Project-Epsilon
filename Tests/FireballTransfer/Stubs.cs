@@ -21,13 +21,31 @@ namespace UnityEngine // Unity 대체 형식
     public sealed class GameObject // 씬 객체 대체
     {
         public bool PendingDestroy; // 파괴 예약 여부
+        public bool activeSelf = true; // 객체 활성 상태
         public Transform transform = new Transform(); // 객체 위치
+        public GameObject() // 기본 객체 생성
+        {
+        }
+        public GameObject(string name) // 이름이 있는 객체 생성
+        {
+        }
+        public void SetActive(bool active) // 객체 활성 상태 설정
+        {
+            activeSelf = active; // 실제 상태 기록
+        }
+        public T AddComponent<T>() where T : new() // 구성 요소 생성
+        {
+            return new T(); // 시험용 구성 반환
+        }
     }
     public sealed class Transform // 위치 대체
     {
         public Vector3 position; // 월드 위치
         public Vector3 localScale; // 객체 크기
         public Quaternion rotation; // 객체 회전
+        public void SetParent(Transform parent, bool worldPositionStays) // 부모 연결 대체
+        {
+        }
     }
     public struct Vector2 // 평면 방향
     {
@@ -44,6 +62,8 @@ namespace UnityEngine // Unity 대체 형식
         public float x; // 가로 위치
         public float y; // 세로 위치
         public float z; // 깊이 위치
+        public static Vector3 one => new Vector3(1f, 1f, 1f); // 단위 크기
+        public static Vector3 operator *(Vector3 value, float scale) => new Vector3(value.x * scale, value.y * scale, value.z * scale); // 벡터 크기 배율
         public Vector3(float a, float b, float c) // 위치 생성
         {
             x = a; // 가로 저장
@@ -66,6 +86,8 @@ namespace UnityEngine // Unity 대체 형식
         public Sprite sprite; // 이미지
         public Color color; // 색상
         public int sortingOrder; // 표시 순서
+        public bool enabled = true; // 표시 활성 상태
+        public GameObject gameObject = new GameObject(); // 표시 객체
     }
     public readonly struct Color // 색상 대체
     {
@@ -76,7 +98,8 @@ namespace UnityEngine // Unity 대체 형식
     public class Collider2D // 충돌체 대체
     {
         public ProjectEpsilon.Combat.WeaponTarget Target; // 충돌 표적
-        public T GetComponent<T>() where T : class => Target as T; // 표적 조회
+        public ProjectEpsilon.Player.SnakeContactHazard Cover; // 충돌 장애물
+        public T GetComponent<T>() where T : class => Cover as T ?? Target as T; // 충돌 구성 조회
     }
     public sealed class CircleCollider2D : Collider2D // 원형 충돌체
     {
@@ -138,6 +161,7 @@ namespace ProjectEpsilon.Data // 무기 데이터 대체
         public int ProjectileHitLimit = 1; // 투사체 관통 수
         public float GradeThreeTransferRange; // 임시 전달 범위
         public float GradeThreeTransferDamageMultiplier = 1f; // 임시 전달 피해 배율
+        public float GetTransferDamageMultiplier(int grade) => GradeThreeTransferDamageMultiplier; // 발사 등급의 전달 피해
     }
 }
 
@@ -211,5 +235,13 @@ namespace ProjectEpsilon.Combat // 공격 대상 대체
             Health -= damage; // 체력 감소
             OnHit?.Invoke(); // 재진입 효과 호출
         }
+    }
+}
+
+namespace ProjectEpsilon.Player // 실제 장애물 엄폐 대체
+{
+    public sealed class SnakeContactHazard // 투사체 엄폐 판정 대체
+    {
+        public bool BlocksProjectiles; // 엄폐 여부
     }
 }

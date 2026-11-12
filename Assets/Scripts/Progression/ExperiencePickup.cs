@@ -1,4 +1,5 @@
 using ProjectEpsilon.Core; // 대상 기능 연결
+using ProjectEpsilon.Player; // 플레이어 획득 범위 효과
 using ProjectEpsilon.Recording; // 선택적 보석 경험치 기록
 using UnityEngine; // Unity 엔진 기능 연결
 
@@ -17,6 +18,7 @@ namespace ProjectEpsilon.Progression // 프로젝트 기능 영역
         private bool collected; // 대상 구성 선언
         private bool destructionScheduled; // 파괴 예약 여부
         private Sprite fallbackSprite; // 이미지 설정이 없는 씬의 기존 표시
+        private SnakeMovement receiverMovement; // 수신자의 임시 범위 효과
 
         private void Awake() // 초기화 기능 선언
         {
@@ -34,6 +36,7 @@ namespace ProjectEpsilon.Progression // 프로젝트 기능 영역
                 return; // 제거 예정 보석 재설정 방지
             }
             receiver = experienceReceiver; // 경험치 값 설정
+            receiverMovement = receiver == null ? null : receiver.GetComponent<SnakeMovement>(); // 실제 수신자의 이동 효과 조회
             ExperiencePickupSettings settings = receiver != null ? receiver.PickupSettings : SnakeExperience.Current != null ? SnakeExperience.Current.PickupSettings : null; // 실제 수신자의 흡수 설정
             if (settings != null) // 공통 설정 존재 확인
             {
@@ -80,6 +83,7 @@ namespace ProjectEpsilon.Progression // 프로젝트 기능 영역
                 {
                     return; // 현재 기능 종료
                 }
+                receiverMovement = receiver.GetComponent<SnakeMovement>(); // 새 수신자의 이동 효과 조회
             }
 
             Vector3 targetPosition = receiver.transform.position; // 벡터·대상 값 설정
@@ -131,7 +135,7 @@ namespace ProjectEpsilon.Progression // 프로젝트 기능 영역
         public int ExperienceValue => experienceValue; // 보석 경험치 조회
         internal bool IsMergeAvailable => !collected && isActiveAndEnabled && gameObject.activeInHierarchy; // 병합 가능 상태
         internal SnakeExperience MergeReceiver => receiver != null ? receiver : SnakeExperience.Current; // 실제 경험치 수신자
-        internal float MergeAttractionRange => Mathf.Max(0f, attractionRange * MetaModifiers.PickupRangeMultiplier); // 영구 성장의 안전한 흡수 거리
+        internal float MergeAttractionRange => Mathf.Max(0f, attractionRange * MetaModifiers.PickupRangeMultiplier * (receiverMovement == null ? 1f : receiverMovement.PickupRangeMultiplier)); // 영구 성장과 꽃가루 획득 범위
 
         internal bool IsOutsideAttraction() // 자동 흡수 범위 밖 확인
         {

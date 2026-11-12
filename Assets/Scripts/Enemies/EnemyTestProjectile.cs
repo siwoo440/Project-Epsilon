@@ -60,6 +60,14 @@ namespace ProjectEpsilon.Enemies // 적 영역
             {
                 return; // 명중 처리 생략
             }
+            SnakeContactHazard cover = other.GetComponent<SnakeContactHazard>(); // 기존 장애물 엄폐 조회
+            if (cover != null && cover.BlocksProjectiles) // 실제 엄폐 충돌 확인
+            {
+                hitConsumed = true; // 같은 프레임 중복 명중 차단
+                gameObject.SetActive(false); // 지연 파괴 전 후속 접촉 차단
+                Destroy(gameObject); // 엄폐물에 막힌 적 탄 제거
+                return; // 플레이어 명중 처리 중단
+            }
             SnakeSegment segment = other.GetComponent<SnakeSegment>(); // 명중 몸통 조회
             bool isHead = other.transform == player.transform; // 머리 명중 여부
             bool isBody = segment != null && body != null && segment.transform.IsChildOf(body.transform); // 몸통 명중 여부

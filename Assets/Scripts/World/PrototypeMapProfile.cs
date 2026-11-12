@@ -14,6 +14,10 @@ namespace ProjectEpsilon.World // 맵 영역
         [Range(1, 9)] [SerializeField] private int bossProjectileCount = 3; // 첫 단계 발사 수 임시값
         [Range(1, 9)] [SerializeField] private int bossPhaseTwoProjectileCount = 5; // 두 번째 단계 발사 수 임시값
         [Min(0f)] [SerializeField] private float obstacleChance; // 청크 장애물 확률 임시값
+        [Range(1, 4)] [SerializeField] private int obstacleMinimumCount = 1; // 청크 최소 장애물 수 임시값
+        [Range(1, 4)] [SerializeField] private int obstacleMaximumCount = 3; // 청크 최대 장애물 수 임시값
+        [Min(3f)] [SerializeField] private float safeCorridorWidth = 4f; // 연결된 안전 통로 폭 임시값
+        [Min(0f)] [SerializeField] private float playerObstacleClearance = 5.5f; // 플레이어 주변 장애물 보호 거리
         [Range(0f, 1f)] [SerializeField] private float specialZoneChance; // 청크 특수 지역 확률 임시값
         [Range(0, 2)] [SerializeField] private int obstaclePattern; // 사전 배치 패턴 종류
         [Min(0.5f)] [SerializeField] private float zoneRadius = 2.5f; // 특수 지역 반경 임시값
@@ -22,6 +26,35 @@ namespace ProjectEpsilon.World // 맵 영역
         [Min(0.1f)] [SerializeField] private float zoneTickSeconds = 2f; // 피해와 회복 간격 임시값
         [Min(0)] [SerializeField] private int zoneDamage = 5; // 위험 지역 피해 임시값
         [Min(0)] [SerializeField] private int zoneHealing = 2; // 회복 지역 회복량 임시값
+        [Min(0f)] [SerializeField] private float windDuration = 2f; // 바람길 지속 시간 임시값
+        [Min(1f)] [SerializeField] private float windSpeedMultiplier = 1.1f; // 바람길 이동 배율 임시값
+        [Min(0f)] [SerializeField] private float windCooldown = 8f; // 같은 바람길 재사용 대기
+        [Min(0f)] [SerializeField] private float pollenDuration = 6f; // 꽃가루 지속 시간 임시값
+        [Min(1f)] [SerializeField] private float pollenPickupMultiplier = 1.2f; // 꽃가루 획득 범위 배율
+        [Min(0)] [SerializeField] private int mapFlowerHealing = 15; // 꽃밭과 정화 꽃 회복량
+        [Range(0.1f, 1f)] [SerializeField] private float mudSpeedMultiplier = 0.85f; // 진흙 이동 배율 임시값
+        [Min(0f)] [SerializeField] private float bridgeImmunityDuration = 5f; // 수초 다리 지형 면역 시간
+        [Min(0f)] [SerializeField] private float electricWarningDuration = 1f; // 방전 바닥 예고 시간
+        [Min(0f)] [SerializeField] private float electricActiveDuration = 2f; // 방전 바닥 활성 시간
+        [Min(0.1f)] [SerializeField] private float electricDamageInterval = 1f; // 방전 바닥 피해 간격
+        [Min(0)] [SerializeField] private int electricDamage = 8; // 방전 바닥 공용 체력 피해
+        [Min(0f)] [SerializeField] private float circuitDisableDuration = 10f; // 스위치의 방전 중지 시간
+        [Min(0f)] [SerializeField] private float circuitCooldown = 20f; // 스위치 재사용 대기
+        [Min(0f)] [SerializeField] private float circuitRange = 12f; // 인접 방전 장치 탐색 거리 임시값
+        [Min(0f)] [SerializeField] private float sporeWarningDuration = 1.2f; // 독성 포자 예고 시간
+        [Range(0f, 1f)] [SerializeField] private float decorationChance = 0.5f; // 청크별 비충돌 장식 확률
+        [Min(1)] [SerializeField] private int mapGemCount = 3; // 맵 보상당 보석 수 임시값
+        [Min(1)] [SerializeField] private int mapGemValue = 1; // 맵 보상 보석 경험치 임시값
+        [Min(0)] [SerializeField] private int supplyHealing = 5; // 보급 창고 체력 회복 임시값
+        [Min(0f)] [SerializeField] private float antHillStartTime = 300f; // 개미굴 활성 시작 시간 임시값
+        [Min(0f)] [SerializeField] private float antHillWarning = 1f; // 개미굴 소환 예고 임시값
+        [Min(0.1f)] [SerializeField] private float antHillInterval = 0.5f; // 개미 순차 소환 간격 임시값
+        [Min(0f)] [SerializeField] private float antHillCooldown = 25f; // 개미굴 재사용 대기
+        [Min(0f)] [SerializeField] private float collapseWarning = 1f; // 붕괴 잔해 예고 시간
+        [Min(0f)] [SerializeField] private float collapseDuration = 2.5f; // 붕괴 잔해 지속 시간
+        [Min(0f)] [SerializeField] private float sporeActiveDuration = 3f; // 독성 포자 활성 시간
+        [Min(0.1f)] [SerializeField] private float sporeDamageInterval = 2f; // 독성 포자 피해 간격
+        [Min(0)] [SerializeField] private int sporeDamage = 5; // 독성 포자 공용 체력 피해
         public string DisplayName => displayName; // 맵 표시 이름
         public Sprite Ground => ground; // 실제 바닥 이미지
         public Color BossTint => bossTint; // 실제 임시 보스 색상
@@ -31,6 +64,10 @@ namespace ProjectEpsilon.World // 맵 영역
         public int BossProjectileCount => Mathf.Clamp(bossProjectileCount, 1, 9); // 안전한 첫 단계 발사 수
         public int BossPhaseTwoProjectileCount => Mathf.Clamp(bossPhaseTwoProjectileCount, 1, 9); // 안전한 두 번째 발사 수
         public float ObstacleChance => Mathf.Clamp01(obstacleChance); // 안전한 장애물 확률
+        public int ObstacleMinimumCount => Mathf.Clamp(obstacleMinimumCount, 1, 4); // 안전한 최소 장애물 수
+        public int ObstacleMaximumCount => Mathf.Clamp(obstacleMaximumCount, ObstacleMinimumCount, 4); // 안전한 최대 장애물 수
+        public float SafeCorridorWidth => Mathf.Max(3f, safeCorridorWidth); // 최소 폭을 보장한 연결 통로
+        public float PlayerObstacleClearance => Mathf.Max(0f, playerObstacleClearance); // 안전한 플레이어 보호 거리
         public float SpecialZoneChance => Mathf.Clamp01(specialZoneChance); // 안전한 특수 지역 확률
         public int ObstaclePattern => Mathf.Clamp(obstaclePattern, 0, 2); // 안전한 패턴 번호
         public float ZoneRadius => Mathf.Max(0.5f, zoneRadius); // 안전한 지역 반경
@@ -39,5 +76,34 @@ namespace ProjectEpsilon.World // 맵 영역
         public float ZoneTickSeconds => Mathf.Max(0.1f, zoneTickSeconds); // 안전한 효과 간격
         public int ZoneDamage => Mathf.Max(0, zoneDamage); // 안전한 지역 피해
         public int ZoneHealing => Mathf.Max(0, zoneHealing); // 안전한 지역 회복
+        public float WindDuration => Mathf.Max(0f, windDuration); // 안전한 바람 지속 시간
+        public float WindSpeedMultiplier => Mathf.Max(1f, windSpeedMultiplier); // 안전한 바람 이동 배율
+        public float WindCooldown => Mathf.Max(0f, windCooldown); // 안전한 바람 재사용 대기
+        public float PollenDuration => Mathf.Max(0f, pollenDuration); // 안전한 꽃가루 지속 시간
+        public float PollenPickupMultiplier => Mathf.Max(1f, pollenPickupMultiplier); // 안전한 획득 범위 배율
+        public int MapFlowerHealing => Mathf.Max(0, mapFlowerHealing); // 안전한 꽃 회복량
+        public float MudSpeedMultiplier => Mathf.Clamp(mudSpeedMultiplier, 0.1f, 1f); // 안전한 진흙 이동 배율
+        public float BridgeImmunityDuration => Mathf.Max(0f, bridgeImmunityDuration); // 안전한 지형 면역 시간
+        public float ElectricWarningDuration => Mathf.Max(0f, electricWarningDuration); // 안전한 방전 예고 시간
+        public float ElectricActiveDuration => Mathf.Max(0f, electricActiveDuration); // 안전한 방전 활성 시간
+        public float ElectricDamageInterval => Mathf.Max(0.1f, electricDamageInterval); // 안전한 방전 피해 간격
+        public int ElectricDamage => Mathf.Max(0, electricDamage); // 안전한 방전 피해량
+        public float CircuitDisableDuration => Mathf.Max(0f, circuitDisableDuration); // 안전한 장치 중지 시간
+        public float CircuitCooldown => Mathf.Max(0f, circuitCooldown); // 안전한 스위치 대기 시간
+        public float CircuitRange => Mathf.Max(0f, circuitRange); // 안전한 인접 장치 거리
+        public float SporeWarningDuration => Mathf.Max(0f, sporeWarningDuration); // 안전한 포자 예고 시간
+        public float DecorationChance => Mathf.Clamp01(decorationChance); // 안전한 장식 출현 확률
+        public int MapGemCount => Mathf.Max(1, mapGemCount); // 안전한 맵 보석 수
+        public int MapGemValue => Mathf.Max(1, mapGemValue); // 안전한 맵 보석 경험치
+        public int SupplyHealing => Mathf.Max(0, supplyHealing); // 안전한 보급 창고 회복량
+        public float AntHillStartTime => Mathf.Max(0f, antHillStartTime); // 안전한 개미굴 시작 시간
+        public float AntHillWarning => Mathf.Max(0f, antHillWarning); // 안전한 개미굴 예고 시간
+        public float AntHillInterval => Mathf.Max(0.1f, antHillInterval); // 안전한 개미 소환 간격
+        public float AntHillCooldown => Mathf.Max(0f, antHillCooldown); // 안전한 개미굴 재사용 시간
+        public float CollapseWarning => Mathf.Max(0f, collapseWarning); // 안전한 붕괴 예고 시간
+        public float CollapseDuration => Mathf.Max(0f, collapseDuration); // 안전한 붕괴 지속 시간
+        public float SporeActiveDuration => Mathf.Max(0f, sporeActiveDuration); // 안전한 포자 활성 시간
+        public float SporeDamageInterval => Mathf.Max(0.1f, sporeDamageInterval); // 안전한 포자 피해 간격
+        public int SporeDamage => Mathf.Max(0, sporeDamage); // 안전한 포자 피해량
     }
 }
