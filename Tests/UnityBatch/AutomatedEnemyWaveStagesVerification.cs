@@ -97,8 +97,8 @@ namespace ProjectEpsilon.Editor // 실제 배치 시험 영역
             float[] times = { 0f, 299.99f, 300f, 599.99f, 600f, 899.99f, 900f }; // 실제 구간 경계 시각
             float[] intervals = { 1.3f, 1.3f, 1.1f, 1.1f, 0.9f, 0.9f, 0.7f }; // 실제 기대 생성 간격
             int[] limits = { 40, 40, 70, 70, 110, 110, 125 }; // 실제 일반 적 최대 상한
-            float[] health = { 1f, 1f, 1.12f, 1.12f, 1.25f, 1.25f, 1.4f }; // 실제 체력 배율
-            float[] damage = { 1f, 1f, 1.03f, 1.03f, 1.06f, 1.06f, 1.09f }; // 실제 공격 배율
+            float[] health = { 1f, 1.096f, 1.12f, 1.224f, 1.25f, 1.37f, 1.4f }; // 실제 체력 배율
+            float[] damage = { 1f, 1.024f, 1.03f, 1.054f, 1.06f, 1.084f, 1.09f }; // 실제 공격 배율
             for (int index = 0; index < times.Length; index++) // 실제 구간 경계 순회
             {
                 elapsed.SetValue(spawner, times[index]); // 실제 경계 시각 통제
@@ -114,9 +114,32 @@ namespace ProjectEpsilon.Editor // 실제 배치 시험 영역
             }
             Require(Mathf.Approximately(enemies[0].health, 25f) && enemies[0].damage == 10, "Wave scaling mutated the shared base enemy settings."); // 원본 능력치 보존 확인
             WeaponTarget elite = spawn.Invoke(spawner, new object[] { enemies[3], new Vector3(150f, 100f, 0f), false }) as WeaponTarget; // 실제 엘리트 생성
-            Require(elite != null && Mathf.Approximately(elite.MaximumHealth, enemies[3].health), "Normal wave scaling changed elite health."); // 일반 적 배율의 엘리트 영향 차단
+            Require(elite != null && Mathf.Approximately(elite.MaximumHealth, Mathf.Ceil(enemies[3].health * 1.4f)), "Elite health did not follow elapsed time."); // 엘리트 체력 배율 확인
+            elite.TakeDamage(elite.MaximumHealth * 0.5f); // 엘리트 체력 절반 감소
+            elapsed.SetValue(spawner, 960f); // 다음 분 경계 이동
+            MethodInfo refresh = typeof(EarlyEnemyWaveSpawner).GetMethod("RefreshEnemyScaling", Private); // 실제 생존 적 갱신 경로
+            Require(refresh != null, "Retroactive minute scaling is missing."); // 분 단위 소급 갱신 존재 확인
+            refresh.Invoke(spawner, null); // 실제 생존 적 능력치 갱신
+            Require(Mathf.Approximately(elite.MaximumHealth, Mathf.Ceil(enemies[3].health * 1.43f)) && Mathf.Approximately(elite.CurrentHealth, elite.MaximumHealth * 0.5f), "Retroactive elite scaling did not preserve health ratio."); // 기존 체력 비율과 증가 확인
+            elapsed.SetValue(spawner, 0f); // 신규 적의 시작 시각 설정
+            WeaponTarget normal = spawn.Invoke(spawner, new object[] { enemies[0], new Vector3(160f, 100f, 0f), false }) as WeaponTarget; // 시작 시각의 일반 적 생성
+            normal.TakeDamage(normal.MaximumHealth * 0.4f); // 기존 일반 적의 체력 감소
+            refresh.Invoke(spawner, null); // 시작 분 적용
+            elapsed.SetValue(spawner, 60f); // 첫 분 경계 이동
+            refresh.Invoke(spawner, null); // 생존 적 소급 갱신
+            float minuteHealth = Mathf.Ceil(enemies[0].health * 1.024f); // 첫 분의 일반 적 최대 체력
+            int minuteDamage = Mathf.CeilToInt(enemies[0].damage * 1.006f); // 첫 분의 일반 적 공격력
+            EarlyEnemySettings normalRuntime = typeof(EarlyEnemyBehaviour).GetField("settings", Private).GetValue(normal.GetComponent<EarlyEnemyBehaviour>()) as EarlyEnemySettings; // 생존 적의 실제 공격 설정
+            Require(Mathf.Approximately(normal.MaximumHealth, minuteHealth) && Mathf.Approximately(normal.CurrentHealth, minuteHealth * 0.6f), "Retroactive normal scaling lost its health ratio."); // 일반 적 체력 비율 확인
+            Require(normalRuntime != null && normalRuntime.damage == minuteDamage && Mathf.Approximately(normalRuntime.speedRatio, enemies[0].speedRatio), "Retroactive damage or movement speed mismatch."); // 기존 적 공격력과 속도 확인
+            WeaponTarget newNormal = spawn.Invoke(spawner, new object[] { enemies[0], new Vector3(165f, 100f, 0f), false }) as WeaponTarget; // 같은 분의 신규 일반 적 생성
+            Require(Mathf.Approximately(newNormal.MaximumHealth, normal.MaximumHealth), "New and existing normal enemies use different scaling."); // 기존 적과 신규 적 배율 일치 확인
+            normal.TakeDamage(normal.MaximumHealth * 10f); // 기존 일반 적 처치
+            elapsed.SetValue(spawner, 120f); // 다음 분 경계 이동
+            refresh.Invoke(spawner, null); // 사망 이후 재갱신
+            Require(!normal.IsAlive && Mathf.Approximately(enemies[0].health, 25f) && enemies[0].damage == 10, "Scaling revived a dead enemy or changed base data."); // 사망 상태와 원본 보존 확인
             yield return null; // 실제 제거 프레임 대기
-            AutomatedEnemyWaveStagesVerification.Finish(0, "Actual adjustable wave boundaries, spawn settings, scaled normal enemies and unchanged elite passed."); // 실제 전체 성공 기록
+            AutomatedEnemyWaveStagesVerification.Finish(0, "Actual adjustable wave boundaries, spawn settings, minute scaling and retroactive elite health passed."); // 실제 전체 성공 기록
         }
 
         private static float ReadFloat(object target, string name) // 실제 출현 구간 실수 값 조회

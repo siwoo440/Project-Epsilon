@@ -33,3 +33,8 @@ MonoBehaviour:
     normalEnemyLimit: 125
     healthMultiplier: 1.4
     damageMultiplier: 1.09
+  - startTime: 1200
+    spawnInterval: 0.6
+    normalEnemyLimit: 140
+    healthMultiplier: 1.55
+    damageMultiplier: 1.12

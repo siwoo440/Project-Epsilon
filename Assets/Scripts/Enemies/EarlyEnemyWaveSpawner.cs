@@ -106,6 +106,13 @@ namespace ProjectEpsilon.Enemies // 적 영역
         private EnemyWaveSettings waveSettings; // 시간별 출현 데이터
         private float nextSpawn; // 다음 출현 시각
         private int activeEnemies; // 생존 적 수
+        private sealed class EnemyScaleRecord // 개별 적의 원본과 실행 설정
+        {
+            public EarlyEnemySettings source; // 원본 적 능력치
+            public EarlyEnemySettings runtime; // 개별 적 실행 능력치
+        }
+        private readonly Dictionary<WeaponTarget, EnemyScaleRecord> enemyScales = new Dictionary<WeaponTarget, EnemyScaleRecord>(); // 생존 적 능력치 추적
+        private int lastScalingMinute = -1; // 마지막 갱신 분
         private readonly List<WeaponTarget> targets = new List<WeaponTarget>(); // 생존 적 추적
         private readonly HashSet<WeaponTarget> eliteTargets = new HashSet<WeaponTarget>(); // 생존 엘리트 집합
         private readonly HashSet<WeaponTarget> bossSummonTargets = new HashSet<WeaponTarget>(); // 무보상 보스 소환 적 집합
@@ -124,8 +131,8 @@ namespace ProjectEpsilon.Enemies // 적 영역
         public int CurrentNormalEnemyCount => Mathf.Max(0, activeEnemies - eliteTargets.Count - bossSummonTargets.Count); // 엘리트와 소환 적을 제외한 일반 적 수
         public float CurrentSpawnInterval => Mathf.Max(0.1f, CurrentStage == null ? spawnInterval : CurrentStage.spawnInterval); // 현재 일반 적 출현 간격
         public int CurrentNormalEnemyLimit => Mathf.Max(1, CurrentStage == null ? maximumEnemies : CurrentStage.normalEnemyLimit); // 현재 일반 적 상한
-        public float CurrentNormalHealthMultiplier => Mathf.Max(0f, CurrentStage == null ? 1f : CurrentStage.healthMultiplier); // 현재 일반 적 체력 배율
-        public float CurrentNormalDamageMultiplier => Mathf.Max(0f, CurrentStage == null ? 1f : CurrentStage.damageMultiplier); // 현재 일반 적 피해 배율
+        public float CurrentNormalHealthMultiplier => waveSettings == null ? 1f : waveSettings.ResolveMultiplier(elapsed, true); // 현재 일반 적 체력 배율
+        public float CurrentNormalDamageMultiplier => waveSettings == null ? 1f : waveSettings.ResolveMultiplier(elapsed, false); // 현재 일반 적 피해 배율
         private EnemyWaveStage CurrentStage => waveSettings == null ? null : waveSettings.Resolve(elapsed); // 현재 시간의 출현 구간
         public float ElapsedSeconds => elapsed; // 실제 전투 경과 시간 조회
         public double CurrentRunSeconds => elapsed + (GameManager.Instance != null && (GameManager.Instance.IsPlaying || GameManager.Instance.IsPaused) ? Math.Max(0d, Time.timeAsDouble - previousClockTime) : 0d); // 종료 프레임을 포함한 전투 시간
@@ -164,6 +171,7 @@ namespace ProjectEpsilon.Enemies // 적 영역
             {
                 return; // 출현과 전환 대기
             }
+            RefreshEnemyScaling(); // 생존 적의 분 단위 능력치 갱신
             if (!hasEnteredBossTransition && elapsed >= Mathf.Max(0f, bossTransitionTime)) // 보스 전환 시각 확인
             {
                 EnterBossTransition(); // 기존 전투 정리와 전환 알림
@@ -226,6 +234,7 @@ namespace ProjectEpsilon.Enemies // 적 영역
                 Destroy(target.gameObject); // 사망 이벤트 없는 제거
             }
             targets.Clear(); // 일반 적과 엘리트 목록 비우기
+            enemyScales.Clear(); // 기존 적 능력치 추적 해제
             eliteTargets.Clear(); // 생존 엘리트 목록 비우기
             bossSummonTargets.Clear(); // 이전 소환 적 목록 제거
             activeEnemies = 0; // 생존 적 수 초기화
@@ -270,16 +279,15 @@ namespace ProjectEpsilon.Enemies // 적 영역
             }
             target.Died -= HandleEnemyDied; // 처치 수량 연결 해제
             bossSummonTargets.Remove(target); // 무보상 소환 목록 제거
+            enemyScales.Remove(target); // 소환 적 능력치 추적 해제
             activeEnemies = Mathf.Max(0, activeEnemies - 1); // 생존 적 수 감소
             target.gameObject.SetActive(false); // 지연 파괴 전 접촉 차단
             Destroy(target.gameObject); // 사망 이벤트 없는 제거
         }
         private WeaponTarget SpawnAt(EarlyEnemySettings setting, Vector3 position, bool bossSummon) // 기존 적 생성 구조 재사용
         {
-            if (!bossSummon && setting.kind != EarlyEnemyKind.Elite) // 일반 적 구간 능력치 적용 확인
-            {
-                setting = ScaleNormalEnemy(setting); // 원본 설정을 보존한 능력치 복사
-            }
+            EarlyEnemySettings source = setting; // 원본 적 능력치 보존
+            setting = ScaleNormalEnemy(source); // 모든 일반 적과 엘리트의 능력치 복사
             GameObject enemy = new GameObject("EarlyEnemy_" + setting.kind); // 적 오브젝트 생성
             enemy.transform.position = position; // 실제 출현 위치
             SpriteRenderer renderer = enemy.AddComponent<SpriteRenderer>(); // 적 렌더러 생성
@@ -309,6 +317,7 @@ namespace ProjectEpsilon.Enemies // 적 영역
             behaviour.Configure(setting, player, body, health, visual, shooterDistance, projectileSpeed, projectileLifetime, eliteWarningDuration, eliteChargeDuration, eliteChargeMultiplier); // 적 행동 연결
             activeEnemies++; // 생존 적 증가
             targets.Add(target); // 생존 적 목록 추가
+            enemyScales.Add(target, new EnemyScaleRecord { source = source, runtime = setting }); // 생존 적별 원본과 실행 설정 저장
             if (bossSummon) // 보스 소환 적 여부 확인
             {
                 bossSummonTargets.Add(target); // 무보상 소환 적 구분
@@ -319,6 +328,25 @@ namespace ProjectEpsilon.Enemies // 적 영역
             }
             target.Died += HandleEnemyDied; // 처치 시 수량 갱신 연결
             return target; // 실제 생성 대상 반환
+        }
+        private void RefreshEnemyScaling() // 생존 적의 분 단위 능력치 갱신
+        {
+            int minute = Mathf.FloorToInt(Mathf.Max(0f, elapsed) / 60f); // 완료된 전투 분
+            if (minute == lastScalingMinute) // 동일한 분 확인
+            {
+                return; // 중복 갱신 생략
+            }
+            lastScalingMinute = minute; // 갱신 분 기록
+            foreach (WeaponTarget target in targets) // 관리 중인 생존 적 순회
+            {
+                if (target == null || !target.IsAlive || !enemyScales.TryGetValue(target, out EnemyScaleRecord record)) // 유효한 생존 적 확인
+                {
+                    continue; // 제거된 적 건너뛰기
+                }
+                record.runtime.health = Mathf.Ceil(record.source.health * CurrentNormalHealthMultiplier); // 원본 기준 최대 체력 갱신
+                record.runtime.damage = Mathf.CeilToInt(record.source.damage * CurrentNormalDamageMultiplier); // 원본 기준 공격력 갱신
+                target.SetMaximumHealthPreservingRatio(record.runtime.health); // 기존 체력 비율 유지
+            }
         }
         private EarlyEnemySettings ScaleNormalEnemy(EarlyEnemySettings source) // 일반 적 능력치 복사와 구간 배율 적용
         {
@@ -381,6 +409,7 @@ namespace ProjectEpsilon.Enemies // 적 영역
             {
                 return; // 중복 사망 무시
             }
+            enemyScales.Remove(target); // 처치 적 능력치 추적 해제
             bool elite = eliteTargets.Remove(target); // 실제 엘리트 처치 여부
             bool summon = bossSummonTargets.Remove(target); // 무보상 소환 처치 여부
             EnemyDied?.Invoke(elite, summon); // 실제 모든 적 처치 알림
@@ -407,6 +436,7 @@ namespace ProjectEpsilon.Enemies // 적 영역
                 WeaponTarget target = targets[index]; // 현재 적 조회
                 if (target == null) // 외부 제거 적 확인
                 {
+                    enemyScales.Remove(target); // 외부 제거 적 능력치 추적 해제
                     eliteTargets.Remove(target); // 외부 제거 엘리트 정리
                     bossSummonTargets.Remove(target); // 외부 제거 소환 적 정리
                     targets.RemoveAt(index); // 빈 대상 제거
@@ -418,6 +448,7 @@ namespace ProjectEpsilon.Enemies // 적 영역
                     continue; // 유지 대상 건너뛰기
                 }
                 target.Died -= HandleEnemyDied; // 처치 수량 연결 해제
+                enemyScales.Remove(target); // 거리 정리 적 능력치 추적 해제
                 bossSummonTargets.Remove(target); // 거리 정리 소환 적 제외
                 targets.RemoveAt(index); // 생존 목록 제거
                 activeEnemies = Mathf.Max(0, activeEnemies - 1); // 생존 수 감소

@@ -54,6 +54,17 @@ namespace ProjectEpsilon.Combat // 전투 영역
             deathHandled = false; // 사망 처리 초기화
         }
 
+        public void SetMaximumHealthPreservingRatio(float health) // 생존 체력 비율 유지 갱신
+        {
+            if (!IsAlive) // 사망 대상 확인
+            {
+                return; // 사망 상태 유지
+            }
+            float ratio = Mathf.Clamp01(currentHealth / Mathf.Max(1f, maximumHealth)); // 기존 체력 비율
+            maximumHealth = Mathf.Max(1f, health); // 변경된 최대 체력
+            currentHealth = maximumHealth * ratio; // 기존 비율의 현재 체력
+        }
+
         public void TakeDamage(float damage) // 피해 적용
         {
             TakeDamageAndReport(damage); // 피해 적용과 결과 무시
