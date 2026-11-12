@@ -278,3 +278,9 @@
 ## 53일차 5~10분 성장
 
 `Day45NaturalCombat/AutomatedNaturalCombatVerification.cs`는 기본적으로 300초 관찰을 유지한다. `-epsilonSurvivalSeconds 600 -epsilonRecord`를 지정하면 정상 게임 속도로 600초까지 진행하고 5분·10분 표본을 기록한다. 시험은 가상 입력과 보상 자동 선택을 사용하며 실제 수동 플레이를 대신하지 않는다. `python Tools/summarize_early_run.py 로그경로`는 완료 기록의 5~10분 성장 변화를 출력한다. 사용자의 저장과 격리된 별도 Unity 사본에서 실행한다.
+
+---
+
+## 54일차 20칸과 장애물 이탈
+
+`AutomatedCollisionPriorityVerification.Run`은 통제된 20칸 몸통에서 자기 충돌·다수 적 접촉·좁은 통로와 장애물 무적 종료 후 안전 위치 및 재접촉 유예를 검사한다. `AutomatedLevelRewardMergeVerification.RunAll`은 합성 중 기존 무적의 적 접촉 차단과 피해·패배 처리를 확인한다. 시험은 몸통 위치와 충돌체를 통제한다. 상세 결과와 복수 장애물 위치 탐색의 한계는 `Devlogs/Day54/README.md`를 참조한다.

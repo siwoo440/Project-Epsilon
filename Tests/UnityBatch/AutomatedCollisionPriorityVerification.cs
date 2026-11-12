@@ -229,6 +229,39 @@ namespace ProjectEpsilon.Editor // 편집기 영역
             {
                 yield break; // 남은 시험 중단
             }
+            yield return ResetFixture(); // 긴 몸통 시험 초기화
+            yield return PrepareLongBody(); // 실제 스무 칸 몸통 준비
+            yield return LongBodySelfAndObstacle(); // 긴 몸통 자기 충돌 우선 확인
+            if (!enabled) // 긴 몸통 시험 실패 확인
+            {
+                yield break; // 남은 시험 중단
+            }
+            yield return ResetFixture(); // 적 포위 시험 초기화
+            yield return PrepareLongBody(); // 실제 스무 칸 몸통 준비
+            yield return LongBodySurrounded(); // 다수 적 동시 접촉 확인
+            if (!enabled) // 적 포위 시험 실패 확인
+            {
+                yield break; // 남은 시험 중단
+            }
+            yield return ResetFixture(); // 좁은 통로 시험 초기화
+            yield return PrepareLongBody(); // 실제 스무 칸 몸통 준비
+            yield return LongBodyCorridor(); // 직진과 벽 접촉 확인
+            if (!enabled) // 좁은 통로 시험 실패 확인
+            {
+                yield break; // 남은 시험 중단
+            }
+            yield return ResetFixture(); // 단일 장애물 이탈 시험 초기화
+            yield return SingleObstacleNearestRecovery(); // 최소 이탈 거리 확인
+            if (!enabled) // 최소 이탈 거리 시험 실패 확인
+            {
+                yield break; // 남은 시험 중단
+            }
+            yield return ResetFixture(); // 이탈 완료 시험 초기화
+            yield return ObstacleExitDuringInvulnerability(); // 무적 중 이미 벗어난 장애물 확인
+            if (!enabled) // 장애물 이탈 시험 실패 확인
+            {
+                yield break; // 남은 시험 중단
+            }
             yield return ResetFixture(); // 상태 초기화
             yield return ProjectileAndObstacle(false); // 장애물과 실제 투사체 시험
             if (!enabled) // 이전 시험 실패 확인
@@ -295,11 +328,14 @@ namespace ProjectEpsilon.Editor // 편집기 영역
             {
                 yield break; // 남은 시험 중단
             }
-            AutomatedCollisionPriorityVerification.Finish(0, "Actual 2D triggers, both synthetic callback orders, invulnerability, self, projectile, shield, melee, elite cut, persistent contact, destroyed hazards, multiple physics steps, disabled cancellation, dispatcher lifecycle, pause, defeat. Actual callback orders: " + string.Join(",", observedOrders)); // 전체 성공 기록
+            AutomatedCollisionPriorityVerification.Finish(0, "Actual 2D triggers, long-body self collision, surrounding enemies, narrow corridor, invulnerability, projectile, shield, melee, elite cut, persistent contact, cancellation, pause and defeat. Actual callback orders: " + string.Join(",", observedOrders)); // 전체 성공 기록
         }
 
         private IEnumerator ResetFixture() // 충돌 시험 초기화
         {
+            SnakeSelfCollision self = player.GetComponent<SnakeSelfCollision>(); // 실제 자기 충돌 처리기
+            self.enabled = false; // 몸통 초기화 중 의도하지 않은 자기 접촉 방지
+            player.enabled = false; // 이전 통로 시험의 이동 정지
             foreach (GameObject item in spawned) // 시험 객체 순회
             {
                 if (item != null) // 객체 존재 확인
@@ -319,6 +355,7 @@ namespace ProjectEpsilon.Editor // 편집기 영역
             }
             invulnerability.ClearInvulnerability(); // 무적 초기화
             shield.Clear(); // 보호막 초기화
+            player.GetComponent<SnakePathRecorder>().ResetHistory(); // 실제 머리 위치 기준 직선 경로 초기화
             body.ResetBody(); // 시작 몸통 복구
             health.ResetHealth(); // 공용 체력 복구
             external.Bind(body, health, invulnerability, 1, 1f, 25, 1.5f); // 외부 충돌 보호 초기화
@@ -326,6 +363,7 @@ namespace ProjectEpsilon.Editor // 편집기 영역
             Physics2D.SyncTransforms(); // 시험 위치 물리 동기화
             yield return null; // 지연 객체 제거 대기
             yield return new WaitForFixedUpdate(); // 충돌 해제 물리 스텝 대기
+            self.enabled = true; // 실제 자기 충돌 재개
             yield return null; // 후속 플레이어루프 대기
         }
 
@@ -380,6 +418,195 @@ namespace ProjectEpsilon.Editor // 편집기 영역
             yield return new WaitForFixedUpdate(); // 실제 접촉 대기
             yield return null; // 물리 후 해결 대기
             Check(body.CurrentBodyCount == 1 && health.CurrentHealth == 100 && invulnerability.IsInvulnerable, $"Self collision priority mismatch: body={body.CurrentBodyCount}, hp={health.CurrentHealth}, full={invulnerability.IsInvulnerable}."); // 몸통 손실 및 신규 무적 확인
+        }
+
+        private IEnumerator PrepareLongBody() // 실제 스무 칸 몸통 준비
+        {
+            SnakeSelfCollision self = player.GetComponent<SnakeSelfCollision>(); // 실제 자기 충돌 처리기
+            self.enabled = false; // 시험 배치 중 자기 충돌 차단
+            while (body.CurrentBodyCount < 20) // 실제 절대 상한까지 성장
+            {
+                if (!Check(body.TryGainBodyFromLevelUp(), "Could not grow to twenty bodies.")) // 실제 성장 성공 확인
+                {
+                    yield break; // 성장 실패 시 중단
+                }
+            }
+            for (int index = 0; index < body.BodySegments.Count; index++) // 실제 몸통 순회
+            {
+                body.BodySegments[index].transform.position = player.transform.position + new Vector3(30f + index * 2f, 30f, 0f); // 접촉 없는 몸통 위치
+            }
+            if (body.TailSegment != null) // 실제 꼬리 존재 확인
+            {
+                body.TailSegment.transform.position = player.transform.position + new Vector3(80f, 30f, 0f); // 꼬리 접촉 방지
+            }
+            Physics2D.SyncTransforms(); // 실제 물리 위치 반영
+            yield return new WaitForFixedUpdate(); // 기존 물리 접촉 해제
+            self.enabled = true; // 실제 자기 충돌 재개
+            yield return null; // 실제 몸통과 충돌 준비 대기
+        }
+
+        private IEnumerator LongBodySelfAndObstacle() // 긴 몸통 자기 충돌과 장애물 동시 접촉
+        {
+            body.BodySegments[19].transform.position = player.transform.position; // 스무 번째 몸통과 머리 접촉
+            SpawnHazard(SnakeContactHazardType.Obstacle, true); // 같은 스텝 장애물 접촉
+            Physics2D.SyncTransforms(); // 실제 충돌체 위치 반영
+            yield return new WaitForFixedUpdate(); // 실제 물리 접촉 대기
+            yield return null; // 실제 충돌 결과 대기
+            Check(body.CurrentBodyCount == 18 && health.CurrentHealth == 100 && invulnerability.IsInvulnerable, $"Long body self collision mismatch: body={body.CurrentBodyCount}, hp={health.CurrentHealth}."); // 두 칸 손실과 무적 우선 확인
+        }
+
+        private IEnumerator LongBodySurrounded() // 여러 적의 동시 접촉
+        {
+            for (int index = 0; index < 4; index++) // 네 방향 적 접촉 구성
+            {
+                Collider2D enemy = SpawnHazard(SnakeContactHazardType.EnemyDirect, true); // 실제 적 직접 충돌체
+                float angle = index * Mathf.PI * 0.5f; // 현재 방향 각도
+                enemy.transform.position += new Vector3(Mathf.Cos(angle), Mathf.Sin(angle), 0f) * 0.08f; // 머리 주변 네 방향 배치
+            }
+            Physics2D.SyncTransforms(); // 실제 적 위치 반영
+            yield return new WaitForFixedUpdate(); // 실제 동시 접촉 대기
+            yield return null; // 실제 충돌 결과 대기
+            if (!Check(body.CurrentBodyCount == 19 && health.CurrentHealth == 100 && external.EnemyContactProtected, $"Surrounding enemies mismatch: body={body.CurrentBodyCount}, hp={health.CurrentHealth}.")) // 동시 직접 접촉 단일 손실 확인
+            {
+                yield break; // 실패 시 후속 검사 중단
+            }
+            yield return new WaitForFixedUpdate(); // 적 접촉 유지 물리 대기
+            yield return null; // 실제 후속 처리 대기
+            Check(body.CurrentBodyCount == 19 && health.CurrentHealth == 100, "Persistent surrounding enemies caused duplicate contact loss."); // 직접 접촉 보호 시간 확인
+        }
+
+        private IEnumerator LongBodyCorridor() // 스무 칸 직진 통로와 장애물 접촉
+        {
+            CircleCollider2D head = player.GetComponent<CircleCollider2D>(); // 실제 머리 충돌 범위
+            if (!Check(head != null, "Player head collider missing.")) // 실제 충돌체 확인
+            {
+                yield break; // 구성 누락 시 중단
+            }
+            player.transform.rotation = Quaternion.identity; // 실제 위쪽 직진 방향
+            float offset = head.bounds.extents.x + 0.16f; // 머리 크기와 좁은 여유 폭
+            Vector3 start = player.transform.position; // 실제 통과 시작 위치
+            BoxCollider2D left = SpawnCorridorWall(start + new Vector3(-offset, 1f, 0f)); // 실제 왼쪽 통로 벽
+            SpawnCorridorWall(start + new Vector3(offset, 1f, 0f)); // 실제 오른쪽 통로 벽
+            Physics2D.SyncTransforms(); // 실제 통로 충돌체 반영
+            player.enabled = true; // 실제 자동 전진 시작
+            yield return new WaitForSeconds(0.4f); // 실제 통로 이동 대기
+            player.enabled = false; // 접촉 시험 전 이동 중단
+            if (!Check(player.transform.position.y - start.y > 0.5f && body.CurrentBodyCount == 20 && health.CurrentHealth == 100, $"Narrow passage mismatch: moved={player.transform.position.y - start.y}, body={body.CurrentBodyCount}, hp={health.CurrentHealth}.")) // 직진과 무피해 확인
+            {
+                yield break; // 통로 실패 시 중단
+            }
+            left.transform.position = player.transform.position; // 실제 벽과 머리 접촉
+            Physics2D.SyncTransforms(); // 실제 접촉 위치 반영
+            yield return new WaitForFixedUpdate(); // 실제 장애물 접촉 대기
+            yield return null; // 실제 피해 처리 대기
+            if (!Check(body.CurrentBodyCount == 20 && health.CurrentHealth == 75 && invulnerability.IsInvulnerable, $"Corridor wall contact mismatch: body={body.CurrentBodyCount}, hp={health.CurrentHealth}.")) // 벽 피해와 무적 확인
+            {
+                yield break; // 접촉 실패 시 중단
+            }
+            Collider2D protectedEnemy = SpawnHazard(SnakeContactHazardType.EnemyDirect, true); // 무적 중 추가 적 접촉
+            Physics2D.SyncTransforms(); // 추가 적 위치 반영
+            yield return new WaitForFixedUpdate(); // 실제 적 접촉 대기
+            yield return null; // 실제 후속 처리 대기
+            if (!Check(body.CurrentBodyCount == 20 && health.CurrentHealth == 75, "Corridor invulnerability did not block enemy contact.")) // 기존 무적의 적 접촉 차단 확인
+            {
+                yield break; // 무적 시험 실패 시 중단
+            }
+            protectedEnemy.enabled = false; // 무적 이후 적 접촉 차단
+            float deadline = Time.realtimeSinceStartup + 5f; // 실제 무적 종료 제한 시각
+            while (invulnerability.IsInvulnerable && Time.realtimeSinceStartup < deadline) // 장애물 무적의 실제 종료 대기
+            {
+                yield return new WaitForFixedUpdate(); // 실제 무적 시간 진행
+            }
+            yield return new WaitForFixedUpdate(); // 종료 후 물리 상태 반영
+            yield return null; // 안전 위치 이동 처리 대기
+            if (!Check(!invulnerability.IsInvulnerable && !head.Distance(left).isOverlapped && body.CurrentBodyCount == 20 && health.CurrentHealth == 75, "Player remained inside the obstacle after invulnerability ended.")) // 무적 종료 후 안전 위치 확인
+            {
+                yield break; // 안전 위치 시험 실패 시 중단
+            }
+            left.transform.position = player.transform.position; // 안전 위치 이동 직후 재접촉 구성
+            Collider2D enemyDuringGrace = SpawnHazard(SnakeContactHazardType.EnemyDirect, true); // 유예 중 실제 적 직접 접촉
+            Physics2D.SyncTransforms(); // 실제 재접촉 위치 반영
+            yield return new WaitForFixedUpdate(); // 실제 재접촉 물리 대기
+            yield return null; // 실제 피해 처리 대기
+            if (!Check(body.CurrentBodyCount == 19 && health.CurrentHealth == 75 && external.EnemyContactProtected, "Obstacle recovery grace did not block the wall or incorrectly blocked enemy contact.")) // 벽 유예와 적 직접 충돌 독립 확인
+            {
+                yield break; // 유예 시험 실패 시 중단
+            }
+            enemyDuringGrace.enabled = false; // 후속 적 접촉 차단
+            player.GetComponent<SnakeSelfCollision>().enabled = false; // 시험용 몸통 재배치의 추가 자기 접촉 차단
+            left.transform.position = player.transform.position + Vector3.left * 8f; // 장애물 접촉 해제
+            Physics2D.SyncTransforms(); // 실제 분리 위치 반영
+            yield return new WaitForSeconds(0.35f); // 장애물 재접촉 유예 종료 대기
+            left.transform.position = player.transform.position; // 유예 종료 후 장애물 재접촉
+            Physics2D.SyncTransforms(); // 실제 재접촉 위치 반영
+            yield return new WaitForFixedUpdate(); // 실제 장애물 재접촉 대기
+            yield return null; // 실제 피해 처리 대기
+            Check(body.CurrentBodyCount == 19 && health.CurrentHealth == 50 && invulnerability.IsInvulnerable, $"Obstacle re-entry mismatch: body={body.CurrentBodyCount}, hp={health.CurrentHealth}, invulnerable={invulnerability.IsInvulnerable}, overlap={head.Distance(left).isOverlapped}."); // 유예 종료 후 실제 피해 재개 확인
+        }
+
+        private BoxCollider2D SpawnCorridorWall(Vector3 position) // 시험용 통로 벽 생성
+        {
+            GameObject wall = new GameObject("CollisionVerificationCorridorWall"); // 실제 시험 벽 객체
+            spawned.Add(wall); // 시험 종료 정리 대상
+            wall.transform.position = position; // 실제 통로 벽 위치
+            BoxCollider2D collider = wall.AddComponent<BoxCollider2D>(); // 실제 벽 충돌체
+            collider.size = new Vector2(0.2f, 3f); // 좁은 통로 벽 크기
+            collider.isTrigger = true; // 실제 장애물 접촉 설정
+            wall.AddComponent<SnakeContactHazard>().Configure(SnakeContactHazardType.Obstacle); // 기존 장애물 처리 연결
+            return collider; // 생성한 실제 벽 반환
+        }
+
+        private IEnumerator ObstacleExitDuringInvulnerability() // 무적 종료 전 실제 장애물 이탈
+        {
+            Collider2D obstacle = SpawnHazard(SnakeContactHazardType.Obstacle, true); // 실제 장애물 접촉
+            Physics2D.SyncTransforms(); // 실제 장애물 위치 반영
+            yield return new WaitForFixedUpdate(); // 실제 장애물 충돌 대기
+            yield return null; // 실제 피해 처리 대기
+            if (!Check(health.CurrentHealth == 75 && invulnerability.IsInvulnerable, "Initial obstacle hit failed.")) // 실제 장애물 피해와 무적 확인
+            {
+                yield break; // 초기 접촉 실패 시 중단
+            }
+            obstacle.enabled = false; // 무적 중 실제 장애물 이탈
+            Vector3 position = player.transform.position; // 장애물 이탈 후 머리 위치
+            float deadline = Time.realtimeSinceStartup + 5f; // 실제 무적 종료 제한 시각
+            while (invulnerability.IsInvulnerable && Time.realtimeSinceStartup < deadline) // 기존 무적 종료 대기
+            {
+                yield return new WaitForFixedUpdate(); // 실제 무적 시간 진행
+            }
+            yield return new WaitForFixedUpdate(); // 실제 무적 종료 처리 대기
+            yield return null; // 후속 위치 처리 대기
+            if (!Check(!invulnerability.IsInvulnerable && Vector3.Distance(position, player.transform.position) < 0.001f, "Player moved after leaving the obstacle during invulnerability.")) // 이미 이탈한 머리 위치 보존 확인
+            {
+                yield break; // 위치 확인 실패 시 중단
+            }
+            SpawnHazard(SnakeContactHazardType.Obstacle, true); // 별도 장애물 즉시 접촉
+            Physics2D.SyncTransforms(); // 실제 신규 장애물 위치 반영
+            yield return new WaitForFixedUpdate(); // 실제 신규 충돌 대기
+            yield return null; // 실제 신규 피해 처리 대기
+            Check(health.CurrentHealth == 50 && invulnerability.IsInvulnerable, "Leaving the obstacle incorrectly started a recovery grace period."); // 불필요한 재접촉 유예 방지
+        }
+
+        private IEnumerator SingleObstacleNearestRecovery() // 단일 장애물의 실제 최소 이탈 거리
+        {
+            BoxCollider2D wall = SpawnCorridorWall(player.transform.position + Vector3.right * 0.05f); // 실제 머리와 겹친 벽
+            CircleCollider2D head = player.GetComponent<CircleCollider2D>(); // 실제 머리 충돌체
+            Physics2D.SyncTransforms(); // 실제 벽과 머리 위치 반영
+            yield return new WaitForFixedUpdate(); // 실제 장애물 접촉 대기
+            yield return null; // 실제 피해 처리 대기
+            if (!Check(health.CurrentHealth == 75 && invulnerability.IsInvulnerable, "Single obstacle hit failed.")) // 실제 장애물 피해 확인
+            {
+                yield break; // 초기 접촉 실패 시 중단
+            }
+            ColliderDistance2D separation = head.Distance(wall); // 실제 최소 분리 거리
+            Vector2 expected = (Vector2)player.transform.position + separation.normal * (separation.distance - 0.01f); // 실제 최소 안전 위치
+            float deadline = Time.realtimeSinceStartup + 5f; // 실제 무적 종료 제한 시각
+            while (invulnerability.IsInvulnerable && Time.realtimeSinceStartup < deadline) // 실제 무적 종료 대기
+            {
+                yield return new WaitForFixedUpdate(); // 실제 무적 시간 진행
+            }
+            yield return new WaitForFixedUpdate(); // 실제 이탈 처리 대기
+            yield return null; // 실제 이동 반영 대기
+            Check(!head.Distance(wall).isOverlapped && Vector2.Distance(player.transform.position, expected) < 0.02f, "Single obstacle did not use its nearest safe boundary."); // 실제 최소 경계와 장애물 이탈 확인
         }
 
         private IEnumerator ProjectileAndObstacle(bool withShield) // 투사체 및 보호막 시험

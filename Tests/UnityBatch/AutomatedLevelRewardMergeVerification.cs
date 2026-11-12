@@ -663,6 +663,24 @@ namespace ProjectEpsilon.Editor // 편집기 영역
             ClickLevel(1); // 보상 합성 선택
             Require(merge.IsMergeOpen && GameManager.Instance.IsPlaying, "Could not start collision fixture merge."); // 충돌 시험 상태 확인
             int before = body.CurrentBodyCount; // 충돌 전 몸통 수
+            int healthBefore = health.CurrentHealth; // 무적 시험 전 공용 체력
+            invulnerability.StartInvulnerability(5f); // 기존 전체 무적 적용
+            GameObject protectedHazard = new GameObject("LevelRewardMergeProtectedHazard"); // 무적 시험 적 객체
+            protectedHazard.transform.position = movement.transform.position; // 실제 플레이어 위치 설정
+            CircleCollider2D protectedCollider = protectedHazard.AddComponent<CircleCollider2D>(); // 실제 적 충돌체
+            protectedCollider.radius = 0.2f; // 시험 접촉 범위
+            protectedCollider.isTrigger = true; // 실제 물리 접촉 설정
+            protectedHazard.AddComponent<SnakeContactHazard>().Configure(SnakeContactHazardType.EnemyDirect); // 실제 적 직접 충돌 설정
+            Physics2D.SyncTransforms(); // 실제 충돌체 위치 반영
+            yield return new WaitForFixedUpdate(); // 실제 무적 접촉 대기
+            yield return null; // 실제 물리 처리 대기
+            Require(collisionProbe.EnemyEntries > 0 && merge.IsMergeOpen && body.CurrentBodyCount == before && health.CurrentHealth == healthBefore && invulnerability.IsInvulnerable, "Existing invulnerability did not protect the active merge."); // 기존 무적의 합성 중 적 접촉 차단
+            protectedCollider.enabled = false; // 무적 시험 접촉 즉시 해제
+            UnityEngine.Object.Destroy(protectedHazard); // 무적 시험 객체 제거
+            invulnerability.ClearInvulnerability(); // 실제 무적 없는 충돌 준비
+            collisionProbe.EnemyEntries = 0; // 후속 실제 접촉 기록 초기화
+            yield return new WaitForFixedUpdate(); // 이전 접촉 종료 대기
+            yield return null; // 후속 물리 처리 대기
             GameObject hazard = new GameObject("LevelRewardMergeCollisionHazard"); // 통제된 위험 객체 생성
             hazard.transform.position = movement.transform.position; // 실제 플레이어 위치 설정
             CircleCollider2D collider = hazard.AddComponent<CircleCollider2D>(); // 실제 2D 충돌체 생성

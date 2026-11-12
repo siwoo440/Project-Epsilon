@@ -1,6 +1,7 @@
 using System; // 절단 결과 알림
 using System.Collections.Generic; // 예약 피해 목록
 using UnityEngine; // Unity 엔진 기능 연결
+using ProjectEpsilon.Core; // 실제 게임 진행 상태
 using ProjectEpsilon.Recording; // 실제 피해 원인 기록
 
 namespace ProjectEpsilon.Player // 프로젝트 기능 영역
@@ -15,8 +16,15 @@ namespace ProjectEpsilon.Player // 프로젝트 기능 영역
         [SerializeField] private float enemyContactProtection = 1f; // 필드·적 설정
         [SerializeField] private int obstacleDamage = 25; // 필드·피해 설정
         [SerializeField] private float obstacleInvulnerability = 1.5f; // 필드·무적 설정
+        [SerializeField] private float obstacleRecoveryGrace = 0.3f; // 장애물 이탈 후 재접촉 유예
 
         private float nextEnemyContactAllowedTime; // 다음 값·적 구성 선언
+        private float nextObstacleContactAllowedTime; // 장애물 재접촉 허용 시각
+        private bool wasInvulnerableInObstacle; // 무적 중 장애물 접촉 여부
+        private Collider2D headCollider; // 실제 머리 충돌체
+        private readonly HashSet<Collider2D> obstacleContacts = new HashSet<Collider2D>(); // 실제 접촉 중인 장애물
+        private readonly List<Collider2D> recoveryOverlaps = new List<Collider2D>(); // 안전 위치 주변 충돌체
+        private readonly List<Vector2> recoveryCandidates = new List<Vector2>(); // 장애물 경계 후보 위치
         private bool stepRegistered; // 물리 스텝 등록 상태
         private int registeredGeneration; // 마지막 물리 등록 세대
         private bool reportedFallback; // 즉시 처리 오류 기록 상태
@@ -85,6 +93,7 @@ namespace ProjectEpsilon.Player // 프로젝트 기능 영역
             {
                 RegisterPhysicsStep(); // 누락된 물리 등록 복구
             }
+            UpdateObstacleRecovery(); // 무적 종료 후 장애물 이탈 확인
         }
 
         private void RegisterPhysicsStep() // 물리 스텝 등록
@@ -98,6 +107,8 @@ namespace ProjectEpsilon.Player // 프로젝트 기능 영역
             SnakePhysicsStepDispatcher.Unregister(ResolvePendingContacts); // 물리 완료 구독 해제
             stepRegistered = false; // 등록 상태 해제
             CancelPendingContacts(); // 예약 취소와 절단 결과 반환
+            obstacleContacts.Clear(); // 이전 장애물 접촉 제거
+            wasInvulnerableInObstacle = false; // 이전 장애물 이탈 상태 초기화
         }
 
         public void Bind( // 연결 호출 시작
@@ -123,6 +134,9 @@ namespace ProjectEpsilon.Player // 프로젝트 기능 영역
             ); // 앞선 항목 종료
 
             nextEnemyContactAllowedTime = 0f; // 다음 값·적 값 설정
+            nextObstacleContactAllowedTime = 0f; // 장애물 유예 시각 초기화
+            wasInvulnerableInObstacle = false; // 이전 장애물 이탈 상태 초기화
+            obstacleContacts.Clear(); // 이전 장애물 접촉 초기화
         }
 
         private void OnTriggerEnter2D(Collider2D other) // 접촉·충돌체 기능 선언
@@ -146,9 +160,148 @@ namespace ProjectEpsilon.Player // 프로젝트 기능 영역
                     break; // 반복 또는 분기 종료
 
                 case SnakeContactHazardType.Obstacle: // 형식 경우 선택
+                    obstacleContacts.Add(other); // 실제 장애물 접촉 보관
                     QueueObstacleContact(); // 장애물 충돌 예약
                     break; // 반복 또는 분기 종료
             }
+        }
+
+        private void OnTriggerStay2D(Collider2D other) // 지속 중인 장애물 접촉 확인
+        {
+            SnakeContactHazard hazard = other.GetComponent<SnakeContactHazard>(); // 실제 접촉 위험 조회
+            if (hazard != null && hazard.HazardType == SnakeContactHazardType.Obstacle) // 실제 장애물 확인
+            {
+                obstacleContacts.Add(other); // 유지 중인 장애물 접촉 보관
+            }
+        }
+
+        private void OnTriggerExit2D(Collider2D other) // 종료된 장애물 접촉 정리
+        {
+            obstacleContacts.Remove(other); // 이전 장애물 접촉 제거
+        }
+
+        private void UpdateObstacleRecovery() // 무적 종료 시 장애물 이탈
+        {
+            if (GameManager.Instance == null || !GameManager.Instance.IsPlaying) // 실제 전투 진행 상태 확인
+            {
+                return; // 정지 또는 종료 중 이탈 방지
+            }
+            obstacleContacts.RemoveWhere(item => item == null || !item.isActiveAndEnabled); // 사라진 장애물 접촉 정리
+            if (IsFullInvulnerable()) // 실제 전체 무적 확인
+            {
+                wasInvulnerableInObstacle |= obstacleContacts.Count > 0; // 무적 중 장애물 접촉 기록
+                return; // 무적 종료까지 대기
+            }
+            if (!wasInvulnerableInObstacle) // 이전 장애물 접촉 확인
+            {
+                return; // 이탈할 장애물 부재
+            }
+            wasInvulnerableInObstacle = false; // 종료된 무적 상태 소비
+            if (headCollider == null) // 실제 머리 충돌체 확인
+            {
+                headCollider = GetComponent<Collider2D>(); // 실제 머리 충돌체 조회
+            }
+            if (headCollider == null || !headCollider.enabled) // 유효한 충돌체 확인
+            {
+                return; // 충돌체 없는 이탈 방지
+            }
+            Physics2D.SyncTransforms(); // 실제 물리 위치 반영
+            Rigidbody2D headBody = GetComponent<Rigidbody2D>(); // 실제 머리 물리체
+            if (headBody == null) // 실제 물리체 존재 확인
+            {
+                return; // 안전 위치 검색 생략
+            }
+            Vector2 original = headBody.position; // 실제 기존 물리 위치
+            ContactFilter2D filter = ContactFilter2D.noFilter; // 전체 물리 계층 검색 조건
+            filter.useTriggers = true; // 장애물 트리거 포함
+            recoveryOverlaps.Clear(); // 이전 겹침 목록 제거
+            recoveryCandidates.Clear(); // 이전 안전 위치 후보 제거
+            Physics2D.OverlapCollider(headCollider, filter, recoveryOverlaps); // 실제 현재 머리 겹침 조회
+            foreach (Collider2D other in recoveryOverlaps) // 현재 겹침 목록 순회
+            {
+                SnakeContactHazard hazard = other == null ? null : other.GetComponent<SnakeContactHazard>(); // 실제 위험 종류 조회
+                if (hazard == null || hazard.HazardType != SnakeContactHazardType.Obstacle) // 장애물 여부 확인
+                {
+                    continue; // 다른 충돌체 제외
+                }
+                ColliderDistance2D distance = headCollider.Distance(other); // 실제 충돌체 간 이탈 거리
+                if (distance.isValid && distance.isOverlapped) // 실제 장애물 겹침 확인
+                {
+                    recoveryCandidates.Add(original + distance.normal * (distance.distance - 0.01f)); // 가장 가까운 장애물 경계 후보
+                }
+            }
+            if (recoveryCandidates.Count == 0) // 실제 겹친 장애물 부재 확인
+            {
+                return; // 기존 위치 유지
+            }
+            Vector2 best = original; // 실제 안전 위치 후보
+            float bestDistance = float.PositiveInfinity; // 최단 이동 거리 초기화
+            foreach (Vector2 candidate in recoveryCandidates) // 실제 경계 후보 순회
+            {
+                float distance = Vector2.Distance(original, candidate); // 실제 후보 이동 거리
+                if (distance < bestDistance && IsObstacleFree(candidate, headBody.rotation, filter)) // 더 가깝고 안전한 후보 확인
+                {
+                    best = candidate; // 실제 안전 위치 저장
+                    bestDistance = distance; // 최단 이동 거리 갱신
+                }
+            }
+            if (float.IsPositiveInfinity(bestDistance)) // 인접 장애물로 경계 후보가 막힌 경우
+            {
+                for (float radius = 0.05f; radius <= 8f && float.IsPositiveInfinity(bestDistance); radius += 0.05f) // 가까운 반경부터 안전 위치 검색
+                {
+                    for (int direction = 0; direction < 32; direction++) // 주변 서른두 방향 순회
+                    {
+                        float angle = direction * Mathf.PI * 2f / 32f; // 실제 검색 방향 각도
+                        Vector2 candidate = original + new Vector2(Mathf.Cos(angle), Mathf.Sin(angle)) * radius; // 실제 주변 위치 후보
+                        if (IsObstacleFree(candidate, headBody.rotation, filter)) // 모든 장애물과 분리 확인
+                        {
+                            Vector2 directionVector = (candidate - original).normalized; // 실제 안전 방향
+                            float lower = Mathf.Max(0f, radius - 0.05f); // 이전 검색 반경
+                            float upper = radius; // 현재 안전 반경
+                            for (int refinement = 0; refinement < 7; refinement++) // 경계 거리 정밀 탐색
+                            {
+                                float middle = (lower + upper) * 0.5f; // 현재 중간 반경
+                                if (IsObstacleFree(original + directionVector * middle, headBody.rotation, filter)) // 중간 위치 안전 여부
+                                {
+                                    upper = middle; // 더 가까운 안전 반경
+                                }
+                                else // 중간 위치 장애물 겹침
+                                {
+                                    lower = middle; // 더 먼 위치 검색
+                                }
+                            }
+                            if (upper < bestDistance) // 더 가까운 안전 방향 확인
+                            {
+                                best = original + directionVector * upper; // 실제 안전 위치 저장
+                                bestDistance = upper; // 실제 이동 거리 저장
+                            }
+                        }
+                    }
+                }
+            }
+            if (!float.IsPositiveInfinity(bestDistance)) // 실제 안전 위치 발견 확인
+            {
+                transform.position = new Vector3(best.x, best.y, transform.position.z); // 실제 안전 위치로 머리 이동
+                Physics2D.SyncTransforms(); // 이동한 실제 물리 위치 반영
+                nextObstacleContactAllowedTime = Time.time + Mathf.Max(0f, obstacleRecoveryGrace); // 장애물 재접촉 유예 시작
+                return; // 안전 위치 확정
+            }
+            Debug.LogWarning("[Project Epsilon] 겹친 장애물에서 안전한 위치를 찾지 못했습니다."); // 해결 불가 상태 기록
+        }
+
+        private bool IsObstacleFree(Vector2 position, float rotation, ContactFilter2D filter) // 후보 위치의 장애물 겹침 확인
+        {
+            recoveryOverlaps.Clear(); // 이전 후보 겹침 제거
+            headCollider.Overlap(position, rotation, filter, recoveryOverlaps); // 실제 후보 위치 물리 검색
+            foreach (Collider2D other in recoveryOverlaps) // 실제 겹침 목록 순회
+            {
+                SnakeContactHazard hazard = other == null ? null : other.GetComponent<SnakeContactHazard>(); // 실제 위험 종류 조회
+                if (hazard != null && hazard.HazardType == SnakeContactHazardType.Obstacle) // 실제 장애물 겹침 확인
+                {
+                    return false; // 장애물 위치 거절
+                }
+            }
+            return true; // 실제 장애물 없는 위치
         }
 
         public void QueueSelfCollision(SnakeSelfCollision source) // 자기 충돌 예약
@@ -362,7 +515,7 @@ namespace ProjectEpsilon.Player // 프로젝트 기능 영역
 
         public bool TryApplyEnemyDirectContact() // 시도·적용 기능 선언
         {
-            if (IsFullInvulnerable()) // 무적 조건 확인
+            if (IsFullInvulnerable()) // 전체 무적 확인
             {
                 return false; // 실패 결과 반환
             }
@@ -410,7 +563,7 @@ namespace ProjectEpsilon.Player // 프로젝트 기능 영역
 
         public bool TryApplyObstacleContact() // 시도·적용 기능 선언
         {
-            if (IsFullInvulnerable()) // 무적 조건 확인
+            if (IsFullInvulnerable() || Time.time < nextObstacleContactAllowedTime) // 무적 또는 장애물 재접촉 유예 확인
             {
                 return false; // 실패 결과 반환
             }
