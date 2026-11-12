@@ -110,6 +110,15 @@ namespace ProjectEpsilon.Combat // 전투 영역
             }
 
             curse.Apply(synergyStage, WeaponAttributeDarkRules.CurseSpreadStacks); // 규칙 기반 저주 중첩 적용
+            if (curse.IsActive) // 실제 저주 전파 성공 확인
+            {
+                WeaponTargetReactionMaterials materials = target.GetComponent<WeaponTargetReactionMaterials>(); // 대상별 반응 재료 조회
+                if (materials == null) // 반응 재료 관리자 부재 확인
+                {
+                    materials = target.gameObject.AddComponent<WeaponTargetReactionMaterials>(); // 대상별 재료 관리자 생성
+                }
+                materials.State.Record(WeaponAttribute.Dark, Time.frameCount, Time.time, curse.RemainingDuration); // 전파 저주의 최초 시점과 지속 시간 기록
+            }
         }
 
         private void HandleShieldEnded(SnakeShieldEndContext context) // 보호막 종료 효과 처리

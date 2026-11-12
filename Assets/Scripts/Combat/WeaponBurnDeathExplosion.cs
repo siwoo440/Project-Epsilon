@@ -56,7 +56,7 @@ namespace ProjectEpsilon.Combat // 전투 영역
         private void HandleDeath(WeaponTarget victim) // 실제 화상 적 사망 처리
         {
             WeaponTargetBurnStatus burn = victim == null ? null : victim.GetComponent<WeaponTargetBurnStatus>(); // 실제 화상 상태 조회
-            if (triggered || resolvingExplosion || burn == null || !burn.isActiveAndEnabled || burn.RemainingDuration <= 0f || radius <= 0f || damage <= 0f) // 화상과 폭발 유효성 확인
+            if (triggered || resolvingExplosion || (victim != null && victim.IsReactionDamage) || burn == null || !burn.isActiveAndEnabled || burn.RemainingDuration <= 0f || radius <= 0f || damage <= 0f) // 화상과 폭발 유효성 확인
             {
                 return; // 무효 또는 연쇄 폭발 차단
             }

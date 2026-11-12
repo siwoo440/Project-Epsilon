@@ -72,6 +72,14 @@ namespace ProjectEpsilon.Combat // 전투 영역
             return true; // 적용 성공
         }
 
+        public void Clear() // 화상 재료 즉시 해제
+        {
+            synergyStage = 0; // 화상 단계 초기화
+            damagePerSecond = 0f; // 화상 피해 초기화
+            remainingDuration = 0f; // 화상 시간 초기화
+            RestoreVisual(); // 기존 색상 복구
+        }
+
         private void ResolveTarget() // 대상 참조 확보
         {
             if (target == null) // 대상 없음 확인

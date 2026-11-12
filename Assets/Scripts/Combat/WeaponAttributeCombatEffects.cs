@@ -14,6 +14,27 @@ namespace ProjectEpsilon.Combat // 전투 영역
         [Min(0f)] [SerializeField] private float coldFreezeDuration = 1f; // 빙결과 보스 강한 감속 시간 임시값
         [Min(1)] [SerializeField] private int coldFreezeAdditionalHits = 1; // 최대 누적 뒤 추가 명중 임시값
 
+        [Min(0f)] [SerializeField] private float corrosiveBurnDuration = 3f; // 부식성 연소 지속 시간 임시값
+        [Min(0f)] [SerializeField] private float corrosiveBurnDamagePerSecond = 1f; // 부식성 연소 초당 피해 임시값
+        [Min(0f)] [SerializeField] private float electricReactionMarkDuration = 3f; // 전기 반응 표식 시간 임시값
+        [Min(0f)] [SerializeField] private float coolingDischargeDamage = 3f; // 냉각 방전 추가 피해 임시값
+        [Min(0f)] [SerializeField] private float coolingDischargeSlowDuration = 1f; // 냉각 방전 감속 시간 임시값
+        [Range(0.05f, 1f)] [SerializeField] private float coolingDischargeSlowMultiplier = 0.5f; // 냉각 방전 이동 배율 임시값
+        [Min(1)] [SerializeField] private int coolingDischargeSlowPriority = 6; // 냉각 방전 감속 우선순위 임시값
+        [Min(0f)] [SerializeField] private float impactReactionMarkDuration = 3f; // 물리와 폭발 표식 시간 임시값
+        [Min(0f)] [SerializeField] private float shatteringImpactRadius = 2f; // 파쇄 충격 범위 임시값
+        [Min(0f)] [SerializeField] private float shatteringImpactDamage = 3f; // 파쇄 충격 피해 임시값
+        [Min(0f)] [SerializeField] private float shatteringImpactKnockbackDistance = 0.6f; // 파쇄 충격 넉백 거리 임시값
+        [Min(0f)] [SerializeField] private float shatteringImpactKnockbackDuration = 0.25f; // 파쇄 충격 넉백 시간 임시값
+        [Min(0f)] [SerializeField] private float holyReactionMarkDuration = 3f; // 신성 반응 표식 시간 임시값
+        [Min(0f)] [SerializeField] private float sacredExplosionRadius = 2f; // 성화 폭발 범위 임시값
+        [Min(0f)] [SerializeField] private float sacredExplosionDamage = 3f; // 성화 폭발 피해 임시값
+        [Min(0f)] [SerializeField] private float lightDarkDamage = 3f; // 명암 상쇄 피해 임시값
+        [Min(0)] [SerializeField] private int lightDarkHealing = 3; // 명암 상쇄 회복 임시값
+        [Min(0f)] [SerializeField] private float corrosiveCurseDuration = 3f; // 부식 저주 지속 시간 임시값
+        [Range(0f, 1f)] [SerializeField] private float corrosiveCurseOutgoingMultiplier = 0.8f; // 부식 저주 공격력 배율 임시값
+        [Min(1f)] [SerializeField] private float corrosiveCurseIncomingMultiplier = 1.2f; // 부식 저주 받는 피해 배율 임시값
+
         private int lastExplosionFrame = -1; // 마지막 폭발 처리 프레임
         private WeaponData lastExplosionWeapon; // 마지막 폭발 무기
         private Vector3 lastExplosionCenter; // 마지막 폭발 중심
@@ -97,6 +118,11 @@ namespace ProjectEpsilon.Combat // 전투 영역
                 ApplyDark(resolvedAttack, target, dealtDamage, darkCurseStacks, hitPosition); // 저주와 흡수 처리
             }
 
+            if (target.IsAlive) // 생존 대상의 속성 명중 확인
+            {
+                ApplyAttributeReaction(target, resolvedAttack.Attribute); // 공통 재료와 반응 판정
+            }
+
             WeaponAttributeHitContext hit = new WeaponAttributeHitContext(resolvedAttack, target, hitPosition); // 주 대상 명중 정보 생성
             effectHooks?.NotifyHit(hit); // 주 대상 명중 Hook 전달
             SpawnHitPulse(resolvedAttack.Attribute, resolvedAttack.SynergyStage, hitPosition); // 주 대상 속성 명중 표시
@@ -105,6 +131,134 @@ namespace ProjectEpsilon.Combat // 전투 영역
             {
                 ApplyElectricChain(resolvedAttack, target, hitPosition); // 전기 연쇄 공격 적용
             }
+        }
+
+        private void ApplyAttributeReaction(WeaponTarget target, WeaponAttribute incoming) // 모든 속성의 공통 반응 판정
+        {
+            WeaponTargetReactionMaterials materials = target.GetComponent<WeaponTargetReactionMaterials>(); // 대상별 반응 재료 조회
+            if (materials == null) // 반응 재료 관리자 부재 확인
+            {
+                materials = target.gameObject.AddComponent<WeaponTargetReactionMaterials>(); // 대상별 재료 관리자 생성
+            }
+            WeaponTargetBurnStatus burn = target.GetComponent<WeaponTargetBurnStatus>(); // 실제 화상 상태 조회
+            WeaponTargetPoisonStatus poison = target.GetComponent<WeaponTargetPoisonStatus>(); // 실제 독 상태 조회
+            WeaponTargetColdStatus cold = target.GetComponent<WeaponTargetColdStatus>(); // 실제 냉기 상태 조회
+            WeaponTargetDarkCurseStatus curse = target.GetComponent<WeaponTargetDarkCurseStatus>(); // 실제 저주 상태 조회
+            if (burn == null || burn.RemainingDuration <= 0f) // 화상 부재 확인
+            {
+                materials.State.Clear(WeaponAttribute.Fire); // 만료된 화염 재료 제거
+            }
+            if (poison == null || !poison.IsActive) // 독 부재 확인
+            {
+                materials.State.Clear(WeaponAttribute.Poison); // 만료된 독 재료 제거
+            }
+            if (cold == null || cold.RemainingDuration <= 0f) // 냉기 부재 확인
+            {
+                materials.State.Clear(WeaponAttribute.Cold); // 만료된 냉기 재료 제거
+            }
+            if (curse == null || !curse.IsActive) // 저주 부재 확인
+            {
+                materials.State.Clear(WeaponAttribute.Dark); // 만료된 암흑 재료 제거
+            }
+            float duration = 0f; // 신규 재료의 유효 시간
+            switch (incoming) // 명중 속성별 유효 시간 선택
+            {
+                case WeaponAttribute.Fire: // 화염 상태 확인
+                    duration = burn == null ? 0f : burn.RemainingDuration; // 실제 화상 시간
+                    break; // 속성 선택 종료
+                case WeaponAttribute.Poison: // 독 상태 확인
+                    duration = poison == null || !poison.IsActive ? 0f : poison.RemainingDuration; // 실제 독 시간
+                    break; // 속성 선택 종료
+                case WeaponAttribute.Cold: // 냉기 상태 확인
+                    duration = cold == null ? 0f : cold.RemainingDuration; // 실제 냉기 시간
+                    break; // 속성 선택 종료
+                case WeaponAttribute.Dark: // 암흑 상태 확인
+                    duration = curse == null || !curse.IsActive ? 0f : curse.RemainingDuration; // 실제 저주 시간
+                    break; // 속성 선택 종료
+                case WeaponAttribute.Electric: // 전기 표식 확인
+                    duration = electricReactionMarkDuration; // 전기 표식 시간
+                    break; // 속성 선택 종료
+                case WeaponAttribute.Holy: // 신성 표식 확인
+                    duration = holyReactionMarkDuration; // 신성 표식 시간
+                    break; // 속성 선택 종료
+                case WeaponAttribute.Physical: // 물리 표식 확인
+                case WeaponAttribute.Explosion: // 폭발 표식 확인
+                    duration = impactReactionMarkDuration; // 물리와 폭발 표식 시간
+                    break; // 속성 선택 종료
+            }
+            if (!materials.State.Apply(incoming, Time.frameCount, Time.time, duration, out WeaponAttributeReaction reaction)) // 가장 오래된 재료와 반응 확인
+            {
+                return; // 유효한 반응 전 대기
+            }
+            switch (reaction) // 결정된 단일 반응 처리
+            {
+                case WeaponAttributeReaction.CorrosiveBurn: // 화염과 독 반응
+                    burn.Clear(); // 화상 재료 소비
+                    poison.Clear(); // 독 재료 소비
+                    WeaponTargetCorrosiveBurnStatus burning = target.GetComponent<WeaponTargetCorrosiveBurnStatus>(); // 기존 지속 피해 조회
+                    if (burning == null) // 기존 반응 부재 확인
+                    {
+                        burning = target.gameObject.AddComponent<WeaponTargetCorrosiveBurnStatus>(); // 반응 지속 피해 생성
+                    }
+                    burning.Apply(target, corrosiveBurnDuration, corrosiveBurnDamagePerSecond); // 반응 전용 지속 피해 갱신
+                    break; // 반응 처리 종료
+                case WeaponAttributeReaction.CoolingDischarge: // 냉기와 전기 반응
+                    cold.Clear(); // 냉기 재료 소비
+                    target.TakeReactionDamage(coolingDischargeDamage); // 반응 전용 추가 피해
+                    if (target.IsAlive) // 피해 이후 생존 확인
+                    {
+                        WeaponTargetStatusController statuses = target.GetComponent<WeaponTargetStatusController>(); // 이동 상태 조회
+                        if (statuses == null) // 상태 관리자 부재 확인
+                        {
+                            statuses = target.gameObject.AddComponent<WeaponTargetStatusController>(); // 이동 상태 관리자 생성
+                        }
+                        statuses.ApplySlow(coolingDischargeSlowPriority, coolingDischargeSlowMultiplier, coolingDischargeSlowDuration); // 빙결 없는 반응 감속
+                    }
+                    break; // 반응 처리 종료
+                case WeaponAttributeReaction.ShatteringImpact: // 물리와 폭발 반응
+                    ApplyShatteringImpact(target); // 범위 피해와 넉백 적용
+                    break; // 반응 처리 종료
+                case WeaponAttributeReaction.SacredExplosion: // 신성과 화염 반응
+                    burn.Clear(); // 화상 재료 소비
+                    Vector3 center = target.transform.position; // 실제 반응 중심
+                    WeaponTarget.VisitAllInRange(center, sacredExplosionRadius, candidate => candidate.TakeReactionDamage(sacredExplosionDamage)); // 반응 범위 피해
+                    break; // 반응 처리 종료
+                case WeaponAttributeReaction.CorrosiveCurse: // 암흑과 독 반응
+                    curse.Clear(); // 저주 재료 소비
+                    poison.Clear(); // 독 재료 소비
+                    WeaponTargetCorrosiveCurseStatus weakened = target.GetComponent<WeaponTargetCorrosiveCurseStatus>(); // 기존 반응 약화 조회
+                    if (weakened == null) // 기존 약화 부재 확인
+                    {
+                        weakened = target.gameObject.AddComponent<WeaponTargetCorrosiveCurseStatus>(); // 반응 전용 약화 생성
+                    }
+                    weakened.Apply(corrosiveCurseDuration, corrosiveCurseOutgoingMultiplier, corrosiveCurseIncomingMultiplier); // 조정 가능한 반응 약화
+                    break; // 반응 처리 종료
+                case WeaponAttributeReaction.LightDarkCancel: // 신성과 암흑 반응
+                    curse.Clear(); // 저주 재료 소비
+                    target.TakeReactionDamage(lightDarkDamage); // 반응 전용 피해
+                    playerEffects?.SnakeHealth?.Heal(lightDarkHealing); // 공용 체력 회복
+                    break; // 반응 처리 종료
+            }
+        }
+
+        private void ApplyShatteringImpact(WeaponTarget target) // 파쇄 충격의 범위 피해와 넉백
+        {
+            Vector3 center = target.transform.position; // 반응 대상 중심 위치
+            WeaponTarget.VisitAllInRange(center, shatteringImpactRadius, candidate => // 반응 범위의 실제 대상 순회
+            {
+                candidate.TakeReactionDamage(shatteringImpactDamage); // 파생 공격 없는 반응 피해
+                if (!candidate.IsAlive) // 반응 피해 이후 생존 확인
+                {
+                    return; // 사망 대상의 넉백 생략
+                }
+                WeaponTargetKnockbackController knockback = candidate.GetComponent<WeaponTargetKnockbackController>(); // 실제 넉백 관리자 조회
+                if (knockback == null) // 넉백 관리자 부재 확인
+                {
+                    knockback = candidate.gameObject.AddComponent<WeaponTargetKnockbackController>(); // 대상별 넉백 관리자 생성
+                }
+                Vector2 direction = candidate.transform.position - center; // 반응 중심의 바깥 방향
+                knockback.Apply(direction, shatteringImpactKnockbackDistance, shatteringImpactKnockbackDuration); // 기존 보스 면역을 지키는 넉백
+            }); // 반응 범위 처리 종료
         }
 
         private static WeaponAttributeAttackSnapshot ResolveTargetAttack(WeaponAttributeAttackSnapshot attack, WeaponTarget target) // 대상 상태 반영 공격 생성
@@ -233,6 +387,10 @@ namespace ProjectEpsilon.Combat // 전투 영역
                 Vector3 nextHitPosition = nextTarget.transform.position; // 다음 명중 위치 저장
                 visitedTargets.Add(nextTarget); // 다음 대상 방문 등록
                 nextTarget.TakeDamage(attack.DirectDamage); // 스냅샷 직접 피해 적용
+                if (nextTarget.IsAlive) // 실제 연쇄 명중의 생존 대상 확인
+                {
+                    ApplyAttributeReaction(nextTarget, WeaponAttribute.Electric); // 연쇄 대상의 전기 표식과 반응 적용
+                }
                 WeaponAttributeHitContext chainHit = new WeaponAttributeHitContext(attack, nextTarget, nextHitPosition); // 연쇄 명중 정보 생성
                 effectHooks?.NotifyHit(chainHit); // 연쇄 명중 Hook 전달
                 SpawnHitPulse(WeaponAttribute.Electric, attack.SynergyStage, nextHitPosition); // 전기 연쇄 Pulse 표시
@@ -276,6 +434,7 @@ namespace ProjectEpsilon.Combat // 전투 영역
             if (target.IsAlive) // 생존 대상 확인
             {
                 ApplyExplosionKnockback(attack, target, center); // 넉백 적용
+                ApplyAttributeReaction(target, WeaponAttribute.Explosion); // 각 폭발 대상의 표식과 반응 적용
             }
 
             Vector3 hitPosition = target.transform.position; // 대상 명중 위치 저장

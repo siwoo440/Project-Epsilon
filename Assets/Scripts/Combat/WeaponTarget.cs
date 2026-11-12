@@ -12,6 +12,7 @@ namespace ProjectEpsilon.Combat // 전투 영역
         [SerializeField] private float currentHealth = 30f; // 현재 체력
 
         private bool deathHandled; // 사망 처리 여부
+        private bool reactionDamage; // 반응 피해 처리 여부
 
         public event Action<WeaponTarget> Died; // 사망 이벤트
         public event Action<float> Damaged; // 실제 피해 이벤트
@@ -19,8 +20,9 @@ namespace ProjectEpsilon.Combat // 전투 영역
         public float CurrentHealth => currentHealth; // 현재 체력 반환
         public float MaximumHealth => maximumHealth; // 최대 체력 반환
         public bool IsAlive => !deathHandled && currentHealth > 0f; // 생존 여부 반환
-        public float IncomingDamageMultiplier => ResolvePoisonIncomingDamageMultiplier(); // 받는 피해 배율 반환
-        public float OutgoingDamageMultiplier => ResolvePoisonOutgoingDamageMultiplier(); // 주는 피해 배율 반환
+        public bool IsReactionDamage => reactionDamage; // 반응 피해 중 처치 확인
+        public float IncomingDamageMultiplier => ResolvePoisonIncomingDamageMultiplier() * ResolveCorrosiveCurseIncomingMultiplier(); // 받는 피해 배율 반환
+        public float OutgoingDamageMultiplier => ResolvePoisonOutgoingDamageMultiplier() * ResolveCorrosiveCurseOutgoingMultiplier(); // 주는 피해 배율 반환
 
         private void OnEnable() // 활성 대상 등록
         {
@@ -68,6 +70,20 @@ namespace ProjectEpsilon.Combat // 전투 영역
         public void TakeDamage(float damage) // 피해 적용
         {
             TakeDamageAndReport(damage); // 피해 적용과 결과 무시
+        }
+
+        public void TakeReactionDamage(float damage) // 파생 공격을 발생시키지 않는 반응 피해
+        {
+            bool previous = reactionDamage; // 이전 반응 피해 상태
+            reactionDamage = true; // 반응 피해 처리 시작
+            try // 반응 피해 적용
+            {
+                TakeDamage(damage); // 기존 피해와 보상 처리
+            }
+            finally // 예외 이후 상태 복원
+            {
+                reactionDamage = previous; // 이전 반응 피해 상태 복원
+            }
         }
 
         public float TakeDamageAndReport(float damage) // 실제 피해량 반환 적용
@@ -237,6 +253,18 @@ namespace ProjectEpsilon.Combat // 전투 영역
             }
 
             return visitedCount; // 방문 수 반환
+        }
+
+        private float ResolveCorrosiveCurseIncomingMultiplier() // 부식 저주의 받는 피해 배율 조회
+        {
+            WeaponTargetCorrosiveCurseStatus status = GetComponent<WeaponTargetCorrosiveCurseStatus>(); // 반응 약화 조회
+            return status == null ? 1f : status.IncomingMultiplier; // 안전한 받는 피해 배율
+        }
+
+        private float ResolveCorrosiveCurseOutgoingMultiplier() // 부식 저주의 주는 피해 배율 조회
+        {
+            WeaponTargetCorrosiveCurseStatus status = GetComponent<WeaponTargetCorrosiveCurseStatus>(); // 반응 약화 조회
+            return status == null ? 1f : status.OutgoingMultiplier; // 안전한 주는 피해 배율
         }
 
         private float ResolvePoisonIncomingDamageMultiplier() // 독 방어 약화 배율 조회

@@ -68,7 +68,6 @@ namespace ProjectEpsilon.Combat // 전투 영역
             synergyStage = 0; // 단계 초기화
             stackCount = 0; // 중첩 초기화
             remainingDuration = 0f; // 시간 초기화
-            Destroy(this); // 상태 제거
         }
 
         private void ResolveTarget() // 대상 참조 확보

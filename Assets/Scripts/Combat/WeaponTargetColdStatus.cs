@@ -79,7 +79,7 @@ namespace ProjectEpsilon.Combat // 전투 영역
             int nextStacks = WeaponAttributeControlRules.ClampColdStacks(stackCount + 1); // 이번 명중 이후 누적
             float movementMultiplier = WeaponAttributeControlRules.GetColdMovementMultiplier(resolvedStage, nextStacks); // 누적별 냉기 이동 배율
             int priority = WeaponAttributeControlRules.GetColdPriority(resolvedStage); // 냉기 우선순위 계산
-            bool applied = statusController.ApplySlow(priority, movementMultiplier, duration); // 공통 감속 적용
+            bool applied = statusController.ApplyColdSlow(priority, movementMultiplier, duration); // 공통 감속 적용
 
             if (!applied) // 공통 감속 실패 확인
             {
@@ -104,6 +104,15 @@ namespace ProjectEpsilon.Combat // 전투 영역
                 additionalColdHits = 0; // 이전 추가 명중 초기화
             }
             return true; // 적용 성공
+        }
+
+        public void Clear() // 냉기 재료와 냉기 이동 효과 해제
+        {
+            synergyStage = 0; // 냉기 단계 초기화
+            stackCount = 0; // 냉기 누적 초기화
+            additionalColdHits = 0; // 추가 명중 초기화
+            remainingDuration = 0f; // 냉기 시간 초기화
+            statusController?.ClearColdStatus(); // 냉기 출처 이동 상태만 제거
         }
 
         private void ResolveReferences() // 필수 참조 확보
