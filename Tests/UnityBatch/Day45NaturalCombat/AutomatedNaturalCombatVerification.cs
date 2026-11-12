@@ -29,6 +29,7 @@ namespace ProjectEpsilon.Editor // 편집기 영역
         private static int currentKeys = -1; // 이전 입력 조합
         private static bool checkedStart; // 시작 몸통 확인
         private static bool startingChoiceObserved; // 실제 시작 버튼 선택 확인
+        private static int startingOptionIndex = 1; // 기본 시작 포탑 후보 번호
         private static int lastBodies = -1; // 이전 몸통 수
         private static int lastHealth = -1; // 이전 체력
         private static float nextReport; // 다음 상태 기록 시각
@@ -145,6 +146,10 @@ namespace ProjectEpsilon.Editor // 편집기 영역
                             {
                                 seed = requestedSeed; // 시험 시드 적용
                             }
+                            if (arguments[index] == "-epsilonStartOption" && int.TryParse(arguments[index + 1], out int requestedOption) && requestedOption >= 1 && requestedOption <= 3) // 시작 포탑 후보 번호 확인
+                            {
+                                startingOptionIndex = requestedOption - 1; // 실제 배열 순서 저장
+                            }
                             if (arguments[index] == "-epsilonSurvivalSeconds" && float.TryParse(arguments[index + 1], System.Globalization.NumberStyles.Float, System.Globalization.CultureInfo.InvariantCulture, out float requestedSeconds) && requestedSeconds >= 300f && requestedSeconds <= 1200f) // 실제 관찰 시간 범위 확인
                             {
                                 targetSurvivalSeconds = requestedSeconds; // 실제 관찰 목표 적용
@@ -162,17 +167,17 @@ namespace ProjectEpsilon.Editor // 편집기 영역
                     StartingWeaponOptions options = selection == null ? null : (StartingWeaponOptions)typeof(StartingWeaponSelection).GetField("options", PrivateInstance).GetValue(selection); // 실제 후보 데이터
                     if (selection != null && selection.IsSelecting) // 실제 시작 후보 선택 상태 확인
                     {
-                        ClickLevelButton(1); // 실제 두 번째 후보 버튼 선택
+                        ClickLevelButton(startingOptionIndex); // 지정된 실제 시작 후보 버튼 선택
                     }
                     if (game.IsPlaying) // 버튼 선택 완료 확인
                     {
                         SnakeWeaponManager weapons = UnityEngine.Object.FindFirstObjectByType<SnakeWeaponManager>(); // 실제 장착 관리자
-                        if (options == null || options.Weapons == null || options.Weapons.Length < 2 || options.Weapons[1] == null || options.Weapons[1].Id != "debug_needle" || weapons == null || weapons.Slots.Count == 0 || weapons.Slots[0].Weapon != options.Weapons[1] || weapons.OccupiedSlotCount != 1) // 두 번째 강철 관통 포탑 실제 장착 확인
+                        if (options == null || options.Weapons == null || options.Weapons.Length <= startingOptionIndex || options.Weapons[startingOptionIndex] == null || (startingOptionIndex == 1 && options.Weapons[startingOptionIndex].Id != "debug_needle") || weapons == null || weapons.Slots.Count == 0 || weapons.Slots[0].Weapon != options.Weapons[startingOptionIndex] || weapons.OccupiedSlotCount != 1) // 지정된 후보와 기존 기본 후보의 실제 장착 확인
                         {
-                            throw new InvalidOperationException("Second starting weapon button did not equip exactly one steel spear."); // 시작 장착 오류
+                            throw new InvalidOperationException("Requested starting weapon button did not equip exactly one turret."); // 시작 장착 오류
                         }
                         startingChoiceObserved = true; // 시작 선택 검증 기록
-                        Debug.Log($"[NaturalCombatVerification] starting button=2 weapon={weapons.Slots[0].Weapon.DisplayName} grade={weapons.Slots[0].Grade} occupied={weapons.OccupiedSlotCount} range={weapons.Slots[0].EffectiveRange:F2} scale={Time.timeScale:F1}"); // 실제 버튼 선택 결과 기록
+                        Debug.Log($"[NaturalCombatVerification] starting button={startingOptionIndex + 1} weapon={weapons.Slots[0].Weapon.DisplayName} grade={weapons.Slots[0].Grade} occupied={weapons.OccupiedSlotCount} range={weapons.Slots[0].EffectiveRange:F2} scale={Time.timeScale:F1}"); // 실제 버튼 선택 결과 기록
                     }
                     return; // 다음 갱신부터 전투 관찰
                 }
