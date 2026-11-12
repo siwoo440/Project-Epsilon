@@ -6,6 +6,7 @@ using ProjectEpsilon.Core; // 게임 상태
 using ProjectEpsilon.Enemies; // 적 행동
 using ProjectEpsilon.Player; // 플레이어 상태
 using ProjectEpsilon.Progression; // 성장 및 보상
+using ProjectEpsilon.Recording; // 선택적 전투 기록
 using ProjectEpsilon.UI; // 선택 화면
 using UnityEditor; // 편집기 제어
 using UnityEditor.SceneManagement; // 씬 열기
@@ -104,6 +105,12 @@ namespace ProjectEpsilon.Editor // 편집기 영역
                     if (!Mathf.Approximately(Time.timeScale, 0f)) // 시작 전 정지 확인
                     {
                         throw new InvalidOperationException("Starting selection did not freeze game time."); // 시작 시간 오류
+                    }
+                    RunFrontendController frontend = RunFrontendController.Instance; // 실제 시작 화면
+                    if (frontend != null && frontend.Stage != FrontendStage.Weapons) // 포탑 선택 이전 단계 확인
+                    {
+                        StartingWeaponBatchHelper.HandleStartingSelection(); // 실제 메뉴 버튼으로 출격 단계 이동
+                        return; // 다음 시작 단계 대기
                     }
                     if (!randomSeedInitialized) // 최초 시작 상태 확인
                     {
@@ -333,6 +340,12 @@ namespace ProjectEpsilon.Editor // 편집기 영역
             }
             if (elapsed >= 300f && game.IsPlaying && (merge == null || !merge.IsMergeOpen)) // 실제 전투 재개 및 생존 시간 확인
             {
+                RunTelemetry telemetry = RunTelemetry.Instance; // 선택적 실제 전투 기록기
+                if (telemetry != null && telemetry.Current != null) // 실제 기록 활성 확인
+                {
+                    telemetry.Capture("five_minutes"); // 실제 5분 상태 표본
+                    Debug.Log("[NaturalCombatVerification] RECORD " + JsonUtility.ToJson(telemetry.Current)); // 실제 5분 관측 기록
+                }
                 if (!naturalProgressObserved) // 실제 성장 누락 확인
                 {
                     Fail($"natural progression absent at 300s: kills={naturalKills} level={experience.CurrentLevel} xp={experience.CurrentExperience} choices={levelSelections}"); // 성장 미발생 기록

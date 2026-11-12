@@ -85,7 +85,7 @@ namespace ProjectEpsilon.Editor // 배치 시험 영역
             panel.ShowStartingWeapons(candidates); // 실제 시작 보상 화면 열기
             Canvas.ForceUpdateCanvases(); // 실제 화면 배치 갱신
             RectTransform panelRect = (RectTransform)panel.transform; // 실제 보상 패널 영역
-            Require(Mathf.Abs(panelRect.anchorMin.x - 0.1f) < 0.001f && Mathf.Abs(panelRect.anchorMax.x - 0.9f) < 0.001f, "Reward panel width is not responsive."); // 실제 화면 기준 패널 너비 확인
+            Require(panelRect.parent != null && panelRect.parent.name == "GameplayViewport", "Reward panel is not inside the gameplay area."); // 실제 보상 패널의 전투 영역 확인
             Button[] buttons = new Button[3]; // 실제 세 카드 버튼
             for (int index = 0; index < buttons.Length; index++) // 실제 카드 순회
             {
@@ -100,8 +100,14 @@ namespace ProjectEpsilon.Editor // 배치 시험 영역
             RectTransform first = (RectTransform)buttons[0].transform; // 실제 첫 카드 영역
             RectTransform second = (RectTransform)buttons[1].transform; // 실제 둘째 카드 영역
             RectTransform third = (RectTransform)buttons[2].transform; // 실제 셋째 카드 영역
-            float width = (panelRect.anchorMax.x - panelRect.anchorMin.x) * (third.anchorMax.x - first.anchorMin.x); // 전체 화면 대비 카드 묶음 너비
-            Require(Mathf.Abs(width - 0.704f) < 0.01f, "Reward cards do not span about seventy percent of screen width."); // 전체 화면 대비 약 칠십 퍼센트 확인
+            Vector3[] firstCorners = new Vector3[4]; // 실제 첫 카드 모서리
+            Vector3[] thirdCorners = new Vector3[4]; // 실제 마지막 카드 모서리
+            first.GetWorldCorners(firstCorners); // 실제 첫 카드 화면 위치
+            third.GetWorldCorners(thirdCorners); // 실제 마지막 카드 화면 위치
+            float left = RectTransformUtility.WorldToScreenPoint(null, firstCorners[0]).x; // 실제 카드 묶음 왼쪽
+            float right = RectTransformUtility.WorldToScreenPoint(null, thirdCorners[2]).x; // 실제 카드 묶음 오른쪽
+            float width = (right - left) / Screen.width; // 실제 전체 화면 대비 카드 너비
+            Require(Mathf.Abs(width - 0.7f) < 0.02f && right <= Camera.main.pixelRect.xMax, $"Reward cards exceed gameplay or are not about seventy percent of screen: width={width}."); // 실제 화면 너비와 패널 경계 확인
             Require(first.anchorMax.x < second.anchorMin.x && second.anchorMax.x < third.anchorMin.x && first.anchorMin.y < first.anchorMax.y, "Reward cards overlap or lack height."); // 실제 카드 간격과 높이 확인
             panel.ShowEliteRewards(new[] { "A", "B", "C" }, new[] { true, true, true }); // 실제 엘리트 보상 전환
             Require(!buttons[0].transform.Find("WeaponArtwork").gameObject.activeSelf, "Weapon artwork remained on elite reward."); // 엘리트 화면의 무기 그림 숨김 확인

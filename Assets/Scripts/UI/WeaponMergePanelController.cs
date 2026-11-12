@@ -103,13 +103,13 @@ namespace ProjectEpsilon.UI // 프로젝트 기능 영역
             if (titleText != null) // 문구 조건 확인
             {
                 titleText.text = // 문구 값 설정
-                    "WEAPON MERGE"; // 포탑·합성 경로 또는 문구 값
+                    "포탑 합성"; // 포탑·합성 경로 또는 문구 값
             }
 
             if (stateText != null) // 상태·문구 조건 확인
             {
                 stateText.text = // 상태·문구 값 설정
-                    "REAL-TIME / AUTO FORWARD / SPEED 70%"; // 시간·속도 경로 또는 문구 값
+                    "실시간 / 자동 전진 / 속도 70%"; // 시간·속도 경로 또는 문구 값
             }
 
             ConfigureCandidate( // 구성·후보 호출 시작
@@ -141,15 +141,15 @@ namespace ProjectEpsilon.UI // 프로젝트 기능 영역
             gameObject.SetActive(true); // 합성 화면 표시
             if (titleText != null) // 제목 연결 확인
             {
-                titleText.text = first ? "SELECT FIRST MATERIAL" : "SELECT SECOND MATERIAL"; // 재료 단계 안내
+                titleText.text = first ? "첫 번째 재료 선택" : "두 번째 재료 선택"; // 재료 단계 안내
             }
             if (stateText != null) // 상태 문구 연결 확인
             {
-                stateText.text = $"{cursor + 1}/{count} | ESC: CANCEL"; // 위치 및 취소 안내
+                stateText.text = $"{cursor + 1}/{count} | 이스케이프: 취소"; // 위치 및 취소 안내
             }
-            ConfigureUpgradeButton(candidateButton01, candidateLabel01, "< PREV"); // 이전 슬롯 버튼
+            ConfigureUpgradeButton(candidateButton01, candidateLabel01, "< 이전"); // 이전 슬롯 버튼
             ConfigureUpgradeButton(candidateButton02, candidateLabel02, FormatSlot(slot, slotIndex)); // 현재 슬롯 버튼
-            ConfigureUpgradeButton(candidateButton03, candidateLabel03, "NEXT >"); // 다음 슬롯 버튼
+            ConfigureUpgradeButton(candidateButton03, candidateLabel03, "다음 >"); // 다음 슬롯 버튼
             BindButtons(); // 버튼 연결
         }
 
@@ -157,11 +157,11 @@ namespace ProjectEpsilon.UI // 프로젝트 기능 영역
         {
             if (titleText != null) // 제목 연결 확인
             {
-                titleText.text = "CHOOSE ENHANCEMENTS"; // 계승 단계 안내
+                titleText.text = "계승할 강화 선택"; // 계승 단계 안내
             }
             if (stateText != null) // 상태 문구 연결 확인
             {
-                stateText.text = "CHOOSE MATERIAL | ESC: CANCEL"; // 계승 및 취소 안내
+                stateText.text = "재료 선택 | 이스케이프: 취소"; // 계승 및 취소 안내
             }
             ConfigureUpgradeButton(candidateButton01, candidateLabel01, FormatSlot(first, firstIndex)); // 첫 재료 강화 표시
             ConfigureUpgradeButton(candidateButton02, candidateLabel02, FormatSlot(second, secondIndex)); // 둘째 재료 강화 표시
@@ -180,11 +180,11 @@ namespace ProjectEpsilon.UI // 프로젝트 기능 영역
         {
             if (titleText != null) // 제목 연결 확인
             {
-                titleText.text = "CHOOSE ENHANCEMENTS"; // 계승 단계 안내
+                titleText.text = "계승할 강화 선택"; // 계승 단계 안내
             }
             if (stateText != null) // 상태 문구 연결 확인
             {
-                stateText.text = "CHOOSE MATERIAL | ESC: CANCEL"; // 계승 및 취소 안내
+                stateText.text = "재료 선택 | 이스케이프: 취소"; // 계승 및 취소 안내
             }
             ConfigureUpgradeButton(candidateButton01, candidateLabel01, $"보상: {reward.DisplayName} ★{grade}\n피해 +0%  속도 +0%  범위 +0%"); // 미장착 보상 강화 표시
             ConfigureUpgradeButton(candidateButton02, candidateLabel02, FormatSlot(equipped, equippedIndex)); // 장착 무기 강화 표시
@@ -198,15 +198,15 @@ namespace ProjectEpsilon.UI // 프로젝트 기능 영역
         {
             if (titleText != null) // 제목 연결 확인
             {
-                titleText.text = "SELECT MERGE UPGRADE"; // 강화 선택 제목
+                titleText.text = "합성 강화 선택"; // 강화 선택 제목
             }
             if (stateText != null) // 상태 문구 연결 확인
             {
-                stateText.text = "ESC: CANCEL"; // 취소 안내
+                stateText.text = "이스케이프: 취소"; // 취소 안내
             }
-            ConfigureUpgradeButton(candidateButton01, candidateLabel01, "DAMAGE +5%"); // 공격력 선택 표시
-            ConfigureUpgradeButton(candidateButton02, candidateLabel02, "ATTACK SPEED +5%"); // 공격 속도 선택 표시
-            ConfigureUpgradeButton(candidateButton03, candidateLabel03, "RANGE / AREA +5%"); // 사거리 선택 표시
+            ConfigureUpgradeButton(candidateButton01, candidateLabel01, "공격력 +5%"); // 공격력 선택 표시
+            ConfigureUpgradeButton(candidateButton02, candidateLabel02, "공격 속도 +5%"); // 공격 속도 선택 표시
+            ConfigureUpgradeButton(candidateButton03, candidateLabel03, "사거리 / 범위 +5%"); // 사거리 선택 표시
         }
 
         public void ShowSynergyPreview(WeaponAttribute attribute, int count, int resultCount, int stage, int resultStage) // 시너지 변화 표시
@@ -215,24 +215,24 @@ namespace ProjectEpsilon.UI // 프로젝트 기능 영역
             {
                 return; // 표시 생략
             }
-            string current = stage == 0 ? "OFF" : $"x{stage}"; // 현재 단계 문구
-            string result = resultStage == 0 ? "OFF" : $"x{resultStage}"; // 합성 후 단계 문구
-            stateText.text += $" | {WeaponDisplayNames.Attribute(attribute)}: {count} -> {resultCount} | {current} -> {result}"; // 속성 수 및 단계 표시
+            string current = stage == 0 ? "미활성" : $"{stage}단계"; // 현재 단계 문구
+            string result = resultStage == 0 ? "미활성" : $"{resultStage}단계"; // 합성 후 단계 문구
+            stateText.text += $" | {WeaponDisplayNames.Attribute(attribute)}: {count} → {resultCount} | {current} → {result}"; // 속성 수 및 단계 표시
         }
 
         public void ShowUpgradeSelection(WeaponMergeCandidate candidate) // 합성 강화 후보 표시
         {
             if (titleText != null) // 제목 연결 확인
             {
-                titleText.text = "SELECT MERGE UPGRADE"; // 강화 선택 제목
+                titleText.text = "합성 강화 선택"; // 강화 선택 제목
             }
             if (stateText != null) // 상태 문구 연결 확인
             {
-                stateText.text = "ESC: CANCEL"; // 대상과 취소 안내
+                stateText.text = "이스케이프: 취소"; // 대상과 취소 안내
             }
-            ConfigureUpgradeButton(candidateButton01, candidateLabel01, "DAMAGE +5%"); // 공격력 선택 표시
-            ConfigureUpgradeButton(candidateButton02, candidateLabel02, "ATTACK SPEED +5%"); // 공격 속도 선택 표시
-            ConfigureUpgradeButton(candidateButton03, candidateLabel03, "RANGE / AREA +5%"); // 사거리 선택 표시
+            ConfigureUpgradeButton(candidateButton01, candidateLabel01, "공격력 +5%"); // 공격력 선택 표시
+            ConfigureUpgradeButton(candidateButton02, candidateLabel02, "공격 속도 +5%"); // 공격 속도 선택 표시
+            ConfigureUpgradeButton(candidateButton03, candidateLabel03, "사거리 / 범위 +5%"); // 사거리 선택 표시
         }
 
         private static void ConfigureUpgradeButton(Button button, Text label, string caption) // 강화 버튼 표시

@@ -96,7 +96,7 @@ namespace ProjectEpsilon.Editor // 편집기 영역
                 Require(events == 5, "Unchanged earned reset emitted an event."); // 불필요한 이벤트 차단 확인
                 presenter.enabled = false; // 표시기 비활성화
                 Require(body.TryGainBodyFromLevelUp(), "Growth while presenter disabled failed."); // 표시기 비활성 상태 성장
-                Require(label.text == "Body 3 / 3 (max 20)", "Disabled presenter unexpectedly changed label."); // 비활성 상태 표시 유지 확인
+                Require(label.text == "몸통 3 / 3 (최대 20)", "Disabled presenter unexpectedly changed label."); // 비활성 상태 표시 유지 확인
                 presenter.enabled = true; // 표시기 재활성화
                 RequireState(body, label, 4, 4, 20, "presenter re-enable"); // 재활성화 즉시 갱신 확인
                 Require(events == 6 && lastCurrent == 4 && lastEarned == 4 && lastMaximum == 20, "Disabled presenter growth event mismatch."); // 일반 구독자 이벤트 확인
@@ -114,7 +114,7 @@ namespace ProjectEpsilon.Editor // 편집기 영역
         private static void RequireState(SnakeBodyManager body, Text label, int current, int earned, int maximum, string stage) // 몸통 상태 및 HUD 확인
         {
             Require(body.CurrentBodyCount == current && body.EarnedBodyCount == earned && body.MaximumBodyCount == maximum, stage + ": body counts mismatch."); // 몸통 세 수치 확인
-            string expected = $"Body {current} / {earned} (max {maximum})"; // 기획된 HUD 문구
+            string expected = $"몸통 {current} / {earned} (최대 {maximum})"; // 기획된 HUD 문구
             Require(label.text == expected, stage + ": expected '" + expected + "', got '" + label.text + "'."); // 실제 HUD 텍스트 확인
             Debug.Log("[BodyHudVerification] " + stage + ": " + label.text); // 단계별 실제 표시 기록
         }
@@ -124,7 +124,7 @@ namespace ProjectEpsilon.Editor // 편집기 영역
             string previousText = label.text; // 기존 표시 문구 저장
             try // 표시 문구 복구 보장
             {
-                label.text = "Body 20 / 20 (max 20)"; // 최대 길이 시험 문구
+                label.text = "몸통 20 / 20 (최대 20)"; // 최대 길이 시험 문구
                 Canvas.ForceUpdateCanvases(); // 화면 배치 강제 갱신
                 float availableWidth = label.rectTransform.rect.width; // 실제 텍스트 영역 너비
                 float preferredWidth = label.preferredWidth; // 폰트 기준 필요 너비

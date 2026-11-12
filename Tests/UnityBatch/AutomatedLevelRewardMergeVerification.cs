@@ -423,9 +423,9 @@ namespace ProjectEpsilon.Editor // 편집기 영역
             string title = PanelText(mergePanel, "titleText"); // 실제 합성 화면 제목
             string selected = PanelText(mergePanel, "candidateLabel02"); // 현재 장착 재료 문구
             Debug.Log($"[LevelRewardMerge] Numeric entry title='{title}', selected='{selected}'."); // 실제 키 처리 결과 기록
-            Require(title == "SELECT SECOND MATERIAL" && selected.Contains("BODY 1:"), "Digit 2 also confirmed a material in the opening frame."); // 첫 재료 선택 보존
+            Require(title == "두 번째 재료 선택" && selected.Contains("몸통 1:"), "Digit 2 also confirmed a material in the opening frame."); // 첫 재료 선택 보존
             ClickMerge(2); // 실제 다음 재료 버튼
-            Require(PanelText(mergePanel, "candidateLabel02").Contains("BODY 2:"), "Second matching material was not selectable after numeric entry."); // 두 번째 재료 접근 확인
+            Require(PanelText(mergePanel, "candidateLabel02").Contains("몸통 2:"), "Second matching material was not selectable after numeric entry."); // 두 번째 재료 접근 확인
             yield return KeyTap(Key.Escape); // 보상 합성 취소
             AssertRewardChoice(); // 같은 보상 선택으로 복귀
         }
@@ -456,7 +456,10 @@ namespace ProjectEpsilon.Editor // 편집기 영역
 
         private IEnumerator VerifyLevelDisable() // 레벨업 선택 단계별 비활성 복구
         {
-            string[] titles = { "LEVEL UP!", "CHOOSE WEAPON ACTION", "CHOOSE SLOT TO REPLACE", "CHOOSE WEAPON ACTION" }; // 단계별 기대 화면
+            string[] titles = // 단계별 기대 화면
+            {
+                "레벨 상승!", "포탑 처리 선택", "교체할 몸통 선택", "포탑 처리 선택" // 실제 네 단계 제목
+            };
             for (int stage = 0; stage < 4; stage++) // 후보와 방식 및 교체와 합성 순회
             {
                 StartLevel(1); // 독립 시험 레벨업
@@ -545,7 +548,10 @@ namespace ProjectEpsilon.Editor // 편집기 영역
             bool ordinaryClosed = !merge.IsMergeOpen && !mergePanel.gameObject.activeInHierarchy && GameManager.Instance.IsPlaying && Mathf.Approximately(Time.timeScale, 1f); // 일반 합성 화면과 속도 정리
             RecordBoundary("ordinary merge disable", ordinaryClosed, $"mergePanel={mergePanel.gameObject.activeInHierarchy}, scale={Time.timeScale:F2}"); // 독립 결과 기록
             ResetBoundaryFixture(); // 일반 합성 상태 초기화
-            string[] titles = { "LEVEL UP!", "CHOOSE WEAPON ACTION", "CHOOSE SLOT TO REPLACE", "CHOOSE WEAPON ACTION" }; // 복구 화면 기대값
+            string[] titles = // 복구 화면 기대값
+            {
+                "레벨 상승!", "포탑 처리 선택", "교체할 몸통 선택", "포탑 처리 선택" // 실제 네 단계 제목
+            };
             for (int stage = 0; stage < 4; stage++) // 레벨업 선택 단계 순회
             {
                 StartLevel(1); // 독립 레벨업 시작

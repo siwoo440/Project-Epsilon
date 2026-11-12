@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8a0e3dc1911eabd488892506cad82e26, type: 3}
   m_Name: PrototypeExplosionWave
   m_EditorClassIdentifier: Assembly-CSharp::ProjectEpsilon.Data.WeaponData
-  id: prototype_explosion_wave
+  id: explosion_wave
   displayName: 폭발 파동 포탑
   artwork: {fileID: 21300000, guid: f873d6246f772fb41a1fb370949f0060, type: 3}
   attribute: 5

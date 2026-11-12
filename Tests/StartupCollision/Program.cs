@@ -72,7 +72,7 @@ public static class Program // 시작 충돌 검증
         hud.Bind(null, label, null, null, null); // 몸통 문구 연결
         SnakeBodyHUDPresenter presenter = hudObject.AddComponent<SnakeBodyHUDPresenter>(); // 실제 몸통 표시기
         presenter.Bind(bodies, hud); // 몸통 이벤트 구독
-        if (label.text != "Body 3 / 6 (max 20)") // 초기 표시 확인
+        if (label.text != "몸통 3 / 6 (최대 20)") // 초기 표시 확인
         {
             Console.Error.WriteLine("Earned reset HUD setup failed."); // 준비 실패 출력
             return false; // 실패 반환
@@ -94,7 +94,7 @@ public static class Program // 시작 충돌 검증
             Console.Error.WriteLine($"Earned reset notification failed: count={notifications}, current={eventCurrent}, earned={eventEarned}, max={eventMaximum}"); // 실패 결과 출력
             return false; // 실패 반환
         }
-        if (label.text != "Body 3 / 3 (max 20)") // 실제 HUD 변경 확인
+        if (label.text != "몸통 3 / 3 (최대 20)") // 실제 HUD 변경 확인
         {
             Console.Error.WriteLine("Earned reset did not update the body HUD."); // 표시 실패 출력
             return false; // 실패 반환

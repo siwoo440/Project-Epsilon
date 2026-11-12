@@ -113,8 +113,7 @@ namespace ProjectEpsilon.Enemies // 적 영역
             {
                 return; // 표시 생략
             }
-            float width = Mathf.Min(400f, Mathf.Max(1f, Screen.width - 40f)); // 화면 너비에 맞춘 체력 바
-            Rect background = new Rect((Screen.width - width) * 0.5f, 48f, width, 22f); // 상단 중앙 표시 영역
+            Rect background = ResolveHealthBarRect(Camera.main); // 실제 전투 화면 안의 체력 바
             GUI.Box(background, GUIContent.none); // 체력 바 배경
             float ratio = Mathf.Clamp01(boss.CurrentHealth / boss.MaximumHealth); // 현재 체력 비율
             Rect fill = new Rect(background.x + 2f, background.y + 2f, Mathf.Max(0f, background.width - 4f) * ratio, background.height - 4f); // 남은 체력 영역
@@ -122,7 +121,32 @@ namespace ProjectEpsilon.Enemies // 적 영역
             GUI.color = new Color(0.85f, 0.15f, 0.25f); // 시험용 체력 색상
             GUI.DrawTexture(fill, Texture2D.whiteTexture); // 남은 체력 표시
             GUI.color = previousColor; // 다른 UI 색상 복구
-            GUI.Label(background, $"BOSS {Mathf.CeilToInt(boss.CurrentHealth)} / {Mathf.CeilToInt(boss.MaximumHealth)}"); // 현재 및 최대 체력 문구
+            Font previousFont = GUI.skin.font; // 실제 이전 화면 글꼴
+            Font displayFont = ProjectEpsilon.UI.RunFrontendController.Instance == null ? null : ProjectEpsilon.UI.RunFrontendController.Instance.DisplayFont; // 실제 한글 화면 글꼴
+            if (displayFont != null) // 실제 한글 글꼴 확인
+            {
+                GUI.skin.font = displayFont; // 실제 보스 체력 글꼴 적용
+            }
+            try // 실제 보스 체력 표시 중 글꼴 보호
+            {
+                GUI.Label(background, FormatHealthLabel(boss.CurrentHealth, boss.MaximumHealth)); // 실제 한국어 보스 체력 문구
+            }
+            finally // 실제 다른 화면 글꼴 복원
+            {
+                GUI.skin.font = previousFont; // 실제 공용 글꼴 복원
+            }
+        }
+
+        private static string FormatHealthLabel(float current, float maximum) // 실제 한국어 보스 체력 문구
+        {
+            return $"보스 {Mathf.CeilToInt(current)} / {Mathf.CeilToInt(maximum)}"; // 실제 현재와 최대 체력 표시
+        }
+
+        private static Rect ResolveHealthBarRect(Camera camera) // 실제 전투 카메라 기준 체력 표시 영역
+        {
+            Rect viewport = camera == null ? new Rect(0f, 0f, Screen.width, Screen.height) : camera.pixelRect; // 실제 카메라 또는 전체 화면
+            float width = Mathf.Min(400f, Mathf.Max(1f, viewport.width - 40f)); // 실제 전투 영역에 맞춘 체력 바
+            return new Rect(viewport.xMin + (viewport.width - width) * 0.5f, Screen.height - viewport.yMax + 48f, width, 22f); // 실제 전투 영역 상단 중앙
         }
 
         private void TrySpawnBoss() // 실제 최종 보스 출현

@@ -86,7 +86,7 @@ namespace ProjectEpsilon.Editor // 배치 시험 영역
             Require(initializer != null && apply != null, "Character run initializer is not attached to the scene."); // 실제 씬 연결 확인
             PropertyInfo activeProfile = runtimeType.GetProperty("ActiveCharacter"); // 실제 현재 런 캐릭터 조회
             CharacterData initialProfile = activeProfile == null ? null : activeProfile.GetValue(null) as CharacterData; // 실제 기본 캐릭터
-            Require(initialProfile != null && initialProfile.Id == "prototype_balanced", "Default balanced character was not applied at startup."); // 실제 기본 캐릭터 자동 적용 확인
+            Require(initialProfile != null && initialProfile.Id == "balanced", "Default balanced character was not applied at startup."); // 실제 기본 캐릭터 자동 적용 확인
             SnakeBodyManager body = UnityEngine.Object.FindFirstObjectByType<SnakeBodyManager>(); // 실제 몸통 관리자
             SnakeWeaponManager weapons = UnityEngine.Object.FindFirstObjectByType<SnakeWeaponManager>(); // 실제 무기 관리자
             SnakeMovement movement = GetComponent<SnakeMovement>(); // 실제 머리 이동

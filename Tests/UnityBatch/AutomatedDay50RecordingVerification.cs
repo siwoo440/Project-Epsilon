@@ -83,7 +83,7 @@ namespace ProjectEpsilon.Editor // 시험 기능 영역
             float expectedProbe = UnityEngine.Random.value; // 실제 첫 난수 표본
             UnityEngine.Random.state = savedRandom; // 실제 게임 난수 상태 복원
             Require(Mathf.Approximately(recording.randomProbe, expectedProbe) && Mathf.Approximately(recording.fixedDeltaTime, Time.fixedDeltaTime), "Seed or physics configuration mismatch."); // 실제 재현 조건 확인
-            Require(recording.mapIndex == 0 && recording.characterId == "prototype_balanced" && recording.enemies.Count == 4 && recording.bossTransitionTime == 1200f, "Actual initial configuration mismatch."); // 실제 기존 게임 설정 확인
+            Require(recording.mapIndex == 0 && recording.characterId == "balanced" && recording.enemies.Count == 4 && recording.bossTransitionTime == 1200f, "Actual initial configuration mismatch."); // 실제 기존 게임 설정 확인
             RunSnapshot initial = recording.snapshots[0]; // 실제 첫 상태 표본
             Require(initial.reason == "start" && initial.currentBodies == 3 && initial.earnedBodies == 3 && initial.bodyLimit == 20 && initial.health == 100 && initial.weapons.Count == 3 && !string.IsNullOrEmpty(initial.weapons[0].weaponId), "Initial body, health or turret snapshot incorrect."); // 실제 시작 상태 확인
             EarlyEnemyWaveSpawner wave = FindFirstObjectByType<EarlyEnemyWaveSpawner>(); // 실제 적 출현기

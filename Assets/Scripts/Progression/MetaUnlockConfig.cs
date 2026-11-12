@@ -5,7 +5,7 @@ namespace ProjectEpsilon.Progression // 영구 성장 영역
     [CreateAssetMenu(fileName = "PrototypeMetaUnlockConfig", menuName = "Project Epsilon/Meta Unlock Config")] // 시험 설정 에셋 메뉴
     public sealed class MetaUnlockConfig : ScriptableObject // 미정 해금 대상 시험 설정
     {
-        [SerializeField] private string firstBossCharacterId = "prototype_mobile"; // 평원 보상 캐릭터 임시 대상
+        [SerializeField] private string firstBossCharacterId = "mobile"; // 평원 보상 캐릭터 임시 대상
         [Min(1)] [SerializeField] private int synergyThreshold = 2; // 포탑 해금 시너지 임시 기준
         [SerializeField] private string[] synergyTurretIds = new string[8]; // 속성별 포탑 임시 대상
         public string FirstBossCharacterId => firstBossCharacterId; // 실제 시험 캐릭터 식별자

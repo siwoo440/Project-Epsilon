@@ -118,10 +118,10 @@ namespace ProjectEpsilon.Editor // 편집기 영역
             PrepareMaterials(); // 스무 슬롯 재료 준비
             yield return OpenByKey(); // 실제 E 입력으로 합성 열기
             Click(0); // 마지막 재료로 역순 이동
-            Require(Label(1).Contains("BODY 20:"), "Twentieth body was not reachable from the first slot."); // 스무 번째 슬롯 표시
+            Require(Label(1).Contains("몸통 20:"), "Twentieth body was not reachable from the first slot."); // 스무 번째 슬롯 표시
             CheckMergeLabelsFit(); // 스무 번째 몸통 문구 높이 확인
             Click(1); // 스무 번째 재료 확정
-            Require(Label(1).Contains("BODY 1:"), "Second material did not start at the first body."); // 둘째 재료 표시
+            Require(Label(1).Contains("몸통 1:"), "Second material did not start at the first body."); // 둘째 재료 표시
             Click(1); // 첫 번째 몸통 재료 확정
             CheckMergeLabelsFit(); // 두 재료 강화 내역 높이 확인
             Require(weapons.OccupiedSlotCount == 2, "Materials were consumed before inheritance selection."); // 미확정 재료 유지
@@ -325,9 +325,9 @@ namespace ProjectEpsilon.Editor // 편집기 영역
         private void VerifyDisplayedSynergy(int count, int before, int after) // 실제 상태 문구 검증
         {
             Text state = (Text)typeof(WeaponMergePanelController).GetField("stateText", PrivateInstance).GetValue(panel); // 실제 UI 문구 조회
-            string currentStage = before == 0 ? "OFF" : "x" + before; // 현재 단계 문구
-            string nextStage = after == 0 ? "OFF" : "x" + after; // 예상 단계 문구
-            string expected = $"{weapon.Attribute}: {count} -> {count - 1} | {currentStage} -> {nextStage}"; // 실제 표시 기대값
+            string currentStage = before == 0 ? "미활성" : before + "단계"; // 현재 단계 문구
+            string nextStage = after == 0 ? "미활성" : after + "단계"; // 예상 단계 문구
+            string expected = $"{WeaponDisplayNames.Attribute(weapon.Attribute)}: {count} → {count - 1} | {currentStage} → {nextStage}"; // 실제 표시 기대값
             Require(state != null && state.text.Contains(expected), $"Incorrect synergy preview: expected '{expected}', actual '{(state == null ? "<null>" : state.text)}'."); // 표시 속성 및 수치 확인
             Canvas.ForceUpdateCanvases(); // 실제 UI 크기 갱신
             float preferredWidth = state.preferredWidth; // 전체 문구 필요 너비

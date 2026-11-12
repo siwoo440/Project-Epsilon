@@ -71,10 +71,98 @@ namespace ProjectEpsilon.Core // 프로젝트 기능 영역
                 return "-"; // 대상 결과 반환
             }
 
-            return InputControlPath.ToHumanReadableString( // 입력·경로 결과 반환
+            string displayName = InputControlPath.ToHumanReadableString( // 실제 키 표시 이름
                 effectivePath, // 경로 항목 전달
                 InputControlPath.HumanReadableStringOptions.OmitDevice // 입력·경로 처리
             ); // 앞선 항목 종료
+            return LocalizeBindingName(displayName, effectivePath); // 실제 키 이름의 한국어 표시
+        }
+
+        private static string LocalizeBindingName(string value, string path) // 실제 키보드 표시 이름 정리
+        {
+            const string keypadPrefix = "<Keyboard>/numpad"; // 실제 숫자 키패드 경로
+            if (!string.IsNullOrEmpty(path) && path.StartsWith(keypadPrefix, StringComparison.OrdinalIgnoreCase)) // 실제 숫자 키패드 확인
+            {
+                string keypad = path.Substring(keypadPrefix.Length).ToLowerInvariant(); // 실제 키패드 세부 키
+                switch (keypad) // 실제 키패드 이름 확인
+                {
+                    case "enter": return "숫자 키패드 엔터"; // 실제 키패드 엔터
+                    case "plus": return "숫자 키패드 +"; // 실제 키패드 더하기
+                    case "minus": return "숫자 키패드 -"; // 실제 키패드 빼기
+                    case "multiply": return "숫자 키패드 ×"; // 실제 키패드 곱하기
+                    case "divide": return "숫자 키패드 ÷"; // 실제 키패드 나누기
+                    case "period": return "숫자 키패드 ."; // 실제 키패드 소수점
+                    case "comma": return "숫자 키패드 ,"; // 실제 키패드 쉼표
+                    case "equals": return "숫자 키패드 ="; // 실제 키패드 등호
+                    default: return "숫자 키패드 " + keypad; // 실제 키패드 숫자 보존
+                }
+            }
+            switch (path == null ? "" : path.ToLowerInvariant()) // 실제 특수 키 경로 확인
+            {
+                case "<keyboard>/altgr": return "오른쪽 알트"; // 실제 보조 알트 키
+                case "<keyboard>/leftmeta": // 실제 왼쪽 운영체제 키 별칭
+                case "<keyboard>/leftwindows": // 실제 왼쪽 윈도 키 별칭
+                case "<keyboard>/leftapple": // 실제 왼쪽 애플 키 별칭
+                case "<keyboard>/leftcommand": return "왼쪽 운영체제 키"; // 실제 왼쪽 운영체제 키
+                case "<keyboard>/rightmeta": // 실제 오른쪽 운영체제 키 별칭
+                case "<keyboard>/rightwindows": // 실제 오른쪽 윈도 키 별칭
+                case "<keyboard>/rightapple": // 실제 오른쪽 애플 키 별칭
+                case "<keyboard>/rightcommand": return "오른쪽 운영체제 키"; // 실제 오른쪽 운영체제 키
+                case "<keyboard>/contextmenu": return "메뉴 키"; // 실제 문맥 메뉴 키
+                case "<keyboard>/imeselected": return "입력기 전환 키"; // 실제 입력기 전환 키
+                case "<keyboard>/mediaplaypause": return "재생·일시정지 키"; // 실제 미디어 재생 키
+                case "<keyboard>/mediarewind": return "되감기 키"; // 실제 미디어 되감기 키
+                case "<keyboard>/mediaforward": return "빨리감기 키"; // 실제 미디어 빨리감기 키
+                case "<keyboard>/oem1": return "특수 키 1"; // 실제 제조사 특수 키
+                case "<keyboard>/oem2": return "특수 키 2"; // 실제 제조사 특수 키
+                case "<keyboard>/oem3": return "특수 키 3"; // 실제 제조사 특수 키
+                case "<keyboard>/oem4": return "특수 키 4"; // 실제 제조사 특수 키
+                case "<keyboard>/oem5": return "특수 키 5"; // 실제 제조사 특수 키
+            }
+            switch (value) // 실제 일반 키 이름 확인
+            {
+                case "Space": return "스페이스"; // 실제 스페이스 키
+                case "Spacebar": return "스페이스"; // 실제 스페이스 키 별칭
+                case "Left Arrow": return "왼쪽 방향키"; // 실제 왼쪽 방향키
+                case "Right Arrow": return "오른쪽 방향키"; // 실제 오른쪽 방향키
+                case "Up Arrow": return "위쪽 방향키"; // 실제 위쪽 방향키
+                case "Down Arrow": return "아래쪽 방향키"; // 실제 아래쪽 방향키
+                case "Left Shift": return "왼쪽 시프트"; // 실제 왼쪽 시프트 키
+                case "Right Shift": return "오른쪽 시프트"; // 실제 오른쪽 시프트 키
+                case "Left Control": // 실제 왼쪽 컨트롤 별칭
+                case "Left Ctrl": return "왼쪽 컨트롤"; // 실제 왼쪽 컨트롤 키
+                case "Right Control": // 실제 오른쪽 컨트롤 별칭
+                case "Right Ctrl": return "오른쪽 컨트롤"; // 실제 오른쪽 컨트롤 키
+                case "Left Alt": return "왼쪽 알트"; // 실제 왼쪽 알트 키
+                case "Right Alt": return "오른쪽 알트"; // 실제 오른쪽 알트 키
+                case "Enter": return "엔터"; // 실제 엔터 키
+                case "Tab": return "탭"; // 실제 탭 키
+                case "Backspace": return "백스페이스"; // 실제 백스페이스 키
+                case "Delete": return "삭제 키"; // 실제 삭제 키
+                case "Insert": return "삽입 키"; // 실제 삽입 키
+                case "Home": return "홈 키"; // 실제 홈 키
+                case "End": return "끝 키"; // 실제 끝 키
+                case "Page Up": return "이전 페이지 키"; // 실제 이전 페이지 키
+                case "Page Down": return "다음 페이지 키"; // 실제 다음 페이지 키
+                case "Escape": return "이스케이프"; // 실제 취소 키
+                case "Caps Lock": return "대문자 잠금"; // 실제 대문자 잠금 키
+                case "Num Lock": return "숫자 잠금"; // 실제 숫자 잠금 키
+                case "Scroll Lock": return "스크롤 잠금"; // 실제 스크롤 잠금 키
+                case "Print Screen": return "화면 캡처 키"; // 실제 화면 캡처 키
+                case "Pause": return "일시정지 키"; // 실제 키보드 일시정지 키
+                case "Left Bracket": return "["; // 실제 왼쪽 대괄호 키
+                case "Right Bracket": return "]"; // 실제 오른쪽 대괄호 키
+                case "Semicolon": return ";"; // 실제 세미콜론 키
+                case "Quote": return "'"; // 실제 따옴표 키
+                case "Comma": return ","; // 실제 쉼표 키
+                case "Period": return "."; // 실제 마침표 키
+                case "Slash": return "/"; // 실제 슬래시 키
+                case "Backslash": return "\\"; // 실제 역슬래시 키
+                case "Minus": return "-"; // 실제 빼기 키
+                case "Equals": return "="; // 실제 등호 키
+                case "Backquote": return "`"; // 실제 백틱 키
+                default: return value; // 실제 문자·숫자와 기타 키 보존
+            }
         }
 
         public void StartInteractiveRebind(RebindableInput input, Action<bool> completed) // 시작·입력 기능 선언

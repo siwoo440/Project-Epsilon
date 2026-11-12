@@ -12,14 +12,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0575b9777d3048a9b2e4074c200b8cc6, type: 3}
   m_Name: PrototypeMetaUnlockConfig
   m_EditorClassIdentifier: Assembly-CSharp::ProjectEpsilon.Progression.MetaUnlockConfig
-  firstBossCharacterId: prototype_mobile
+  firstBossCharacterId: mobile
   synergyThreshold: 2
   synergyTurretIds:
-  - prototype_physical_javelin
-  - prototype_fire_burst
-  - prototype_cold_wave
-  - prototype_electric_wave
-  - prototype_poison_wave
-  - prototype_explosion_wave
-  - prototype_holy_wave
-  - prototype_dark_wave
+  - physical_javelin
+  - fire_burst
+  - cold_wave
+  - electric_wave
+  - poison_wave
+  - explosion_wave
+  - holy_wave
+  - dark_wave

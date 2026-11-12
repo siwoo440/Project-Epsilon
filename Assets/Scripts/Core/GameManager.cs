@@ -50,6 +50,11 @@ namespace ProjectEpsilon.Core // 프로젝트 기능 영역
 
         private void Start() // 시작 기능 선언
         {
+            HUDController hud = FindFirstObjectByType<HUDController>(); // 실제 전투 HUD 조회
+            if (hud != null && hud.GetComponent<Canvas>() != null && hud.GetComponent<BodySidebarController>() == null) // 실제 전투 캔버스와 패널 확인
+            {
+                hud.gameObject.AddComponent<BodySidebarController>(); // 실제 몸통 정보 패널 연결
+            }
             playerHealth = FindFirstObjectByType<SnakeHealth>(); // 플레이어 체력 조회
             if (playerHealth != null) // 체력 존재 확인
             {
@@ -178,7 +183,12 @@ namespace ProjectEpsilon.Core // 프로젝트 기능 영역
 
         public bool RestartRun() // 실제 종료 후 현재 씬 재시작
         {
-            if (currentState != GameState.Defeated && currentState != GameState.Victory) // 실제 종료 상태 확인
+            return RestartToScene(UnityEngine.SceneManagement.SceneManager.GetActiveScene().path); // 기존 현재 씬 재시작 유지
+        }
+
+        public bool RestartToScene(string scenePath) // 실제 저장 후 지정 씬으로 복귀
+        {
+            if (string.IsNullOrEmpty(scenePath) || currentState != GameState.Defeated && currentState != GameState.Victory) // 실제 대상과 종료 상태 확인
             {
                 return false; // 진행 중 재시작 방지
             }
@@ -188,7 +198,7 @@ namespace ProjectEpsilon.Core // 프로젝트 기능 영역
                 return false; // 저장 실패 시 성과 보존
             }
             GameObject loader = new GameObject("RunSceneReloader"); // 실제 재시작 보조 객체
-            loader.AddComponent<RunSceneReloader>().Begin(gameObject, UnityEngine.SceneManagement.SceneManager.GetActiveScene().path); // 관리자 제거 후 실제 씬 재로딩
+            loader.AddComponent<RunSceneReloader>().Begin(gameObject, scenePath); // 관리자 제거 후 실제 지정 씬 이동
             return true; // 재시작 예약 완료
         }
 

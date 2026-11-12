@@ -5,7 +5,7 @@ namespace ProjectEpsilon.World // 맵 영역
     [CreateAssetMenu(fileName = "PrototypeMapProfile", menuName = "Project Epsilon/Prototype Map")] // 맵 데이터 생성 메뉴
     public sealed class PrototypeMapProfile : ScriptableObject // 맵별 시험 데이터
     {
-        [SerializeField] private string displayName = "OPEN PLAINS"; // 시작 화면 맵 이름
+        [SerializeField] private string displayName = "개방 평원"; // 시작 화면 맵 이름
         [SerializeField] private Sprite ground; // 맵 바닥 이미지
         [SerializeField] private Color bossTint = Color.white; // 임시 보스 구분 색상
         [Min(1f)] [SerializeField] private float bossHealth = 600f; // 보스 체력 임시값

@@ -27,6 +27,35 @@ namespace ProjectEpsilon.UI // 프로젝트 기능 영역
 
         public event Action<int> CandidateSelected; // 이벤트·동작 구성 선언
 
+        public void ConfigureGameplayViewport() // 분리된 전투 영역의 보상 카드 크기
+        {
+            RectTransform rect = transform as RectTransform; // 실제 보상 패널 영역
+            if (rect == null) // 실제 UI 영역 확인
+            {
+                return; // 잘못된 화면 구성 생략
+            }
+            rect.anchorMin = new Vector2(0f, rect.anchorMin.y); // 실제 전투 영역 왼쪽 기준
+            rect.anchorMax = new Vector2(1f, rect.anchorMax.y); // 실제 전투 영역 오른쪽 기준
+            rect.offsetMin = new Vector2(0f, rect.offsetMin.y); // 실제 왼쪽 여백 제거
+            rect.offsetMax = new Vector2(0f, rect.offsetMax.y); // 실제 오른쪽 여백 제거
+            SetCardHorizontalAnchors(candidateButton01, 0.04f, 0.32f); // 실제 첫 카드 가로 범위
+            SetCardHorizontalAnchors(candidateButton02, 0.36f, 0.64f); // 실제 가운데 카드 가로 범위
+            SetCardHorizontalAnchors(candidateButton03, 0.68f, 0.96f); // 실제 마지막 카드 가로 범위
+        }
+
+        private static void SetCardHorizontalAnchors(Button button, float left, float right) // 실제 카드의 가로 위치 설정
+        {
+            RectTransform rect = button == null ? null : button.transform as RectTransform; // 실제 카드 UI 영역
+            if (rect == null) // 실제 카드 확인
+            {
+                return; // 누락 카드 설정 생략
+            }
+            rect.anchorMin = new Vector2(left, rect.anchorMin.y); // 실제 카드 왼쪽 기준
+            rect.anchorMax = new Vector2(right, rect.anchorMax.y); // 실제 카드 오른쪽 기준
+            rect.offsetMin = new Vector2(0f, rect.offsetMin.y); // 실제 카드 왼쪽 여백 제거
+            rect.offsetMax = new Vector2(0f, rect.offsetMax.y); // 실제 카드 오른쪽 여백 제거
+        }
+
         public void ApplyDisplayFont(Font value) // 실제 포탑과 보상 글꼴 연결
         {
             if (value == null) // 실제 글꼴 존재 확인
@@ -105,13 +134,13 @@ namespace ProjectEpsilon.UI // 프로젝트 기능 영역
 
             if (titleText != null) // 문구 조건 확인
             {
-                titleText.text = "LEVEL UP!"; // 문구·레벨 값 설정
+                titleText.text = "레벨 상승!"; // 문구·레벨 값 설정
             }
 
             if (levelText != null) // 레벨·문구 조건 확인
             {
                 levelText.text = // 레벨·문구 값 설정
-                    $"Lv. {Mathf.Max(1, level)}"; // 최대·레벨 기능 실행
+                    $"레벨 {Mathf.Max(1, level)}"; // 최대·레벨 기능 실행
             }
 
             if (growthText != null) // 문구 조건 확인
@@ -153,7 +182,7 @@ namespace ProjectEpsilon.UI // 프로젝트 기능 영역
         {
             if (available && growthText != null) // 실제 안내 표시 확인
             {
-                growthText.text += "   R: REROLL"; // 실제 재선택 키 표시
+                growthText.text += "   R: 다시 선택"; // 실제 재선택 키 표시
             }
         }
 
@@ -162,15 +191,15 @@ namespace ProjectEpsilon.UI // 프로젝트 기능 영역
             gameObject.SetActive(true); // 시작 후보 화면 표시
             if (titleText != null) // 제목 연결 확인
             {
-                titleText.text = "CHOOSE STARTING WEAPON"; // 시작 무기 선택 제목
+                titleText.text = "시작 포탑 선택"; // 시작 무기 선택 제목
             }
             if (levelText != null) // 부제 연결 확인
             {
-                levelText.text = "CHOOSE ONE BEFORE THE RUN"; // 시작 전 선택 안내
+                levelText.text = "전투 전에 하나를 선택하세요"; // 시작 전 선택 안내
             }
             if (growthText != null) // 조작 안내 연결 확인
             {
-                growthText.text = "1 / 2 / 3: SELECT"; // 선택 키 안내
+                growthText.text = "1 / 2 / 3: 선택"; // 선택 키 안내
             }
             ConfigureCandidate(0, candidateButton01, candidateLabel01, candidates); // 첫 후보 표시
             ConfigureCandidate(1, candidateButton02, candidateLabel02, candidates); // 둘째 후보 표시
@@ -186,11 +215,11 @@ namespace ProjectEpsilon.UI // 프로젝트 기능 영역
             }
             if (levelText != null) // 실제 캐릭터 문구 확인
             {
-                levelText.text = $"{character.DisplayName} | BODY {character.StartingBodyCount} / HP {character.BodyMaxHealth:0}"; // 실제 캐릭터 시작 능력치
+                levelText.text = $"{character.DisplayName} | 몸통 {character.StartingBodyCount} / 체력 {character.BodyMaxHealth:0}"; // 실제 캐릭터 시작 능력치
             }
             if (growthText != null) // 실제 조작 안내 확인
             {
-                growthText.text = "← / →: CHARACTER    1 / 2 / 3: WEAPON"; // 캐릭터와 무기 선택 안내
+                growthText.text = "← / →: 캐릭터    1 / 2 / 3: 포탑"; // 캐릭터와 무기 선택 안내
             }
         }
 
@@ -198,7 +227,7 @@ namespace ProjectEpsilon.UI // 프로젝트 기능 영역
         {
             if (growthText != null && map != null) // 실제 안내와 맵 확인
             {
-                growthText.text = $"← / →: CHARACTER    ↑ / ↓: MAP ({map.DisplayName})    1 / 2 / 3: WEAPON"; // 시작 맵과 조작 표시
+                growthText.text = $"← / →: 캐릭터    ↑ / ↓: 맵 ({map.DisplayName})    1 / 2 / 3: 포탑"; // 시작 맵과 조작 표시
             }
         }
 
@@ -207,15 +236,15 @@ namespace ProjectEpsilon.UI // 프로젝트 기능 영역
             gameObject.SetActive(true); // 선택 화면 표시
             if (titleText != null) // 제목 연결 확인
             {
-                titleText.text = "ELITE REWARD"; // 보상 제목 표시
+                titleText.text = "정예 보상"; // 보상 제목 표시
             }
             if (levelText != null) // 부제 연결 확인
             {
-                levelText.text = "CHOOSE ONE"; // 단일 선택 안내
+                levelText.text = "하나를 선택하세요"; // 단일 선택 안내
             }
             if (growthText != null) // 안내 문구 연결 확인
             {
-                growthText.text = "1 / 2 / 3: SELECT"; // 입력 안내
+                growthText.text = "1 / 2 / 3: 선택"; // 입력 안내
             }
             ConfigureEliteButton(candidateButton01, candidateLabel01, labels, available, 0); // 첫 후보 표시
             ConfigureEliteButton(candidateButton02, candidateLabel02, labels, available, 1); // 둘째 후보 표시
@@ -243,7 +272,7 @@ namespace ProjectEpsilon.UI // 프로젝트 기능 영역
             gameObject.SetActive(true); // 레벨업 화면 표시
             if (titleText != null) // 제목 연결 확인
             {
-                titleText.text = "CHOOSE WEAPON ACTION"; // 처리 방식 제목
+                titleText.text = "포탑 처리 선택"; // 처리 방식 제목
             }
             if (levelText != null) // 무기 문구 연결 확인
             {
@@ -251,15 +280,15 @@ namespace ProjectEpsilon.UI // 프로젝트 기능 영역
             }
             if (growthText != null) // 안내 문구 연결 확인
             {
-                growthText.text = "1 / 2 / 3: SELECT"; // 선택 키 안내
+                growthText.text = "1 / 2 / 3: 선택"; // 선택 키 안내
             }
-            SetReplacementButton(candidateButton01, candidateLabel01, "EQUIP / REPLACE"); // 장착 및 교체 선택
-            SetReplacementButton(candidateButton02, candidateLabel02, canMerge ? "MERGE REWARD" : "MERGE (NO MATERIAL)"); // 합성 가능 상태 안내
+            SetReplacementButton(candidateButton01, candidateLabel01, "장착 / 교체"); // 장착 및 교체 선택
+            SetReplacementButton(candidateButton02, candidateLabel02, canMerge ? "보상 합성" : "합성 (재료 없음)"); // 합성 가능 상태 안내
             if (candidateButton02 != null) // 합성 버튼 연결 확인
             {
                 candidateButton02.interactable = canMerge; // 재료가 있을 때만 합성 허용
             }
-            SetReplacementButton(candidateButton03, candidateLabel03, "BACK"); // 기존 후보 재선택
+            SetReplacementButton(candidateButton03, candidateLabel03, "뒤로"); // 기존 후보 재선택
             BindButtons(); // 버튼 이벤트 연결
         }
 
@@ -268,7 +297,7 @@ namespace ProjectEpsilon.UI // 프로젝트 기능 영역
             gameObject.SetActive(true); // 교체 화면 표시
             if (titleText != null) // 제목 연결 확인
             {
-                titleText.text = "CHOOSE SLOT TO REPLACE"; // 교체 선택 제목
+                titleText.text = "교체할 몸통 선택"; // 교체 선택 제목
             }
             if (levelText != null) // 보상 문구 연결 확인
             {
@@ -276,12 +305,12 @@ namespace ProjectEpsilon.UI // 프로젝트 기능 영역
             }
             if (growthText != null) // 안내 문구 연결 확인
             {
-                growthText.text = "1: PREV   2: SELECT   3: NEXT   ESC: REJECT"; // 선택 및 거절 안내
+                growthText.text = "1: 이전   2: 선택   3: 다음   이스케이프: 거절"; // 선택 및 거절 안내
             }
-            string selected = index >= slots.Count ? "REJECT NEW WEAPON" : $"교체할 몸통 {index + 1}\n{slots[index].Weapon.DisplayName}  ★{slots[index].Grade}"; // 현재 선택 항목
-            SetReplacementButton(candidateButton01, candidateLabel01, "< PREV"); // 이전 항목 버튼
+            string selected = index >= slots.Count ? "새 포탑 거절" : $"교체할 몸통 {index + 1}\n{slots[index].Weapon.DisplayName}  ★{slots[index].Grade}"; // 현재 선택 항목
+            SetReplacementButton(candidateButton01, candidateLabel01, "< 이전"); // 이전 항목 버튼
             SetReplacementButton(candidateButton02, candidateLabel02, selected); // 선택 항목 버튼
-            SetReplacementButton(candidateButton03, candidateLabel03, "NEXT >"); // 다음 항목 버튼
+            SetReplacementButton(candidateButton03, candidateLabel03, "다음 >"); // 다음 항목 버튼
             BindButtons(); // 버튼 입력 연결
         }
 
@@ -477,19 +506,19 @@ namespace ProjectEpsilon.UI // 프로젝트 기능 영역
                     ); // 앞선 항목 종료
 
                 return // 대상 결과 반환
-                    $"Body {previous} → {safeCurrent} / {safeMaximum}\n" + // 몸통·이전 값 처리
-                    "Choose 1 Weapon"; // 포탑 경로 또는 문구 값
+                    $"몸통 {previous} → {safeCurrent} / {safeMaximum}\n" + // 몸통·이전 값 처리
+                    "포탑 하나를 선택하세요"; // 포탑 경로 또는 문구 값
             }
 
             if (healthRestored) // 체력 조건 확인
             {
                 return // 대상 결과 반환
-                    $"Body MAX {safeMaximum} / {safeMaximum}\n" + // 몸통·최대 처리
-                    "HP FULL RESTORE + Choose 1 Weapon"; // 체력·포탑 경로 또는 문구 값
+                    $"몸통 최대 {safeMaximum} / {safeMaximum}\n" + // 몸통·최대 처리
+                    "체력 전체 회복 + 포탑 하나 선택"; // 체력·포탑 경로 또는 문구 값
             }
 
             return // 대상 결과 반환
-                $"Choose 1 Weapon"; // 포탑 처리
+                $"포탑 하나를 선택하세요"; // 포탑 처리
         }
     }
 }

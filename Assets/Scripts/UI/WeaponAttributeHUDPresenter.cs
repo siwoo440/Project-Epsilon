@@ -71,7 +71,7 @@ namespace ProjectEpsilon.UI // UI 영역
             }
 
             StringBuilder builder = new StringBuilder(); // 문자열 작성기 생성
-            builder.AppendLine("ATTRIBUTES"); // 제목 추가
+            builder.AppendLine("속성"); // 제목 추가
 
             for (int index = 0; index < WeaponAttributeSynergyRules.AttributeCount; index++) // 모든 속성 순회
             {
@@ -79,7 +79,7 @@ namespace ProjectEpsilon.UI // UI 영역
                 int count = synergyManager == null ? 0 : synergyManager.GetCount(attribute); // 현재 개수 조회
                 int stage = WeaponAttributeSynergyRules.ResolveStage(count); // 현재 단계 계산
                 string stageLabel = stage > 0 ? " ×" + stage : string.Empty; // 단계 문구 생성
-                builder.Append(attribute); // 속성명 추가
+                builder.Append(WeaponDisplayNames.Attribute(attribute)); // 속성명 추가
                 builder.Append(" "); // 구분 공백 추가
                 builder.Append(count); // 개수 추가
                 builder.AppendLine(stageLabel); // 단계 추가

@@ -23,7 +23,7 @@ namespace ProjectEpsilon.UI // 화면 설정 영역
         public int Shake => data.shake; // 실제 흔들림 백분율
         public int ResolutionIndex => data.resolution; // 실제 해상도 번호
         public bool Fullscreen => data.fullscreen; // 실제 전체 화면 여부
-        public string ResolutionLabel => data.resolution < 0 ? $"{Screen.width} x {Screen.height} (CURRENT)" : $"{Widths[data.resolution]} x {Heights[data.resolution]}"; // 실제 해상도 표시
+        public string ResolutionLabel => data.resolution < 0 ? $"{Screen.width} × {Screen.height} (현재)" : $"{Widths[data.resolution]} × {Heights[data.resolution]}"; // 실제 해상도 표시
         public FrontendOptions() // 실제 설정 읽기
         {
             data.fullscreen = Screen.fullScreen; // 현재 화면 모드 기본값

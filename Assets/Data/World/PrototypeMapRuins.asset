@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 421dfce3117840c9abe12b22179a0198, type: 3}
   m_Name: PrototypeMapRuins
   m_EditorClassIdentifier: Assembly-CSharp::ProjectEpsilon.World.PrototypeMapProfile
-  displayName: RUINED CORRIDOR
+  displayName: 폐허 회랑
   ground: {fileID: 21300000, guid: 98a52e6174704c58a4c3445d15aae880, type: 3}
   bossTint: {r: 0.76, g: 0.82, b: 1, a: 1}
   bossHealth: 700

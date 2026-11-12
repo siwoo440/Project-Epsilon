@@ -151,11 +151,11 @@ namespace ProjectEpsilon.Progression // 영구 성장 영역
             LastUnlockNotice = string.Empty; // 실제 새 해금 초기화
             if (!hadRuins && Service.IsMapUnlocked(1)) // 새 폐허 해금 확인
             {
-                LastUnlockNotice += "RUINS  "; // 실제 폐허 해금 표시
+                LastUnlockNotice += "폐허 회랑  "; // 실제 폐허 해금 표시
             }
             if (!hadSwamp && Service.IsMapUnlocked(2)) // 새 습지 해금 확인
             {
-                LastUnlockNotice += "SWAMP  "; // 실제 습지 해금 표시
+                LastUnlockNotice += "변이 습지  "; // 실제 습지 해금 표시
             }
             if (!hadCharacter && Service.IsCharacterUnlocked(0)) // 새 캐릭터 해금 확인
             {
@@ -186,7 +186,7 @@ namespace ProjectEpsilon.Progression // 영구 성장 영역
                     return candidate.DisplayName; // 실제 표시 이름 반환
                 }
             }
-            return "CHARACTER"; // 실제 이름 부재 시 기본 안내
+            return "캐릭터"; // 실제 이름 부재 시 기본 안내
         }
         private int AttributeMask() // 실제 속성 해금 집계
         {

@@ -94,43 +94,42 @@ namespace ProjectEpsilon.Editor // 배치 시험 영역
             LevelUpPanelController panel = UnityEngine.Object.FindFirstObjectByType<LevelUpPanelController>(FindObjectsInactive.Include); // 실제 시작 화면
             Require(body != null && health != null && selection != null && panel != null, "Character input fixtures missing."); // 실제 시작 구성 확인
             SettingsMenuController settings = UnityEngine.Object.FindFirstObjectByType<SettingsMenuController>(); // 실제 설정 화면
-            Button openSettings = settings == null ? null : (Button)typeof(SettingsMenuController).GetField("openButton", BindingFlags.Instance | BindingFlags.NonPublic).GetValue(settings); // 실제 설정 열기 버튼
             Button closeSettings = settings == null ? null : (Button)typeof(SettingsMenuController).GetField("closeButton", BindingFlags.Instance | BindingFlags.NonPublic).GetValue(settings); // 실제 설정 닫기 버튼
-            Require(openSettings != null && closeSettings != null, "Settings controls missing."); // 실제 설정 버튼 확인
-            openSettings.onClick.Invoke(); // 실제 설정 화면 열기
+            Require(settings != null && closeSettings != null, "Settings controls missing."); // 실제 설정 화면과 닫기 버튼 확인
+            settings.OpenSettings(); // 실제 설정 화면 열기
             PrototypeMapSelection maps = UnityEngine.Object.FindFirstObjectByType<PrototypeMapSelection>(); // 실제 맵 선택기
             Require(maps != null && maps.ProfileCount == 3 && maps.SelectedIndex == 0, "Default map selection missing."); // 실제 기본 맵 확인
             yield return Tap(keyboard, Key.DownArrow); // 설정 중 실제 맵 변경 입력
             Require(maps.SelectedIndex == 0, "Map input leaked through settings."); // 설정 화면 입력 우선 확인
             yield return Tap(keyboard, Key.RightArrow); // 설정 화면 위 캐릭터 변경 입력
-            Require(settings.IsOpen && CharacterRunInitializer.ActiveCharacter.Id == "prototype_balanced", "Character input leaked through settings."); // 설정 우선 입력 차단 확인
+            Require(settings.IsOpen && CharacterRunInitializer.ActiveCharacter.Id == "balanced", "Character input leaked through settings."); // 설정 우선 입력 차단 확인
             closeSettings.onClick.Invoke(); // 실제 설정 화면 닫기
             yield return Tap(keyboard, Key.DownArrow); // 실제 다음 맵 키 입력
             Text guide = (Text)typeof(LevelUpPanelController).GetField("growthText", BindingFlags.Instance | BindingFlags.NonPublic).GetValue(panel); // 실제 시작 안내 문구
-            Require(maps.SelectedIndex == 1 && guide != null && guide.text.Contains("RUINED CORRIDOR"), "Map arrow input or visible selection failed."); // 실제 맵 변경과 안내 확인
+            Require(maps.SelectedIndex == 1 && guide != null && guide.text.Contains("폐허 회랑"), "Map arrow input or visible selection failed."); // 실제 맵 변경과 안내 확인
             yield return Tap(keyboard, Key.UpArrow); // 실제 이전 맵 키 입력
             Require(maps.SelectedIndex == 0, "Map arrow did not return to plains."); // 실제 첫 맵 복귀 확인
             yield return Tap(keyboard, Key.UpArrow); // 실제 맵 역순 순환 입력
             Require(maps.SelectedIndex == 2, "Map selection did not wrap backwards."); // 실제 세 번째 맵 순환 확인
             yield return Tap(keyboard, Key.DownArrow); // 실제 기본 맵 복귀 입력
             yield return Tap(keyboard, Key.RightArrow); // 실제 다음 캐릭터 키 입력
-            Require(CharacterRunInitializer.ActiveCharacter != null && CharacterRunInitializer.ActiveCharacter.Id == "prototype_mobile" && health.MaximumHealth == 85 && body.CurrentBodyCount == 3, "Right arrow did not select mobile character."); // 실제 기동형 선택과 능력치 확인
+            Require(CharacterRunInitializer.ActiveCharacter != null && CharacterRunInitializer.ActiveCharacter.Id == "mobile" && health.MaximumHealth == 85 && body.CurrentBodyCount == 3, "Right arrow did not select mobile character."); // 실제 기동형 선택과 능력치 확인
             Text label = (Text)typeof(LevelUpPanelController).GetField("levelText", BindingFlags.Instance | BindingFlags.NonPublic).GetValue(panel); // 실제 시작 화면 캐릭터 문구
             Require(label != null && label.text.Contains("기동형"), "Selected character name is not shown."); // 실제 선택 캐릭터 문구 확인
             yield return Tap(keyboard, Key.RightArrow); // 실제 다음 캐릭터 키 입력
-            Require(CharacterRunInitializer.ActiveCharacter.Id == "prototype_heavy" && health.MaximumHealth == 125 && body.CurrentBodyCount == 4, "Right arrow did not select heavy character."); // 실제 중장형 선택과 능력치 확인
+            Require(CharacterRunInitializer.ActiveCharacter.Id == "heavy" && health.MaximumHealth == 125 && body.CurrentBodyCount == 4, "Right arrow did not select heavy character."); // 실제 중장형 선택과 능력치 확인
             yield return Tap(keyboard, Key.RightArrow); // 실제 다음 캐릭터 키 입력
-            Require(CharacterRunInitializer.ActiveCharacter.Id == "prototype_fusion" && health.MaximumHealth == 95, "Fusion character was not reachable."); // 실제 합성형 선택 확인
+            Require(CharacterRunInitializer.ActiveCharacter.Id == "fusion" && health.MaximumHealth == 95, "Fusion character was not reachable."); // 실제 합성형 선택 확인
             yield return Tap(keyboard, Key.RightArrow); // 실제 다음 캐릭터 키 입력
-            Require(CharacterRunInitializer.ActiveCharacter.Id == "prototype_holy" && health.MaximumHealth == 100, "Holy character was not reachable."); // 실제 신성형 선택 확인
+            Require(CharacterRunInitializer.ActiveCharacter.Id == "holy" && health.MaximumHealth == 100, "Holy character was not reachable."); // 실제 신성형 선택 확인
             yield return Tap(keyboard, Key.RightArrow); // 실제 다음 캐릭터 키 입력
-            Require(CharacterRunInitializer.ActiveCharacter.Id == "prototype_dark" && health.MaximumHealth == 90, "Dark character was not reachable."); // 실제 암흑형 선택 확인
+            Require(CharacterRunInitializer.ActiveCharacter.Id == "dark" && health.MaximumHealth == 90, "Dark character was not reachable."); // 실제 암흑형 선택 확인
             yield return Tap(keyboard, Key.RightArrow); // 실제 목록 끝 순환 입력
-            Require(CharacterRunInitializer.ActiveCharacter.Id == "prototype_balanced" && health.MaximumHealth == 100, "Character selection did not wrap to balanced."); // 실제 목록 순환 확인
+            Require(CharacterRunInitializer.ActiveCharacter.Id == "balanced" && health.MaximumHealth == 100, "Character selection did not wrap to balanced."); // 실제 목록 순환 확인
             yield return Tap(keyboard, Key.RightArrow); // 실제 기동형 이동 입력
             yield return Tap(keyboard, Key.RightArrow); // 실제 중장형 이동 입력
             yield return Tap(keyboard, Key.LeftArrow); // 실제 이전 캐릭터 키 입력
-            Require(CharacterRunInitializer.ActiveCharacter.Id == "prototype_mobile" && health.MaximumHealth == 85 && body.CurrentBodyCount == 3 && selection.IsSelecting, "Left arrow did not restore mobile character."); // 실제 기동형 복귀와 후보 유지 확인
+            Require(CharacterRunInitializer.ActiveCharacter.Id == "mobile" && health.MaximumHealth == 85 && body.CurrentBodyCount == 3 && selection.IsSelecting, "Left arrow did not restore mobile character."); // 실제 기동형 복귀와 후보 유지 확인
             WeaponData chosen = CharacterRunInitializer.ActiveCharacter.StartingWeapons.Weapons[0]; // 선택 캐릭터 첫 시작 무기
             Button button = (Button)typeof(LevelUpPanelController).GetField("candidateButton01", BindingFlags.Instance | BindingFlags.NonPublic).GetValue(panel); // 실제 첫 무기 버튼
             Require(button != null && button.interactable, "Character starting weapon button missing."); // 실제 시작 무기 선택 확인

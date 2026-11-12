@@ -240,3 +240,29 @@
 `AutomatedDay50RecordingVerification.Run`은 `-epsilonRecord -epsilonSeed 13579`와 공용 시작 도우미를 사용해 격리된 제품 프로필에서 실행한다. 실제 승패 시에만 기록 파일이 생성된다. `AutomatedDay50NoRecordingVerification.Run`은 기록 인수 없이 실행해 기본 기록 비활성을 확인한다. `AutomatedDay50NamingVerification.Run`은 포탑 에셋과 실제 보상 문구를 검사하고 `AutomatedDay50FontVerification.Run`은 관련 텍스트의 공용 글꼴 연결을 검사한다. 각 진입점 앞에는 `ProjectEpsilon.Editor.`를 붙인다.
 
 `python Tools/compare_run_records.py 첫번째.json 두번째.json`은 기록된 시작 조건과 결과를 비교한다. 같은 시드로 완전히 동일한 전투가 재생된다는 뜻은 아니다. 통제된 시험 결과와 실제 화면에서 남은 확인은 `Devlogs/Day50/README.md`에 기록한다.
+
+---
+
+## 51일차 초반 전투와 데이터 ID
+
+기존 `Day45NaturalCombat/AutomatedNaturalCombatVerification.cs`는 실제 메뉴·캐릭터·맵 단계를 공용 도우미로 통과하고 두 번째 시작 포탑을 선택한다. `-epsilonRecord -epsilonSeed 5101` 등으로 실행하면 300초 생존 시 로그에 실제 기록을 남긴다. `python Tools/summarize_early_run.py 로그경로`는 완료된 로그만 요약한다. 세 시드의 결과는 `Devlogs/Day51/README.md`를 참조한다.
+
+`AutomatedDataIdentifierVerification.Run`은 실제 캐릭터·포탑 ID의 접두어와 중복, 여덟 포탑과 캐릭터의 해금 참조 및 기존 비트 저장 복원을 검사한다. 게임 실행 중 ID 참조와 실제 저장은 격리 사본의 48·49·50일차 회귀로 확인한다.
+
+---
+
+## 51-A 화면별 씬
+
+`AutomatedSceneAssetsVerification.Run`은 실제 네 씬과 활성 빌드 순서를 검사한다. `AutomatedSceneFlowVerification.Run`은 제품 이름이 `Project-Epsilon-SceneFlow-Isolated`인 별도 Unity 사본에서만 실행하며 해당 시험 프로필의 메타 저장 키를 초기화한다. 실제 버튼 이벤트로 선택·전투·결과·저장 실패·재도전·승리·메뉴 복귀를 검사한다. `ConfigureSceneFlow.Run`은 씬 에셋을 생성하는 편집기 전용 보조 도구이며 실제 사용자 프로젝트에 실행하기 전 기존 씬과 빌드 설정을 확인해야 한다.
+
+---
+
+## 51-B 몸통·포탑 우측 패널
+
+`AutomatedBodySidebarVerification.Run`은 실제 전투 카메라와 UI의 픽셀 경계, 20칸까지 포탑 이미지·순서·등급, 빈 슬롯과 가운데 정렬, 중복 HUD 제거, 설정 접근, 합성·시너지·성장·손실·복구를 검사한다. `AutomatedRewardLayoutVerification.Run`은 실제 화면 픽셀로 보상 카드 약 70%와 우측 패널 비중복을 확인한다. 자연 전투와 회귀 결과는 `Devlogs/BodySidebar/README.md`에 기록한다.
+
+---
+
+## 51-C 화면 한국어 정리
+
+`AutomatedKoreanUiVerification.Run`은 `StartingWeaponBatchHelper.cs`와 함께 제품 이름이 `Project-Epsilon-KoreanUI-Isolated`인 별도 Unity 사본에서 실행한다. 실제 메뉴와 전투 화면을 진행하며 활성 UI 문구의 영문과 글꼴 연결을 검사한다. 키 문자는 허용하며 글꼴의 화면상 렌더링은 직접 확인해야 한다. 상세 결과는 `Devlogs/KoreanUI/README.md`를 참조한다.

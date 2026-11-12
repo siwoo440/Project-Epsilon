@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 960fbfacb2f487b4588497574dacf44e, type: 3}
   m_Name: PrototypeDark
   m_EditorClassIdentifier: Assembly-CSharp::ProjectEpsilon.Data.CharacterData
-  id: prototype_dark
+  id: dark
   displayName: 암흑 특화형
   startingBodyCount: 3
   bodyMaxHealth: 90

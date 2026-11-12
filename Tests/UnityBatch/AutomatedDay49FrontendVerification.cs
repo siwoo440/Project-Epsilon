@@ -119,11 +119,11 @@ namespace ProjectEpsilon.Editor // 배치 시험 영역
             {
                 CharacterData candidate = characters.GetCharacter(index); // 실제 캐릭터 데이터
                 Require(candidate != null && candidate.StartingWeapons != null && candidate.StartingWeapons.Weapons != null && candidate.StartingWeapons.Weapons.Length == 3, "Character data or three starting candidates missing."); // 실제 후보 구성 확인
-                if (candidate.Id == "prototype_mobile") // 실제 기동형 확인
+                if (candidate.Id == "mobile") // 실제 기동형 확인
                 {
                     mobile = index; // 실제 기동형 번호 기록
                 }
-                if (candidate.Id == "prototype_heavy") // 실제 중장형 확인
+                if (candidate.Id == "heavy") // 실제 중장형 확인
                 {
                     heavy = index; // 실제 중장형 번호 기록
                 }
@@ -133,7 +133,7 @@ namespace ProjectEpsilon.Editor // 배치 시험 영역
             Click("FrontendCharacterButton" + heavy); // 실제 중장형 선택
             Require(CharacterRunInitializer.ActiveCharacter == characters.GetCharacter(heavy) && FindFirstObjectByType<SnakeHealth>().MaximumHealth == Mathf.RoundToInt(characters.GetCharacter(heavy).BodyMaxHealth), "Selected character stats not applied."); // 실제 선택 능력 적용
             Text details = GameObject.Find("FrontendCharacterDetails").GetComponent<Text>(); // 실제 캐릭터 상세 문구
-            Require(details.text.Contains("DAMAGE TAKEN") && details.text.Contains(characters.GetCharacter(heavy).StartingWeapons.Weapons[0].DisplayName), "Character passive or starting candidates not displayed."); // 실제 패시브와 후보 표시 확인
+            Require(details.text.Contains("받는 피해") && details.text.Contains(characters.GetCharacter(heavy).StartingWeapons.Weapons[0].DisplayName), "Character passive or starting candidates not displayed."); // 실제 패시브와 후보 표시 확인
             Click("FrontendCharactersNextButton"); // 실제 맵 선택 진입
             Require(frontend.Stage == FrontendStage.Maps && FindButton("FrontendMapButton0").interactable && !FindButton("FrontendMapButton1").interactable && !FindButton("FrontendMapButton2").interactable && !maps.SelectMap(1), "Locked map selection failed."); // 실제 맵 잠금 확인
             Require(GameObject.Find("FrontendMapPreview0") != null && GameObject.Find("FrontendMapPreview1") != null && GameObject.Find("FrontendMapPreview2") != null, "Actual map previews missing."); // 실제 세 맵 미리보기 확인
@@ -141,7 +141,7 @@ namespace ProjectEpsilon.Editor // 배치 시험 영역
             Click("FrontendMapsBackButton"); // 실제 캐릭터 화면 복귀
             Require(FindButton("FrontendCharacterButton" + mobile).interactable, "Unlocked character remained disabled."); // 실제 해금 캐릭터 버튼 확인
             Click("FrontendCharacterButton" + mobile); // 실제 해금 캐릭터 선택
-            Require(CharacterRunInitializer.ActiveCharacter.Id == "prototype_mobile", "Unlocked character could not be selected."); // 실제 해금 캐릭터 적용
+            Require(CharacterRunInitializer.ActiveCharacter.Id == "mobile", "Unlocked character could not be selected."); // 실제 해금 캐릭터 적용
             Click("FrontendCharactersNextButton"); // 실제 해금 맵 화면 진입
             Require(FindButton("FrontendMapButton1").interactable && !FindButton("FrontendMapButton2").interactable, "Map unlock was not reflected in UI."); // 실제 맵 해금 표시 확인
             Click("FrontendMapButton1"); // 실제 해금된 폐허 선택
@@ -189,12 +189,12 @@ namespace ProjectEpsilon.Editor // 배치 시험 영역
             yield return null; // 실제 결과 표시 대기
             Require(GameManager.Instance.CurrentState == GameState.Defeated && frontend.Stage == FrontendStage.Results && meta.LastAward == 1 && meta.Service.Cores == 6, "Abandon result or core reward failed."); // 실제 성과 저장 확인
             Text result = GameObject.Find("FrontendResultDetails").GetComponent<Text>(); // 실제 결과 문구
-            Require(result.text.Contains("02:00") && result.text.Contains("CORES  +1") && result.text.Contains("물리 포탑") && result.text.Contains("SAVED") && meta.Service.IsTurretAttributeUnlocked(0), "Result details do not match actual saved reward and unlock."); // 실제 시간과 저장 해금 확인
+            Require(result.text.Contains("02:00") && result.text.Contains("코어  +1") && result.text.Contains("물리 포탑") && result.text.Contains("저장됨") && meta.Service.IsTurretAttributeUnlocked(0), "Result details do not match actual saved reward and unlock."); // 실제 시간과 저장 해금 확인
             Click("FrontendRetryButton"); // 실제 같은 캐릭터 재도전
             yield return WaitForStage(FrontendStage.Weapons); // 실제 씬 재시작 대기
             frontend = RunFrontendController.Instance; // 실제 새 화면 관리자
             meta = MetaProgressionController.Instance; // 실제 새 진행 관리자
-            Require(frontend.Stage == FrontendStage.Weapons && meta.Service.Cores == 6 && FindFirstObjectByType<PrototypeMapSelection>().SelectedIndex == 1 && CharacterRunInitializer.ActiveCharacter.Id == "prototype_heavy", $"Retry state: stage={frontend.Stage}, cores={meta.Service.Cores}, map={FindFirstObjectByType<PrototypeMapSelection>().SelectedIndex}, character={(CharacterRunInitializer.ActiveCharacter == null ? "null" : CharacterRunInitializer.ActiveCharacter.Id)}."); // 실제 저장과 재도전 확인
+            Require(frontend.Stage == FrontendStage.Weapons && meta.Service.Cores == 6 && FindFirstObjectByType<PrototypeMapSelection>().SelectedIndex == 1 && CharacterRunInitializer.ActiveCharacter.Id == "heavy", $"Retry state: stage={frontend.Stage}, cores={meta.Service.Cores}, map={FindFirstObjectByType<PrototypeMapSelection>().SelectedIndex}, character={(CharacterRunInitializer.ActiveCharacter == null ? "null" : CharacterRunInitializer.ActiveCharacter.Id)}."); // 실제 저장과 재도전 확인
             panel = FindFirstObjectByType<LevelUpPanelController>(FindObjectsInactive.Include); // 실제 새 시작 포탑 화면
             weaponButton = (Button)typeof(LevelUpPanelController).GetField("candidateButton01", BindingFlags.Instance | BindingFlags.NonPublic).GetValue(panel); // 실제 새 포탑 버튼
             weaponButton.onClick.Invoke(); // 실제 두 번째 출격
@@ -204,7 +204,7 @@ namespace ProjectEpsilon.Editor // 배치 시험 영역
             Day48MemoryStorage failing = new Day48MemoryStorage { FailWrite = true }; // 실제 저장 실패 재현
             typeof(MetaProgressionController).GetProperty("Service").SetValue(meta, new MetaProgressionService(failing)); // 실제 실패 저장소 연결
             Click("FrontendPauseMainButton"); // 실제 저장 실패 상태에서 주 메뉴 시도
-            Require(meta.HasPendingSave && frontend.Stage == FrontendStage.Results && GameObject.Find("FrontendResultDetails").GetComponent<Text>().text.Contains("SAVE FAILED"), "Failed save did not block main menu or display error."); // 실제 성과 보존과 오류 확인
+            Require(meta.HasPendingSave && frontend.Stage == FrontendStage.Results && GameObject.Find("FrontendResultDetails").GetComponent<Text>().text.Contains("저장 실패"), "Failed save did not block main menu or display error."); // 실제 성과 보존과 오류 확인
             failing.FailWrite = false; // 실제 저장 복구
             Click("FrontendResultMainButton"); // 실제 저장 재시도와 주 메뉴 복귀
             yield return WaitForStage(FrontendStage.Main); // 실제 주 메뉴 재시작 대기

@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: DebugChaser
   m_EditorClassIdentifier: Assembly-CSharp::ProjectEpsilon.Data.EnemyData
   id: debug_day16_chaser
-  displayName: Debug Chaser
+  displayName: 추적자
   maxHealth: 30
   contactDamage: 10
   moveSpeed: 1

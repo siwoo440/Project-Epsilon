@@ -201,6 +201,12 @@ namespace ProjectEpsilon.Progression // 게임 진행 영역
             return settingsMenu != null && settingsMenu.IsOpen; // 설정 화면 우선 여부
         }
 
+        public bool TrySelectForStart(int index) // 다른 씬에서 선택한 시작 포탑 적용
+        {
+            HandleSelected(index); // 실제 기존 시작 선택 처리
+            return selected; // 실제 장착과 전투 시작 여부
+        }
+
         private void HandleSelected(int index) // 시작 무기 확정
         {
             GameManager game = GameManager.Instance; // 현재 게임 관리자

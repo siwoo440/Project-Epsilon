@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 960fbfacb2f487b4588497574dacf44e, type: 3}
   m_Name: PrototypeBalanced
   m_EditorClassIdentifier: Assembly-CSharp::ProjectEpsilon.Data.CharacterData
-  id: prototype_balanced
+  id: balanced
   displayName: 균형형
   startingBodyCount: 3
   bodyMaxHealth: 100

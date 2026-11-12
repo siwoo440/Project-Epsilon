@@ -6,37 +6,37 @@ namespace ProjectEpsilon.UI // 프로젝트 기능 영역
     {
         public static string FormatHealth(int current, int maximum) // 체력·현재 기능 선언
         {
-            return $"HP {Mathf.Max(0, current)} / {Mathf.Max(0, maximum)}"; // 체력·최대 결과 반환
+            return $"체력 {Mathf.Max(0, current)} / {Mathf.Max(0, maximum)}"; // 체력·최대 결과 반환
         }
 
         public static string FormatHealth(int current, int maximum, int shield) // 보호막 포함 체력 문구 생성
         {
-            return $"HP {Mathf.Max(0, current)} / {Mathf.Max(0, maximum)}  Shield {Mathf.Max(0, shield)}"; // 체력과 보호막 반환
+            return $"체력 {Mathf.Max(0, current)} / {Mathf.Max(0, maximum)}  보호막 {Mathf.Max(0, shield)}"; // 체력과 보호막 반환
         }
 
         public static string FormatBodyCount(int current, int maximum) // 몸통·개수 기능 선언
         {
-            return $"Body {Mathf.Max(0, current)} / {Mathf.Max(0, maximum)}"; // 몸통·최대 결과 반환
+            return $"몸통 {Mathf.Max(0, current)} / {Mathf.Max(0, maximum)}"; // 몸통·최대 결과 반환
         }
 
         public static string FormatBodyCount(int current, int earned, int maximum) // 몸통 현재 수와 두 상한 표시
         {
-            return $"Body {Mathf.Max(0, current)} / {Mathf.Max(0, earned)} (max {Mathf.Max(0, maximum)})"; // 현재 수와 상한 문구
+            return $"몸통 {Mathf.Max(0, current)} / {Mathf.Max(0, earned)} (최대 {Mathf.Max(0, maximum)})"; // 현재 수와 상한 문구
         }
 
         public static string FormatExperience(int current, int required) // 경험치·현재 기능 선언
         {
-            return $"XP {Mathf.Max(0, current)} / {Mathf.Max(0, required)}"; // 경험치·최대 결과 반환
+            return $"경험치 {Mathf.Max(0, current)} / {Mathf.Max(0, required)}"; // 경험치·최대 결과 반환
         }
 
         public static string FormatLevel(int level) // 레벨 기능 선언
         {
-            return $"Lv. {Mathf.Max(1, level)}"; // 최대·레벨 결과 반환
+            return $"레벨 {Mathf.Max(1, level)}"; // 최대·레벨 결과 반환
         }
 
         public static string FormatStamina(int current, int maximum) // 스태미나·현재 기능 선언
         {
-            return $"Stamina {Mathf.Max(0, current)} / {Mathf.Max(0, maximum)}"; // 스태미나·최대 결과 반환
+            return $"스태미나 {Mathf.Max(0, current)} / {Mathf.Max(0, maximum)}"; // 스태미나·최대 결과 반환
         }
 
         public static string FormatTime(float elapsedSeconds) // 시간 기능 선언

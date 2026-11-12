@@ -21,6 +21,17 @@ namespace ProjectEpsilon.UI // 프로젝트 기능 영역
         private bool wasPlayingBeforeOpen; // 열기 구성 선언
         public bool IsOpen => settingsPanel != null && settingsPanel.activeInHierarchy; // 설정 화면 상태
 
+        public void RemoveHudOpenButton() // 기존 전투 HUD의 독립 설정 버튼 제거
+        {
+            if (openButton == null) // 실제 기존 버튼 확인
+            {
+                return; // 누락 버튼 제거 생략
+            }
+            openButton.gameObject.SetActive(false); // 실제 기존 버튼 즉시 숨김
+            Destroy(openButton.gameObject); // 실제 중복 버튼 객체 제거
+            openButton = null; // 실제 제거된 버튼 참조 해제
+        }
+
         private void Start() // 시작 기능 선언
         {
             RegisterListeners(); // 등록 기능 실행
@@ -162,7 +173,7 @@ namespace ProjectEpsilon.UI // 프로젝트 기능 영역
             }
 
             SetBindingButtonsInteractable(false); // 설정 기능 실행
-            SetStatus("새 키를 누르세요. ESC로 취소합니다."); // 설정·상태 기능 실행
+            SetStatus("새 키를 누르세요. 이스케이프로 취소합니다."); // 설정·상태 기능 실행
 
             bindingManager.StartInteractiveRebind( // 관리자·시작 호출 시작
                 input, // 입력 항목 전달

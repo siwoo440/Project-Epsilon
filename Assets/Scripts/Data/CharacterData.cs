@@ -18,7 +18,7 @@ namespace ProjectEpsilon.Data // 프로젝트 기능 영역
     {
         [Header("Identity")] // 대상 설정
         [SerializeField] private string id = "character_id"; // 필드·식별자 설정
-        [SerializeField] private string displayName = "Character"; // 필드·이름 설정
+        [SerializeField] private string displayName = "캐릭터"; // 필드·이름 설정
 
         [Header("Base Stats")] // 대상 설정
         [Min(1)] [SerializeField] private int startingBodyCount = 3; // 최소·필드 설정
