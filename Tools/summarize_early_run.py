@@ -9,6 +9,29 @@ from pathlib import Path  # 로그 파일 경로
 MARKER = "[NaturalCombatVerification] RECORD "  # 실제 5분 기록 구분자
 
 
+def gem_collection_summary(record, sample):  # 실제 보석 원본 경험치 수집률 계산
+    version = record.get("gemAccountingVersion")  # 실제 보석 집계 형식
+    if version is None:  # 기존 집계 없는 기록 확인
+        return None  # 기존 수집률 미기록 반환
+    if version != 1:  # 지원하는 집계 형식 확인
+        raise ValueError("지원하지 않는 보석 집계 형식")  # 알 수 없는 집계 제외
+    dropped = sample.get("droppedGemExperience")  # 실제 생성 보석 원본량
+    collected = sample.get("collectedGemExperience")  # 실제 수집 보석 원본량
+    if type(dropped) is not int or type(collected) is not int or dropped < 0 or collected < 0 or collected > dropped:  # 실제 집계 범위 확인
+        raise ValueError("보석 생성·수집 경험치 집계가 유효하지 않음")  # 누락 또는 잘못된 집계 제외
+    return dropped, collected, None if dropped == 0 else collected / dropped  # 실제 원본량과 수집률 반환
+
+
+def print_gem_collection(record, sample, label):  # 실제 표본의 보석 수집률 출력
+    summary = gem_collection_summary(record, sample)  # 실제 보석 집계 계산
+    if summary is None:  # 기존 기록의 집계 누락 확인
+        print(f"  {label} 보석 수집률: 기록 없음")  # 미기록 상태 명시
+        return  # 수집률 추정 방지
+    dropped, collected, rate = summary  # 실제 원본 집계 분리
+    formatted = "계산 불가" if rate is None else f"{rate:.1%}"  # 실제 수집률 또는 분모 없음 표시
+    print(f"  {label} 보석 원본: 생성={dropped}, 수집={collected}, 수집률={formatted}")  # 실제 보너스 전 보석 집계 출력
+
+
 def summarize(path):  # 자연 전투 로그 요약
     lines = Path(path).read_text(encoding="utf-8-sig", errors="replace").splitlines()  # 실제 로그 읽기
     entries = [line.partition(MARKER)[2] for line in lines if MARKER in line]  # 완료된 5분 기록 검색
@@ -21,6 +44,7 @@ def summarize(path):  # 자연 전투 로그 요약
         raise ValueError("유효한 5분 상태 표본이 없음")  # 불완전 표본 차단
     last = five[0]  # 실제 최종 상태
     print(f"{path}: seed={record.get('seed')} 시간={last['seconds']:.1f}초 레벨={last['level']} 획득XP={last['totalExperience']} 처치={last['kills']} 보상처치={last['rewardableKills']} 몸통={last['currentBodies']} 체력={last['health']}")  # 실제 결과 출력
+    print_gem_collection(record, last, "5분")  # 실제 5분 원본 보석 수집률
     ten = [sample for sample in samples if sample.get("reason") == "ten_minutes"]  # 실제 10분 표본 검색
     if len(ten) > 1 or (ten and ten[0].get("seconds", 0) < 600):  # 실제 10분 표본 유효성 확인
         raise ValueError("유효한 10분 상태 표본이 아님")  # 중복 또는 조기 표본 차단
@@ -29,6 +53,7 @@ def summarize(path):  # 자연 전투 로그 요약
         equipped = sum(1 for weapon in later.get("weapons", []) if weapon.get("weaponId"))  # 실제 장착 포탑 수
         print(f"  10분: 시간={later['seconds']:.1f}초 레벨={later['level']} 획득XP={later['totalExperience']} 처치={later['kills']} 몸통={later['currentBodies']} 체력={later['health']} 포탑={equipped}")  # 실제 10분 상태 출력
         print(f"  5~10분 변화: 레벨={later['level'] - last['level']:+} 획득XP={later['totalExperience'] - last['totalExperience']:+} 처치={later['kills'] - last['kills']:+} 몸통={later['currentBodies'] - last['currentBodies']:+}")  # 실제 구간 변화 출력
+        print_gem_collection(record, later, "10분")  # 실제 10분 원본 보석 수집률
     fifteen = [sample for sample in samples if sample.get("reason") == "fifteen_minutes"]  # 실제 15분 표본 검색
     if len(fifteen) > 1 or (fifteen and (fifteen[0].get("seconds", 0) < 900 or not ten)):  # 실제 15분 표본과 이전 기준 확인
         raise ValueError("유효한 10분·15분 상태 표본이 아님")  # 중복 또는 누락 표본 차단
@@ -37,6 +62,7 @@ def summarize(path):  # 자연 전투 로그 요약
         equipped = sum(1 for weapon in final.get("weapons", []) if weapon.get("weaponId"))  # 실제 장착 포탑 수
         print(f"  15분: 시간={final['seconds']:.1f}초 레벨={final['level']} 획득XP={final['totalExperience']} 처치={final['kills']} 몸통={final['currentBodies']} 체력={final['health']} 포탑={equipped}")  # 실제 15분 상태 출력
         print(f"  10~15분 변화: 레벨={final['level'] - later['level']:+} 획득XP={final['totalExperience'] - later['totalExperience']:+} 처치={final['kills'] - later['kills']:+} 몸통={final['currentBodies'] - later['currentBodies']:+}")  # 실제 구간 변화 출력
+        print_gem_collection(record, final, "15분")  # 실제 15분 원본 보석 수집률
         pattern = re.compile(r"^\[NaturalCombatVerification\] time=([\d.]+) .*?body=(\d+) hp=(\d+) .*?gems=(\d+) enemies=(\d+)")  # 실제 주기 상태 문구
         observed = [pattern.search(line) for line in lines if line.startswith("[NaturalCombatVerification] time=")]  # 실제 상태 로그 검색
         window = [match for match in observed if match and 600 <= float(match.group(1)) <= 901]  # 실제 10~15분 상태 표본
@@ -56,6 +82,7 @@ def summarize(path):  # 자연 전투 로그 요약
         print(f"  20분: 시간={end['seconds']:.1f}초 레벨={end['level']} 획득XP={end['totalExperience']} 처치={end['kills']} 몸통={end['currentBodies']} 체력={end['health']} 포탑={equipped}")  # 실제 20분 상태 출력
         print(f"  15~20분 변화: 레벨={end['level'] - final['level']:+} 획득XP={end['totalExperience'] - final['totalExperience']:+} 처치={end['kills'] - final['kills']:+} 몸통={end['currentBodies'] - final['currentBodies']:+}")  # 실제 구간 변화 출력
         print(f"  15~20분 엘리트 처치={end.get('elites', 0) - final.get('elites', 0)}")  # 실제 구간 엘리트 처치 수 출력
+        print_gem_collection(record, end, "20분")  # 실제 20분 원본 보석 수집률
         window = [match for match in observed if match and 900 <= float(match.group(1)) <= 1201]  # 실제 15~20분 상태 표본
         if window:  # 실제 상태 표본 존재 확인
             enemies = [int(match.group(5)) for match in window]  # 실제 동시 적 수

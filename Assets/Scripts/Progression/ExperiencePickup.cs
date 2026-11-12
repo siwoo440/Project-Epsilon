@@ -1,4 +1,5 @@
 using ProjectEpsilon.Core; // 대상 기능 연결
+using ProjectEpsilon.Recording; // 선택적 보석 경험치 기록
 using UnityEngine; // Unity 엔진 기능 연결
 
 namespace ProjectEpsilon.Progression // 프로젝트 기능 영역
@@ -122,6 +123,7 @@ namespace ProjectEpsilon.Progression // 프로젝트 기능 영역
 
             collected = true; // 대상 값 설정
             destructionScheduled = true; // 획득 중 재설정 및 중복 사용 방지
+            RunTelemetry.RecordGemCollection(experienceValue); // 보너스 적용 전 실제 수집량 기록
             receiver.AddExperience(experienceValue); // 추가·경험치 기능 실행
             Destroy(gameObject); // 제거·게임 기능 실행
         }
@@ -205,6 +207,8 @@ namespace ProjectEpsilon.Progression // 프로젝트 기능 영역
                 value, // 값 항목 전달
                 visual // 시각 효과 처리
             ); // 앞선 항목 종료
+
+            RunTelemetry.RecordGemSpawn(pickup.ExperienceValue); // 실제 생성 보석 원본량 기록
 
             return pickup; // 대상 결과 반환
         }

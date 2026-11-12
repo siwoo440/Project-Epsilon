@@ -62,6 +62,8 @@ namespace ProjectEpsilon.Recording // 전투 기록 영역
         public int level; // 실제 레벨
         public int currentExperience; // 실제 남은 경험치
         public long totalExperience; // 실제 누적 획득 경험치
+        public long droppedGemExperience; // 실제 생성 보석의 원본 경험치
+        public long collectedGemExperience; // 실제 수집 보석의 원본 경험치
         public int kills; // 실제 일반 적·엘리트·소환 적·보스 처치
         public int rewardableKills; // 실제 코어 보상 대상 적 처치
         public int summonedKills; // 실제 보스 소환 적 처치
@@ -98,6 +100,7 @@ namespace ProjectEpsilon.Recording // 전투 기록 영역
     public sealed class RunRecording // 실제 한 판 전투 기록
     {
         public int version = 1; // 실제 기록 형식
+        public int gemAccountingVersion = 1; // 보석 생성·수집 집계 형식
         public string runId; // 실제 기록 식별자
         public string startedUtc; // 실제 시작 UTC 시각
         public string unityVersion; // 실제 Unity 버전
@@ -141,6 +144,8 @@ namespace ProjectEpsilon.Recording // 전투 기록 영역
         private RunRecording recording; // 실제 현재 런 기록
         private double nextSample; // 다음 정기 표본 시각
         private long totalExperience; // 실제 누적 경험치
+        private long droppedGemExperience; // 실제 생성 보석 경험치 합계
+        private long collectedGemExperience; // 실제 수집 보석 원본 경험치 합계
         private int totalKills; // 실제 모든 적 처치
         private int summonedKills; // 실제 소환 적 처치
         private int bossKills; // 실제 최종 보스 처치
@@ -237,6 +242,8 @@ namespace ProjectEpsilon.Recording // 전투 기록 영역
             }
             startFrame = Time.frameCount; // 실제 시작 프레임 기록
             totalExperience = 0L; // 실제 누적 경험치 초기화
+            droppedGemExperience = 0L; // 실제 생성 보석 경험치 초기화
+            collectedGemExperience = 0L; // 실제 수집 보석 경험치 초기화
             totalKills = 0; // 실제 모든 처치 초기화
             summonedKills = 0; // 실제 소환 적 처치 초기화
             bossKills = 0; // 실제 최종 보스 처치 초기화
@@ -324,6 +331,24 @@ namespace ProjectEpsilon.Recording // 전투 기록 영역
                 totalExperience = totalExperience > long.MaxValue - amount ? long.MaxValue : totalExperience + amount; // 실제 경험치 안전 누적
             }
         }
+        public static void RecordGemSpawn(int amount) // 실제 생성 보석 원본 경험치 집계
+        {
+            RunTelemetry self = Instance; // 실제 선택적 기록기 조회
+            if (self == null || !self.active || amount <= 0) // 실제 기록과 유효 수량 확인
+            {
+                return; // 비활성 또는 무효 집계 차단
+            }
+            self.droppedGemExperience = self.droppedGemExperience > long.MaxValue - amount ? long.MaxValue : self.droppedGemExperience + amount; // 실제 생성량 안전 누적
+        }
+        public static void RecordGemCollection(int amount) // 실제 수집 보석 원본 경험치 집계
+        {
+            RunTelemetry self = Instance; // 실제 선택적 기록기 조회
+            if (self == null || !self.active || amount <= 0) // 실제 기록과 유효 수량 확인
+            {
+                return; // 비활성 또는 무효 집계 차단
+            }
+            self.collectedGemExperience = self.collectedGemExperience > long.MaxValue - amount ? long.MaxValue : self.collectedGemExperience + amount; // 실제 수집량 안전 누적
+        }
         private void OnSlotsChanged() // 실제 포탑 구성 변경
         {
             Capture("loadout"); // 실제 포탑 변경 표본
@@ -366,6 +391,8 @@ namespace ProjectEpsilon.Recording // 전투 기록 영역
                 level = experience == null ? 0 : experience.CurrentLevel, // 실제 현재 레벨
                 currentExperience = experience == null ? 0 : experience.CurrentExperience, // 실제 남은 경험치
                 totalExperience = totalExperience, // 실제 누적 획득 경험치
+                droppedGemExperience = droppedGemExperience, // 실제 생성 보석 원본 경험치
+                collectedGemExperience = collectedGemExperience, // 실제 수집 보석 원본 경험치
                 kills = totalKills, // 실제 모든 적 처치
                 rewardableKills = meta == null ? 0 : meta.Kills, // 실제 보상 대상 처치
                 summonedKills = summonedKills, // 실제 보스 소환 적 처치
