@@ -75,6 +75,8 @@ namespace ProjectEpsilon.Editor // 편집기 영역
         private static bool randomSeedInitialized; // 실제 난수 시드 적용 여부
         private static float targetSurvivalSeconds = 300f; // 실제 생존 관찰 목표
         private static bool fiveMinuteCaptured; // 실제 5분 표본 저장 여부
+        private static bool tenMinuteCaptured; // 실제 10분 표본 저장 여부
+        private static bool recordingLogged; // 실제 기록 중복 출력 여부
         private static bool automaticMergeRequested; // 자동 합성 시험 요청
         private static SnakeWeaponMergeController trackedMerge; // 실제 합성 결과 구독 대상
         private static float nextMergeScan; // 다음 합성 가능 검사 시각
@@ -132,7 +134,7 @@ namespace ProjectEpsilon.Editor // 편집기 영역
                             {
                                 seed = requestedSeed; // 시험 시드 적용
                             }
-                            if (arguments[index] == "-epsilonSurvivalSeconds" && float.TryParse(arguments[index + 1], System.Globalization.NumberStyles.Float, System.Globalization.CultureInfo.InvariantCulture, out float requestedSeconds) && requestedSeconds >= 300f && requestedSeconds <= 600f) // 실제 관찰 시간 범위 확인
+                            if (arguments[index] == "-epsilonSurvivalSeconds" && float.TryParse(arguments[index + 1], System.Globalization.NumberStyles.Float, System.Globalization.CultureInfo.InvariantCulture, out float requestedSeconds) && requestedSeconds >= 300f && requestedSeconds <= 900f) // 실제 관찰 시간 범위 확인
                             {
                                 targetSurvivalSeconds = requestedSeconds; // 실제 관찰 목표 적용
                             }
@@ -378,16 +380,25 @@ namespace ProjectEpsilon.Editor // 편집기 영역
                 }
                 fiveMinuteCaptured = true; // 실제 5분 표본 중복 방지
             }
+            if (!tenMinuteCaptured && elapsed >= 600f && game.IsPlaying && (merge == null || !merge.IsMergeOpen)) // 실제 10분 표본 시점 확인
+            {
+                RunTelemetry telemetry = RunTelemetry.Instance; // 선택적 실제 전투 기록기
+                if (telemetry != null && telemetry.Current != null) // 실제 기록 활성 확인
+                {
+                    telemetry.Capture("ten_minutes"); // 실제 10분 상태 표본
+                }
+                tenMinuteCaptured = true; // 실제 10분 표본 중복 방지
+            }
             if (elapsed >= targetSurvivalSeconds && game.IsPlaying && (merge == null || !merge.IsMergeOpen)) // 실제 전투 재개 및 목표 생존 시간 확인
             {
                 RunTelemetry telemetry = RunTelemetry.Instance; // 선택적 실제 전투 기록기
                 if (telemetry != null && telemetry.Current != null) // 실제 기록 활성 확인
                 {
-                    if (targetSurvivalSeconds >= 600f) // 실제 10분 목표 확인
+                    if (targetSurvivalSeconds >= 900f) // 실제 15분 목표 확인
                     {
-                        telemetry.Capture("ten_minutes"); // 실제 10분 상태 표본
+                        telemetry.Capture("fifteen_minutes"); // 실제 15분 상태 표본
                     }
-                    Debug.Log("[NaturalCombatVerification] RECORD " + JsonUtility.ToJson(telemetry.Current)); // 실제 관측 기록
+                    LogRecording(); // 실제 관측 기록 출력
                 }
                 if (!naturalProgressObserved) // 실제 성장 누락 확인
                 {
@@ -949,7 +960,20 @@ namespace ProjectEpsilon.Editor // 편집기 영역
         private static void Fail(string message) // 실패 결과 기록
         {
             Debug.LogError("[NaturalCombatVerification] " + message); // 실패 로그
+            RunTelemetry.Instance?.Capture("interrupted"); // 실제 실패 시점 표본 저장
+            LogRecording(); // 실패 전 실제 관측 기록 출력
             Finish(1); // 실패 종료
+        }
+
+        private static void LogRecording() // 실제 전투 기록 한 번 출력
+        {
+            RunTelemetry telemetry = RunTelemetry.Instance; // 실제 전투 기록기
+            if (recordingLogged || telemetry == null || telemetry.Current == null) // 출력 여부와 실제 기록 확인
+            {
+                return; // 중복 또는 빈 기록 출력 방지
+            }
+            recordingLogged = true; // 실제 기록 출력 상태 저장
+            Debug.Log("[NaturalCombatVerification] RECORD " + JsonUtility.ToJson(telemetry.Current)); // 실제 관측 기록 출력
         }
 
         private static void Finish(int code) // 검증 종료

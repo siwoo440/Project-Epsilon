@@ -1,0 +1,35 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 700d1d7ce6aa4b37944e98e4b143f331, type: 3}
+  m_Name: EnemyWaveSettings
+  m_EditorClassIdentifier: Assembly-CSharp::ProjectEpsilon.Enemies.EnemyWaveSettings
+  stages:
+  - startTime: 0
+    spawnInterval: 1.3
+    normalEnemyLimit: 40
+    healthMultiplier: 1
+    damageMultiplier: 1
+  - startTime: 300
+    spawnInterval: 1.1
+    normalEnemyLimit: 70
+    healthMultiplier: 1.12
+    damageMultiplier: 1.03
+  - startTime: 600
+    spawnInterval: 0.9
+    normalEnemyLimit: 110
+    healthMultiplier: 1.25
+    damageMultiplier: 1.06
+  - startTime: 900
+    spawnInterval: 0.7
+    normalEnemyLimit: 125
+    healthMultiplier: 1.4
+    damageMultiplier: 1.09

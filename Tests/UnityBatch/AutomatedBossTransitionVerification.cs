@@ -120,6 +120,7 @@ namespace ProjectEpsilon.Editor // 배치 시험 영역
             {
                 slot.Clear(); // 시험 중 자동 처치 방지
             }
+            weapons.enabled = false; // 합성 재료 재장착 후에도 자동 공격 차단
             Time.timeScale = 32f; // 실제 게임 시간 가속
             float deadline = Time.realtimeSinceStartup + 140f; // 실제 시험 제한 시각
             while (Elapsed() < 1190f && Time.realtimeSinceStartup < deadline) // 실제 누적 경계 대기
@@ -141,11 +142,7 @@ namespace ProjectEpsilon.Editor // 배치 시험 영역
             int pendingRewards = rewards == null ? 0 : rewards.PendingRewardCount; // 기존 보상 대기 수
             int gemCount = UnityEngine.Object.FindObjectsByType<ExperiencePickup>(FindObjectsSortMode.None).Length; // 기존 경험치 보석 수
             Require(before > 0, "No actual spawned enemies available for cleanup."); // 실제 정리 대상 확인
-            while (Elapsed() < 1198.5f && Time.realtimeSinceStartup < deadline) // 합성 경계 직전 대기
-            {
-                DisableEnemyActions(); // 자연 적 행동 통제
-                yield return null; // 실제 게임 시간 진행
-            }
+            Debug.Log($"[BossTransitionVerification] merge fixture: elapsed={Elapsed():F3}, weapon={(startingWeapon == null ? "missing" : startingWeapon.name)}, bodies={body.CurrentBodyCount}, slots={weapons.Slots.Count}, remaining={deadline - Time.realtimeSinceStartup:F2}."); // 실제 합성 준비 상태 기록
             Require(Elapsed() < 1200f && startingWeapon != null && weapons.TryEquipAt(0, startingWeapon, 1) && weapons.TryEquipAt(1, startingWeapon, 1), "Could not prepare actual merge materials before transition."); // 실제 미확정 합성 재료 준비
             SnakeWeaponMergeController merge = UnityEngine.Object.FindFirstObjectByType<SnakeWeaponMergeController>(); // 실제 합성 화면 조회
             Require(merge != null && merge.OpenMergePanel() && merge.IsMergeOpen && Mathf.Approximately(Time.timeScale, 0.7f), "Actual merge did not open at 70 percent speed."); // 실제 합성과 속도 확인

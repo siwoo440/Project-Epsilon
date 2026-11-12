@@ -250,8 +250,7 @@ namespace ProjectEpsilon.Editor // 편집기 영역
             elapsedField = typeof(EarlyEnemyWaveSpawner).GetField("elapsed", PrivateFields); // 실제 출현 경과 시간 필드
             valueField = typeof(ExperiencePickup).GetField("experienceValue", PrivateFields); // 실제 보석 값 필드
             FieldInfo enemiesField = typeof(EarlyEnemyWaveSpawner).GetField("enemies", PrivateFields); // 실제 직렬화 출현 설정 필드
-            FieldInfo intervalField = typeof(EarlyEnemyWaveSpawner).GetField("spawnInterval", PrivateFields); // 실제 직렬화 출현 간격
-            Require(elapsedField != null && valueField != null && enemiesField != null && intervalField != null, "Actual spawn and gem configuration fields are missing."); // 실제 설정 연결 확인
+            Require(elapsedField != null && valueField != null && enemiesField != null, "Actual spawn and gem configuration fields are missing."); // 실제 설정 연결 확인
             EarlyEnemySettings[] settings = enemiesField.GetValue(spawner) as EarlyEnemySettings[]; // 실제 씬 적 설정
             Require(settings != null && settings.Length >= 4 && settings[0].kind == EarlyEnemyKind.Chaser && settings[1].kind == EarlyEnemyKind.Predator && settings[2].kind == EarlyEnemyKind.Shooter && settings[3].kind == EarlyEnemyKind.Elite && Mathf.Approximately(settings[0].firstAppearance, 0f) && Mathf.Approximately(settings[1].firstAppearance, 60f) && Mathf.Approximately(settings[2].firstAppearance, 120f) && Mathf.Approximately(settings[3].firstAppearance, 240f), "Actual scene appearance configuration differs from the early-wave specification."); // 실제 출현 시간 대조
             Require(Elapsed() >= 0f && Elapsed() < 1.5f, "Actual spawn timer was not near its genuine game start."); // 실제 출현 타이머 시작 확인
@@ -289,12 +288,13 @@ namespace ProjectEpsilon.Editor // 편집기 영역
             {
                 slot.Clear(); // 통제 중 자연 자동 처치 방지
             }
+            weapons.enabled = false; // 보상으로 새 포탑을 얻은 뒤에도 자동 공격 차단
             experience.Configure(10, 1f); // 시험용 경험치 기준과 배율
             experience.ResetProgression(); // 시험 경험치와 레벨 초기화
             Require(experience.RequiredExperience == 10, "Controlled experience requirement is not ten."); // 실제 통제 요구량 확인
             UnityEngine.Random.InitState(3191); // 출현 추첨 시험 시드
             Time.timeScale = 8f; // 제품 수정 없는 임시 게임 시간 가속
-            Debug.Log($"[EarlyWaveVerification] actual spawner start={Elapsed():F3}, configured interval={intervalField.GetValue(spawner)}, appearance=0/60/120/240; accelerated scale=8; seed=3191; no spawn clock injection; movement, player colliders, combat and normal enemies controlled; XP base=10 multiplier=1.0."); // 실제 설정과 통제 조건 기록
+            Debug.Log($"[EarlyWaveVerification] actual spawner start={Elapsed():F3}, active interval={spawner.CurrentSpawnInterval:F1}, appearance=0/60/120/240; accelerated scale=8; seed=3191; no spawn clock injection; movement, player colliders, combat and normal enemies controlled; XP base=10 multiplier=1.0."); // 실제 설정과 통제 조건 기록
         }
 
         private void ObserveWaves() // 실제 출현 적 관찰과 일반 적 정리

@@ -103,6 +103,7 @@ namespace ProjectEpsilon.Enemies // 적 영역
         private SnakeMovement player; // 플레이어 이동 참조
         private SnakeBodyManager body; // 플레이어 몸통 참조
         private SnakeHealth health; // 공용 체력 참조
+        private EnemyWaveSettings waveSettings; // 시간별 출현 데이터
         private float nextSpawn; // 다음 출현 시각
         private int activeEnemies; // 생존 적 수
         private readonly List<WeaponTarget> targets = new List<WeaponTarget>(); // 생존 적 추적
@@ -115,16 +116,23 @@ namespace ProjectEpsilon.Enemies // 적 영역
         public event Action BossTransitionStarted; // 최종 보스 전환 알림
         public event Action<bool> RewardableEnemyDied; // 실제 보상 대상 처치 알림
         public event Action<bool, bool> EnemyDied; // 실제 엘리트와 소환 적 처치 알림
-        public float RecordingSpawnInterval => Mathf.Max(0.1f, spawnInterval); // 실제 일반 적 출현 간격
-        public int RecordingEnemyLimit => Mathf.Max(1, maximumEnemies); // 실제 동시 일반 적 상한
+        public float RecordingSpawnInterval => CurrentSpawnInterval; // 기록 시점 일반 적 출현 간격
+        public int RecordingEnemyLimit => CurrentNormalEnemyLimit; // 기록 시점 일반 적 상한
         public float RecordingBossTime => Mathf.Max(0f, bossTransitionTime); // 실제 보스 전환 시각
         public IReadOnlyList<EarlyEnemySettings> RecordingEnemies => enemies; // 실제 시험 적 설정 목록
         public int ActiveEnemies => activeEnemies; // 생존 적 수 조회
+        public int CurrentNormalEnemyCount => Mathf.Max(0, activeEnemies - eliteTargets.Count - bossSummonTargets.Count); // 엘리트와 소환 적을 제외한 일반 적 수
+        public float CurrentSpawnInterval => Mathf.Max(0.1f, CurrentStage == null ? spawnInterval : CurrentStage.spawnInterval); // 현재 일반 적 출현 간격
+        public int CurrentNormalEnemyLimit => Mathf.Max(1, CurrentStage == null ? maximumEnemies : CurrentStage.normalEnemyLimit); // 현재 일반 적 상한
+        public float CurrentNormalHealthMultiplier => Mathf.Max(0f, CurrentStage == null ? 1f : CurrentStage.healthMultiplier); // 현재 일반 적 체력 배율
+        public float CurrentNormalDamageMultiplier => Mathf.Max(0f, CurrentStage == null ? 1f : CurrentStage.damageMultiplier); // 현재 일반 적 피해 배율
+        private EnemyWaveStage CurrentStage => waveSettings == null ? null : waveSettings.Resolve(elapsed); // 현재 시간의 출현 구간
         public float ElapsedSeconds => elapsed; // 실제 전투 경과 시간 조회
         public double CurrentRunSeconds => elapsed + (GameManager.Instance != null && (GameManager.Instance.IsPlaying || GameManager.Instance.IsPaused) ? Math.Max(0d, Time.timeAsDouble - previousClockTime) : 0d); // 종료 프레임을 포함한 전투 시간
         public bool HasEnteredBossTransition => hasEnteredBossTransition; // 최종 보스 전환 상태 조회
         private void OnEnable() // 출현기 활성 시간 초기화
         {
+            waveSettings = Resources.Load<EnemyWaveSettings>("EnemyWaveSettings"); // 공용 출현 데이터 불러오기
             previousClockTime = Time.timeAsDouble; // 비활성 구간 제외 기준
         }
         private void Start() // 플레이 시작 처리
@@ -167,11 +175,11 @@ namespace ProjectEpsilon.Enemies // 적 영역
             CleanupDistantEnemies(); // 먼 일반 적 정리
             ProcessEliteSchedule(); // 엘리트 일정과 대기 출현 처리
 
-            if (elapsed < nextSpawn || activeEnemies >= Mathf.Max(1, maximumEnemies)) // 일반 출현 대기 조건
+            if (elapsed < nextSpawn || CurrentNormalEnemyCount >= CurrentNormalEnemyLimit) // 일반 적 상한과 출현 대기 확인
             {
                 return; // 일반 출현 중지
             }
-            nextSpawn = elapsed + Mathf.Max(0.1f, spawnInterval); // 다음 출현 시각 저장
+            nextSpawn = elapsed + CurrentSpawnInterval; // 현재 구간의 다음 출현 시각 저장
             int available = 0; // 출현 가능 종류 수
             for (int index = 0; index < enemies.Length; index++) // 적 설정 순회
             {
@@ -268,6 +276,10 @@ namespace ProjectEpsilon.Enemies // 적 영역
         }
         private WeaponTarget SpawnAt(EarlyEnemySettings setting, Vector3 position, bool bossSummon) // 기존 적 생성 구조 재사용
         {
+            if (!bossSummon && setting.kind != EarlyEnemyKind.Elite) // 일반 적 구간 능력치 적용 확인
+            {
+                setting = ScaleNormalEnemy(setting); // 원본 설정을 보존한 능력치 복사
+            }
             GameObject enemy = new GameObject("EarlyEnemy_" + setting.kind); // 적 오브젝트 생성
             enemy.transform.position = position; // 실제 출현 위치
             SpriteRenderer renderer = enemy.AddComponent<SpriteRenderer>(); // 적 렌더러 생성
@@ -307,6 +319,23 @@ namespace ProjectEpsilon.Enemies // 적 영역
             }
             target.Died += HandleEnemyDied; // 처치 시 수량 갱신 연결
             return target; // 실제 생성 대상 반환
+        }
+        private EarlyEnemySettings ScaleNormalEnemy(EarlyEnemySettings source) // 일반 적 능력치 복사와 구간 배율 적용
+        {
+            return new EarlyEnemySettings // 원본과 분리된 출현 적 설정
+            {
+                kind = source.kind, // 기존 행동 종류
+                health = Mathf.Ceil(source.health * CurrentNormalHealthMultiplier), // 구간 체력 배율과 올림
+                damage = Mathf.CeilToInt(source.damage * CurrentNormalDamageMultiplier), // 구간 피해 배율과 올림
+                speedRatio = source.speedRatio, // 기존 이동 속도
+                attackInterval = source.attackInterval, // 기존 공격 간격
+                projectileCount = source.projectileCount, // 기존 투사체 수
+                projectileSpreadDegrees = source.projectileSpreadDegrees, // 기존 투사체 각도
+                experience = source.experience, // 기존 경험치
+                firstAppearance = source.firstAppearance, // 기존 최초 출현 시각
+                color = source.color, // 기존 표시 색상
+                enemySprite = source.enemySprite // 기존 적 이미지
+            };
         }
         private float ResolveSpawnDistance(Vector2 direction) // 화면 밖 출현 거리
         {
@@ -430,45 +459,12 @@ namespace ProjectEpsilon.Enemies // 적 영역
                 nextEliteRound++; // 다음 회차 선택
             }
             int concurrentLimit = elapsed >= secondEliteConcurrentTime ? 2 : 1; // 임시 시점별 동시 상한
-            if (pendingEliteRounds.Count == 0 || eliteTargets.Count >= concurrentLimit || !ReserveEliteSlot()) // 대기 회차와 출현 자리 확인
+            if (pendingEliteRounds.Count == 0 || eliteTargets.Count >= concurrentLimit) // 대기 회차와 엘리트 동시 상한 확인
             {
                 return; // 자리 확보 전 대기
             }
             pendingEliteRounds.Dequeue(); // 가장 오래된 회차 소비
             Spawn(enemies[3]); // 동일 시험용 엘리트 출현
-        }
-        private bool ReserveEliteSlot() // 엘리트 출현 자리 확보
-        {
-            if (activeEnemies < Mathf.Max(1, maximumEnemies)) // 빈 자리 확인
-            {
-                return true; // 출현 자리 확보
-            }
-            WeaponTarget farthest = null; // 가장 먼 적 초기화
-            float farthestDistance = -1f; // 가장 먼 거리 초기화
-            foreach (WeaponTarget target in targets) // 생존 적 순회
-            {
-                if (target == null || eliteTargets.Contains(target)) // 제거 대상과 기존 엘리트 확인
-                {
-                    continue; // 다음 적 이동
-                }
-                float distance = (target.transform.position - player.transform.position).sqrMagnitude; // 플레이어 거리 계산
-                if (distance > farthestDistance) // 가장 먼 적 확인
-                {
-                    farthest = target; // 제거 후보 저장
-                    farthestDistance = distance; // 가장 먼 거리 저장
-                }
-            }
-            if (farthest == null) // 제거할 일반 적 확인
-            {
-                return false; // 엘리트만 남은 경우 출현 보류
-            }
-            farthest.Died -= HandleEnemyDied; // 제거 대상 사망 연결 해제
-            bossSummonTargets.Remove(farthest); // 무보상 소환 목록 정리
-            targets.Remove(farthest); // 생존 적 목록 제거
-            activeEnemies = Mathf.Max(0, activeEnemies - 1); // 생존 적 수 감소
-            farthest.gameObject.SetActive(false); // 지연 파괴 전 보상과 공격 대상 해제
-            Destroy(farthest.gameObject); // 먼 일반 적 무보상 제거
-            return true; // 출현 자리 확보
         }
     }
 }

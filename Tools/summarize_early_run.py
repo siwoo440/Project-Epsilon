@@ -1,5 +1,7 @@
 import argparse  # 실행 인수 처리
 import json  # 전투 기록 읽기
+import re  # 실제 상태 로그 해석
+import statistics  # 실제 표본 평균
 import sys  # 실패 종료 상태
 from collections import Counter  # 피해 원인 집계
 from pathlib import Path  # 로그 파일 경로
@@ -27,6 +29,24 @@ def summarize(path):  # 자연 전투 로그 요약
         equipped = sum(1 for weapon in later.get("weapons", []) if weapon.get("weaponId"))  # 실제 장착 포탑 수
         print(f"  10분: 시간={later['seconds']:.1f}초 레벨={later['level']} 획득XP={later['totalExperience']} 처치={later['kills']} 몸통={later['currentBodies']} 체력={later['health']} 포탑={equipped}")  # 실제 10분 상태 출력
         print(f"  5~10분 변화: 레벨={later['level'] - last['level']:+} 획득XP={later['totalExperience'] - last['totalExperience']:+} 처치={later['kills'] - last['kills']:+} 몸통={later['currentBodies'] - last['currentBodies']:+}")  # 실제 구간 변화 출력
+    fifteen = [sample for sample in samples if sample.get("reason") == "fifteen_minutes"]  # 실제 15분 표본 검색
+    if len(fifteen) > 1 or (fifteen and (fifteen[0].get("seconds", 0) < 900 or not ten)):  # 실제 15분 표본과 이전 기준 확인
+        raise ValueError("유효한 10분·15분 상태 표본이 아님")  # 중복 또는 누락 표본 차단
+    if fifteen:  # 실제 15분 표본 존재 확인
+        final = fifteen[0]  # 실제 15분 최종 상태
+        equipped = sum(1 for weapon in final.get("weapons", []) if weapon.get("weaponId"))  # 실제 장착 포탑 수
+        print(f"  15분: 시간={final['seconds']:.1f}초 레벨={final['level']} 획득XP={final['totalExperience']} 처치={final['kills']} 몸통={final['currentBodies']} 체력={final['health']} 포탑={equipped}")  # 실제 15분 상태 출력
+        print(f"  10~15분 변화: 레벨={final['level'] - later['level']:+} 획득XP={final['totalExperience'] - later['totalExperience']:+} 처치={final['kills'] - later['kills']:+} 몸통={final['currentBodies'] - later['currentBodies']:+}")  # 실제 구간 변화 출력
+        pattern = re.compile(r"^\[NaturalCombatVerification\] time=([\d.]+) .*?body=(\d+) hp=(\d+) .*?gems=(\d+) enemies=(\d+)")  # 실제 주기 상태 문구
+        observed = [pattern.search(line) for line in lines if line.startswith("[NaturalCombatVerification] time=")]  # 실제 상태 로그 검색
+        window = [match for match in observed if match and 600 <= float(match.group(1)) <= 901]  # 실제 10~15분 상태 표본
+        if window:  # 실제 상태 표본 존재 확인
+            enemies = [int(match.group(5)) for match in window]  # 실제 동시 적 수
+            gems = [int(match.group(4)) for match in window]  # 실제 씬 전체 미수집 보석 수
+            print(f"  10~15분 상태 {len(window)}회: 동시 적 최소/평균/최대={min(enemies)}/{statistics.mean(enemies):.1f}/{max(enemies)}, 미수집 보석 최소/최대={min(gems)}/{max(gems)}")  # 실제 출현과 보석 표본 출력
+        retained = [sample['currentBodies'] / sample['earnedBodies'] for sample in samples if sample.get('reason') == 'interval' and 600 <= sample.get('seconds', 0) <= 901 and sample.get('earnedBodies', 0) > 0]  # 실제 성장 최대 대비 몸통 비율
+        if retained:  # 실제 몸통 표본 존재 확인
+            print(f"  10~15분 몸통 유지율 {len(retained)}회: 최소={min(retained):.1%}, 평균={statistics.mean(retained):.1%}")  # 실제 몸통 유지 상태 출력
     intervals = [sample for sample in samples if sample.get("reason") == "interval"]  # 실제 정기 표본
     for seconds in range(30, 301, 30):  # 30초별 상태 비교
         available = [sample for sample in intervals if abs(sample["seconds"] - seconds) < 1.0]  # 유효 시간 표본 선택
