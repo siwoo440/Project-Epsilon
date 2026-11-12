@@ -82,7 +82,13 @@ namespace ProjectEpsilon.Editor // 배치 시험 영역
             weapons.enabled = false; // 시험 중 자동 공격 중지
             WeaponData weapon = AssetDatabase.LoadAssetAtPath<WeaponData>("Assets/Data/Weapons/DebugBlade.asset"); // 실제 시작 포탑 데이터
             Require(weapon != null && merge != null && weapons.TryEquipAt(0, weapon) && weapons.TryEquipAt(1, weapon), "Merge pilot setup failed."); // 실제 동일 포탑 장착 확인
-            Require(merge.OpenMergePanel(), "Actual merge panel did not open."); // 실제 합성 화면 열기
+            MethodInfo open = typeof(AutomatedNaturalCombatVerification).GetMethod("TryStartAutomaticMerge", BindingFlags.Static | BindingFlags.NonPublic); // 실제 자동 합성 진입 메서드
+            Require(open != null && (bool)open.Invoke(null, new object[] { merge }), "Actual automatic merge did not open."); // 실제 조종기 합성 진입 확인
+            int completed = 0; // 실제 합성 완료 횟수
+            merge.MergeClosed += merged => // 실제 합성 결과 관찰
+            {
+                completed += merged ? 1 : 0; // 성공한 합성만 기록
+            };
             MethodInfo click = typeof(AutomatedNaturalCombatVerification).GetMethod("ClickFirstAvailableMergeButton", BindingFlags.Static | BindingFlags.NonPublic); // 실제 자연 전투 조종기 선택 메서드
             Require(click != null, "Natural merge pilot handler missing."); // 실제 조종기 확인
             for (int index = 0; index < 5 && merge.IsMergeOpen; index++) // 실제 합성 단계 순회
@@ -90,7 +96,8 @@ namespace ProjectEpsilon.Editor // 배치 시험 영역
                 click.Invoke(null, null); // 실제 자연 전투 조종기의 버튼 선택
                 yield return null; // 실제 화면 단계 갱신 대기
             }
-            Require(!merge.IsMergeOpen && weapons.Slots[0].Weapon == weapon && weapons.Slots[0].Grade == 2 && weapons.OccupiedSlotCount == 1, "Natural pilot did not complete the real merge."); // 실제 재료 선택과 합성 완료 확인
+            Require(!merge.IsMergeOpen && weapons.Slots[0].Weapon == weapon && weapons.Slots[0].Grade == 2 && weapons.OccupiedSlotCount == 1 && completed == 1, "Natural pilot did not complete the real merge exactly once."); // 실제 재료 선택과 단일 합성 완료 확인
+            Require(!(bool)open.Invoke(null, new object[] { merge }), "Automatic merge reopened without a matching pair."); // 합성 재료 소진 후 재진입 차단
             Require(Mathf.Abs(Time.timeScale - 1f) < 0.001f, "Merge time scale was not restored."); // 실제 합성 시간 복구 확인
             AutomatedNaturalMergePilotVerification.Finish(0, "Natural pilot selected real materials, inherited enhancement and completed merge."); // 전체 성공 기록
         }

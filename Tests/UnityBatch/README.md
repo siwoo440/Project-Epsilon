@@ -284,3 +284,9 @@
 ## 54일차 20칸과 장애물 이탈
 
 `AutomatedCollisionPriorityVerification.Run`은 통제된 20칸 몸통에서 자기 충돌·다수 적 접촉·좁은 통로와 장애물 무적 종료 후 안전 위치 및 재접촉 유예를 검사한다. `AutomatedLevelRewardMergeVerification.RunAll`은 합성 중 기존 무적의 적 접촉 차단과 피해·패배 처리를 확인한다. 시험은 몸통 위치와 충돌체를 통제한다. 상세 결과와 복수 장애물 위치 탐색의 한계는 `Devlogs/Day54/README.md`를 참조한다.
+
+---
+
+## 55일차 10분 통합 검증
+
+기존 자연 조종기에 `-epsilonAutoMerge`를 지정하면 실제 장착 포탑 중 합성 가능한 쌍을 찾아 합성 화면 API로 진입하고 후보 버튼을 자동 선택한다. 합성 완료·취소를 기록하며, 옵션이 없을 때는 기존 조종 방식을 유지한다. E 키와 합성 화면 입력은 `AutomatedMergeSelectionVerification.Run`으로 따로 확인한다. 자연 전투 세 회의 개별 조건과 결과는 `Devlogs/Day55/README.md`를 참조한다.

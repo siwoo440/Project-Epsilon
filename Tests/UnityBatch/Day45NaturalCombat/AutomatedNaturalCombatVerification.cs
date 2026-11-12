@@ -75,6 +75,13 @@ namespace ProjectEpsilon.Editor // 편집기 영역
         private static bool randomSeedInitialized; // 실제 난수 시드 적용 여부
         private static float targetSurvivalSeconds = 300f; // 실제 생존 관찰 목표
         private static bool fiveMinuteCaptured; // 실제 5분 표본 저장 여부
+        private static bool automaticMergeRequested; // 자동 합성 시험 요청
+        private static SnakeWeaponMergeController trackedMerge; // 실제 합성 결과 구독 대상
+        private static float nextMergeScan; // 다음 합성 가능 검사 시각
+        private static bool pilotMergeOpen; // 자동 조종기가 연 합성 여부
+        private static int pilotMergeAttempts; // 자동 합성 시작 횟수
+        private static int pilotMergeCompleted; // 자동 합성 완료 횟수
+        private static int pilotMergeCancelled; // 자동 합성 취소 횟수
 
         static AutomatedNaturalCombatVerification() // 도메인 연결
         {
@@ -118,6 +125,7 @@ namespace ProjectEpsilon.Editor // 편집기 영역
                     {
                         int seed = 4501; // 재현용 기본 난수 시드
                         string[] arguments = Environment.GetCommandLineArgs(); // 실제 배치 인수
+                        automaticMergeRequested = Array.IndexOf(arguments, "-epsilonAutoMerge") >= 0; // 자동 합성 시험 옵션 확인
                         for (int index = 0; index + 1 < arguments.Length; index++) // 실제 배치 인수 순회
                         {
                             if (arguments[index] == "-epsilonSeed" && int.TryParse(arguments[index + 1], out int requestedSeed)) // 요청된 시드 확인
@@ -230,6 +238,17 @@ namespace ProjectEpsilon.Editor // 편집기 영역
             SnakeLevelUpController level = UnityEngine.Object.FindFirstObjectByType<SnakeLevelUpController>(); // 레벨업 처리기
             EliteRewardController elite = UnityEngine.Object.FindFirstObjectByType<EliteRewardController>(); // 엘리트 보상 처리기
             SnakeWeaponMergeController merge = UnityEngine.Object.FindFirstObjectByType<SnakeWeaponMergeController>(); // 합성 처리기
+            if (automaticMergeRequested && trackedMerge == null && merge != null) // 실제 합성 결과 구독 확인
+            {
+                trackedMerge = merge; // 실제 합성 처리기 저장
+                trackedMerge.MergeClosed += HandlePilotMergeClosed; // 실제 합성 완료와 취소 관찰
+            }
+            bool mergeReady = false; // 현재 자동 합성 가능 여부
+            if (automaticMergeRequested && merge != null && elapsed >= nextMergeScan) // 실제 합성 가능 검사 시각 확인
+            {
+                nextMergeScan = elapsed + 2f; // 다음 합성 가능 검사 시각
+                mergeReady = merge.HasMergeCandidates(); // 실제 같은 포탑과 등급 확인
+            }
             if (level != null && level.IsPresentingLevelUp) // 레벨업 선택 상태
             {
                 SetKeys(0); // 이동 입력 해제
@@ -255,6 +274,13 @@ namespace ProjectEpsilon.Editor // 편집기 영역
             {
                 SetKeys(0); // 이동 입력 해제
                 ClickFirstAvailableMergeButton(); // 첫 합성 또는 강화 선택
+            }
+            else if (game.IsPlaying && mergeReady && TryStartAutomaticMerge(merge)) // 실제 자동 합성 진입
+            {
+                SetKeys(0); // 합성 중 가상 이동 입력 해제
+                pilotMergeOpen = true; // 자동 조종기의 합성 진행 기록
+                pilotMergeAttempts++; // 실제 합성 시작 횟수 증가
+                Debug.Log($"[NaturalCombatVerification] automatic merge started time={elapsed:F2} attempt={pilotMergeAttempts}."); // 실제 자동 합성 진입 기록
             }
             else if (game.IsPlaying) // 일반 플레이 상태
             {
@@ -373,11 +399,11 @@ namespace ProjectEpsilon.Editor // 편집기 영역
                     Fail("No elite observed by five minutes."); // 출현 누락 기록
                     return; // 성공 처리 중단
                 }
-                Debug.Log($"[NaturalCombatVerification] PASS survival target={targetSurvivalSeconds:F0}s kills={naturalKills} level={experience.CurrentLevel} xp={experience.CurrentExperience} choices={levelSelections} sawElite={sawElite} eliteChoices={eliteSelections} body={body.CurrentBodyCount} hp={health.CurrentHealth} game={elapsed:F1}s wall={EditorApplication.timeSinceStartup - startWallTime:F1}s."); // 자연 성장과 엘리트 출현 기록
+                Debug.Log($"[NaturalCombatVerification] PASS survival target={targetSurvivalSeconds:F0}s kills={naturalKills} level={experience.CurrentLevel} xp={experience.CurrentExperience} choices={levelSelections} sawElite={sawElite} eliteChoices={eliteSelections} mergeAttempts={pilotMergeAttempts} merges={pilotMergeCompleted} mergeCancellations={pilotMergeCancelled} body={body.CurrentBodyCount} hp={health.CurrentHealth} game={elapsed:F1}s wall={EditorApplication.timeSinceStartup - startWallTime:F1}s."); // 자연 성장과 합성 기록
                 Finish(0); // 성공 종료
                 return; // 추가 처리 중단
             }
-            if (EditorApplication.timeSinceStartup - startWallTime > targetSurvivalSeconds * 1.2d + 120d) // 관찰 목표별 실제 시간 제한 확인
+            if (EditorApplication.timeSinceStartup - startWallTime > targetSurvivalSeconds * 2d + 180d) // 병렬 시험을 포함한 실제 시간 제한 확인
             {
                 Fail($"timed out at {elapsed:F1} seconds"); // 시간 초과 기록
             }
@@ -896,6 +922,30 @@ namespace ProjectEpsilon.Editor // 편집기 영역
             }
         }
 
+        private static bool TryStartAutomaticMerge(SnakeWeaponMergeController merge) // 실제 자동 합성 시작
+        {
+            return merge != null && !merge.IsMergeOpen && merge.HasMergeCandidates() && merge.OpenMergePanel(); // 실제 합성 가능 상태와 진입 결과
+        }
+
+        private static void HandlePilotMergeClosed(bool completed) // 실제 자동 합성 종료 기록
+        {
+            if (!pilotMergeOpen) // 자동 조종기가 연 합성 확인
+            {
+                return; // 다른 합성 결과 제외
+            }
+            pilotMergeOpen = false; // 자동 합성 진행 상태 해제
+            if (completed) // 실제 합성 성공 확인
+            {
+                pilotMergeCompleted++; // 실제 완료 횟수 증가
+                RunTelemetry.Instance?.Capture("automatic_merge"); // 실제 합성 결과 상태 표본
+            }
+            else // 실제 합성 취소 확인
+            {
+                pilotMergeCancelled++; // 실제 취소 횟수 증가
+            }
+            Debug.Log($"[NaturalCombatVerification] automatic merge result completed={completed} total={pilotMergeCompleted} cancelled={pilotMergeCancelled}."); // 실제 자동 합성 결과 기록
+        }
+
         private static void Fail(string message) // 실패 결과 기록
         {
             Debug.LogError("[NaturalCombatVerification] " + message); // 실패 로그
@@ -904,6 +954,10 @@ namespace ProjectEpsilon.Editor // 편집기 영역
 
         private static void Finish(int code) // 검증 종료
         {
+            if (trackedMerge != null) // 실제 합성 구독 확인
+            {
+                trackedMerge.MergeClosed -= HandlePilotMergeClosed; // 실제 합성 결과 구독 해제
+            }
             if (trackedBody != null) // 실제 몸통 구독 확인
             {
                 trackedBody.BodyCountChanged -= HandleBodyCountChanged; // 몸통 이벤트 연결 해제
