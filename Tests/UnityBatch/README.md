@@ -272,3 +272,9 @@
 ## 52일차 엘리트 전투
 
 `AutomatedEarlyWaveVerification.Run`은 실제 출현기를 가속해 4분 엘리트의 예고·방향 고정·돌진 이동을 확인한 후 강제 처치와 연속 레벨·엘리트 보상을 검증한다. 테스트 중 플레이어와 일반 적의 이동·충돌, 보상 전 경험치 설정을 통제한다. `AutomatedEliteRewardVerification.Run`은 시각을 강제로 240초로 설정하고 포탑 보상 선택과 장착을 검사한다. 실제 정상 속도 자연 전투 및 제한 사항은 `Devlogs/Day52/README.md`를 참조한다.
+
+---
+
+## 53일차 5~10분 성장
+
+`Day45NaturalCombat/AutomatedNaturalCombatVerification.cs`는 기본적으로 300초 관찰을 유지한다. `-epsilonSurvivalSeconds 600 -epsilonRecord`를 지정하면 정상 게임 속도로 600초까지 진행하고 5분·10분 표본을 기록한다. 시험은 가상 입력과 보상 자동 선택을 사용하며 실제 수동 플레이를 대신하지 않는다. `python Tools/summarize_early_run.py 로그경로`는 완료 기록의 5~10분 성장 변화를 출력한다. 사용자의 저장과 격리된 별도 Unity 사본에서 실행한다.

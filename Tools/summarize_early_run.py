@@ -19,6 +19,14 @@ def summarize(path):  # 자연 전투 로그 요약
         raise ValueError("유효한 5분 상태 표본이 없음")  # 불완전 표본 차단
     last = five[0]  # 실제 최종 상태
     print(f"{path}: seed={record.get('seed')} 시간={last['seconds']:.1f}초 레벨={last['level']} 획득XP={last['totalExperience']} 처치={last['kills']} 보상처치={last['rewardableKills']} 몸통={last['currentBodies']} 체력={last['health']}")  # 실제 결과 출력
+    ten = [sample for sample in samples if sample.get("reason") == "ten_minutes"]  # 실제 10분 표본 검색
+    if len(ten) > 1 or (ten and ten[0].get("seconds", 0) < 600):  # 실제 10분 표본 유효성 확인
+        raise ValueError("유효한 10분 상태 표본이 아님")  # 중복 또는 조기 표본 차단
+    if ten:  # 실제 10분 표본 존재 확인
+        later = ten[0]  # 실제 10분 최종 상태
+        equipped = sum(1 for weapon in later.get("weapons", []) if weapon.get("weaponId"))  # 실제 장착 포탑 수
+        print(f"  10분: 시간={later['seconds']:.1f}초 레벨={later['level']} 획득XP={later['totalExperience']} 처치={later['kills']} 몸통={later['currentBodies']} 체력={later['health']} 포탑={equipped}")  # 실제 10분 상태 출력
+        print(f"  5~10분 변화: 레벨={later['level'] - last['level']:+} 획득XP={later['totalExperience'] - last['totalExperience']:+} 처치={later['kills'] - last['kills']:+} 몸통={later['currentBodies'] - last['currentBodies']:+}")  # 실제 구간 변화 출력
     intervals = [sample for sample in samples if sample.get("reason") == "interval"]  # 실제 정기 표본
     for seconds in range(30, 301, 30):  # 30초별 상태 비교
         available = [sample for sample in intervals if abs(sample["seconds"] - seconds) < 1.0]  # 유효 시간 표본 선택

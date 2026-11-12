@@ -73,6 +73,8 @@ namespace ProjectEpsilon.Editor // 편집기 영역
         private static int previousLevel; // 이전 레벨 값
         private static float nextTacticalReport; // 다음 전투 거리 기록 시각
         private static bool randomSeedInitialized; // 실제 난수 시드 적용 여부
+        private static float targetSurvivalSeconds = 300f; // 실제 생존 관찰 목표
+        private static bool fiveMinuteCaptured; // 실제 5분 표본 저장 여부
 
         static AutomatedNaturalCombatVerification() // 도메인 연결
         {
@@ -121,12 +123,15 @@ namespace ProjectEpsilon.Editor // 편집기 영역
                             if (arguments[index] == "-epsilonSeed" && int.TryParse(arguments[index + 1], out int requestedSeed)) // 요청된 시드 확인
                             {
                                 seed = requestedSeed; // 시험 시드 적용
-                                break; // 추가 검색 종료
+                            }
+                            if (arguments[index] == "-epsilonSurvivalSeconds" && float.TryParse(arguments[index + 1], System.Globalization.NumberStyles.Float, System.Globalization.CultureInfo.InvariantCulture, out float requestedSeconds) && requestedSeconds >= 300f && requestedSeconds <= 600f) // 실제 관찰 시간 범위 확인
+                            {
+                                targetSurvivalSeconds = requestedSeconds; // 실제 관찰 목표 적용
                             }
                         }
                         UnityEngine.Random.InitState(seed); // 실제 게임 난수 초기화
                         randomSeedInitialized = true; // 중복 시드 적용 방지
-                        Debug.Log($"[NaturalCombatVerification] seed={seed}, fixedDelta={Time.fixedDeltaTime:F3}, pilot=range-aware."); // 재현 조건 기록
+                        Debug.Log($"[NaturalCombatVerification] seed={seed}, fixedDelta={Time.fixedDeltaTime:F3}, pilot=range-aware, target={targetSurvivalSeconds:F0}s."); // 재현 조건 기록
                     }
                     StartingWeaponSelection selection = UnityEngine.Object.FindFirstObjectByType<StartingWeaponSelection>(); // 실제 시작 선택기
                     StartingWeaponOptions options = selection == null ? null : (StartingWeaponOptions)typeof(StartingWeaponSelection).GetField("options", PrivateInstance).GetValue(selection); // 실제 후보 데이터
@@ -338,17 +343,29 @@ namespace ProjectEpsilon.Editor // 편집기 영역
                 naturalProgressObserved = true; // 실제 성장 완료 기록
                 Debug.Log($"[NaturalCombatVerification] progression observed kills={naturalKills} level={experience.CurrentLevel} xp={experience.CurrentExperience} choices={levelSelections} body={body.CurrentBodyCount} hp={health.CurrentHealth} game={elapsed:F1}s wall={EditorApplication.timeSinceStartup - startWallTime:F1}s."); // 자연 전투 성장 확인
             }
-            if (elapsed >= 300f && game.IsPlaying && (merge == null || !merge.IsMergeOpen)) // 실제 전투 재개 및 생존 시간 확인
+            if (!fiveMinuteCaptured && elapsed >= 300f && game.IsPlaying && (merge == null || !merge.IsMergeOpen)) // 실제 5분 표본 시점 확인
             {
                 RunTelemetry telemetry = RunTelemetry.Instance; // 선택적 실제 전투 기록기
                 if (telemetry != null && telemetry.Current != null) // 실제 기록 활성 확인
                 {
                     telemetry.Capture("five_minutes"); // 실제 5분 상태 표본
-                    Debug.Log("[NaturalCombatVerification] RECORD " + JsonUtility.ToJson(telemetry.Current)); // 실제 5분 관측 기록
+                }
+                fiveMinuteCaptured = true; // 실제 5분 표본 중복 방지
+            }
+            if (elapsed >= targetSurvivalSeconds && game.IsPlaying && (merge == null || !merge.IsMergeOpen)) // 실제 전투 재개 및 목표 생존 시간 확인
+            {
+                RunTelemetry telemetry = RunTelemetry.Instance; // 선택적 실제 전투 기록기
+                if (telemetry != null && telemetry.Current != null) // 실제 기록 활성 확인
+                {
+                    if (targetSurvivalSeconds >= 600f) // 실제 10분 목표 확인
+                    {
+                        telemetry.Capture("ten_minutes"); // 실제 10분 상태 표본
+                    }
+                    Debug.Log("[NaturalCombatVerification] RECORD " + JsonUtility.ToJson(telemetry.Current)); // 실제 관측 기록
                 }
                 if (!naturalProgressObserved) // 실제 성장 누락 확인
                 {
-                    Fail($"natural progression absent at 300s: kills={naturalKills} level={experience.CurrentLevel} xp={experience.CurrentExperience} choices={levelSelections}"); // 성장 미발생 기록
+                    Fail($"natural progression absent at {targetSurvivalSeconds:F0}s: kills={naturalKills} level={experience.CurrentLevel} xp={experience.CurrentExperience} choices={levelSelections}"); // 성장 미발생 기록
                     return; // 추가 처리 중단
                 }
                 if (!sawElite) // 실제 엘리트 출현 누락 확인
@@ -356,11 +373,11 @@ namespace ProjectEpsilon.Editor // 편집기 영역
                     Fail("No elite observed by five minutes."); // 출현 누락 기록
                     return; // 성공 처리 중단
                 }
-                Debug.Log($"[NaturalCombatVerification] PASS five-minute survival kills={naturalKills} level={experience.CurrentLevel} xp={experience.CurrentExperience} choices={levelSelections} sawElite={sawElite} eliteChoices={eliteSelections} body={body.CurrentBodyCount} hp={health.CurrentHealth} game={elapsed:F1}s wall={EditorApplication.timeSinceStartup - startWallTime:F1}s."); // 자연 성장과 엘리트 출현 기록
+                Debug.Log($"[NaturalCombatVerification] PASS survival target={targetSurvivalSeconds:F0}s kills={naturalKills} level={experience.CurrentLevel} xp={experience.CurrentExperience} choices={levelSelections} sawElite={sawElite} eliteChoices={eliteSelections} body={body.CurrentBodyCount} hp={health.CurrentHealth} game={elapsed:F1}s wall={EditorApplication.timeSinceStartup - startWallTime:F1}s."); // 자연 성장과 엘리트 출현 기록
                 Finish(0); // 성공 종료
                 return; // 추가 처리 중단
             }
-            if (EditorApplication.timeSinceStartup - startWallTime > 480d) // 실제 시간 제한 확인
+            if (EditorApplication.timeSinceStartup - startWallTime > targetSurvivalSeconds * 1.2d + 120d) // 관찰 목표별 실제 시간 제한 확인
             {
                 Fail($"timed out at {elapsed:F1} seconds"); // 시간 초과 기록
             }
@@ -689,7 +706,10 @@ namespace ProjectEpsilon.Editor // 편집기 영역
                 }
                 if (target != null && targetHealth.TryGetValue(target, out float previous) && target.CurrentHealth < previous) // 실제 적 피해 확인
                 {
-                    Debug.Log($"[NaturalCombatVerification] target damage id={target.GetInstanceID()} type={target.name} hp={previous:F1}->{target.CurrentHealth:F1} time={Time.time:F2}"); // 무기 피해 관찰 기록
+                    if (previous - target.CurrentHealth >= 0.1f) // 표시 가능한 실제 체력 차이 확인
+                    {
+                        Debug.Log($"[NaturalCombatVerification] target damage id={target.GetInstanceID()} type={target.name} hp={previous:F1}->{target.CurrentHealth:F1} time={Time.time:F2}"); // 무기 피해 관찰 기록
+                    }
                     targetHealth[target] = target.CurrentHealth; // 적 체력 갱신
                     SnakeWeaponManager weapons = UnityEngine.Object.FindFirstObjectByType<SnakeWeaponManager>(); // 실제 무기 관리자
                     SnakeWeaponSlot slot = weapons != null && weapons.Slots.Count > 0 ? weapons.Slots[0] : null; // 첫 무기 슬롯
