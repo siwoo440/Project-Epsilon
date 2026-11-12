@@ -77,6 +77,10 @@ namespace ProjectEpsilon.Editor // 편집기 영역
         private static bool fiveMinuteCaptured; // 실제 5분 표본 저장 여부
         private static bool tenMinuteCaptured; // 실제 10분 표본 저장 여부
         private static bool fifteenMinuteCaptured; // 실제 15분 표본 저장 여부
+        private static bool twentyMinuteCaptured; // 실제 20분 표본 저장 여부
+        private static bool bossFightRequested; // 실제 보스전 연속 관찰 요청
+        private static bool bossPhaseTwoObserved; // 실제 보스 2단계 관찰 여부
+        private static double victoryObservedAt; // 실제 승리 화면 대기 시작 시각
         private static bool recordingLogged; // 실제 기록 중복 출력 여부
         private static bool automaticMergeRequested; // 자동 합성 시험 요청
         private static SnakeWeaponMergeController trackedMerge; // 실제 합성 결과 구독 대상
@@ -112,6 +116,11 @@ namespace ProjectEpsilon.Editor // 편집기 영역
             try // 검증 오류 처리
             {
                 GameManager game = GameManager.Instance; // 현재 시작 상태 조회
+                if (bossFightRequested && game != null && game.CurrentState == GameState.Victory) // 실제 보스전 승리 확인
+                {
+                    ObserveBossVictory(game); // 실제 결과 화면과 승리 기록 확인
+                    return; // 일반 전투 관찰 중단
+                }
                 if (game != null && game.CurrentState == GameState.Starting) // 시작 선택 상태 확인
                 {
                     if (!Mathf.Approximately(Time.timeScale, 0f)) // 시작 전 정지 확인
@@ -129,6 +138,7 @@ namespace ProjectEpsilon.Editor // 편집기 영역
                         int seed = 4501; // 재현용 기본 난수 시드
                         string[] arguments = Environment.GetCommandLineArgs(); // 실제 배치 인수
                         automaticMergeRequested = Array.IndexOf(arguments, "-epsilonAutoMerge") >= 0; // 자동 합성 시험 옵션 확인
+                        bossFightRequested = Array.IndexOf(arguments, "-epsilonFightBoss") >= 0; // 보스전 연속 관찰 옵션 확인
                         for (int index = 0; index + 1 < arguments.Length; index++) // 실제 배치 인수 순회
                         {
                             if (arguments[index] == "-epsilonSeed" && int.TryParse(arguments[index + 1], out int requestedSeed)) // 요청된 시드 확인
@@ -139,6 +149,10 @@ namespace ProjectEpsilon.Editor // 편집기 영역
                             {
                                 targetSurvivalSeconds = requestedSeconds; // 실제 관찰 목표 적용
                             }
+                        }
+                        if (bossFightRequested) // 실제 보스전 관찰 요청 확인
+                        {
+                            targetSurvivalSeconds = 1200f; // 확정된 20분 보스 진입 목표
                         }
                         UnityEngine.Random.InitState(seed); // 실제 게임 난수 초기화
                         randomSeedInitialized = true; // 중복 시드 적용 방지
@@ -217,6 +231,11 @@ namespace ProjectEpsilon.Editor // 편집기 영역
                 Debug.Log("[NaturalCombatVerification] Virtual Keyboard A/D/Space; in-memory focus settings; natural spawns; no invulnerability, stat, XP, or time-scale changes; automatic UI choices."); // 시험 조건 기록
             }
             float elapsed = (float)typeof(EarlyEnemyWaveSpawner).GetField("elapsed", PrivateInstance).GetValue(spawner); // 전투 경과 시간
+            if (bossFightRequested && game.IsFinalBossPhase) // 실제 보스전 진행 확인
+            {
+                PrototypeBossEncounter bossEncounter = UnityEngine.Object.FindFirstObjectByType<PrototypeBossEncounter>(); // 실제 보스 출현기 조회
+                bossPhaseTwoObserved |= bossEncounter != null && bossEncounter.IsPhaseTwo; // 실제 보스 2단계 관찰
+            }
             ObserveState(player, body, health, elapsed); // 손실 및 피해 상태 기록
             if (!checkedStart && elapsed >= 0.25f) // 첫 물리 갱신 이후 확인
             {
@@ -407,12 +426,24 @@ namespace ProjectEpsilon.Editor // 편집기 영역
                     return; // 성공 처리 중단
                 }
                 RunTelemetry telemetry = RunTelemetry.Instance; // 선택적 실제 전투 기록기
-                if (telemetry != null && telemetry.Current != null) // 실제 기록 활성 확인
+                if (!twentyMinuteCaptured && targetSurvivalSeconds >= 1200f) // 실제 20분 표본 중복 확인
                 {
-                    if (targetSurvivalSeconds >= 1200f) // 실제 20분 목표 확인
+                    if (telemetry != null && telemetry.Current != null) // 실제 기록 활성 확인
                     {
                         telemetry.Capture("twenty_minutes"); // 실제 20분 상태 표본
                     }
+                    twentyMinuteCaptured = true; // 실제 20분 표본 중복 방지
+                }
+                if (bossFightRequested) // 실제 보스전 연속 관찰 확인
+                {
+                    if (elapsed > 1320f) // 실제 보스전 추가 시간 제한
+                    {
+                        Fail($"boss fight timed out at {elapsed:F1} seconds; phaseTwo={bossPhaseTwoObserved}"); // 실제 보스전 미종료 기록
+                    }
+                    return; // 실제 보스전 계속 진행
+                }
+                if (telemetry != null && telemetry.Current != null) // 실제 기록 활성 확인
+                {
                     LogRecording(); // 실제 관측 기록 출력
                 }
                 if (!naturalProgressObserved) // 실제 성장 누락 확인
@@ -433,6 +464,33 @@ namespace ProjectEpsilon.Editor // 편집기 영역
             {
                 Fail($"timed out at {elapsed:F1} seconds"); // 시간 초과 기록
             }
+        }
+
+        private static void ObserveBossVictory(GameManager game) // 실제 보스전 승리와 결과 화면 확인
+        {
+            if (victoryObservedAt <= 0d) // 실제 승리 최초 관찰 확인
+            {
+                victoryObservedAt = EditorApplication.timeSinceStartup; // 실제 결과 화면 대기 시작
+            }
+            RunFrontendController frontend = RunFrontendController.Instance; // 실제 결과 화면 관리자
+            GameObject titleObject = GameObject.Find("FrontendTitle"); // 실제 결과 제목 객체
+            Text title = titleObject == null ? null : titleObject.GetComponent<Text>(); // 실제 결과 제목 문구
+            if (frontend == null || frontend.Stage != FrontendStage.Results || title == null || title.text != "승리") // 실제 승리 화면 생성 확인
+            {
+                if (EditorApplication.timeSinceStartup - victoryObservedAt > 10d) // 실제 결과 화면 대기 제한
+                {
+                    Fail("Victory result screen did not appear."); // 실제 결과 화면 누락 기록
+                }
+                return; // 실제 결과 화면 대기
+            }
+            if (!twentyMinuteCaptured || !bossPhaseTwoObserved || !game.IsFinalBossPhase || !naturalProgressObserved || !sawElite) // 실제 성장과 보스전 단계 관찰 확인
+            {
+                Fail($"victory missed required observation: twenty={twentyMinuteCaptured}, phaseTwo={bossPhaseTwoObserved}, boss={game.IsFinalBossPhase}, progression={naturalProgressObserved}, elite={sawElite}"); // 실제 단계 누락 기록
+                return; // 성공 처리 중단
+            }
+            LogRecording(); // 실제 보스 처치와 결과 기록 출력
+            Debug.Log($"[NaturalCombatVerification] PASS boss victory phaseTwo={bossPhaseTwoObserved} kills={naturalKills} eliteChoices={eliteSelections} merges={pilotMergeCompleted} wall={EditorApplication.timeSinceStartup - startWallTime:F1}s."); // 실제 보스전 성공 기록
+            Finish(0); // 실제 결과 화면 검증 종료
         }
 
         private static int ChooseKeys(SnakeMovement player, SnakeBodyManager body, EarlyEnemyBehaviour[] enemies, SnakeStamina stamina, float elapsed) // 회피 조향 선택

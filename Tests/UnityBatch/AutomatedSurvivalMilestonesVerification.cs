@@ -1,6 +1,7 @@
 using System; // 실제 형식 조회
 using System.Collections; // 실제 프레임 대기
 using System.Reflection; // 실제 조종기와 시간 필드 조회
+using ProjectEpsilon.Combat; // 실제 최종 보스 공격 대상
 using ProjectEpsilon.Core; // 실제 게임 상태
 using ProjectEpsilon.Enemies; // 실제 출현 시계
 using ProjectEpsilon.Player; // 실제 플레이어
@@ -109,6 +110,40 @@ namespace ProjectEpsilon.Editor // 배치 시험 영역
             SessionState.SetBool("EpsilonSurvivalMilestonesVerification", false); // 시험 감시 자동 재시작 방지
             Debug.Log("[SurvivalMilestonesVerification] Controlled clock jumps reached 5, 10 and 15 minutes; awaiting real 20-minute transition and pilot record."); // 통제된 시험 조건 기록
             elapsed.SetValue(spawner, 1199.95f); // 실제 보스 전환 경계 직전 통제
+            if (Array.IndexOf(Environment.GetCommandLineArgs(), "-epsilonFightBoss") < 0) // 보스전 연속 시험 요청 확인
+            {
+                yield break; // 기존 생존 표본 시험 유지
+            }
+            float bossDeadline = Time.realtimeSinceStartup + 5f; // 실제 보스 출현 제한
+            PrototypeBossEncounter encounter = null; // 실제 보스 출현기 초기화
+            while (Time.realtimeSinceStartup < bossDeadline) // 실제 보스 출현 대기
+            {
+                encounter = UnityEngine.Object.FindFirstObjectByType<PrototypeBossEncounter>(); // 실제 보스 출현기 조회
+                if (encounter != null && encounter.Boss != null && encounter.Boss.IsAlive) // 실제 생존 보스 확인
+                {
+                    break; // 보스 피해 시험 진행
+                }
+                yield return null; // 실제 전환 프레임 대기
+            }
+            if (encounter == null || encounter.Boss == null || !encounter.Boss.IsAlive) // 실제 보스 출현 확인
+            {
+                AutomatedSurvivalMilestonesVerification.Fail("Actual boss did not appear during continuation test."); // 실제 출현 실패 기록
+                yield break; // 후속 시험 중단
+            }
+            WeaponTarget boss = encounter.Boss; // 실제 보스 전투 대상
+            boss.TakeDamage(boss.MaximumHealth * 0.51f); // 통제 시험의 실제 2단계 진입 피해
+            while (!encounter.IsPhaseTwo && Time.realtimeSinceStartup < bossDeadline) // 실제 보스 단계 전환 대기
+            {
+                yield return null; // 실제 단계 갱신 프레임
+            }
+            if (!encounter.IsPhaseTwo || !boss.IsAlive) // 실제 생존한 2단계 확인
+            {
+                AutomatedSurvivalMilestonesVerification.Fail("Actual boss did not enter phase two."); // 실제 단계 전환 실패 기록
+                yield break; // 후속 시험 중단
+            }
+            yield return null; // 조종기의 실제 2단계 관찰 프레임
+            boss.TakeDamage(boss.MaximumHealth); // 통제 시험의 실제 보스 강제 처치
+            Debug.Log("[SurvivalMilestonesVerification] Controlled boss entered phase two and was forcibly defeated; awaiting pilot result."); // 강제 처치와 실제 단계 기록
         }
     }
 }
