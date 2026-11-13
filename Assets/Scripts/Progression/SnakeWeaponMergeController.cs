@@ -54,7 +54,7 @@ namespace ProjectEpsilon.Progression // 성장 기능 영역
             { // 조건 시작
                 settingsMenu = FindFirstObjectByType<SettingsMenuController>(); // 설정 화면 조회
             } // 조건 종료
-            if ((settingsMenu != null && settingsMenu.IsOpen) || (RunFrontendController.Instance != null && RunFrontendController.Instance.Stage == FrontendStage.Settings)) // 설정 화면 확인
+            if ((settingsMenu != null && settingsMenu.IsOpen) || (RunFrontendController.Instance != null && (RunFrontendController.Instance.Stage == FrontendStage.Settings || RunFrontendController.Instance.Stage == FrontendStage.Tutorial))) // 설정과 안내 화면 확인
             { // 조건 시작
                 return; // 설정 입력 우선
             } // 조건 종료

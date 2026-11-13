@@ -7,13 +7,14 @@ using ProjectEpsilon.Progression; // 실제 진행과 포탑 선택
 using ProjectEpsilon.World; // 실제 맵 선택
 using UnityEngine; // Unity 화면 기능
 using UnityEngine.SceneManagement; // 실제 화면 씬 전환
+using UnityEngine.InputSystem; // 안내 취소 입력
 using UnityEngine.UI; // 실제 화면과 버튼
 
 namespace ProjectEpsilon.UI // 실제 메뉴 영역
 {
     public enum FrontendStage // 실제 화면 단계
     {
-        Main, Characters, Maps, Weapons, Playing, Paused, Settings, Results // 실제 메뉴 흐름
+        Main, Characters, Maps, Weapons, Playing, Paused, Settings, Results, Tutorial // 실제 메뉴 흐름
     }
     [DefaultExecutionOrder(300)] // 기존 시작 데이터 이후 화면 구성
     public sealed class RunFrontendController : MonoBehaviour // 실제 메뉴와 런 흐름
@@ -33,6 +34,12 @@ namespace ProjectEpsilon.UI // 실제 메뉴 영역
         private FrontendOptions options; // 실제 화면과 음량 설정
         private FrontendStage settingsReturn; // 설정 닫기 복귀 화면
         private SceneFrontendContext sceneContext; // 실제 분리 화면 데이터
+        private const string TutorialCompletedKey = "ProjectEpsilon.TutorialCompleted.v1"; // 첫 안내 완료 저장 키
+        private const int TutorialPageCount = 8; // 기획서 안내 단계 수
+        private bool tutorialAutoChecked; // 첫 안내 자동 확인 여부
+        private bool tutorialOwnsPause; // 안내가 시작한 일시정지 여부
+        private int tutorialPage; // 현재 안내 단계
+        private FrontendStage tutorialReturn; // 안내 종료 후 복귀 화면
         public static RunFrontendController Instance { get; private set; } // 실제 메뉴 관리자
         public FrontendStage Stage { get; private set; } // 실제 현재 단계
         public Font DisplayFont => font; // 실제 화면의 한글 우선 글꼴
@@ -140,6 +147,11 @@ namespace ProjectEpsilon.UI // 실제 메뉴 영역
             bool growthOpen = MetaProgressionController.Instance != null && MetaProgressionController.Instance.Menu != null && MetaProgressionController.Instance.Menu.IsOpen; // 실제 성장 화면 상태
             canvas.enabled = !inputOpen; // 기존 설정 화면 표시 우선
             group.blocksRaycasts = !inputOpen && !growthOpen; // 실제 화면 입력 우선권
+            if (Stage == FrontendStage.Tutorial && !inputOpen && Keyboard.current != null && Keyboard.current.escapeKey.wasPressedThisFrame) // 안내 취소 입력 확인
+            { // 조건 시작
+                FinishTutorial(); // 안내 종료와 이전 화면 복귀
+                return; // 같은 프레임의 다른 화면 처리 방지
+            } // 조건 종료
             GameManager game = GameManager.Instance; // 실제 게임 관리자
             if (game == null) // 실제 관리자 확인
             {
@@ -161,6 +173,14 @@ namespace ProjectEpsilon.UI // 실제 메뉴 영역
             {
                 Show(FrontendStage.Playing); // 실제 전투 화면 표시
             }
+            if (sceneContext == null && game.IsPlaying && Stage == FrontendStage.Playing && !tutorialAutoChecked) // 첫 실제 전투 확인
+            { // 조건 시작
+                tutorialAutoChecked = true; // 같은 런의 중복 안내 방지
+                if (NeedsFirstTutorial()) // 첫 플레이 안내 확인
+                { // 조건 시작
+                    BeginTutorial(false); // 첫 전투 안내 시작
+                } // 조건 종료
+            } // 조건 종료
         }
         private void OnDestroy() // 실제 관리자 정리
         {
@@ -217,6 +237,7 @@ namespace ProjectEpsilon.UI // 실제 메뉴 영역
                 case FrontendStage.Paused: BuildPause(); break; // 실제 일시정지 구성
                 case FrontendStage.Settings: BuildSettings(); break; // 실제 설정 구성
                 case FrontendStage.Results: BuildResults(); break; // 실제 결과 구성
+                case FrontendStage.Tutorial: BuildTutorial(); break; // 첫 플레이 안내 구성
             }
         }
         private void CreateSelectionBackground() // 실제 출격 선택 배경 구성
@@ -498,6 +519,91 @@ namespace ProjectEpsilon.UI // 실제 메뉴 영역
             settingsReturn = from; // 실제 복귀 화면 저장
             Show(FrontendStage.Settings); // 실제 설정 화면 표시
         }
+        private void BeginTutorial(bool fromSettings) // 첫 안내 또는 다시 보기 시작
+        { // 함수 시작
+            tutorialPage = 0; // 첫 안내 단계 설정
+            tutorialReturn = fromSettings ? FrontendStage.Settings : FrontendStage.Playing; // 종료 후 복귀 화면
+            tutorialOwnsPause = false; // 기존 정지 소유 초기화
+            GameManager game = GameManager.Instance; // 현재 게임 관리자
+            if (!fromSettings && game != null && game.IsPlaying) // 자동 안내의 진행 상태 확인
+            { // 조건 시작
+                game.PauseGame(); // 안내 중 전투 일시정지
+                tutorialOwnsPause = game.IsPaused; // 안내가 시작한 정지 기록
+            } // 조건 종료
+            Show(FrontendStage.Tutorial); // 실제 안내 화면 표시
+        } // 함수 종료
+        private static bool NeedsFirstTutorial() // 첫 안내 저장 상태 조회
+        { // 함수 시작
+            try // 저장 상태 읽기
+            { // 조회 시작
+                return PlayerPrefs.GetInt(TutorialCompletedKey, 0) == 0; // 미완료 여부 반환
+            } // 조회 종료
+            catch (Exception error) // 저장 상태 오류 확인
+            { // 실패 시작
+                Debug.LogWarning("[Project Epsilon] 안내 상태를 읽지 못했습니다: " + error.Message); // 저장 오류 기록
+                return false; // 저장 오류 시 전투 차단 방지
+            } // 실패 종료
+        } // 함수 종료
+        private void BuildTutorial() // 현재 안내 단계 구성
+        { // 함수 시작
+            string left = InputBindingManager.Instance == null ? "A" : InputBindingManager.Instance.GetBindingDisplayName(RebindableInput.TurnLeft); // 현재 왼쪽 회전 키
+            string right = InputBindingManager.Instance == null ? "D" : InputBindingManager.Instance.GetBindingDisplayName(RebindableInput.TurnRight); // 현재 오른쪽 회전 키
+            string boost = InputBindingManager.Instance == null ? "스페이스" : InputBindingManager.Instance.GetBindingDisplayName(RebindableInput.Boost); // 현재 가속 키
+            string[] titles = { "자동 전진과 회전", "자기 몸 피하기", "몸통과 공용 체력", "자동 공격", "몸통의 포탑", "포탑 합성", "속성 시너지", "가속" }; // 기획서 안내 단계
+            string[] pages = // 실제 조작과 성장 안내
+            { // 목록 시작
+                $"뱀은 자동으로 앞으로 이동합니다.\n{left} 또는 왼쪽 방향키와 {right} 또는 오른쪽 방향키로 회전하세요.", // 이동과 회전 안내
+                "머리가 자기 몸에 부딪히지 않도록 넓게 회전하세요.\n자기 충돌로 몸통을 잃을 수 있습니다.", // 자기 충돌 안내
+                "몸통은 생명과 포탑 슬롯을 함께 담당합니다.\n공용 체력이 소진되면 몸통을 잃고, 몸통이 모두 사라지면 패배합니다.", // 공용 체력 안내
+                "포탑은 자동으로 공격합니다.\n각 포탑은 장착된 몸통 위치에서 가장 가까운 적을 조준합니다.", // 자동 공격 안내
+                "오른쪽 패널에서 머리 뒤 몸통 순서와 장착 포탑을 확인하세요.\n적을 처치해 경험치를 얻으면 몸통과 포탑을 성장시킬 수 있습니다.", // 몸통과 성장 안내
+                "같은 포탑과 같은 등급이 두 개 있으면 E 키로 즉시 합성합니다.\n앞쪽 몸통부터 한 쌍이 합쳐지고 등급이 올라갑니다.", // 즉시 합성 안내
+                "같은 속성의 포탑 수에 따라 시너지가 활성화됩니다.\n합성으로 포탑 수가 줄면 시너지 단계도 바로 바뀝니다.", // 속성 안내
+                $"{boost} 키를 누르면 가속하며 스태미나가 줄어듭니다.\n20분을 생존한 뒤 최종 보스를 처치하면 승리합니다." // 가속과 승리 안내
+            }; // 목록 종료
+            int page = Mathf.Clamp(tutorialPage, 0, TutorialPageCount - 1); // 유효한 안내 단계
+            Title(titles[page], $"첫 플레이 안내  {page + 1} / {TutorialPageCount}"); // 실제 안내 제목
+            Label(panel, "FrontendTutorialBody", pages[page], new Vector2(0f, 70f), new Vector2(1450f, 330f), 38); // 실제 안내 내용
+            Button previous = CreateButton(panel, "FrontendTutorialPreviousButton", "이전", new Vector2(-350f, -280f), new Vector2(300f, 80f), PreviousTutorialPage); // 이전 단계 버튼
+            previous.interactable = page > 0; // 첫 단계 이전 이동 차단
+            CreateButton(panel, "FrontendTutorialNextButton", page == TutorialPageCount - 1 ? "완료" : "다음", new Vector2(0f, -280f), new Vector2(300f, 80f), NextTutorialPage); // 다음 단계 또는 완료 버튼
+            CreateButton(panel, "FrontendTutorialSkipButton", "건너뛰기", new Vector2(350f, -280f), new Vector2(300f, 80f), FinishTutorial); // 안내 건너뛰기 버튼
+            Label(panel, "FrontendTutorialEscapeHelp", "ESC: 안내 닫기", new Vector2(0f, -390f), new Vector2(900f, 55f), 23); // 안내 취소 입력
+        } // 함수 종료
+        private void PreviousTutorialPage() // 이전 안내 단계
+        { // 함수 시작
+            tutorialPage = Mathf.Max(0, tutorialPage - 1); // 첫 단계 아래 이동 방지
+            Show(FrontendStage.Tutorial); // 이전 안내 표시
+        } // 함수 종료
+        private void NextTutorialPage() // 다음 안내 단계
+        { // 함수 시작
+            if (tutorialPage >= TutorialPageCount - 1) // 마지막 단계 확인
+            { // 조건 시작
+                FinishTutorial(); // 안내 완료와 복귀
+                return; // 추가 단계 이동 방지
+            } // 조건 종료
+            tutorialPage++; // 다음 안내 단계
+            Show(FrontendStage.Tutorial); // 다음 안내 표시
+        } // 함수 종료
+        private void FinishTutorial() // 안내 완료와 이전 화면 복귀
+        { // 함수 시작
+            try // 안내 완료 저장
+            { // 저장 시작
+                PlayerPrefs.SetInt(TutorialCompletedKey, 1); // 완료 표식 저장
+                PlayerPrefs.Save(); // 완료 표식 반영
+            } // 저장 종료
+            catch (Exception error) // 저장 실패 확인
+            { // 실패 시작
+                Debug.LogWarning("[Project Epsilon] 안내 완료를 저장하지 못했습니다: " + error.Message); // 저장 오류 기록
+            } // 실패 종료
+            GameManager game = GameManager.Instance; // 현재 게임 관리자
+            if (tutorialOwnsPause && game != null && game.IsPaused) // 안내가 시작한 정지 확인
+            { // 조건 시작
+                game.ResumeGame(); // 안내가 정지한 전투만 재개
+            } // 조건 종료
+            tutorialOwnsPause = false; // 정지 소유 해제
+            Show(tutorialReturn); // 기존 전투 또는 설정 복귀
+        } // 함수 종료
         private void BuildSettings() // 실제 음량과 화면 설정 구성
         {
             Title("설정", "화면, 소리와 조작"); // 실제 설정 제목
@@ -508,6 +614,7 @@ namespace ProjectEpsilon.UI // 실제 메뉴 영역
             Button mode = CreateButton(panel, "FrontendScreenModeButton", "화면 모드 변경", new Vector2(300f, -35f), new Vector2(480f, 80f), () => ChangeOptions(0, 0, 0, true)); // 실제 화면 모드 변경
             volume.interactable = shake.interactable = resolution.interactable = mode.interactable = options.IsAvailable; // 실제 저장 오류 시 변경 차단
             CreateButton(panel, "FrontendInputSettingsButton", "키 설정", new Vector2(0f, -150f), new Vector2(500f, 80f), () => inputSettings?.OpenSettings()); // 실제 기존 키 설정 열기
+            CreateButton(panel, "FrontendTutorialReplayButton", "조작 안내 다시 보기", new Vector2(500f, -150f), new Vector2(420f, 80f), () => BeginTutorial(true)); // 첫 플레이 안내 다시 보기
             CreateButton(panel, "FrontendSettingsBackButton", "뒤로", new Vector2(0f, -280f), new Vector2(320f, 80f), () => Show(settingsReturn)); // 실제 이전 메뉴 복귀
             Label(panel, "FrontendShakeNote", "흔들림 설정은 저장되며 화면 효과는 아직 적용되지 않았습니다.", new Vector2(0f, -350f), new Vector2(1200f, 40f), 20); // 실제 흔들림 구현 상태
             Label(panel, "FrontendDebugHelp", "전투 중 시험 조작\nN: 합성 재료  |  E: 합성  |  P: 피해  |  [: 몸통 손실\nH: 회복 보석  |  J: 복구 보석  |  Shift+3 / Shift+5: 포탑 등급", new Vector2(0f, -445f), new Vector2(1500f, 105f), 22); // 설정 화면의 실제 시험 조작 안내
