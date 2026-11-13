@@ -20,6 +20,23 @@ MonoBehaviour:
   bossAttackInterval: 1.8
   bossProjectileCount: 3
   bossPhaseTwoProjectileCount: 5
+  bossDamage: 15
+  bossPhaseTwoSpeedMultiplier: 1.25
+  bossPhaseTwoIntervalMultiplier: 0.75
+  bossChargeInterval: 6
+  bossChargeWarningDuration: 1
+  bossChargeDuration: 0.8
+  bossChargeSpeed: 8
+  bossPhaseTwoChargeSpeedMultiplier: 1.4
+  bossHazardInterval: 8
+  bossHazardWarningDuration: 1
+  bossHazardDuration: 3
+  bossHazardDamageInterval: 1
+  bossHazardRadius: 1.2
+  bossHazardDamage: 10
+  bossSummonInterval: 12
+  bossSummonMaximum: 4
+  bossSummonRadius: 2
   obstacleChance: 0.32
   obstacleMinimumCount: 1
   obstacleMaximumCount: 3

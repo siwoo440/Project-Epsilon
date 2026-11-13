@@ -157,6 +157,24 @@ namespace ProjectEpsilon.Editor // 배치 시험 영역
                 SpriteRenderer artwork = obstacle.GetComponent<SpriteRenderer>(); // 실제 장애물 표시기
                 Require(artwork != null && artwork.sprite != null && AssetDatabase.GetAssetPath(artwork.sprite).StartsWith("Assets/Resources/MapElements/" + folders[index] + "/", StringComparison.Ordinal), "Selected map obstacle artwork is wrong."); // 실제 선택 맵의 장애물 이미지 확인
             }
+            SetBossValue(map.Profile, "bossDamage", 20 + index); // 실제 맵별 투사체와 돌진 피해 시험값
+            SetBossValue(map.Profile, "bossPhaseTwoSpeedMultiplier", 1.4f); // 실제 맵별 두 번째 단계 이동 배율
+            SetBossValue(map.Profile, "bossPhaseTwoIntervalMultiplier", 0.6f); // 실제 맵별 두 번째 단계 사격 간격
+            SetBossValue(map.Profile, "bossChargeInterval", 0.8f); // 실제 맵별 돌진 간격
+            SetBossValue(map.Profile, "bossChargeWarningDuration", 0.6f); // 실제 맵별 돌진 예고 시간
+            SetBossValue(map.Profile, "bossChargeDuration", 0.5f); // 실제 맵별 돌진 지속 시간
+            SetBossValue(map.Profile, "bossChargeSpeed", 7f); // 실제 맵별 돌진 속도
+            SetBossValue(map.Profile, "bossPhaseTwoChargeSpeedMultiplier", 1.3f); // 실제 맵별 두 번째 단계 돌진 배율
+            SetBossValue(map.Profile, "bossHazardInterval", 1.2f); // 실제 맵별 위험 구역 간격
+            SetBossValue(map.Profile, "bossHazardWarningDuration", 0.7f); // 실제 맵별 위험 구역 예고
+            SetBossValue(map.Profile, "bossHazardDuration", 1.5f); // 실제 맵별 위험 구역 지속
+            SetBossValue(map.Profile, "bossHazardDamageInterval", 0.3f); // 실제 맵별 위험 피해 간격
+            SetBossValue(map.Profile, "bossHazardRadius", 3f); // 실제 맵별 위험 반경
+            SetBossValue(map.Profile, "bossHazardDamage", 6 + index); // 실제 맵별 위험 피해
+            SetBossValue(map.Profile, "bossSummonInterval", 3f); // 실제 맵별 소환 간격
+            SetBossValue(map.Profile, "bossSummonMaximum", 2); // 실제 맵별 소환 상한
+            SetBossValue(map.Profile, "bossSummonRadius", 3f); // 실제 맵별 소환 거리
+            Require(encounter.ApplyProfile(map.Profile), "Actual boss map settings could not be applied."); // 실제 선택 맵의 보스 설정 적용
             MethodInfo spawn = typeof(PrototypeBossEncounter).GetMethod("TrySpawnBoss", BindingFlags.Instance | BindingFlags.NonPublic); // 실제 보스 생성
             Require(spawn != null, "Boss spawn path missing."); // 실제 생성 경로 확인
             spawn.Invoke(encounter, null); // 실제 보스 강제 생성
@@ -168,11 +186,31 @@ namespace ProjectEpsilon.Editor // 배치 시험 영역
             Require(Mathf.Approximately(boss.MaximumHealth, expectedHealth[index]), "Selected map boss health does not match its data."); // 실제 맵별 보스 데이터 확인
             EarlyEnemyBehaviour behavior = boss.GetComponent<EarlyEnemyBehaviour>(); // 실제 보스 사격 행동
             behavior.enabled = false; // 통제 중 자동 사격 중지
+            PrototypeBossChargeAttack charge = boss.GetComponent<PrototypeBossChargeAttack>(); // 실제 보스 돌진 구성
+            PrototypeBossHazardSpawner hazard = boss.GetComponent<PrototypeBossHazardSpawner>(); // 실제 위험 구역 출현기
+            PrototypeBossSummoner summon = boss.GetComponent<PrototypeBossSummoner>(); // 실제 보스 소환기
+            Require(charge != null && hazard != null && summon != null, "Actual boss attack components missing."); // 실제 보스 공격 구성 확인
+            hazard.enabled = false; // 돌진 시험 중 위험 구역 중지
+            summon.enabled = false; // 돌진 시험 중 잡몹 소환 중지
+            Vector3 chargeStart = boss.transform.position; // 실제 돌진 전 보스 위치
+            yield return new WaitForSeconds(0.9f); // 실제 맵별 돌진 간격 경과
+            Require(charge.IsWarning && !charge.IsCharging, "Map-specific charge did not begin its warning after the configured interval."); // 맵별 돌진 예고 시작 확인
+            yield return new WaitForSeconds(0.35f); // 실제 예고 중 대기
+            Require(charge.IsWarning && !charge.IsCharging, "Map-specific charge warning ended too early."); // 맵별 예고 지속 확인
+            yield return new WaitForSeconds(0.3f); // 실제 예고 종료 경과
+            Require(charge.IsCharging, "Map-specific charge did not start after its warning."); // 맵별 실제 돌진 시작 확인
+            yield return new WaitForSeconds(0.55f); // 실제 돌진 지속 경과
+            Require(!charge.IsCharging, "Map-specific charge exceeded its configured duration."); // 맵별 실제 돌진 종료 확인
+            float chargeDistance = Vector2.Distance(chargeStart, boss.transform.position); // 실제 보스 돌진 거리
+            Require(chargeDistance > 1.3f && chargeDistance < 2.2f, $"Actual charge distance differs from map speed, duration and enemy speed multiplier: distance={chargeDistance:F3}, start={chargeStart}, end={boss.transform.position}."); // 전체 적 속도 절반을 반영한 실제 돌진 거리 확인
+            charge.enabled = false; // 후속 사격과 피해 시험의 돌진 중지
             MethodInfo fire = typeof(EarlyEnemyBehaviour).GetMethod("FireProjectile", BindingFlags.Instance | BindingFlags.NonPublic); // 실제 부채꼴 사격 경로
             Require(fire != null, "Actual boss firing path missing."); // 실제 사격 경로 확인
             fire.Invoke(behavior, new object[] { Vector2.right }); // 실제 첫 단계 사격
             EnemyTestProjectile[] firstShots = UnityEngine.Object.FindObjectsByType<EnemyTestProjectile>(FindObjectsSortMode.None); // 실제 첫 단계 투사체
             Require(firstShots.Length == expectedFirstShots[index], "Selected map boss first-phase firing count differs from its data."); // 실제 첫 단계 발사 확인
+            FieldInfo projectileDamage = typeof(EnemyTestProjectile).GetField("damage", BindingFlags.Instance | BindingFlags.NonPublic); // 실제 발사된 투사체 피해
+            Require(projectileDamage != null && (int)projectileDamage.GetValue(firstShots[0]) == 20 + index, "Actual boss projectile did not use the selected map damage."); // 실제 맵별 사격 피해 확인
             foreach (EnemyTestProjectile shot in firstShots) // 실제 첫 단계 투사체 순회
             {
                 shot.gameObject.SetActive(false); // 다음 단계 시험 간섭 차단
@@ -180,11 +218,77 @@ namespace ProjectEpsilon.Editor // 배치 시험 영역
             boss.TakeDamage(boss.MaximumHealth * 0.5f); // 실제 두 번째 단계 경계
             yield return null; // 실제 보스 단계 갱신
             Require(encounter.IsPhaseTwo, "Selected map boss did not enter its second phase."); // 실제 두 번째 단계 확인
+            FieldInfo settingsField = typeof(EarlyEnemyBehaviour).GetField("settings", BindingFlags.Instance | BindingFlags.NonPublic); // 실제 보스 행동 능력치
+            EarlyEnemySettings settings = settingsField == null ? null : settingsField.GetValue(behavior) as EarlyEnemySettings; // 실제 두 번째 단계 능력치
+            Require(settings != null && Mathf.Abs(settings.speedRatio - map.Profile.BossSpeedRatio * 1.4f) < 0.001f && Mathf.Abs(settings.attackInterval - map.Profile.BossAttackInterval * 0.6f) < 0.001f, "Actual second phase ignored map multipliers."); // 실제 맵별 두 번째 단계 이동과 사격 간격 확인
             fire.Invoke(behavior, new object[] { Vector2.right }); // 실제 두 번째 단계 사격
             EnemyTestProjectile[] secondShots = UnityEngine.Object.FindObjectsByType<EnemyTestProjectile>(FindObjectsSortMode.None); // 실제 두 번째 단계 투사체
             Require(secondShots.Length == expectedSecondShots[index], "Selected map boss second-phase firing count differs from its data."); // 실제 두 번째 단계 발사 확인
-            AutomatedDay46MapsVerification.Finish(0, $"Map {index}: actual profile, nine chunks, ground, boss HP, both firing phases and transition passed."); // 맵별 시험 성공
+            foreach (EnemyTestProjectile shot in secondShots) // 실제 두 번째 단계 투사체 순회
+            { // 영역 시작
+                shot.gameObject.SetActive(false); // 위험 구역 시험 간섭 차단
+            } // 영역 종료
+            SnakeHealth health = GetComponent<SnakeHealth>(); // 실제 공용 체력
+            health.ResetHealth(); // 실제 체력 복구
+            GetComponent<SnakeInvulnerability>().ClearInvulnerability(); // 기존 무적 제거
+            int beforeHazard = health.CurrentHealth; // 실제 위험 예고 전 체력
+            hazard.enabled = true; // 실제 위험 구역 출현 시작
+            yield return new WaitForFixedUpdate(); // 실제 위험 구역 생성 대기
+            yield return null; // 실제 구성 반영 대기
+            PrototypeBossHazard actualHazard = hazard.CurrentHazard; // 실제 생성된 위험 구역
+            Require(actualHazard != null && actualHazard.IsWarning && health.CurrentHealth == beforeHazard, "Map-specific boss hazard warning missing or damaged early."); // 실제 위험 예고와 무피해 확인
+            SnakeBodyManager body = UnityEngine.Object.FindFirstObjectByType<SnakeBodyManager>(); // 실제 몸통 관리자
+            SnakeBodyFollower follower = UnityEngine.Object.FindFirstObjectByType<SnakeBodyFollower>(); // 실제 몸통 추적기
+            Require(body != null && follower != null, "Boss hazard body fixture missing."); // 실제 몸통 구성 확인
+            follower.enabled = false; // 범위 시험 중 몸통 위치 고정
+            foreach (SnakeSegment segment in body.BodySegments) // 실제 몸통 순회
+            { // 영역 시작
+                segment.transform.position = actualHazard.transform.position + Vector3.right * 20f; // 실제 위험 반경 밖의 몸통 위치
+            } // 영역 종료
+            transform.position = actualHazard.transform.position + Vector3.right * 2f; // 기본 반경 밖과 변경 반경 안의 머리
+            Physics2D.SyncTransforms(); // 실제 머리와 몸통 위치 반영
+            yield return new WaitForSeconds(0.4f); // 실제 위험 예고 중 대기
+            Require(actualHazard.IsWarning && health.CurrentHealth == beforeHazard, "Boss hazard warning ended too early."); // 실제 예고 지속 확인
+            yield return new WaitForSeconds(0.4f); // 실제 위험 활성 경과
+            Require(actualHazard.IsActive && health.CurrentHealth == beforeHazard - (6 + index), "Actual boss hazard ignored map warning or damage."); // 실제 맵별 위험 피해 확인
+            yield return new WaitForSeconds(0.3f); // 실제 위험 피해 간격 경과
+            Require(actualHazard.IsActive && health.CurrentHealth == beforeHazard - 2 * (6 + index), "Actual boss hazard ignored its map damage interval."); // 실제 맵별 반복 피해 확인
+            hazard.enabled = false; // 추가 위험 구역 생성 중지
+            actualHazard.gameObject.SetActive(false); // 실제 위험 피해 중지
+            GetComponent<SnakeInvulnerability>().StartInvulnerability(30f); // 소환 적 접촉의 시험 간섭 방지
+            summon.enabled = true; // 실제 보스 소환 시작
+            yield return new WaitForSeconds(0.3f); // 첫 실제 소환 대기
+            Require(summon.ActiveCount == 1, "Actual boss did not use its map summon interval."); // 맵별 첫 소환 간격 확인
+            FieldInfo summonField = typeof(PrototypeBossSummoner).GetField("summons", BindingFlags.Instance | BindingFlags.NonPublic); // 실제 소환 적 목록
+            IList summoned = summonField == null ? null : summonField.GetValue(summon) as IList; // 실제 소환 적 집합
+            Require(summoned != null && summoned.Count == 1, "Actual boss summon target missing."); // 실제 소환 대상 확인
+            WeaponTarget summonedEnemy = summoned[0] as WeaponTarget; // 실제 첫 소환 적
+            float summonDistance = summonedEnemy == null ? 0f : Vector2.Distance(summonedEnemy.transform.position, boss.transform.position); // 실제 보스와 소환 적 거리
+            Require(summonDistance > 2.5f && summonDistance < 3.5f, "Actual boss did not use the map summon radius."); // 실제 맵별 소환 거리 확인
+            yield return new WaitForSeconds(3.1f); // 실제 다음 소환 간격 경과
+            Require(summon.ActiveCount == 2, "Actual boss did not summon its second enemy."); // 맵별 두 번째 소환 확인
+            yield return new WaitForSeconds(3.1f); // 실제 상한 상태의 소환 간격 경과
+            Require(summon.ActiveCount == 2, "Actual boss exceeded the map summon maximum."); // 맵별 소환 상한 확인
+            summon.enabled = false; // 두 번째 단계 돌진 시험의 추가 소환 중지
+            transform.position = boss.transform.position + Vector3.down * 20f; // 실제 보스와 충분히 떨어진 머리
+            Physics2D.SyncTransforms(); // 실제 머리 위치 반영
+            Vector3 secondStart = boss.transform.position; // 실제 두 번째 단계 돌진 시작 위치
+            charge.enabled = true; // 실제 두 번째 단계 돌진 재개
+            yield return new WaitForSeconds(0.1f); // 실제 절단 돌진 예고 시작
+            Require(charge.IsWarning && encounter.IsPhaseTwo, "Second-phase charge warning missing."); // 두 번째 단계 예고 확인
+            yield return new WaitForSeconds(0.65f); // 실제 두 번째 단계 예고 경과
+            Require(charge.IsCharging, "Second-phase charge did not begin."); // 두 번째 단계 돌진 확인
+            yield return new WaitForSeconds(0.6f); // 실제 두 번째 단계 돌진 종료
+            float secondDistance = Vector2.Distance(secondStart, boss.transform.position); // 실제 두 번째 단계 돌진 거리
+            Require(!charge.IsCharging && secondDistance > 1.8f && secondDistance < 2.7f, "Second-phase charge did not use the map speed multiplier."); // 실제 두 번째 단계 돌진 배율 확인
+            AutomatedDay46MapsVerification.Finish(0, $"Map {index}: map profile, boss firing, charge, hazard and two-phase settings passed."); // 맵별 시험 성공
         }
+        private static void SetBossValue(PrototypeMapProfile profile, string name, object value) // 실제 맵 보스 시험값 설정
+        { // 영역 시작
+            FieldInfo field = typeof(PrototypeMapProfile).GetField(name, BindingFlags.Instance | BindingFlags.NonPublic); // 실제 맵 보스 데이터 필드
+            Require(field != null, "Map-specific boss setting missing: " + name); // 조정 가능한 보스 데이터 확인
+            field.SetValue(profile, value); // 실제 선택 맵의 시험값 적용
+        } // 영역 종료
         private static void Require(bool condition, string message) // 실제 시험 조건
         {
             if (!condition) // 실제 실패 확인

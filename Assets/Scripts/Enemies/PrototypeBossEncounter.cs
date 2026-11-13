@@ -62,6 +62,23 @@ namespace ProjectEpsilon.Enemies // 적 영역
             attackInterval = profile.BossAttackInterval; // 맵별 임시 발사 간격
             projectileCount = profile.BossProjectileCount; // 맵별 첫 단계 발사 수
             phaseTwoProjectileCount = profile.BossPhaseTwoProjectileCount; // 맵별 두 번째 단계 발사 수
+            damage = profile.BossDamage; // 맵별 투사체와 돌진 피해
+            phaseTwoSpeedMultiplier = profile.BossPhaseTwoSpeedMultiplier; // 맵별 두 번째 단계 이동 배율
+            phaseTwoIntervalMultiplier = profile.BossPhaseTwoIntervalMultiplier; // 맵별 두 번째 단계 사격 배율
+            chargeInterval = profile.BossChargeInterval; // 맵별 돌진 간격
+            chargeWarningDuration = profile.BossChargeWarningDuration; // 맵별 돌진 예고 시간
+            chargeDuration = profile.BossChargeDuration; // 맵별 돌진 지속 시간
+            chargeSpeed = profile.BossChargeSpeed; // 맵별 돌진 속도
+            phaseTwoChargeSpeedMultiplier = profile.BossPhaseTwoChargeSpeedMultiplier; // 맵별 두 번째 단계 돌진 배율
+            hazardInterval = profile.BossHazardInterval; // 맵별 위험 구역 간격
+            hazardWarningDuration = profile.BossHazardWarningDuration; // 맵별 위험 구역 예고
+            hazardDuration = profile.BossHazardDuration; // 맵별 위험 구역 지속
+            hazardDamageInterval = profile.BossHazardDamageInterval; // 맵별 위험 피해 간격
+            hazardRadius = profile.BossHazardRadius; // 맵별 위험 반경
+            hazardDamage = profile.BossHazardDamage; // 맵별 위험 피해
+            summonInterval = profile.BossSummonInterval; // 맵별 소환 간격
+            summonMaximum = profile.BossSummonMaximum; // 맵별 소환 적 상한
+            summonRadius = profile.BossSummonRadius; // 맵별 소환 거리
             bossTint = profile.BossTint; // 임시 보스 구분 색상
             return true; // 맵별 설정 적용 완료
         }
