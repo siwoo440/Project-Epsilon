@@ -169,6 +169,10 @@ namespace ProjectEpsilon.World // 맵 영역
                 }
             }
             PrototypeSpecialZone.Create(chunk, position, kind, profile); // 실제 청크 지역 생성
+            if (kind == PrototypeZoneKind.AntHill) // 평원 개미굴 확인
+            { // 영역 시작
+                CreateAntHillMound(chunk, position); // 안전한 주변 흙무더기 생성
+            } // 영역 종료
             if (kind == PrototypeZoneKind.ElectricFloor) // 방전 바닥의 스위치 배치
             {
                 float direction = position.x - chunk.position.x < ChunkSize * 0.5f ? 1f : -1f; // 같은 사분면의 중앙 방향
@@ -176,6 +180,47 @@ namespace ProjectEpsilon.World // 맵 영역
                 PrototypeSpecialZone.Create(chunk, switchPosition, PrototypeZoneKind.CircuitSwitch, profile); // 실제 회로 스위치 생성
             }
         }
+
+        private void CreateAntHillMound(Transform chunk, Vector3 hillPosition) // 개미굴 주변의 안전한 흙무더기
+        { // 영역 시작
+            float half = ChunkSize * 0.5f; // 청크 중앙 좌표
+            float edge = profile.SafeCorridorWidth * 0.5f + 1.2f; // 경계 통로와 충돌체 여유
+            Vector3 hillLocal = hillPosition - chunk.position; // 실제 개미굴의 청크 내 위치
+            float x = hillLocal.x < half ? edge : ChunkSize - edge; // 같은 사분면의 바깥 가로 위치
+            float y = hillLocal.y < half ? edge : ChunkSize - edge; // 같은 사분면의 바깥 세로 위치
+            Vector3 position = chunk.position + new Vector3(x, y, 0f); // 실제 흙무더기 후보 위치
+            if (Vector2.Distance(position, hillPosition) < profile.ZoneRadius + 1.2f) // 개미굴 진입 공간 확인
+            { // 영역 시작
+                return; // 충분한 진입 여유가 없는 후보 제외
+            } // 영역 종료
+            if (player != null && Vector2.Distance(player.transform.position, position) < profile.PlayerObstacleClearance) // 실제 머리 주변 보호
+            { // 영역 시작
+                return; // 플레이어 주변의 장애물 생성 차단
+            } // 영역 종료
+            SnakeBodyManager body = FindFirstObjectByType<SnakeBodyManager>(); // 실제 몸통 관리자
+            if (body != null) // 실제 몸통 존재 확인
+            { // 영역 시작
+                foreach (SnakeSegment segment in body.BodySegments) // 실제 몸통 순회
+                { // 영역 시작
+                    if (segment != null && Vector2.Distance(segment.transform.position, position) < 1.5f) // 몸통과 장애물 간격 확인
+                    { // 영역 시작
+                        return; // 몸통에 겹친 장애물 생성 차단
+                    } // 영역 종료
+                } // 영역 종료
+                if (body.TailSegment != null && Vector2.Distance(body.TailSegment.transform.position, position) < 1.5f) // 실제 꼬리와 간격 확인
+                { // 영역 시작
+                    return; // 꼬리에 겹친 장애물 생성 차단
+                } // 영역 종료
+            } // 영역 종료
+            foreach (SnakeContactHazard existing in chunk.GetComponentsInChildren<SnakeContactHazard>()) // 기존 청크 장애물 순회
+            { // 영역 시작
+                if (existing != null && Vector2.Distance(existing.transform.position, position) < 2f) // 기존 장애물과 간격 확인
+                { // 영역 시작
+                    return; // 겹친 장애물 생성 차단
+                } // 영역 종료
+            } // 영역 종료
+            CreateObstacleAt(chunk, position, "Plains", "개미굴_흙무더기"); // 기존 장애물 구성 재사용
+        } // 영역 종료
         private void CreateDecoration(Transform chunk) // 충돌 없는 맵별 바닥 장식
         {
             if (Random.value >= profile.DecorationChance) // 데이터의 장식 생성 확률 확인
@@ -270,10 +315,15 @@ namespace ProjectEpsilon.World // 맵 영역
                     ? new[] { "비틀린_고사목", "거대_버섯_줄기", "노출_뿌리_군락", "암반_섬" } // 습지 장애물 이미지
                     : new[] { "바위_군락", "쓰러진_고목", "울타리_잔해", "개미굴_흙무더기", "바위_엄폐" }; // 평원 장애물 이미지
             string selectedName = names[Random.Range(0, names.Length)]; // 실제 장애물 종류 추첨
+            CreateObstacleAt(chunk, position, folder, selectedName); // 기존 장애물 표시와 충돌 생성
+        }
+
+        private void CreateObstacleAt(Transform chunk, Vector3 position, string folder, string selectedName) // 실제 위치의 공용 장애물 생성
+        { // 영역 시작
             Sprite artwork = Resources.Load<Sprite>("MapElements/" + folder + "/" + selectedName); // 실제 맵별 이미지 조회
             GameObject obstacle = new GameObject("PrototypeObstacle"); // 기존 장애물 객체
             obstacle.transform.SetParent(chunk, false); // 실제 청크와 수명 연결
-            obstacle.transform.localPosition = new Vector3(x, y, 0f); // 실제 사분면 위치
+            obstacle.transform.position = position; // 실제 월드 장애물 위치
             SpriteRenderer renderer = obstacle.AddComponent<SpriteRenderer>(); // 실제 장애물 표시기
             if (obstacleVisual == null) // 공용 대체 이미지 생성 확인
             {
@@ -289,7 +339,7 @@ namespace ProjectEpsilon.World // 맵 영역
             SnakeContactHazard hazard = obstacle.AddComponent<SnakeContactHazard>(); // 기존 장애물 충돌 처리 생성
             hazard.Configure(SnakeContactHazardType.Obstacle); // 기존 장애물 충돌 처리 연결
             hazard.SetProjectileCover(selectedName == "바위_엄폐" || selectedName == "엄폐_잔해"); // 실제 엄폐 이미지의 투사체 차단 설정
-        }
+        } // 영역 종료
         private void CreateGround(Transform chunk, Vector2Int coordinate) // 실제 청크 바닥 생성
         {
             if (groundSprite == null || groundSprite.bounds.size.x <= 0f || groundSprite.bounds.size.y <= 0f) // 실제 바닥 이미지 확인

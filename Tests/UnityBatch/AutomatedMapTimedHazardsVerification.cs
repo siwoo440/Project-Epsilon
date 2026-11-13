@@ -207,7 +207,23 @@ namespace ProjectEpsilon.Editor // 배치 시험 영역
             Require(collapse.IsHazardActive && collapse.GetComponentInChildren<SnakeContactHazard>() != null, "Collapse did not create its temporary existing obstacle."); // 예고 후 기존 장애물 생성 확인
             yield return new WaitForSeconds(2.6f); // 실제 잔해 지속 시간 경과
             Require(!collapse.IsHazardActive && collapse.GetComponentInChildren<SnakeContactHazard>() == null, "Collapse obstacle did not expire."); // 일시 장애물 제거 확인
-            AutomatedMapTimedHazardsVerification.Finish(0, "Electric, switch, spores, capped rewardable ant spawning and safe temporary collapse passed."); // 실제 검증 성공 기록
+            SnakeBodyManager body = UnityEngine.Object.FindFirstObjectByType<SnakeBodyManager>(); // 실제 몸통 관리자
+            SnakeBodyFollower follower = UnityEngine.Object.FindFirstObjectByType<SnakeBodyFollower>(); // 실제 몸통 경로 추적기
+            Require(body != null && body.CurrentBodyCount > 0 && follower != null, "Body protection fixture missing."); // 몸통 시험 구성 확인
+            follower.enabled = false; // 통제 위치의 몸통 이동 중지
+            player.GetComponent<SnakeSelfCollision>().enabled = false; // 배치 중 자기 충돌 중지
+            Vector3 bodyPoint = new Vector3(1600f, 1600f, 0f); // 독립된 몸통 통과 시험 위치
+            player.transform.position = bodyPoint; // 실제 머리의 붕괴 지역 진입
+            PrototypeSpecialZone bodyCollapse = PrototypeSpecialZone.Create(map.transform, bodyPoint, PrototypeZoneKind.Collapse, map.Profile); // 실제 붕괴 지역 생성
+            yield return new WaitForSeconds(0.3f); // 실제 붕괴 예고 시작
+            Require(bodyCollapse.IsWarning, "Body collapse warning did not begin."); // 예고 시작 확인
+            player.transform.position = bodyPoint + Vector3.right * 10f; // 머리의 붕괴 지역 이탈
+            body.BodySegments[0].transform.position = bodyPoint; // 실제 몸통의 예고 지역 통과
+            Physics2D.SyncTransforms(); // 실제 몸통 충돌 위치 반영
+            int bodyBefore = body.CurrentBodyCount; // 붕괴 전 실제 몸통 수
+            yield return new WaitForSeconds(1f); // 몸통이 남은 예고 종료 대기
+            Require(!bodyCollapse.IsHazardActive && bodyCollapse.GetComponentInChildren<SnakeContactHazard>() == null && body.CurrentBodyCount == bodyBefore, "Collapse spawned on or removed a passing body segment."); // 몸통 통과 중 붕괴와 절단 방지 확인
+            AutomatedMapTimedHazardsVerification.Finish(0, "Electric, switch, spores, ant spawning and collapse protection for head and body passed."); // 실제 검증 성공 기록
         }
 
         private static bool ReadFlag(PrototypeSpecialZone zone, string name) // 실제 위험 지역 상태 조회
