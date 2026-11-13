@@ -19,12 +19,14 @@ namespace ProjectEpsilon.Enemies // 적 영역
         private float damageInterval; // 피해 간격
         private float radius; // 위험 반경
         private int damage; // 확정 피해
+        private bool rectangular; // 폐허 구획형 위험 여부
+        private bool toxicSpore; // 습지 독성 포자 위험 여부
         private float phaseEndsAt; // 현재 단계 종료 시각
         private float nextDamageAt; // 다음 피해 시각
         public bool IsWarning { get; private set; } // 실제 예고 상태
         public bool IsActive { get; private set; } // 실제 위험 상태
 
-        public void Configure(SnakeMovement head, SnakeBodyManager segments, SnakeHealth sharedHealth, WeaponTarget owner, float warningTime, float activeTime, float hitInterval, float range, int hitDamage) // 실제 위험 구역 설정
+        public void Configure(SnakeMovement head, SnakeBodyManager segments, SnakeHealth sharedHealth, WeaponTarget owner, float warningTime, float activeTime, float hitInterval, float range, int hitDamage, int pattern = 0) // 실제 위험 구역 설정
         {
             player = head; // 실제 머리 저장
             body = segments; // 실제 몸통 저장
@@ -34,6 +36,8 @@ namespace ProjectEpsilon.Enemies // 적 영역
             damageInterval = Mathf.Max(0.1f, hitInterval); // 안전한 피해 간격
             radius = Mathf.Max(0.1f, range); // 안전한 위험 반경
             damage = Mathf.Max(0, hitDamage); // 안전한 확정 피해
+            rectangular = pattern == 1; // 폐허 구획형 위험 설정
+            toxicSpore = pattern == 2; // 습지 독성 포자 위험 설정
             phaseEndsAt = Time.time + Mathf.Max(0.1f, warningTime); // 예고 종료 시각
             IsWarning = true; // 실제 예고 시작
             outline = gameObject.AddComponent<LineRenderer>(); // 실제 원형 표시선
@@ -43,13 +47,22 @@ namespace ProjectEpsilon.Enemies // 적 영역
             outline.endWidth = 0.1f; // 표시선 끝 두께
             outline.sortingOrder = 30; // 전투 위 표시 순서
             outline.loop = true; // 원형 표시 연결
-            outline.positionCount = 32; // 원형 표시 좌표 수
-            for (int index = 0; index < outline.positionCount; index++) // 원형 좌표 순회
-            {
-                float angle = index * Mathf.PI * 2f / outline.positionCount; // 실제 원형 각도
-                outline.SetPosition(index, transform.position + new Vector3(Mathf.Cos(angle) * radius, Mathf.Sin(angle) * radius, 0f)); // 실제 원형 좌표
-            }
-            SetColor(Color.yellow); // 예고 색상 표시
+            outline.positionCount = rectangular ? 4 : 32; // 구획 또는 원형 표시 좌표 수
+            for (int index = 0; index < outline.positionCount; index++) // 실제 표시 좌표 순회
+            { // 영역 시작
+                if (rectangular) // 폐허 구획형 예고 확인
+                { // 영역 시작
+                    float x = index == 0 || index == 3 ? -radius : radius; // 실제 구획 가로 경계
+                    float y = index < 2 ? -radius : radius; // 실제 구획 세로 경계
+                    outline.SetPosition(index, transform.position + new Vector3(x, y, 0f)); // 실제 구획 모서리
+                } // 영역 종료
+                else // 기존 원형 예고 확인
+                { // 영역 시작
+                    float angle = index * Mathf.PI * 2f / outline.positionCount; // 실제 원형 각도
+                    outline.SetPosition(index, transform.position + new Vector3(Mathf.Cos(angle) * radius, Mathf.Sin(angle) * radius, 0f)); // 실제 원형 좌표
+                } // 영역 종료
+            } // 영역 종료
+            SetColor(toxicSpore ? new Color(0.35f, 1f, 0.35f) : Color.yellow); // 맵별 예고 색상 표시
         }
 
         private void Update() // 보스 사망 시 정지 중 구역 정리
@@ -72,7 +85,7 @@ namespace ProjectEpsilon.Enemies // 적 영역
                 IsActive = true; // 실제 위험 시작
                 phaseEndsAt = Time.time + duration; // 위험 종료 시각
                 nextDamageAt = Time.time; // 첫 피해 시각
-                SetColor(Color.red); // 위험 색상 표시
+                SetColor(toxicSpore ? new Color(0.7f, 0.2f, 0.85f) : Color.red); // 맵별 활성 위험 색상 표시
             }
             if (!IsActive) // 실제 위험 단계 확인
             {
@@ -96,7 +109,8 @@ namespace ProjectEpsilon.Enemies // 적 영역
             {
                 return; // 무효 피해 제외
             }
-            foreach (Collider2D contact in Physics2D.OverlapCircleAll(transform.position, radius)) // 실제 구역 접촉 순회
+            Collider2D[] contacts = rectangular ? Physics2D.OverlapBoxAll(transform.position, Vector2.one * (radius * 2f), 0f) : Physics2D.OverlapCircleAll(transform.position, radius); // 실제 구획 또는 원형 접촉
+            foreach (Collider2D contact in contacts) // 실제 구역 접촉 순회
             {
                 SnakeSegment segment = contact.GetComponent<SnakeSegment>(); // 실제 접촉 몸통 조회
                 bool isHead = contact.transform == player.transform; // 실제 머리 접촉 여부

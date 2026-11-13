@@ -36,10 +36,11 @@ namespace ProjectEpsilon.Enemies // 적 영역
         private bool cutPending; // 같은 스텝 절단 대기
         private bool previousMovementEnabled; // 기존 행동 활성 상태
         private bool alignVisualWithCharge; // 예고한 방향으로 이미지 회전
+        private bool trackWarningTarget; // 예고 중 움직이는 머리 추적 여부
         public bool IsWarning => warningActive; // 실제 예고 상태 조회
         public bool IsCharging => charging; // 실제 돌진 상태 조회
 
-        public void Configure(PrototypeBossEncounter owner, SnakeMovement head, SnakeBodyManager segments, SnakeHealth sharedHealth, EarlyEnemyBehaviour movement, float interval, float warningTime, float duration, float speed, float secondPhaseSpeed, int hitDamage, bool alignVisual = false) // 실제 보스 돌진 구성
+        public void Configure(PrototypeBossEncounter owner, SnakeMovement head, SnakeBodyManager segments, SnakeHealth sharedHealth, EarlyEnemyBehaviour movement, float interval, float warningTime, float duration, float speed, float secondPhaseSpeed, int hitDamage, bool alignVisual = false, bool trackWarning = false) // 실제 보스 돌진 구성
         {
             encounter = owner; // 실제 보스 단계 저장
             player = head; // 실제 머리 저장
@@ -56,6 +57,7 @@ namespace ProjectEpsilon.Enemies // 적 영역
             phaseTwoSpeedMultiplier = Mathf.Max(1f, secondPhaseSpeed); // 안전한 강화 배율
             damage = Mathf.Max(0, hitDamage); // 안전한 HP 피해
             alignVisualWithCharge = alignVisual; // 실제 이미지 방향 설정
+            trackWarningTarget = trackWarning; // 맵별 예고 추적 여부 저장
             nextChargeAt = Time.time + chargeInterval; // 첫 돌진 시각
         }
 
@@ -71,6 +73,10 @@ namespace ProjectEpsilon.Enemies // 적 영역
             }
             if (warningActive) // 실제 예고 단계 확인
             {
+                if (trackWarningTarget) // 습지의 예고 중 머리 추적 확인
+                { // 영역 시작
+                    RefreshWarningTarget(); // 실제 머리 위치와 예고선 갱신
+                } // 영역 종료
                 if (Time.time >= phaseEndsAt) // 실제 예고 종료 확인
                 {
                     warningActive = false; // 예고 단계 종료
@@ -93,6 +99,25 @@ namespace ProjectEpsilon.Enemies // 적 영역
             float speed = Mathf.Max(0.1f, chargeSpeed) * (cutAttack ? Mathf.Max(1f, phaseTwoSpeedMultiplier) : 1f) * EnemyMovementRules.SpeedMultiplier; // 전체 적 이동 배율을 적용한 돌진 속도
             physicsBody.MovePosition(physicsBody.position + direction * speed * statusMultiplier * Time.fixedDeltaTime); // 예고한 방향의 실제 물리 이동
         }
+
+        private void RefreshWarningTarget() // 예고 중 실제 머리 방향 갱신
+        { // 영역 시작
+            Vector2 offset = (Vector2)player.transform.position - physicsBody.position; // 현재 머리와 보스 거리
+            if (offset.sqrMagnitude > 0.001f) // 유효한 추적 방향 확인
+            { // 영역 시작
+                direction = offset.normalized; // 실제 현재 머리 방향
+            } // 영역 종료
+            if (alignVisualWithCharge) // 보스 이미지 방향 회전 확인
+            { // 영역 시작
+                physicsBody.MoveRotation(Mathf.Atan2(direction.y, direction.x) * Mathf.Rad2Deg - 90f); // 실제 예고 방향으로 이미지 회전
+            } // 영역 종료
+            if (warning != null) // 실제 예고선 확인
+            { // 영역 시작
+                float distance = Mathf.Max(0.1f, chargeSpeed) * Mathf.Max(0.1f, chargeDuration) * (cutAttack ? Mathf.Max(1f, phaseTwoSpeedMultiplier) : 1f) * EnemyMovementRules.SpeedMultiplier; // 실제 돌진 거리와 속도 배율
+                warning.SetPosition(0, transform.position); // 실제 예고 시작 위치
+                warning.SetPosition(1, transform.position + (Vector3)(direction * distance)); // 실제 추적 방향 예고 끝
+            } // 영역 종료
+        } // 영역 종료
 
         private void BeginWarning() // 실제 돌진 방향 예고
         {

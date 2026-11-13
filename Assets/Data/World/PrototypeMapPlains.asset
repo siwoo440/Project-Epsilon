@@ -15,6 +15,7 @@ MonoBehaviour:
   displayName: 개방 평원
   ground: {fileID: 21300000, guid: aa8fb6306d6836a47a709a925757de8c, type: 3}
   bossTint: {r: 1, g: 1, b: 1, a: 1}
+  bossPattern: 0
   bossHealth: 600
   bossSpeedRatio: 0.75
   bossAttackInterval: 2
@@ -29,6 +30,7 @@ MonoBehaviour:
   bossChargeSpeed: 8
   bossPhaseTwoChargeSpeedMultiplier: 1.4
   bossHazardInterval: 8
+  bossPhaseTwoHazardIntervalMultiplier: 1
   bossHazardWarningDuration: 1
   bossHazardDuration: 3
   bossHazardDamageInterval: 1

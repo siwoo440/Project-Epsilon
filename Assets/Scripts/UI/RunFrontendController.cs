@@ -240,7 +240,11 @@ namespace ProjectEpsilon.UI // 실제 메뉴 영역
         }
         private void BuildMain() // 실제 주 메뉴 구성
         {
-            Texture2D background = Resources.Load<Texture2D>("MenuBackground_Casual"); // 실제 승인 화풍 메뉴 이미지
+            Texture2D background = Resources.Load<Texture2D>("MenuBackground_LeftFacing"); // 머리 방향을 수정한 메뉴 이미지
+            if (background == null) // 수정 이미지 누락 확인
+            {
+                background = Resources.Load<Texture2D>("MenuBackground_Casual"); // 기존 배경 대체 사용
+            }
             if (background != null) // 실제 메뉴 이미지 확인
             {
                 GameObject artwork = new GameObject("FrontendBackground", typeof(RectTransform), typeof(RawImage)); // 실제 메뉴 배경 객체
@@ -254,14 +258,15 @@ namespace ProjectEpsilon.UI // 실제 메뉴 영역
                 image.texture = background; // 실제 생성 이미지 적용
                 image.raycastTarget = false; // 실제 버튼 입력 방해 방지
             }
-            Title("프로젝트 엡실론", "생존  /  성장  /  진화"); // 실제 주 메뉴 제목
-            CreateButton(panel, "FrontendStartButton", "시작", new Vector2(0f, 140f), new Vector2(460f, 86f), GoToPreparation); // 실제 캐릭터 선택 진입
-            Button growth = CreateButton(panel, "FrontendGrowthButton", "영구 성장", new Vector2(0f, 35f), new Vector2(460f, 86f), () => MetaProgressionController.Instance?.Menu?.Open()); // 실제 성장 메뉴 진입
+            Label(panel, "FrontendTitle", "프로젝트 엡실론", new Vector2(500f, 425f), new Vector2(820f, 100f), 56); // 오른쪽 주 메뉴 제목
+            Label(panel, "FrontendSubtitle", "생존  /  성장  /  진화", new Vector2(500f, 355f), new Vector2(820f, 55f), 26); // 오른쪽 주 메뉴 안내
+            CreateButton(panel, "FrontendStartButton", "시작", new Vector2(500f, 140f), new Vector2(460f, 86f), GoToPreparation); // 실제 캐릭터 선택 진입
+            Button growth = CreateButton(panel, "FrontendGrowthButton", "영구 성장", new Vector2(500f, 35f), new Vector2(460f, 86f), () => MetaProgressionController.Instance?.Menu?.Open()); // 실제 성장 메뉴 진입
             growth.interactable = MetaProgressionController.Instance != null && MetaProgressionController.Instance.Service != null && MetaProgressionController.Instance.Service.FinishedFirstRun && MetaProgressionController.Instance.Service.IsAvailable; // 실제 첫 런 해금 확인
-            CreateButton(panel, "FrontendSettingsButton", "설정", new Vector2(0f, -70f), new Vector2(460f, 86f), () => OpenSettings(FrontendStage.Main)); // 실제 설정 진입
-            CreateButton(panel, "FrontendQuitButton", "종료", new Vector2(0f, -175f), new Vector2(460f, 86f), Application.Quit); // 실제 게임 종료
+            CreateButton(panel, "FrontendSettingsButton", "설정", new Vector2(500f, -70f), new Vector2(460f, 86f), () => OpenSettings(FrontendStage.Main)); // 실제 설정 진입
+            CreateButton(panel, "FrontendQuitButton", "종료", new Vector2(500f, -175f), new Vector2(460f, 86f), Application.Quit); // 실제 게임 종료
             MetaProgressionController meta = MetaProgressionController.Instance; // 실제 코어 관리자
-            Label(panel, "FrontendCoreStatus", meta != null && meta.Service != null && meta.Service.IsAvailable ? $"코어  {meta.Service.Cores}" : "성장 저장을 사용할 수 없습니다", new Vector2(0f, -300f), new Vector2(800f, 55f), 26); // 실제 저장 상태 표시
+            Label(panel, "FrontendCoreStatus", meta != null && meta.Service != null && meta.Service.IsAvailable ? $"코어  {meta.Service.Cores}" : "성장 저장을 사용할 수 없습니다", new Vector2(500f, -300f), new Vector2(800f, 55f), 26); // 오른쪽 저장 상태 표시
         }
         private void GoToPreparation() // 실제 출격 준비 화면 이동
         {
@@ -375,17 +380,28 @@ namespace ProjectEpsilon.UI // 실제 메뉴 영역
                 bool unlocked = meta == null || meta.IsMapUnlocked(index); // 실제 맵 해금 상태
                 string locked = index == 1 ? "개방 평원 보스 처치" : "폐허 회랑 보스 처치"; // 실제 맵 해금 조건
                 string label = profile.DisplayName + (unlocked ? index == selectedMap ? "  [선택됨]" : "" : "\n잠김: " + locked); // 실제 맵과 잠금 안내
-                Button button = CreateButton(panel, "FrontendMapButton" + index, label, new Vector2(-500f + index * 500f, 160f), new Vector2(450f, 150f), () => SelectMap(selected)); // 실제 맵 선택 버튼
+                GameObject card = new GameObject("FrontendMapCard" + index, typeof(RectTransform), typeof(Image), typeof(Outline)); // 맵 카드 배경 생성
+                card.transform.SetParent(panel, false); // 선택 화면에 카드 연결
+                RectTransform cardRect = card.GetComponent<RectTransform>(); // 카드 위치 영역
+                cardRect.anchoredPosition = new Vector2(-500f + index * 500f, 0f); // 맵별 카드 배치
+                cardRect.sizeDelta = new Vector2(460f, 550f); // 카드 크기 설정
+                Image cardImage = card.GetComponent<Image>(); // 카드 배경 표시기
+                cardImage.color = new Color(0.025f, 0.09f, 0.14f, 0.92f); // 어두운 카드 배경
+                cardImage.raycastTarget = false; // 버튼 입력 보존
+                Outline outline = card.GetComponent<Outline>(); // 카드 테두리
+                outline.effectColor = index == selectedMap ? new Color(0.2f, 0.8f, 0.9f, 1f) : new Color(0.25f, 0.4f, 0.48f, 0.8f); // 선택 상태 구분
+                outline.effectDistance = new Vector2(2f, -2f); // 테두리 두께
+                Preview(card.transform, "FrontendMapPreview" + index, profile.Ground, new Vector2(0f, 90f), new Vector2(320f, 320f)); // 카드 위쪽 맵 이미지
+                Button button = CreateButton(card.transform, "FrontendMapButton" + index, label, new Vector2(0f, -150f), new Vector2(400f, 90f), () => SelectMap(selected)); // 카드 아래쪽 맵 선택 버튼
                 button.interactable = unlocked; // 실제 잠긴 맵 선택 차단
-                Preview(panel, "FrontendMapPreview" + index, profile.Ground, new Vector2(-500f + index * 500f, -220f), new Vector2(110f, 110f)); // 실제 맵 바닥 미리보기
             }
             PrototypeMapProfile current = sceneContext == null ? maps.SelectedProfile : sceneContext.GetMap(selectedMap); // 실제 선택된 맵
             if (current != null) // 실제 맵 정보 확인
             {
-                Label(panel, "FrontendMapDetails", $"{current.DisplayName}\n보스 체력 {current.BossHealth:0}   장애물 {current.ObstacleChance:P0}\n특수 지역 {current.SpecialZoneChance:P0}", new Vector2(0f, -60f), new Vector2(1100f, 180f), 28); // 실제 맵과 위험 정보
+                Label(panel, "FrontendMapDetails", $"{current.DisplayName}\n보스 체력 {current.BossHealth:0}   장애물 {current.ObstacleChance:P0}\n특수 지역 {current.SpecialZoneChance:P0}", new Vector2(0f, -330f), new Vector2(1100f, 75f), 22); // 카드 아래 맵과 위험 정보
             }
-            CreateButton(panel, "FrontendMapsBackButton", "뒤로", new Vector2(-520f, -350f), new Vector2(260f, 75f), () => Show(FrontendStage.Characters)); // 실제 캐릭터 선택 복귀
-            CreateButton(panel, "FrontendMapsNextButton", "다음: 포탑", new Vector2(520f, -350f), new Vector2(360f, 75f), () => Show(FrontendStage.Weapons)); // 실제 포탑 선택 진입
+            CreateButton(panel, "FrontendMapsBackButton", "뒤로", new Vector2(-520f, -445f), new Vector2(260f, 75f), () => Show(FrontendStage.Characters)); // 실제 캐릭터 선택 복귀
+            CreateButton(panel, "FrontendMapsNextButton", "다음: 포탑", new Vector2(520f, -445f), new Vector2(360f, 75f), () => Show(FrontendStage.Weapons)); // 실제 포탑 선택 진입
         }
         private void SelectMap(int index) // 실제 맵 선택
         {
@@ -493,7 +509,8 @@ namespace ProjectEpsilon.UI // 실제 메뉴 영역
             volume.interactable = shake.interactable = resolution.interactable = mode.interactable = options.IsAvailable; // 실제 저장 오류 시 변경 차단
             CreateButton(panel, "FrontendInputSettingsButton", "키 설정", new Vector2(0f, -150f), new Vector2(500f, 80f), () => inputSettings?.OpenSettings()); // 실제 기존 키 설정 열기
             CreateButton(panel, "FrontendSettingsBackButton", "뒤로", new Vector2(0f, -280f), new Vector2(320f, 80f), () => Show(settingsReturn)); // 실제 이전 메뉴 복귀
-            Label(panel, "FrontendShakeNote", "흔들림 설정은 저장되며 화면 효과는 아직 적용되지 않았습니다.", new Vector2(0f, -390f), new Vector2(1200f, 50f), 21); // 실제 흔들림 구현 상태
+            Label(panel, "FrontendShakeNote", "흔들림 설정은 저장되며 화면 효과는 아직 적용되지 않았습니다.", new Vector2(0f, -350f), new Vector2(1200f, 40f), 20); // 실제 흔들림 구현 상태
+            Label(panel, "FrontendDebugHelp", "전투 중 시험 조작\nN: 합성 재료  |  E: 합성  |  P: 피해  |  [: 몸통 손실\nH: 회복 보석  |  J: 복구 보석  |  Shift+3 / Shift+5: 포탑 등급", new Vector2(0f, -445f), new Vector2(1500f, 105f), 22); // 설정 화면의 실제 시험 조작 안내
         }
         private void ChangeOptions(int volume, int shake, int resolution, bool fullscreen) // 실제 화면 설정 변경
         {

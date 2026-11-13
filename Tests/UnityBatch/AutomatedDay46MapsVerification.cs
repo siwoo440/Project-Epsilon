@@ -165,7 +165,8 @@ namespace ProjectEpsilon.Editor // 배치 시험 영역
             SetBossValue(map.Profile, "bossChargeDuration", 0.5f); // 실제 맵별 돌진 지속 시간
             SetBossValue(map.Profile, "bossChargeSpeed", 7f); // 실제 맵별 돌진 속도
             SetBossValue(map.Profile, "bossPhaseTwoChargeSpeedMultiplier", 1.3f); // 실제 맵별 두 번째 단계 돌진 배율
-            SetBossValue(map.Profile, "bossHazardInterval", 1.2f); // 실제 맵별 위험 구역 간격
+            SetBossValue(map.Profile, "bossHazardInterval", 3f); // 실제 맵별 위험 구역 간격
+            SetBossValue(map.Profile, "bossPhaseTwoHazardIntervalMultiplier", index == 0 ? 1f : 0.5f); // 맵별 두 번째 단계 간격 시험값
             SetBossValue(map.Profile, "bossHazardWarningDuration", 0.7f); // 실제 맵별 위험 구역 예고
             SetBossValue(map.Profile, "bossHazardDuration", 1.5f); // 실제 맵별 위험 구역 지속
             SetBossValue(map.Profile, "bossHazardDamageInterval", 0.3f); // 실제 맵별 위험 피해 간격
@@ -181,8 +182,8 @@ namespace ProjectEpsilon.Editor // 배치 시험 영역
             WeaponTarget boss = encounter.Boss; // 실제 보스 조회
             Require(boss != null && boss.IsAlive && boss.GetComponent<EarlyEnemyBehaviour>() != null, "Selected map boss did not spawn with combat."); // 실제 보스 전투 구성
             float[] expectedHealth = { 600f, 700f, 650f }; // 맵별 실제 임시 체력
-            int[] expectedFirstShots = { 3, 3, 4 }; // 맵별 첫 단계 발사 수
-            int[] expectedSecondShots = { 5, 5, 6 }; // 맵별 두 번째 발사 수
+            int[] expectedFirstShots = { 3, 6, 4 }; // 맵별 첫 단계 전체 발사 수
+            int[] expectedSecondShots = { 5, 10, 6 }; // 맵별 두 번째 단계 전체 발사 수
             Require(Mathf.Approximately(boss.MaximumHealth, expectedHealth[index]), "Selected map boss health does not match its data."); // 실제 맵별 보스 데이터 확인
             EarlyEnemyBehaviour behavior = boss.GetComponent<EarlyEnemyBehaviour>(); // 실제 보스 사격 행동
             behavior.enabled = false; // 통제 중 자동 사격 중지
@@ -209,6 +210,20 @@ namespace ProjectEpsilon.Editor // 배치 시험 영역
             fire.Invoke(behavior, new object[] { Vector2.right }); // 실제 첫 단계 사격
             EnemyTestProjectile[] firstShots = UnityEngine.Object.FindObjectsByType<EnemyTestProjectile>(FindObjectsSortMode.None); // 실제 첫 단계 투사체
             Require(firstShots.Length == expectedFirstShots[index], "Selected map boss first-phase firing count differs from its data."); // 실제 첫 단계 발사 확인
+            if (index == 1) // 폐허 양방향 사격 확인
+            { // 영역 시작
+                FieldInfo direction = typeof(EnemyTestProjectile).GetField("direction", BindingFlags.Instance | BindingFlags.NonPublic); // 실제 투사체 방향 필드
+                Require(direction != null, "Actual projectile direction missing."); // 실제 투사체 방향 확인
+                int forward = 0; // 실제 전방 발사 수
+                int backward = 0; // 실제 후방 발사 수
+                foreach (EnemyTestProjectile shot in firstShots) // 실제 첫 단계 탄환 순회
+                { // 영역 시작
+                    Vector2 value = (Vector2)direction.GetValue(shot); // 실제 탄환 이동 방향
+                    forward += value.x > 0f ? 1 : 0; // 실제 전방 탄환 집계
+                    backward += value.x < 0f ? 1 : 0; // 실제 후방 탄환 집계
+                } // 영역 종료
+                Require(forward == 3 && backward == 3, "Ruins boss did not fire three projectiles in both directions."); // 실제 양방향 부채꼴 확인
+            } // 영역 종료
             FieldInfo projectileDamage = typeof(EnemyTestProjectile).GetField("damage", BindingFlags.Instance | BindingFlags.NonPublic); // 실제 발사된 투사체 피해
             Require(projectileDamage != null && (int)projectileDamage.GetValue(firstShots[0]) == 20 + index, "Actual boss projectile did not use the selected map damage."); // 실제 맵별 사격 피해 확인
             foreach (EnemyTestProjectile shot in firstShots) // 실제 첫 단계 투사체 순회
@@ -232,11 +247,24 @@ namespace ProjectEpsilon.Editor // 배치 시험 영역
             health.ResetHealth(); // 실제 체력 복구
             GetComponent<SnakeInvulnerability>().ClearInvulnerability(); // 기존 무적 제거
             int beforeHazard = health.CurrentHealth; // 실제 위험 예고 전 체력
+            FieldInfo nextHazard = typeof(PrototypeBossHazardSpawner).GetField("nextHazardAt", BindingFlags.Instance | BindingFlags.NonPublic); // 첫 구역 즉시 출현 설정
+            Require(nextHazard != null, "Boss hazard schedule missing."); // 실제 출현 일정 확인
+            nextHazard.SetValue(hazard, Time.time); // 시험 시작 시각 지정
             hazard.enabled = true; // 실제 위험 구역 출현 시작
             yield return new WaitForFixedUpdate(); // 실제 위험 구역 생성 대기
             yield return null; // 실제 구성 반영 대기
             PrototypeBossHazard actualHazard = hazard.CurrentHazard; // 실제 생성된 위험 구역
             Require(actualHazard != null && actualHazard.IsWarning && health.CurrentHealth == beforeHazard, "Map-specific boss hazard warning missing or damaged early."); // 실제 위험 예고와 무피해 확인
+            LineRenderer hazardOutline = actualHazard.GetComponent<LineRenderer>(); // 실제 위험 예고선
+            Require(hazardOutline != null, "Actual boss hazard warning outline missing."); // 실제 위험 예고 표시 확인
+            if (index == 1) // 폐허 구획 경고 확인
+            { // 영역 시작
+                Require(hazardOutline.loop && hazardOutline.positionCount == 4, "Ruins boss did not show a rectangular sector warning."); // 실제 구획형 위험 예고 확인
+            } // 영역 종료
+            if (index == 2) // 습지 포자 경고 확인
+            { // 영역 시작
+                Require(hazardOutline.startColor.g > 0.5f && hazardOutline.startColor.r < 0.9f, "Swamp boss spore warning was not visually distinguished."); // 실제 독성 포자 경고 구분 확인
+            } // 영역 종료
             SnakeBodyManager body = UnityEngine.Object.FindFirstObjectByType<SnakeBodyManager>(); // 실제 몸통 관리자
             SnakeBodyFollower follower = UnityEngine.Object.FindFirstObjectByType<SnakeBodyFollower>(); // 실제 몸통 추적기
             Require(body != null && follower != null, "Boss hazard body fixture missing."); // 실제 몸통 구성 확인
@@ -245,7 +273,7 @@ namespace ProjectEpsilon.Editor // 배치 시험 영역
             { // 영역 시작
                 segment.transform.position = actualHazard.transform.position + Vector3.right * 20f; // 실제 위험 반경 밖의 몸통 위치
             } // 영역 종료
-            transform.position = actualHazard.transform.position + Vector3.right * 2f; // 기본 반경 밖과 변경 반경 안의 머리
+            transform.position = actualHazard.transform.position + (index == 1 ? new Vector3(2.4f, 2.4f, 0f) : Vector3.right * 2f); // 실제 구획 모서리 또는 변경 반경 안의 머리
             Physics2D.SyncTransforms(); // 실제 머리와 몸통 위치 반영
             yield return new WaitForSeconds(0.4f); // 실제 위험 예고 중 대기
             Require(actualHazard.IsWarning && health.CurrentHealth == beforeHazard, "Boss hazard warning ended too early."); // 실제 예고 지속 확인
@@ -253,8 +281,19 @@ namespace ProjectEpsilon.Editor // 배치 시험 영역
             Require(actualHazard.IsActive && health.CurrentHealth == beforeHazard - (6 + index), "Actual boss hazard ignored map warning or damage."); // 실제 맵별 위험 피해 확인
             yield return new WaitForSeconds(0.3f); // 실제 위험 피해 간격 경과
             Require(actualHazard.IsActive && health.CurrentHealth == beforeHazard - 2 * (6 + index), "Actual boss hazard ignored its map damage interval."); // 실제 맵별 반복 피해 확인
-            hazard.enabled = false; // 추가 위험 구역 생성 중지
             actualHazard.gameObject.SetActive(false); // 실제 위험 피해 중지
+            UnityEngine.Object.Destroy(actualHazard.gameObject); // 첫 구역 제거
+            yield return new WaitForSeconds(0.55f); // 단계별 다음 출현 간격 경과
+            if (index == 0) // 평원 기본 간격 확인
+            { // 조건 시작
+                Require(hazard.CurrentHazard == null, "Plains hazard appeared before its unchanged interval."); // 기존 간격 유지 확인
+            } // 조건 종료
+            else // 폐허와 습지 두 번째 단계 확인
+            { // 조건 시작
+                Require(hazard.CurrentHazard != null && hazard.CurrentHazard.IsWarning, "Second-phase hazard did not use the shorter map interval."); // 단축된 구역 재출현 확인
+                hazard.CurrentHazard.gameObject.SetActive(false); // 후속 시험의 추가 피해 방지
+            } // 조건 종료
+            hazard.enabled = false; // 추가 위험 구역 생성 중지
             GetComponent<SnakeInvulnerability>().StartInvulnerability(30f); // 소환 적 접촉의 시험 간섭 방지
             summon.enabled = true; // 실제 보스 소환 시작
             yield return new WaitForSeconds(0.3f); // 첫 실제 소환 대기
@@ -276,7 +315,18 @@ namespace ProjectEpsilon.Editor // 배치 시험 영역
             charge.enabled = true; // 실제 두 번째 단계 돌진 재개
             yield return new WaitForSeconds(0.1f); // 실제 절단 돌진 예고 시작
             Require(charge.IsWarning && encounter.IsPhaseTwo, "Second-phase charge warning missing."); // 두 번째 단계 예고 확인
-            yield return new WaitForSeconds(0.65f); // 실제 두 번째 단계 예고 경과
+            if (index == 2) // 습지 추적 예고 확인
+            { // 영역 시작
+                LineRenderer warning = boss.GetComponent<LineRenderer>(); // 실제 돌진 예고선
+                Require(warning != null && warning.enabled, "Swamp charge warning line missing."); // 실제 돌진 예고 표시 확인
+                transform.position += Vector3.right * 10f; // 실제 머리의 예고 중 이동
+                Physics2D.SyncTransforms(); // 실제 머리 위치 반영
+                yield return new WaitForSeconds(0.15f); // 실제 추적 예고 갱신 대기
+                Vector2 shown = ((Vector2)(warning.GetPosition(1) - warning.GetPosition(0))).normalized; // 실제 화면상 예고 방향
+                Vector2 targetDirection = ((Vector2)(transform.position - boss.transform.position)).normalized; // 실제 이동한 머리 방향
+                Require(Vector2.Dot(shown, targetDirection) > 0.99f, "Swamp charge warning did not track the moving player."); // 실제 머리를 추적하는 예고 확인
+            } // 영역 종료
+            yield return new WaitForSeconds(index == 2 ? 0.5f : 0.65f); // 실제 두 번째 단계 예고 경과
             Require(charge.IsCharging, "Second-phase charge did not begin."); // 두 번째 단계 돌진 확인
             yield return new WaitForSeconds(0.6f); // 실제 두 번째 단계 돌진 종료
             float secondDistance = Vector2.Distance(secondStart, boss.transform.position); // 실제 두 번째 단계 돌진 거리

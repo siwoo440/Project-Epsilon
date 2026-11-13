@@ -8,6 +8,7 @@ namespace ProjectEpsilon.World // 맵 영역
         [SerializeField] private string displayName = "개방 평원"; // 시작 화면 맵 이름
         [SerializeField] private Sprite ground; // 맵 바닥 이미지
         [SerializeField] private Color bossTint = Color.white; // 임시 보스 구분 색상
+        [Range(0, 2)] [SerializeField] private int bossPattern; // 평원·폐허·습지 보스 패턴
         [Min(1f)] [SerializeField] private float bossHealth = 600f; // 보스 체력 임시값
         [Min(0f)] [SerializeField] private float bossSpeedRatio = 0.75f; // 보스 이동 비율 임시값
         [Min(0.1f)] [SerializeField] private float bossAttackInterval = 2f; // 보스 사격 간격 임시값
@@ -22,6 +23,7 @@ namespace ProjectEpsilon.World // 맵 영역
         [Min(0.1f)] [SerializeField] private float bossChargeSpeed = 8f; // 보스 돌진 속도
         [Min(1f)] [SerializeField] private float bossPhaseTwoChargeSpeedMultiplier = 1.4f; // 두 번째 단계 돌진 속도 배율
         [Min(0.1f)] [SerializeField] private float bossHazardInterval = 8f; // 보스 위험 구역 간격
+        [Range(0.1f, 1f)] [SerializeField] private float bossPhaseTwoHazardIntervalMultiplier = 1f; // 두 번째 단계 구역 간격 임시 배율
         [Min(0.1f)] [SerializeField] private float bossHazardWarningDuration = 1f; // 보스 위험 구역 예고
         [Min(0.1f)] [SerializeField] private float bossHazardDuration = 3f; // 보스 위험 구역 지속
         [Min(0.1f)] [SerializeField] private float bossHazardDamageInterval = 1f; // 보스 위험 구역 피해 간격
@@ -75,6 +77,7 @@ namespace ProjectEpsilon.World // 맵 영역
         public string DisplayName => displayName; // 맵 표시 이름
         public Sprite Ground => ground; // 실제 바닥 이미지
         public Color BossTint => bossTint; // 실제 임시 보스 색상
+        public int BossPattern => Mathf.Clamp(bossPattern, 0, 2); // 안전한 맵별 보스 패턴
         public float BossHealth => Mathf.Max(1f, bossHealth); // 안전한 보스 체력
         public float BossSpeedRatio => Mathf.Max(0f, bossSpeedRatio); // 안전한 이동 비율
         public float BossAttackInterval => Mathf.Max(0.1f, bossAttackInterval); // 안전한 사격 간격
@@ -89,6 +92,7 @@ namespace ProjectEpsilon.World // 맵 영역
         public float BossChargeSpeed => Mathf.Max(0.1f, bossChargeSpeed); // 안전한 보스 돌진 속도
         public float BossPhaseTwoChargeSpeedMultiplier => Mathf.Max(1f, bossPhaseTwoChargeSpeedMultiplier); // 안전한 두 번째 단계 돌진 배율
         public float BossHazardInterval => Mathf.Max(0.1f, bossHazardInterval); // 안전한 보스 위험 구역 간격
+        public float BossPhaseTwoHazardIntervalMultiplier => Mathf.Clamp(bossPhaseTwoHazardIntervalMultiplier, 0.1f, 1f); // 안전한 두 번째 단계 구역 간격 배율
         public float BossHazardWarningDuration => Mathf.Max(0.1f, bossHazardWarningDuration); // 안전한 보스 위험 구역 예고
         public float BossHazardDuration => Mathf.Max(0.1f, bossHazardDuration); // 안전한 보스 위험 구역 지속
         public float BossHazardDamageInterval => Mathf.Max(0.1f, bossHazardDamageInterval); // 안전한 보스 위험 피해 간격

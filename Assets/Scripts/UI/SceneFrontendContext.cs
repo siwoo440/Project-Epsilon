@@ -46,6 +46,7 @@ namespace ProjectEpsilon.UI // 실제 화면 흐름 영역
         }
         private void Awake() // 실제 씬 초기화
         {
+            EnsureDisplayCamera(); // 독립 화면의 실제 렌더 카메라 확인
             if (kind != SceneFrontendKind.Results) // 실제 메뉴 또는 준비 화면 확인
             {
                 Time.timeScale = 1f; // 이전 런의 정지 상태 해제
@@ -60,6 +61,25 @@ namespace ProjectEpsilon.UI // 실제 화면 흐름 영역
                 }
             }
         }
+
+        private void EnsureDisplayCamera() // 독립 화면의 디스플레이 카메라 보장
+        { // 영역 시작
+            foreach (Camera existing in FindObjectsByType<Camera>(FindObjectsSortMode.None)) // 실제 활성 카메라 순회
+            { // 영역 시작
+                if (existing != null && existing.isActiveAndEnabled && existing.gameObject.scene == gameObject.scene && existing.targetDisplay == 0 && existing.targetTexture == null) // 같은 씬의 실제 화면 카메라 확인
+                { // 영역 시작
+                    return; // 기존 화면 카메라 재사용
+                } // 영역 종료
+            } // 영역 종료
+            GameObject cameraObject = new GameObject("FrontendDisplayCamera"); // 독립 화면의 카메라 객체
+            cameraObject.transform.SetParent(transform, false); // 독립 화면 씬과 수명 연결
+            cameraObject.tag = "MainCamera"; // 실제 주 화면 카메라 표시
+            Camera displayCamera = cameraObject.AddComponent<Camera>(); // 실제 디스플레이 렌더 카메라
+            displayCamera.orthographic = true; // 평면 화면용 직교 투영
+            displayCamera.clearFlags = CameraClearFlags.SolidColor; // 실제 불투명 배경 초기화
+            displayCamera.backgroundColor = Color.black; // 화면 아래 기본 배경색
+            displayCamera.cullingMask = 0; // 오버레이 UI만 표시
+        } // 영역 종료
         public CharacterData GetCharacter(int index) // 실제 캐릭터 후보 조회
         {
             return characters != null && index >= 0 && index < characters.Length ? characters[index] : null; // 유효한 후보 반환

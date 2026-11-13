@@ -16,8 +16,20 @@ namespace ProjectEpsilon.UI // 프로젝트 기능 영역
 
         private void Start() // 시작 기능 선언
         {
+            HideLegacyControlHints(); // 기존 화면의 시험 조작 안내 숨김
             ShowDebugDefaults(); // 표시 기능 실행
         }
+
+        private void HideLegacyControlHints() // 기존 HUD 시험 조작 안내 제거
+        { // 영역 시작
+            foreach (Transform hint in GetComponentsInChildren<Transform>(true)) // 전투 영역을 포함한 자식 검색
+            { // 영역 시작
+                if (hint.name == "MergeHintText" || hint.name == "PrototypeHintText") // 기존 안내 이름 확인
+                { // 영역 시작
+                    hint.gameObject.SetActive(false); // 기존 화면의 안내 표시 제거
+                } // 영역 종료
+            } // 영역 종료
+        } // 영역 종료
 
         public void Bind( // 연결 호출 시작
             Text health, // 문구·체력 항목 전달

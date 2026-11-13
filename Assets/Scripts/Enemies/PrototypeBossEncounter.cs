@@ -34,6 +34,7 @@ namespace ProjectEpsilon.Enemies // 적 영역
         [SerializeField] private float hazardDuration = 3f; // 위험 구역 지속 시간 임시값
         [SerializeField] private float hazardDamageInterval = 1f; // 위험 구역 피해 간격 임시값
         [SerializeField] private float hazardRadius = 1.2f; // 위험 구역 반경 임시값
+        [SerializeField] private float phaseTwoHazardIntervalMultiplier = 1f; // 두 번째 단계 위험 구역 간격 배율
         [SerializeField] private int hazardDamage = 10; // 위험 구역 피해 임시값
         [SerializeField] private float summonInterval = 12f; // 보스 잡몹 소환 간격 임시값
         [SerializeField] private int summonMaximum = 4; // 보스 잡몹 동시 상한 임시값
@@ -48,6 +49,7 @@ namespace ProjectEpsilon.Enemies // 적 영역
         private EarlyEnemySettings settings; // 실제 보스 행동 설정
         private readonly PrototypeBossPhase phase = new PrototypeBossPhase(); // 보스 체력 단계 상태
         private bool spawned; // 보스 출현 완료 여부
+        private int mapBossPattern; // 선택된 맵의 보스 패턴
         public WeaponTarget Boss => boss; // 실제 생성 보스 조회
         public bool IsPhaseTwo => phase.IsPhaseTwo; // 현재 보스 단계 조회
 
@@ -71,6 +73,7 @@ namespace ProjectEpsilon.Enemies // 적 영역
             chargeSpeed = profile.BossChargeSpeed; // 맵별 돌진 속도
             phaseTwoChargeSpeedMultiplier = profile.BossPhaseTwoChargeSpeedMultiplier; // 맵별 두 번째 단계 돌진 배율
             hazardInterval = profile.BossHazardInterval; // 맵별 위험 구역 간격
+            phaseTwoHazardIntervalMultiplier = profile.BossPhaseTwoHazardIntervalMultiplier; // 맵별 두 번째 단계 구역 간격 배율
             hazardWarningDuration = profile.BossHazardWarningDuration; // 맵별 위험 구역 예고
             hazardDuration = profile.BossHazardDuration; // 맵별 위험 구역 지속
             hazardDamageInterval = profile.BossHazardDamageInterval; // 맵별 위험 피해 간격
@@ -80,6 +83,7 @@ namespace ProjectEpsilon.Enemies // 적 영역
             summonMaximum = profile.BossSummonMaximum; // 맵별 소환 적 상한
             summonRadius = profile.BossSummonRadius; // 맵별 소환 거리
             bossTint = profile.BossTint; // 임시 보스 구분 색상
+            mapBossPattern = profile.BossPattern; // 선택된 맵의 보스 패턴
             return true; // 맵별 설정 적용 완료
         }
 
@@ -209,6 +213,7 @@ namespace ProjectEpsilon.Enemies // 적 영역
                 attackInterval = Mathf.Max(0.1f, attackInterval), // 임시 사격 간격
                 projectileCount = Mathf.Clamp(projectileCount, 1, 9), // 첫 단계 임시 사격 수
                 projectileSpreadDegrees = Mathf.Clamp(projectileSpreadDegrees, 0f, 180f), // 임시 부채꼴 각도
+                opposedProjectileFan = mapBossPattern == 1, // 폐허 보스의 양방향 부채꼴
                 enemySprite = alignVisualWithTarget ? bossVisual : null // 보스 이미지 방향 회전 설정
             };
             EarlyEnemyBehaviour behaviour = instance.AddComponent<EarlyEnemyBehaviour>(); // 기존 적 행동 재사용
@@ -222,10 +227,10 @@ namespace ProjectEpsilon.Enemies // 적 영역
             }
             boss = target; // 실제 보스 참조 저장
             spawned = true; // 중복 출현 방지
-            instance.AddComponent<PrototypeBossChargeAttack>().Configure(this, player, body, health, behaviour, chargeInterval, chargeWarningDuration, chargeDuration, chargeSpeed, phaseTwoChargeSpeedMultiplier, damage, alignVisualWithTarget); // 실제 예고 돌진 구성
+            instance.AddComponent<PrototypeBossChargeAttack>().Configure(this, player, body, health, behaviour, chargeInterval, chargeWarningDuration, chargeDuration, chargeSpeed, phaseTwoChargeSpeedMultiplier, damage, alignVisualWithTarget, mapBossPattern == 2); // 습지 예고 추적을 포함한 실제 돌진 구성
             SnakeBodyFollower follower = body.GetComponent<SnakeBodyFollower>(); // 실제 몸통 경로 추적기 조회
             instance.AddComponent<PrototypeBossBodyPush>().Configure(body, follower, bodyPushDistance, bodyPushRecoveryDuration, bodyPushGraceDuration); // 실제 보스 몸통 밀림 구성
-            instance.AddComponent<PrototypeBossHazardSpawner>().Configure(player, body, health, target, hazardInterval, hazardWarningDuration, hazardDuration, hazardDamageInterval, hazardRadius, hazardDamage); // 실제 예고 위험 구역 구성
+            instance.AddComponent<PrototypeBossHazardSpawner>().Configure(player, body, health, target, hazardInterval, hazardWarningDuration, hazardDuration, hazardDamageInterval, hazardRadius, hazardDamage, mapBossPattern, this, phaseTwoHazardIntervalMultiplier); // 맵별 위험 구역과 단계별 간격 구성
             instance.AddComponent<PrototypeBossSummoner>().Configure(spawner, target, summonInterval, summonMaximum, summonRadius); // 실제 보스 잡몹 소환 구성
         }
     }

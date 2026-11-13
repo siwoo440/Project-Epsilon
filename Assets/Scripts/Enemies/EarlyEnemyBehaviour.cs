@@ -273,18 +273,23 @@ namespace ProjectEpsilon.Enemies // 적 영역
             WeaponTarget target = GetComponent<WeaponTarget>(); // 실제 사수 전투 상태
             float damageMultiplier = target == null ? 1f : target.OutgoingDamageMultiplier; // 발사 시점 독 약화 배율
             int shotDamage = Mathf.CeilToInt(settings.damage * damageMultiplier); // 기존 올림 규칙의 발사 피해
-            for (int index = 0; index < count; index++) // 부채꼴 사격 순회
-            {
-                float angle = count == 1 ? 0f : -spread * 0.5f + spread * index / (count - 1); // 목표 중심의 대칭 각도
-                float radians = angle * Mathf.Deg2Rad; // 회전 각도의 라디안 변환
-                float cosine = Mathf.Cos(radians); // 수평 회전 성분
-                float sine = Mathf.Sin(radians); // 수직 회전 성분
-                Vector2 direction = new Vector2(aim.x * cosine - aim.y * sine, aim.x * sine + aim.y * cosine); // 실제 투사체 발사 방향
-                GameObject shot = new GameObject("Enemy_Projectile"); // 투사체 오브젝트 생성
-                shot.transform.position = transform.position; // 발사 위치 설정
-                EnemyTestProjectile projectile = shot.AddComponent<EnemyTestProjectile>(); // 투사체 행동 추가
-                projectile.Configure(direction, projectileSpeed, projectileLifetime, shotDamage, health, body, player, visual, GetComponent<PrototypeBossChargeAttack>() == null ? DamageOrigin.EnemyProjectile : DamageOrigin.BossProjectile); // 발사 시점 피해와 투사체 설정
-            }
+            int fanCount = settings.opposedProjectileFan ? 2 : 1; // 맵별 부채꼴 방향 수
+            for (int fan = 0; fan < fanCount; fan++) // 실제 부채꼴 방향 순회
+            { // 영역 시작
+                Vector2 fanAim = fan == 0 ? aim : -aim; // 전방 또는 반대 방향
+                for (int index = 0; index < count; index++) // 부채꼴 사격 순회
+                { // 영역 시작
+                    float angle = count == 1 ? 0f : -spread * 0.5f + spread * index / (count - 1); // 목표 중심의 대칭 각도
+                    float radians = angle * Mathf.Deg2Rad; // 회전 각도의 라디안 변환
+                    float cosine = Mathf.Cos(radians); // 수평 회전 성분
+                    float sine = Mathf.Sin(radians); // 수직 회전 성분
+                    Vector2 direction = new Vector2(fanAim.x * cosine - fanAim.y * sine, fanAim.x * sine + fanAim.y * cosine); // 실제 투사체 발사 방향
+                    GameObject shot = new GameObject("Enemy_Projectile"); // 투사체 오브젝트 생성
+                    shot.transform.position = transform.position; // 발사 위치 설정
+                    EnemyTestProjectile projectile = shot.AddComponent<EnemyTestProjectile>(); // 투사체 행동 추가
+                    projectile.Configure(direction, projectileSpeed, projectileLifetime, shotDamage, health, body, player, visual, GetComponent<PrototypeBossChargeAttack>() == null ? DamageOrigin.EnemyProjectile : DamageOrigin.BossProjectile); // 발사 시점 피해와 투사체 설정
+                } // 영역 종료
+            } // 영역 종료
         }
     }
 }

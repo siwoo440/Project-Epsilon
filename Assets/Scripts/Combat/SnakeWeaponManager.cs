@@ -366,7 +366,7 @@ namespace ProjectEpsilon.Combat // 프로젝트 기능 영역
             {
                 return false; // 불일치 재료 거절
             }
-            if (upgrade < WeaponMergeUpgrade.Damage || upgrade > WeaponMergeUpgrade.Range) // 강화 선택 범위 검사
+            if (upgrade < WeaponMergeUpgrade.None || upgrade > WeaponMergeUpgrade.Range) // 강화 값 범위 검사
             {
                 return false; // 잘못된 강화 거절
             }
