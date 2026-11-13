@@ -328,15 +328,22 @@ namespace ProjectEpsilon.UI // 실제 메뉴 영역
                 string info = $"{active.DisplayName}\n몸통 {active.StartingBodyCount}   체력 {active.BodyMaxHealth:0}\n이동 ×{active.MoveSpeedMultiplier:0.00}   회전 ×{active.TurnPowerMultiplier:0.00}\n특성: {DescribePassive(active)}\n시작 포탑: {weapons}"; // 실제 캐릭터 능력과 후보
                 Label(panel, "FrontendCharacterDetails", info, new Vector2(535f, 110f), new Vector2(700f, 400f), 25); // 실제 선택 캐릭터 정보
             }
-            SnakeMovement movement = FindFirstObjectByType<SnakeMovement>(); // 실제 뱀 머리 조회
-            SpriteRenderer head = movement == null ? null : movement.GetComponentInChildren<SpriteRenderer>(); // 실제 머리 스프라이트
-            SnakeBodyManager body = FindFirstObjectByType<SnakeBodyManager>(); // 실제 몸통 관리자
-            SpriteRenderer segment = body == null || body.BodySegments.Count == 0 ? null : body.BodySegments[0].GetComponent<SpriteRenderer>(); // 실제 몸통 스프라이트
-            Sprite headImage = sceneContext == null ? head == null ? null : head.sprite : sceneContext.HeadSprite; // 실제 머리 미리보기
-            Sprite bodyImage = sceneContext == null ? segment == null ? null : segment.sprite : sceneContext.BodySprite; // 실제 몸통 미리보기
-            Preview(panel, "FrontendCharacterHead", headImage, new Vector2(365f, -210f), new Vector2(150f, 150f)); // 실제 머리 미리보기
-            Preview(panel, "FrontendCharacterBody1", bodyImage, new Vector2(515f, -210f), new Vector2(150f, 150f)); // 실제 첫 몸통 미리보기
-            Preview(panel, "FrontendCharacterBody2", bodyImage, new Vector2(665f, -210f), new Vector2(150f, 150f)); // 실제 둘째 몸통 미리보기
+            if (active != null && active.Portrait != null) // 실제 선택 캐릭터 초상화 확인
+            { // 조건 시작
+                Preview(panel, "FrontendCharacterPortrait", active.Portrait, new Vector2(535f, -210f), new Vector2(220f, 220f)); // 선택 캐릭터 초상화 표시
+            } // 조건 종료
+            else // 초상화가 없는 기존 데이터 확인
+            { // 대체 시작
+                SnakeMovement movement = FindFirstObjectByType<SnakeMovement>(); // 실제 뱀 머리 조회
+                SpriteRenderer head = movement == null ? null : movement.GetComponentInChildren<SpriteRenderer>(); // 실제 머리 스프라이트
+                SnakeBodyManager body = FindFirstObjectByType<SnakeBodyManager>(); // 실제 몸통 관리자
+                SpriteRenderer segment = body == null || body.BodySegments.Count == 0 ? null : body.BodySegments[0].GetComponent<SpriteRenderer>(); // 실제 몸통 스프라이트
+                Sprite headImage = sceneContext == null ? head == null ? null : head.sprite : sceneContext.HeadSprite; // 실제 머리 미리보기
+                Sprite bodyImage = sceneContext == null ? segment == null ? null : segment.sprite : sceneContext.BodySprite; // 실제 몸통 미리보기
+                Preview(panel, "FrontendCharacterHead", headImage, new Vector2(365f, -210f), new Vector2(150f, 150f)); // 실제 머리 미리보기
+                Preview(panel, "FrontendCharacterBody1", bodyImage, new Vector2(515f, -210f), new Vector2(150f, 150f)); // 실제 첫 몸통 미리보기
+                Preview(panel, "FrontendCharacterBody2", bodyImage, new Vector2(665f, -210f), new Vector2(150f, 150f)); // 실제 둘째 몸통 미리보기
+            } // 대체 종료
             CreateButton(panel, "FrontendCharactersBackButton", "뒤로", new Vector2(-520f, -350f), new Vector2(260f, 75f), BackFromCharacters); // 실제 주 메뉴 복귀
             CreateButton(panel, "FrontendCharactersNextButton", "다음: 맵", new Vector2(520f, -350f), new Vector2(360f, 75f), () => Show(FrontendStage.Maps)); // 실제 맵 선택 진입
         }
