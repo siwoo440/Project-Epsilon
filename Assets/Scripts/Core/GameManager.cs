@@ -41,6 +41,10 @@ namespace ProjectEpsilon.Core // 프로젝트 기능 영역
             { // 조건 시작
                 gameObject.AddComponent<GameplaySoundController>(); // 실제 전투 효과음 연결
             } // 조건 종료
+            if (GetComponent<PlayerCombatVfx>() == null) // 플레이어 시각 효과 중복 확인
+            { // 조건 시작
+                gameObject.AddComponent<PlayerCombatVfx>(); // 실제 플레이어 시각 효과 연결
+            } // 조건 종료
             if (RunTelemetry.IsRequested()) // 전투 기록 실행 옵션 확인
             {
                 telemetry = gameObject.AddComponent<RunTelemetry>(); // 실제 로컬 기록기 생성

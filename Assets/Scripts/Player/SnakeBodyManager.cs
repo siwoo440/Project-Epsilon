@@ -41,6 +41,7 @@ namespace ProjectEpsilon.Player // 프로젝트 기능 영역
         private bool initialized; // 초기화 구성 선언
 
         public event Action<int, int> BodyCountChanged; // 이벤트·동작 구성 선언
+        public event Action<Vector3> BodyRemoved; // 실제 몸통 손실 위치 알림
 
         public int CurrentBodyCount // 현재·몸통 구성 선언
         {
@@ -264,6 +265,7 @@ namespace ProjectEpsilon.Player // 프로젝트 기능 영역
 
                 if (segment != null) // 몸통 조건 확인
                 {
+                    BodyRemoved?.Invoke(segment.transform.position); // 실제 제거 위치 알림
                     DestroySegmentObject( // 제거·몸통 호출 시작
                         segment.gameObject // 몸통·게임 처리
                     ); // 앞선 항목 종료

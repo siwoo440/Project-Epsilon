@@ -1,0 +1,2691 @@
+fileFormatVersion: 2
+guid: 5043c1a249e0a2e4580e6d961419f702
+TextureImporter:
+  internalIDToNameTable:
+  - first:
+      213: -6182869645825017341
+    second: CombatVfxAtlas_0
+  - first:
+      213: 6471500019857824189
+    second: CombatVfxAtlas_1
+  - first:
+      213: 7543608506185565534
+    second: CombatVfxAtlas_2
+  - first:
+      213: 4707132726534722703
+    second: CombatVfxAtlas_3
+  - first:
+      213: 6653223495227493347
+    second: CombatVfxAtlas_4
+  - first:
+      213: 2570714185212476627
+    second: CombatVfxAtlas_5
+  - first:
+      213: 2029335050740045893
+    second: CombatVfxAtlas_6
+  - first:
+      213: -4191678313615274849
+    second: CombatVfxAtlas_7
+  - first:
+      213: -206981435792890363
+    second: CombatVfxAtlas_8
+  - first:
+      213: -6657345609560293932
+    second: CombatVfxAtlas_9
+  - first:
+      213: 1772377513184494423
+    second: CombatVfxAtlas_10
+  - first:
+      213: 8810959380932864403
+    second: CombatVfxAtlas_11
+  - first:
+      213: 2162610612699346233
+    second: CombatVfxAtlas_12
+  - first:
+      213: -7486686602043519654
+    second: CombatVfxAtlas_13
+  - first:
+      213: -4246180276749552828
+    second: CombatVfxAtlas_14
+  - first:
+      213: -8901874393699571610
+    second: CombatVfxAtlas_15
+  - first:
+      213: 8108057885027758556
+    second: CombatVfxAtlas_16
+  - first:
+      213: -21494772633111318
+    second: CombatVfxAtlas_17
+  - first:
+      213: -1544413064859735300
+    second: CombatVfxAtlas_18
+  - first:
+      213: 8585970568256286081
+    second: CombatVfxAtlas_19
+  - first:
+      213: 3695729533671733749
+    second: CombatVfxAtlas_20
+  - first:
+      213: 4292829636020924582
+    second: CombatVfxAtlas_21
+  - first:
+      213: -2863909191987418534
+    second: CombatVfxAtlas_22
+  - first:
+      213: 7973924217721888684
+    second: CombatVfxAtlas_23
+  - first:
+      213: 3523601493552910652
+    second: CombatVfxAtlas_24
+  - first:
+      213: 7336522144054023019
+    second: CombatVfxAtlas_25
+  - first:
+      213: -3870514370083913611
+    second: CombatVfxAtlas_26
+  - first:
+      213: 1756296290092370162
+    second: CombatVfxAtlas_27
+  - first:
+      213: 7340763591730899265
+    second: CombatVfxAtlas_28
+  - first:
+      213: -6787257875742205267
+    second: CombatVfxAtlas_29
+  - first:
+      213: 6230826366332294913
+    second: CombatVfxAtlas_30
+  - first:
+      213: 4653345277770198025
+    second: CombatVfxAtlas_31
+  - first:
+      213: 5694712535136002075
+    second: CombatVfxAtlas_32
+  - first:
+      213: -3999755512187991438
+    second: CombatVfxAtlas_33
+  - first:
+      213: 1363186883040773961
+    second: CombatVfxAtlas_34
+  - first:
+      213: -2826999504539946577
+    second: CombatVfxAtlas_35
+  - first:
+      213: 2370464132884473765
+    second: CombatVfxAtlas_36
+  - first:
+      213: 4988224140084650826
+    second: CombatVfxAtlas_37
+  - first:
+      213: 8949571424479048516
+    second: CombatVfxAtlas_38
+  - first:
+      213: -3384717620502116217
+    second: CombatVfxAtlas_39
+  - first:
+      213: 1823704563846013656
+    second: CombatVfxAtlas_40
+  - first:
+      213: 4785956596748262116
+    second: CombatVfxAtlas_41
+  - first:
+      213: -4266137114539949064
+    second: CombatVfxAtlas_42
+  - first:
+      213: 8887748877699154000
+    second: CombatVfxAtlas_43
+  - first:
+      213: 2683799704930867959
+    second: CombatVfxAtlas_44
+  - first:
+      213: -5169501860610607047
+    second: CombatVfxAtlas_45
+  - first:
+      213: 4128267377493507758
+    second: CombatVfxAtlas_46
+  - first:
+      213: 4125857294718418842
+    second: CombatVfxAtlas_47
+  - first:
+      213: -5158995098385238360
+    second: CombatVfxAtlas_48
+  - first:
+      213: 963607626935136298
+    second: CombatVfxAtlas_49
+  - first:
+      213: -6634386019991341420
+    second: CombatVfxAtlas_50
+  - first:
+      213: 6185820295980382816
+    second: CombatVfxAtlas_51
+  - first:
+      213: 2379155263197377612
+    second: CombatVfxAtlas_52
+  - first:
+      213: 8950517636129447635
+    second: CombatVfxAtlas_53
+  - first:
+      213: 6922239013501808731
+    second: CombatVfxAtlas_54
+  - first:
+      213: 7073685805347243609
+    second: CombatVfxAtlas_55
+  - first:
+      213: 6440883979484467763
+    second: CombatVfxAtlas_56
+  - first:
+      213: 6330851556124945432
+    second: CombatVfxAtlas_57
+  - first:
+      213: -7950903403946446484
+    second: CombatVfxAtlas_58
+  - first:
+      213: 2830069070469274806
+    second: CombatVfxAtlas_59
+  - first:
+      213: 3446126467883822283
+    second: CombatVfxAtlas_60
+  - first:
+      213: -8241844329295417910
+    second: CombatVfxAtlas_61
+  - first:
+      213: -1923781856825460517
+    second: CombatVfxAtlas_62
+  - first:
+      213: 4877960305105469289
+    second: CombatVfxAtlas_63
+  - first:
+      213: 4480397453813478483
+    second: CombatVfxAtlas_64
+  - first:
+      213: 9075455970870560708
+    second: CombatVfxAtlas_65
+  - first:
+      213: -7193926099581049612
+    second: CombatVfxAtlas_66
+  - first:
+      213: 5755664219442196496
+    second: CombatVfxAtlas_67
+  - first:
+      213: 1932746765355522691
+    second: CombatVfxAtlas_68
+  - first:
+      213: 176588157661979542
+    second: CombatVfxAtlas_69
+  - first:
+      213: 1301802891178811354
+    second: CombatVfxAtlas_70
+  - first:
+      213: -8331255117606464834
+    second: CombatVfxAtlas_71
+  - first:
+      213: 3295504634781309430
+    second: CombatVfxAtlas_72
+  - first:
+      213: -3340294374268245916
+    second: CombatVfxAtlas_73
+  - first:
+      213: -739134158813261311
+    second: CombatVfxAtlas_74
+  - first:
+      213: 2484881191016222091
+    second: CombatVfxAtlas_75
+  - first:
+      213: -5750507341234751957
+    second: CombatVfxAtlas_76
+  - first:
+      213: 2777668819603778610
+    second: CombatVfxAtlas_77
+  - first:
+      213: -7741698521796755218
+    second: CombatVfxAtlas_78
+  - first:
+      213: -1778074109608432305
+    second: CombatVfxAtlas_79
+  - first:
+      213: -7747412573163910302
+    second: CombatVfxAtlas_80
+  - first:
+      213: 638516757491629222
+    second: CombatVfxAtlas_81
+  - first:
+      213: -4549279270790994495
+    second: CombatVfxAtlas_82
+  - first:
+      213: 1784785404199743818
+    second: CombatVfxAtlas_83
+  - first:
+      213: 113776399755135118
+    second: CombatVfxAtlas_84
+  - first:
+      213: 5014229032427507495
+    second: CombatVfxAtlas_85
+  - first:
+      213: 459414632422105381
+    second: CombatVfxAtlas_86
+  - first:
+      213: -7005692535508433771
+    second: CombatVfxAtlas_87
+  - first:
+      213: -2219804425555665176
+    second: CombatVfxAtlas_88
+  - first:
+      213: -2370116458853896471
+    second: CombatVfxAtlas_89
+  - first:
+      213: 4223275381121874954
+    second: CombatVfxAtlas_90
+  - first:
+      213: 1346452085792689801
+    second: CombatVfxAtlas_91
+  - first:
+      213: -1017023770960219520
+    second: CombatVfxAtlas_92
+  - first:
+      213: -6040245044305740474
+    second: CombatVfxAtlas_93
+  - first:
+      213: -5303793771155248012
+    second: CombatVfxAtlas_94
+  - first:
+      213: 1360086780251900849
+    second: CombatVfxAtlas_95
+  - first:
+      213: -3075131835972643709
+    second: CombatVfxAtlas_96
+  - first:
+      213: -2783903250294888747
+    second: CombatVfxAtlas_97
+  - first:
+      213: 796243193236954491
+    second: CombatVfxAtlas_98
+  externalObjects: {}
+  serializedVersion: 13
+  mipmaps:
+    mipMapMode: 0
+    enableMipMap: 0
+    sRGBTexture: 1
+    linearTexture: 0
+    fadeOut: 0
+    borderMipMap: 0
+    mipMapsPreserveCoverage: 0
+    alphaTestReferenceValue: 0.5
+    mipMapFadeDistanceStart: 1
+    mipMapFadeDistanceEnd: 3
+  bumpmap:
+    convertToNormalMap: 0
+    externalNormalMap: 0
+    heightScale: 0.25
+    normalMapFilter: 0
+    flipGreenChannel: 0
+  isReadable: 0
+  streamingMipmaps: 0
+  streamingMipmapsPriority: 0
+  vTOnly: 0
+  ignoreMipmapLimit: 0
+  grayScaleToAlpha: 0
+  generateCubemap: 6
+  cubemapConvolution: 0
+  seamlessCubemap: 0
+  textureFormat: 1
+  maxTextureSize: 2048
+  textureSettings:
+    serializedVersion: 2
+    filterMode: 1
+    aniso: 1
+    mipBias: 0
+    wrapU: 1
+    wrapV: 1
+    wrapW: 1
+  nPOTScale: 0
+  lightmap: 0
+  compressionQuality: 50
+  spriteMode: 1
+  spriteExtrude: 1
+  spriteMeshType: 1
+  alignment: 0
+  spritePivot: {x: 0.5, y: 0.5}
+  spritePixelsToUnits: 315
+  spriteBorder: {x: 0, y: 0, z: 0, w: 0}
+  spriteGenerateFallbackPhysicsShape: 1
+  alphaUsage: 1
+  alphaIsTransparency: 1
+  spriteTessellationDetail: -1
+  textureType: 8
+  textureShape: 1
+  singleChannelComponent: 0
+  flipbookRows: 1
+  flipbookColumns: 1
+  maxTextureSizeSet: 0
+  compressionQualitySet: 0
+  textureFormatSet: 0
+  ignorePngGamma: 0
+  applyGammaDecoding: 0
+  swizzle: 50462976
+  cookieLightType: 0
+  platformSettings:
+  - serializedVersion: 4
+    buildTarget: DefaultTexturePlatform
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 0
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 4
+    buildTarget: Standalone
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  spriteSheet:
+    serializedVersion: 2
+    sprites:
+    - serializedVersion: 2
+      name: CombatVfxAtlas_0
+      rect:
+        serializedVersion: 2
+        x: 30
+        y: 898
+        width: 260
+        height: 333
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData:
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 30afd0cb0d8023aa0800000000000000
+      internalID: -6182869645825017341
+      vertices: []
+      indices:
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: CombatVfxAtlas_1
+      rect:
+        serializedVersion: 2
+        x: 325
+        y: 926
+        width: 296
+        height: 315
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData:
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: db91f870bf26fc950800000000000000
+      internalID: 6471500019857824189
+      vertices: []
+      indices:
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: CombatVfxAtlas_2
+      rect:
+        serializedVersion: 2
+        x: 620
+        y: 906
+        width: 333
+        height: 323
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData:
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: e554ec7f7f740b860800000000000000
+      internalID: 7543608506185565534
+      vertices: []
+      indices:
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: CombatVfxAtlas_3
+      rect:
+        serializedVersion: 2
+        x: 940
+        y: 930
+        width: 308
+        height: 294
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData:
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: f84d7bb7648135140800000000000000
+      internalID: 4707132726534722703
+      vertices: []
+      indices:
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: CombatVfxAtlas_4
+      rect:
+        serializedVersion: 2
+        x: 1163
+        y: 1214
+        width: 18
+        height: 15
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData:
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 3eb4154c48ff45c50800000000000000
+      internalID: 6653223495227493347
+      vertices: []
+      indices:
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: CombatVfxAtlas_5
+      rect:
+        serializedVersion: 2
+        x: 1212
+        y: 1207
+        width: 6
+        height: 6
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData:
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 3dcb5a46ee20da320800000000000000
+      internalID: 2570714185212476627
+      vertices: []
+      indices:
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: CombatVfxAtlas_6
+      rect:
+        serializedVersion: 2
+        x: 1233
+        y: 1197
+        width: 7
+        height: 13
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData:
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 5481c9d0a75a92c10800000000000000
+      internalID: 2029335050740045893
+      vertices: []
+      indices:
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: CombatVfxAtlas_7
+      rect:
+        serializedVersion: 2
+        x: 612
+        y: 1173
+        width: 34
+        height: 26
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData:
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: f9cc04048ca24d5c0800000000000000
+      internalID: -4191678313615274849
+      vertices: []
+      indices:
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: CombatVfxAtlas_8
+      rect:
+        serializedVersion: 2
+        x: 645
+        y: 1183
+        width: 9
+        height: 16
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData:
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 506e6741b77a02df0800000000000000
+      internalID: -206981435792890363
+      vertices: []
+      indices:
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: CombatVfxAtlas_9
+      rect:
+        serializedVersion: 2
+        x: 287
+        y: 1157
+        width: 27
+        height: 23
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData:
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 4ddf623b07b5c93a0800000000000000
+      internalID: -6657345609560293932
+      vertices: []
+      indices:
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: CombatVfxAtlas_10
+      rect:
+        serializedVersion: 2
+        x: 126
+        y: 975
+        width: 196
+        height: 158
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData:
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 753804135ffb89810800000000000000
+      internalID: 1772377513184494423
+      vertices: []
+      indices:
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: CombatVfxAtlas_11
+      rect:
+        serializedVersion: 2
+        x: 620
+        y: 1074
+        width: 12
+        height: 11
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData:
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 39926eedfd0d64a70800000000000000
+      internalID: 8810959380932864403
+      vertices: []
+      indices:
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: CombatVfxAtlas_12
+      rect:
+        serializedVersion: 2
+        x: 620
+        y: 1009
+        width: 10
+        height: 13
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData:
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 9353f6de4e2230e10800000000000000
+      internalID: 2162610612699346233
+      vertices: []
+      indices:
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: CombatVfxAtlas_13
+      rect:
+        serializedVersion: 2
+        x: 289
+        y: 910
+        width: 39
+        height: 52
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData:
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: a5d058c9332f91890800000000000000
+      internalID: -7486686602043519654
+      vertices: []
+      indices:
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: CombatVfxAtlas_14
+      rect:
+        serializedVersion: 2
+        x: 620
+        y: 956
+        width: 18
+        height: 20
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData:
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 443b21819898215c0800000000000000
+      internalID: -4246180276749552828
+      vertices: []
+      indices:
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: CombatVfxAtlas_15
+      rect:
+        serializedVersion: 2
+        x: 628
+        y: 938
+        width: 14
+        height: 22
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData:
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 66824603760367480800000000000000
+      internalID: -8901874393699571610
+      vertices: []
+      indices:
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: CombatVfxAtlas_16
+      rect:
+        serializedVersion: 2
+        x: 653
+        y: 938
+        width: 17
+        height: 28
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData:
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: cd1726720bb958070800000000000000
+      internalID: 8108057885027758556
+      vertices: []
+      indices:
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: CombatVfxAtlas_17
+      rect:
+        serializedVersion: 2
+        x: 525
+        y: 930
+        width: 17
+        height: 11
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData:
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: ae4fca04e92a3bff0800000000000000
+      internalID: -21494772633111318
+      vertices: []
+      indices:
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: CombatVfxAtlas_18
+      rect:
+        serializedVersion: 2
+        x: 619
+        y: 940
+        width: 10
+        height: 11
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData:
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: cfa209a0084219ae0800000000000000
+      internalID: -1544413064859735300
+      vertices: []
+      indices:
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: CombatVfxAtlas_19
+      rect:
+        serializedVersion: 2
+        x: 699
+        y: 940
+        width: 11
+        height: 9
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData:
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 18defdccdbe772770800000000000000
+      internalID: 8585970568256286081
+      vertices: []
+      indices:
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: CombatVfxAtlas_20
+      rect:
+        serializedVersion: 2
+        x: 71
+        y: 914
+        width: 9
+        height: 17
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData:
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 5f97c681e6ed94330800000000000000
+      internalID: 3695729533671733749
+      vertices: []
+      indices:
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: CombatVfxAtlas_21
+      rect:
+        serializedVersion: 2
+        x: 234
+        y: 924
+        width: 8
+        height: 13
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData:
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 6a0fb404fc1339b30800000000000000
+      internalID: 4292829636020924582
+      vertices: []
+      indices:
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: CombatVfxAtlas_22
+      rect:
+        serializedVersion: 2
+        x: 267
+        y: 914
+        width: 7
+        height: 12
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData:
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: a5a2d9673c95148d0800000000000000
+      internalID: -2863909191987418534
+      vertices: []
+      indices:
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: CombatVfxAtlas_23
+      rect:
+        serializedVersion: 2
+        x: 616
+        y: 633
+        width: 345
+        height: 304
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData:
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: caf923f04d119ae60800000000000000
+      internalID: 7973924217721888684
+      vertices: []
+      indices:
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: CombatVfxAtlas_24
+      rect:
+        serializedVersion: 2
+        x: 620
+        y: 908
+        width: 14
+        height: 21
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData:
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: c31d149b3e856e030800000000000000
+      internalID: 3523601493552910652
+      vertices: []
+      indices:
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: CombatVfxAtlas_25
+      rect:
+        serializedVersion: 2
+        x: 645
+        y: 920
+        width: 9
+        height: 14
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData:
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: b63902bf40090d560800000000000000
+      internalID: 7336522144054023019
+      vertices: []
+      indices:
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: CombatVfxAtlas_26
+      rect:
+        serializedVersion: 2
+        x: 765
+        y: 922
+        width: 10
+        height: 14
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData:
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 5708a11ffab294ac0800000000000000
+      internalID: -3870514370083913611
+      vertices: []
+      indices:
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: CombatVfxAtlas_27
+      rect:
+        serializedVersion: 2
+        x: 969
+        y: 904
+        width: 20
+        height: 25
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData:
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 2f8ca4bab2e9f5810800000000000000
+      internalID: 1756296290092370162
+      vertices: []
+      indices:
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: CombatVfxAtlas_28
+      rect:
+        serializedVersion: 2
+        x: 275
+        y: 624
+        width: 334
+        height: 295
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData:
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 149ad39f791afd560800000000000000
+      internalID: 7340763591730899265
+      vertices: []
+      indices:
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: CombatVfxAtlas_29
+      rect:
+        serializedVersion: 2
+        x: 612
+        y: 904
+        width: 9
+        height: 17
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData:
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: daad9652ce0dec1a0800000000000000
+      internalID: -6787257875742205267
+      vertices: []
+      indices:
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: CombatVfxAtlas_30
+      rect:
+        serializedVersion: 2
+        x: 633
+        y: 914
+        width: 7
+        height: 9
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData:
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 107df5e5197587650800000000000000
+      internalID: 6230826366332294913
+      vertices: []
+      indices:
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: CombatVfxAtlas_31
+      rect:
+        serializedVersion: 2
+        x: 965
+        y: 635
+        width: 265
+        height: 284
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData:
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 90cebba20e0049040800000000000000
+      internalID: 4653345277770198025
+      vertices: []
+      indices:
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: CombatVfxAtlas_32
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 621
+        width: 290
+        height: 278
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData:
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: b10eebaf0eea70f40800000000000000
+      internalID: 5694712535136002075
+      vertices: []
+      indices:
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: CombatVfxAtlas_33
+      rect:
+        serializedVersion: 2
+        x: 143
+        y: 898
+        width: 8
+        height: 11
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData:
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 27acf93ad830e78c0800000000000000
+      internalID: -3999755512187991438
+      vertices: []
+      indices:
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: CombatVfxAtlas_34
+      rect:
+        serializedVersion: 2
+        x: 608
+        y: 865
+        width: 20
+        height: 18
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData:
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 9470e166f330be210800000000000000
+      internalID: 1363186883040773961
+      vertices: []
+      indices:
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: CombatVfxAtlas_35
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 788
+        width: 35
+        height: 40
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData:
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: fa1f0bfbdea74c8d0800000000000000
+      internalID: -2826999504539946577
+      vertices: []
+      indices:
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: CombatVfxAtlas_36
+      rect:
+        serializedVersion: 2
+        x: 622
+        y: 655
+        width: 6
+        height: 6
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData:
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 5a72261d19495e020800000000000000
+      internalID: 2370464132884473765
+      vertices: []
+      indices:
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: CombatVfxAtlas_37
+      rect:
+        serializedVersion: 2
+        x: 918
+        y: 618
+        width: 33
+        height: 52
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData:
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: a4326c93d6bb93540800000000000000
+      internalID: 4988224140084650826
+      vertices: []
+      indices:
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: CombatVfxAtlas_38
+      rect:
+        serializedVersion: 2
+        x: 960
+        y: 648
+        width: 11
+        height: 10
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData:
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 4437f003bc3433c70800000000000000
+      internalID: 8949571424479048516
+      vertices: []
+      indices:
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: CombatVfxAtlas_39
+      rect:
+        serializedVersion: 2
+        x: 14
+        y: 617
+        width: 21
+        height: 24
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData:
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 78847f4d1411701d0800000000000000
+      internalID: -3384717620502116217
+      vertices: []
+      indices:
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: CombatVfxAtlas_40
+      rect:
+        serializedVersion: 2
+        x: 40
+        y: 635
+        width: 14
+        height: 11
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData:
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 8d2ec4f63a91f4910800000000000000
+      internalID: 1823704563846013656
+      vertices: []
+      indices:
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: CombatVfxAtlas_41
+      rect:
+        serializedVersion: 2
+        x: 870
+        y: 639
+        width: 12
+        height: 11
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData:
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 4ea1e9bea222b6240800000000000000
+      internalID: 4785956596748262116
+      vertices: []
+      indices:
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: CombatVfxAtlas_42
+      rect:
+        serializedVersion: 2
+        x: 903
+        y: 622
+        width: 20
+        height: 28
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData:
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 8f38cb4b5e2abc4c0800000000000000
+      internalID: -4266137114539949064
+      vertices: []
+      indices:
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: CombatVfxAtlas_43
+      rect:
+        serializedVersion: 2
+        x: 1113
+        y: 638
+        width: 12
+        height: 12
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData:
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 0508224d380a75b70800000000000000
+      internalID: 8887748877699154000
+      vertices: []
+      indices:
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: CombatVfxAtlas_44
+      rect:
+        serializedVersion: 2
+        x: 1178
+        y: 639
+        width: 9
+        height: 14
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData:
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 7fad3bcbc95ce3520800000000000000
+      internalID: 2683799704930867959
+      vertices: []
+      indices:
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: CombatVfxAtlas_45
+      rect:
+        serializedVersion: 2
+        x: 1202
+        y: 635
+        width: 7
+        height: 15
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData:
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 938759c627d3248b0800000000000000
+      internalID: -5169501860610607047
+      vertices: []
+      indices:
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: CombatVfxAtlas_46
+      rect:
+        serializedVersion: 2
+        x: 1208
+        y: 637
+        width: 14
+        height: 13
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData:
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: eae755dae4d8a4930800000000000000
+      internalID: 4128267377493507758
+      vertices: []
+      indices:
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: CombatVfxAtlas_47
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 330
+        width: 290
+        height: 291
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData:
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: a9f35ad895df14930800000000000000
+      internalID: 4125857294718418842
+      vertices: []
+      indices:
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: CombatVfxAtlas_48
+      rect:
+        serializedVersion: 2
+        x: 34
+        y: 617
+        width: 18
+        height: 15
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData:
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 8a634c2aa419768b0800000000000000
+      internalID: -5158995098385238360
+      vertices: []
+      indices:
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: CombatVfxAtlas_49
+      rect:
+        serializedVersion: 2
+        x: 54
+        y: 620
+        width: 6
+        height: 7
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData:
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: a207352080c6f5d00800000000000000
+      internalID: 963607626935136298
+      vertices: []
+      indices:
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: CombatVfxAtlas_50
+      rect:
+        serializedVersion: 2
+        x: 57
+        y: 618
+        width: 11
+        height: 14
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData:
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 4963997b01dede3a0800000000000000
+      internalID: -6634386019991341420
+      vertices: []
+      indices:
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: CombatVfxAtlas_51
+      rect:
+        serializedVersion: 2
+        x: 289
+        y: 319
+        width: 363
+        height: 307
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData:
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 06aff4a09c278d550800000000000000
+      internalID: 6185820295980382816
+      vertices: []
+      indices:
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: CombatVfxAtlas_52
+      rect:
+        serializedVersion: 2
+        x: 525
+        y: 622
+        width: 6
+        height: 7
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData:
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: c4471684b15740120800000000000000
+      internalID: 2379155263197377612
+      vertices: []
+      indices:
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: CombatVfxAtlas_53
+      rect:
+        serializedVersion: 2
+        x: 636
+        y: 621
+        width: 10
+        height: 13
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData:
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 3de5d514e50a63c70800000000000000
+      internalID: 8950517636129447635
+      vertices: []
+      indices:
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: CombatVfxAtlas_54
+      rect:
+        serializedVersion: 2
+        x: 645
+        y: 317
+        width: 294
+        height: 319
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData:
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: b50302a05bbb01060800000000000000
+      internalID: 6922239013501808731
+      vertices: []
+      indices:
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: CombatVfxAtlas_55
+      rect:
+        serializedVersion: 2
+        x: 952
+        y: 339
+        width: 283
+        height: 298
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData:
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 956027013c7ca2260800000000000000
+      internalID: 7073685805347243609
+      vertices: []
+      indices:
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: CombatVfxAtlas_56
+      rect:
+        serializedVersion: 2
+        x: 921
+        y: 590
+        width: 6
+        height: 9
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData:
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 3321da4aadd926950800000000000000
+      internalID: 6440883979484467763
+      vertices: []
+      indices:
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: CombatVfxAtlas_57
+      rect:
+        serializedVersion: 2
+        x: 925
+        y: 586
+        width: 8
+        height: 7
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData:
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 81c6e80b2f3bbd750800000000000000
+      internalID: 6330851556124945432
+      vertices: []
+      indices:
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: CombatVfxAtlas_58
+      rect:
+        serializedVersion: 2
+        x: 926
+        y: 584
+        width: 15
+        height: 25
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData:
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: c61f354da77b8a190800000000000000
+      internalID: -7950903403946446484
+      vertices: []
+      indices:
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: CombatVfxAtlas_59
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 503
+        width: 11
+        height: 32
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData:
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 6bc142343dc664720800000000000000
+      internalID: 2830069070469274806
+      vertices: []
+      indices:
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: CombatVfxAtlas_60
+      rect:
+        serializedVersion: 2
+        x: 631
+        y: 425
+        width: 13
+        height: 12
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData:
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: bcc6941a3c913df20800000000000000
+      internalID: 3446126467883822283
+      vertices: []
+      indices:
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: CombatVfxAtlas_61
+      rect:
+        serializedVersion: 2
+        x: 647
+        y: 355
+        width: 17
+        height: 20
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData:
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: acd674aef361f9d80800000000000000
+      internalID: -8241844329295417910
+      vertices: []
+      indices:
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: CombatVfxAtlas_62
+      rect:
+        serializedVersion: 2
+        x: 1201
+        y: 312
+        width: 31
+        height: 48
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData:
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: bd8b396089a5d45e0800000000000000
+      internalID: -1923781856825460517
+      vertices: []
+      indices:
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: CombatVfxAtlas_63
+      rect:
+        serializedVersion: 2
+        x: 523
+        y: 339
+        width: 20
+        height: 15
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData:
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 96f744e8d0ff1b340800000000000000
+      internalID: 4877960305105469289
+      vertices: []
+      indices:
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: CombatVfxAtlas_64
+      rect:
+        serializedVersion: 2
+        x: 903
+        y: 331
+        width: 20
+        height: 9
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData:
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 354fd1ffeb19d2e30800000000000000
+      internalID: 4480397453813478483
+      vertices: []
+      indices:
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: CombatVfxAtlas_65
+      rect:
+        serializedVersion: 2
+        x: 938
+        y: 0
+        width: 316
+        height: 343
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData:
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 4c700762f1f72fd70800000000000000
+      internalID: 9075455970870560708
+      vertices: []
+      indices:
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: CombatVfxAtlas_66
+      rect:
+        serializedVersion: 2
+        x: 297
+        y: 0
+        width: 357
+        height: 336
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData:
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 4f46f06d35a0a2c90800000000000000
+      internalID: -7193926099581049612
+      vertices: []
+      indices:
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: CombatVfxAtlas_67
+      rect:
+        serializedVersion: 2
+        x: 337
+        y: 328
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData:
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 010374edc1a30ef40800000000000000
+      internalID: 5755664219442196496
+      vertices: []
+      indices:
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: CombatVfxAtlas_68
+      rect:
+        serializedVersion: 2
+        x: 628
+        y: 296
+        width: 30
+        height: 36
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData:
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 38a1dc561fe72da10800000000000000
+      internalID: 1932746765355522691
+      vertices: []
+      indices:
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: CombatVfxAtlas_69
+      rect:
+        serializedVersion: 2
+        x: 905
+        y: 319
+        width: 16
+        height: 13
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData:
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 693abf86efd537200800000000000000
+      internalID: 176588157661979542
+      vertices: []
+      indices:
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: CombatVfxAtlas_70
+      rect:
+        serializedVersion: 2
+        x: 919
+        y: 323
+        width: 8
+        height: 9
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData:
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: adf1a4015dee01210800000000000000
+      internalID: 1301802891178811354
+      vertices: []
+      indices:
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: CombatVfxAtlas_71
+      rect:
+        serializedVersion: 2
+        x: 31
+        y: 0
+        width: 257
+        height: 319
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData:
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: eb259e58c9f616c80800000000000000
+      internalID: -8331255117606464834
+      vertices: []
+      indices:
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: CombatVfxAtlas_72
+      rect:
+        serializedVersion: 2
+        x: 289
+        y: 272
+        width: 23
+        height: 47
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData:
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 6f91bc7410cfbbd20800000000000000
+      internalID: 3295504634781309430
+      vertices: []
+      indices:
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: CombatVfxAtlas_73
+      rect:
+        serializedVersion: 2
+        x: 655
+        y: 43
+        width: 278
+        height: 268
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData:
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 4686188d6f3e4a1d0800000000000000
+      internalID: -3340294374268245916
+      vertices: []
+      indices:
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: CombatVfxAtlas_74
+      rect:
+        serializedVersion: 2
+        x: 784
+        y: 274
+        width: 35
+        height: 39
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData:
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 102149e06611eb5f0800000000000000
+      internalID: -739134158813261311
+      vertices: []
+      indices:
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: CombatVfxAtlas_75
+      rect:
+        serializedVersion: 2
+        x: 915
+        y: 268
+        width: 6
+        height: 7
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData:
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: b8d429b17421c7220800000000000000
+      internalID: 2484881191016222091
+      vertices: []
+      indices:
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: CombatVfxAtlas_76
+      rect:
+        serializedVersion: 2
+        x: 917
+        y: 248
+        width: 42
+        height: 74
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData:
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: b263d676a081230b0800000000000000
+      internalID: -5750507341234751957
+      vertices: []
+      indices:
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: CombatVfxAtlas_77
+      rect:
+        serializedVersion: 2
+        x: 940
+        y: 276
+        width: 11
+        height: 10
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData:
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 23c692023134c8620800000000000000
+      internalID: 2777668819603778610
+      vertices: []
+      indices:
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: CombatVfxAtlas_78
+      rect:
+        serializedVersion: 2
+        x: 913
+        y: 196
+        width: 8
+        height: 6
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData:
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: ee043223636ff8490800000000000000
+      internalID: -7741698521796755218
+      vertices: []
+      indices:
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: CombatVfxAtlas_79
+      rect:
+        serializedVersion: 2
+        x: 620
+        y: 94
+        width: 22
+        height: 37
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData:
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: f4d687894030357e0800000000000000
+      internalID: -1778074109608432305
+      vertices: []
+      indices:
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: CombatVfxAtlas_80
+      rect:
+        serializedVersion: 2
+        x: 794
+        y: 82
+        width: 60
+        height: 56
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData:
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 26b8b20ff49ab7490800000000000000
+      internalID: -7747412573163910302
+      vertices: []
+      indices:
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: CombatVfxAtlas_81
+      rect:
+        serializedVersion: 2
+        x: 913
+        y: 110
+        width: 10
+        height: 12
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData:
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 6ac3c61ab977cd800800000000000000
+      internalID: 638516757491629222
+      vertices: []
+      indices:
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: CombatVfxAtlas_82
+      rect:
+        serializedVersion: 2
+        x: 919
+        y: 98
+        width: 18
+        height: 13
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData:
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 1c564783b96bdd0c0800000000000000
+      internalID: -4549279270790994495
+      vertices: []
+      indices:
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: CombatVfxAtlas_83
+      rect:
+        serializedVersion: 2
+        x: 936
+        y: 102
+        width: 9
+        height: 11
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData:
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: a41b0a17ed4d4c810800000000000000
+      internalID: 1784785404199743818
+      vertices: []
+      indices:
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: CombatVfxAtlas_84
+      rect:
+        serializedVersion: 2
+        x: 259
+        y: 60
+        width: 17
+        height: 21
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData:
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: e884a336807349100800000000000000
+      internalID: 113776399755135118
+      vertices: []
+      indices:
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: CombatVfxAtlas_85
+      rect:
+        serializedVersion: 2
+        x: 263
+        y: 43
+        width: 21
+        height: 18
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData:
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 72fca4c0dbe169540800000000000000
+      internalID: 5014229032427507495
+      vertices: []
+      indices:
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: CombatVfxAtlas_86
+      rect:
+        serializedVersion: 2
+        x: 616
+        y: 64
+        width: 13
+        height: 15
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData:
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 521e2229c2b206600800000000000000
+      internalID: 459414632422105381
+      vertices: []
+      indices:
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: CombatVfxAtlas_87
+      rect:
+        serializedVersion: 2
+        x: 628
+        y: 68
+        width: 8
+        height: 9
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData:
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 5940a67b1c7c6ce90800000000000000
+      internalID: -7005692535508433771
+      vertices: []
+      indices:
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: CombatVfxAtlas_88
+      rect:
+        serializedVersion: 2
+        x: 895
+        y: 21
+        width: 44
+        height: 70
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData:
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 8ee1aefc2aba131e0800000000000000
+      internalID: -2219804425555665176
+      vertices: []
+      indices:
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: CombatVfxAtlas_89
+      rect:
+        serializedVersion: 2
+        x: 178
+        y: 29
+        width: 35
+        height: 30
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData:
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 9eee4b953a7ab1fd0800000000000000
+      internalID: -2370116458853896471
+      vertices: []
+      indices:
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: CombatVfxAtlas_90
+      rect:
+        serializedVersion: 2
+        x: 192
+        y: 23
+        width: 11
+        height: 22
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData:
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: a0cfb6055961c9a30800000000000000
+      internalID: 4223275381121874954
+      vertices: []
+      indices:
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: CombatVfxAtlas_91
+      rect:
+        serializedVersion: 2
+        x: 200
+        y: 17
+        width: 67
+        height: 40
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData:
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 98ec1c8c90f8fa210800000000000000
+      internalID: 1346452085792689801
+      vertices: []
+      indices:
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: CombatVfxAtlas_92
+      rect:
+        serializedVersion: 2
+        x: 536
+        y: 22
+        width: 9
+        height: 10
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData:
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 082b9cbc44ec2e1f0800000000000000
+      internalID: -1017023770960219520
+      vertices: []
+      indices:
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: CombatVfxAtlas_93
+      rect:
+        serializedVersion: 2
+        x: 548
+        y: 23
+        width: 9
+        height: 11
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData:
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 64db7d1822dbc2ca0800000000000000
+      internalID: -6040245044305740474
+      vertices: []
+      indices:
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: CombatVfxAtlas_94
+      rect:
+        serializedVersion: 2
+        x: 885
+        y: 38
+        width: 15
+        height: 13
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData:
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 47cac547aa32566b0800000000000000
+      internalID: -5303793771155248012
+      vertices: []
+      indices:
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: CombatVfxAtlas_95
+      rect:
+        serializedVersion: 2
+        x: 902
+        y: 17
+        width: 14
+        height: 41
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData:
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 1bb8e9878bfffd210800000000000000
+      internalID: 1360086780251900849
+      vertices: []
+      indices:
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: CombatVfxAtlas_96
+      rect:
+        serializedVersion: 2
+        x: 952
+        y: 33
+        width: 7
+        height: 9
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData:
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 3841b5f43efe255d0800000000000000
+      internalID: -3075131835972643709
+      vertices: []
+      indices:
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: CombatVfxAtlas_97
+      rect:
+        serializedVersion: 2
+        x: 1091
+        y: 39
+        width: 13
+        height: 14
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData:
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 5d62e1d5eb69d59d0800000000000000
+      internalID: -2783903250294888747
+      vertices: []
+      indices:
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: CombatVfxAtlas_98
+      rect:
+        serializedVersion: 2
+        x: 1176
+        y: 27
+        width: 15
+        height: 23
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData:
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: b7d16bf27f2dc0b00800000000000000
+      internalID: 796243193236954491
+      vertices: []
+      indices:
+      edges: []
+      weights: []
+    outline: []
+    customData:
+    physicsShape: []
+    bones: []
+    spriteID: 5e97eb03825dee720800000000000000
+    internalID: 0
+    vertices: []
+    indices:
+    edges: []
+    weights: []
+    secondaryTextures: []
+    spriteCustomMetadata:
+      entries: []
+    nameFileIdTable:
+      CombatVfxAtlas_0: -6182869645825017341
+      CombatVfxAtlas_1: 6471500019857824189
+      CombatVfxAtlas_10: 1772377513184494423
+      CombatVfxAtlas_11: 8810959380932864403
+      CombatVfxAtlas_12: 2162610612699346233
+      CombatVfxAtlas_13: -7486686602043519654
+      CombatVfxAtlas_14: -4246180276749552828
+      CombatVfxAtlas_15: -8901874393699571610
+      CombatVfxAtlas_16: 8108057885027758556
+      CombatVfxAtlas_17: -21494772633111318
+      CombatVfxAtlas_18: -1544413064859735300
+      CombatVfxAtlas_19: 8585970568256286081
+      CombatVfxAtlas_2: 7543608506185565534
+      CombatVfxAtlas_20: 3695729533671733749
+      CombatVfxAtlas_21: 4292829636020924582
+      CombatVfxAtlas_22: -2863909191987418534
+      CombatVfxAtlas_23: 7973924217721888684
+      CombatVfxAtlas_24: 3523601493552910652
+      CombatVfxAtlas_25: 7336522144054023019
+      CombatVfxAtlas_26: -3870514370083913611
+      CombatVfxAtlas_27: 1756296290092370162
+      CombatVfxAtlas_28: 7340763591730899265
+      CombatVfxAtlas_29: -6787257875742205267
+      CombatVfxAtlas_3: 4707132726534722703
+      CombatVfxAtlas_30: 6230826366332294913
+      CombatVfxAtlas_31: 4653345277770198025
+      CombatVfxAtlas_32: 5694712535136002075
+      CombatVfxAtlas_33: -3999755512187991438
+      CombatVfxAtlas_34: 1363186883040773961
+      CombatVfxAtlas_35: -2826999504539946577
+      CombatVfxAtlas_36: 2370464132884473765
+      CombatVfxAtlas_37: 4988224140084650826
+      CombatVfxAtlas_38: 8949571424479048516
+      CombatVfxAtlas_39: -3384717620502116217
+      CombatVfxAtlas_4: 6653223495227493347
+      CombatVfxAtlas_40: 1823704563846013656
+      CombatVfxAtlas_41: 4785956596748262116
+      CombatVfxAtlas_42: -4266137114539949064
+      CombatVfxAtlas_43: 8887748877699154000
+      CombatVfxAtlas_44: 2683799704930867959
+      CombatVfxAtlas_45: -5169501860610607047
+      CombatVfxAtlas_46: 4128267377493507758
+      CombatVfxAtlas_47: 4125857294718418842
+      CombatVfxAtlas_48: -5158995098385238360
+      CombatVfxAtlas_49: 963607626935136298
+      CombatVfxAtlas_5: 2570714185212476627
+      CombatVfxAtlas_50: -6634386019991341420
+      CombatVfxAtlas_51: 6185820295980382816
+      CombatVfxAtlas_52: 2379155263197377612
+      CombatVfxAtlas_53: 8950517636129447635
+      CombatVfxAtlas_54: 6922239013501808731
+      CombatVfxAtlas_55: 7073685805347243609
+      CombatVfxAtlas_56: 6440883979484467763
+      CombatVfxAtlas_57: 6330851556124945432
+      CombatVfxAtlas_58: -7950903403946446484
+      CombatVfxAtlas_59: 2830069070469274806
+      CombatVfxAtlas_6: 2029335050740045893
+      CombatVfxAtlas_60: 3446126467883822283
+      CombatVfxAtlas_61: -8241844329295417910
+      CombatVfxAtlas_62: -1923781856825460517
+      CombatVfxAtlas_63: 4877960305105469289
+      CombatVfxAtlas_64: 4480397453813478483
+      CombatVfxAtlas_65: 9075455970870560708
+      CombatVfxAtlas_66: -7193926099581049612
+      CombatVfxAtlas_67: 5755664219442196496
+      CombatVfxAtlas_68: 1932746765355522691
+      CombatVfxAtlas_69: 176588157661979542
+      CombatVfxAtlas_7: -4191678313615274849
+      CombatVfxAtlas_70: 1301802891178811354
+      CombatVfxAtlas_71: -8331255117606464834
+      CombatVfxAtlas_72: 3295504634781309430
+      CombatVfxAtlas_73: -3340294374268245916
+      CombatVfxAtlas_74: -739134158813261311
+      CombatVfxAtlas_75: 2484881191016222091
+      CombatVfxAtlas_76: -5750507341234751957
+      CombatVfxAtlas_77: 2777668819603778610
+      CombatVfxAtlas_78: -7741698521796755218
+      CombatVfxAtlas_79: -1778074109608432305
+      CombatVfxAtlas_8: -206981435792890363
+      CombatVfxAtlas_80: -7747412573163910302
+      CombatVfxAtlas_81: 638516757491629222
+      CombatVfxAtlas_82: -4549279270790994495
+      CombatVfxAtlas_83: 1784785404199743818
+      CombatVfxAtlas_84: 113776399755135118
+      CombatVfxAtlas_85: 5014229032427507495
+      CombatVfxAtlas_86: 459414632422105381
+      CombatVfxAtlas_87: -7005692535508433771
+      CombatVfxAtlas_88: -2219804425555665176
+      CombatVfxAtlas_89: -2370116458853896471
+      CombatVfxAtlas_9: -6657345609560293932
+      CombatVfxAtlas_90: 4223275381121874954
+      CombatVfxAtlas_91: 1346452085792689801
+      CombatVfxAtlas_92: -1017023770960219520
+      CombatVfxAtlas_93: -6040245044305740474
+      CombatVfxAtlas_94: -5303793771155248012
+      CombatVfxAtlas_95: 1360086780251900849
+      CombatVfxAtlas_96: -3075131835972643709
+      CombatVfxAtlas_97: -2783903250294888747
+      CombatVfxAtlas_98: 796243193236954491
+  mipmapLimitGroupName:
+  pSDRemoveMatte: 0
+  userData:
+  assetBundleName:
+  assetBundleVariant:

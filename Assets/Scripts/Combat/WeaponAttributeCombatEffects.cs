@@ -190,6 +190,7 @@ namespace ProjectEpsilon.Combat // 전투 영역
             {
                 return; // 유효한 반응 전 대기
             }
+            CombatVfx.SpawnReaction(reaction, target.transform.position); // 실제 단일 속성 반응 표시
             switch (reaction) // 결정된 단일 반응 처리
             {
                 case WeaponAttributeReaction.CorrosiveBurn: // 화염과 독 반응
@@ -506,6 +507,11 @@ namespace ProjectEpsilon.Combat // 전투 영역
 
         private void SpawnHitPulse(WeaponAttribute attribute, int stage, Vector3 position) // 명중 Pulse 생성
         {
+            if (CombatVfx.GetAttributeSprite(attribute) != null) // 실제 속성 이미지 확인
+            { // 조건 시작
+                CombatVfx.SpawnAttribute(attribute, stage, position); // 기본 명중을 포함한 속성별 표시
+                return; // 기존 대체 이미지 중복 방지
+            } // 조건 종료
             if (pulseSprite == null || stage <= 0) // 표시 가능 여부 확인
             {
                 return; // 표시 생략
