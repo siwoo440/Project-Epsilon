@@ -13,6 +13,10 @@ namespace ProjectEpsilon.UI // 프로젝트 기능 영역
         private RectTransform healthFill; // 체력 막대 채움 영역
         private RectTransform experienceFill; // 경험치 막대 채움 영역
         private RectTransform staminaFill; // 스태미나 막대 채움 영역
+        private Text sizedLevelText; // 글자 크기 기준 레벨 표시
+        private Text sizedExperienceText; // 글자 크기 기준 경험치 표시
+        private int baseLevelFontSize; // 원래 레벨 글자 크기
+        private int baseExperienceFontSize; // 원래 경험치 글자 크기
 
         private void Start() // 시작 기능 선언
         {
@@ -88,6 +92,7 @@ namespace ProjectEpsilon.UI // 프로젝트 기능 영역
             if (experienceText != null) // 경험치·문구 조건 확인
             {
                 experienceText.text = HUDTextFormatter.FormatExperience(current, required); // 경험치·문구 값 설정
+                FitLevelExperienceLabels(); // 겹치는 레벨과 경험치 글자 조정
             }
         }
 
@@ -96,6 +101,7 @@ namespace ProjectEpsilon.UI // 프로젝트 기능 영역
             if (levelText != null) // 레벨·문구 조건 확인
             {
                 levelText.text = HUDTextFormatter.FormatLevel(level); // 레벨·문구 값 설정
+                FitLevelExperienceLabels(); // 겹치는 레벨과 경험치 글자 조정
             }
         }
 
@@ -107,6 +113,59 @@ namespace ProjectEpsilon.UI // 프로젝트 기능 영역
                 staminaText.text = HUDTextFormatter.FormatStamina(current, maximum); // 스태미나·문구 값 설정
             }
         }
+
+        private void FitLevelExperienceLabels() // 공통 영역의 글자 겹침 방지
+        { // 함수 시작
+            if (levelText == null || experienceText == null || levelText.font == null || experienceText.font == null) // 글자와 글꼴 확인
+            { // 조건 시작
+                return; // 표시 준비 전 조정 방지
+            } // 조건 종료
+            if (sizedLevelText != levelText || sizedExperienceText != experienceText) // 새 글자 연결 확인
+            { // 조건 시작
+                if (sizedLevelText != null) // 이전 레벨 글자 확인
+                { // 조건 시작
+                    sizedLevelText.fontSize = baseLevelFontSize; // 이전 글자 크기 복원
+                } // 조건 종료
+                if (sizedExperienceText != null) // 이전 경험치 글자 확인
+                { // 조건 시작
+                    sizedExperienceText.fontSize = baseExperienceFontSize; // 이전 글자 크기 복원
+                } // 조건 종료
+                sizedLevelText = levelText; // 현재 레벨 글자 저장
+                sizedExperienceText = experienceText; // 현재 경험치 글자 저장
+                baseLevelFontSize = levelText.fontSize; // 원래 레벨 크기 저장
+                baseExperienceFontSize = experienceText.fontSize; // 원래 경험치 크기 저장
+            } // 조건 종료
+            RectTransform levelRect = levelText.rectTransform; // 레벨 표시 영역
+            RectTransform experienceRect = experienceText.rectTransform; // 경험치 표시 영역
+            if (levelRect.parent != experienceRect.parent || levelRect.anchorMin != experienceRect.anchorMin || levelRect.anchorMax != experienceRect.anchorMax || levelRect.anchoredPosition != experienceRect.anchoredPosition || levelRect.sizeDelta != experienceRect.sizeDelta) // 같은 표시 영역 확인
+            { // 조건 시작
+                return; // 별도 영역의 글자 크기 유지
+            } // 조건 종료
+            levelText.fontSize = baseLevelFontSize; // 기본 레벨 글자 크기 복원
+            experienceText.fontSize = baseExperienceFontSize; // 기본 경험치 글자 크기 복원
+            float available = Mathf.Min(levelRect.rect.width, experienceRect.rect.width); // 실제 공통 영역 너비
+            if (available <= 0f) // 유효한 표시 너비 확인
+            { // 조건 시작
+                return; // 계산 전 크기 조정 방지
+            } // 조건 종료
+            int minimumExperience = Mathf.Min(14, baseExperienceFontSize); // 경험치 최소 글자 크기
+            int minimumLevel = Mathf.Min(14, baseLevelFontSize); // 레벨 최소 글자 크기
+            while (levelText.preferredWidth + experienceText.preferredWidth + 8f > available) // 글자와 여백이 겹치는 동안 반복
+            { // 반복 시작
+                if (experienceText.fontSize > minimumExperience) // 경험치 크기 조정 가능 확인
+                { // 조건 시작
+                    experienceText.fontSize--; // 경험치 글자 축소
+                } // 조건 종료
+                else if (levelText.fontSize > minimumLevel) // 레벨 크기 조정 가능 확인
+                { // 조건 시작
+                    levelText.fontSize--; // 레벨 글자 축소
+                } // 조건 종료
+                else // 최소 글자 크기 도달
+                { // 조건 시작
+                    break; // 추가 축소 방지
+                } // 조건 종료
+            } // 반복 종료
+        } // 함수 종료
 
         private static void SetBar(Text label, ref RectTransform fill, string name, int current, int maximum, Color color) // 실제 HUD 막대 구성과 비율 갱신
         {
