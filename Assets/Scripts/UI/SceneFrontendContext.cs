@@ -68,6 +68,10 @@ namespace ProjectEpsilon.UI // 실제 화면 흐름 영역
             { // 영역 시작
                 if (existing != null && existing.isActiveAndEnabled && existing.gameObject.scene == gameObject.scene && existing.targetDisplay == 0 && existing.targetTexture == null) // 같은 씬의 실제 화면 카메라 확인
                 { // 영역 시작
+                    if (FindFirstObjectByType<AudioListener>() == null) // 기존 오디오 수신기 확인
+                    { // 조건 시작
+                        existing.gameObject.AddComponent<AudioListener>(); // 기존 메뉴 카메라에 수신기 연결
+                    } // 조건 종료
                     return; // 기존 화면 카메라 재사용
                 } // 영역 종료
             } // 영역 종료
@@ -79,6 +83,10 @@ namespace ProjectEpsilon.UI // 실제 화면 흐름 영역
             displayCamera.clearFlags = CameraClearFlags.SolidColor; // 실제 불투명 배경 초기화
             displayCamera.backgroundColor = Color.black; // 화면 아래 기본 배경색
             displayCamera.cullingMask = 0; // 오버레이 UI만 표시
+            if (FindFirstObjectByType<AudioListener>() == null) // 기존 오디오 수신기 확인
+            { // 조건 시작
+                cameraObject.AddComponent<AudioListener>(); // 메뉴 카메라에 수신기 연결
+            } // 조건 종료
         } // 영역 종료
         public CharacterData GetCharacter(int index) // 실제 캐릭터 후보 조회
         {
