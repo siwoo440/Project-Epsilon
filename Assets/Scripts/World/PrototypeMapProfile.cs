@@ -38,6 +38,14 @@ namespace ProjectEpsilon.World // 맵 영역
         [Range(1, 4)] [SerializeField] private int obstacleMaximumCount = 3; // 청크 최대 장애물 수 임시값
         [Min(3f)] [SerializeField] private float safeCorridorWidth = 4f; // 연결된 안전 통로 폭 임시값
         [Min(0f)] [SerializeField] private float playerObstacleClearance = 5.5f; // 플레이어 주변 장애물 보호 거리
+        [Min(0f)] [SerializeField] private float worldEventFirstTime = 90f; // 첫 맵 위험 시작 시간 시험값
+        [Min(1f)] [SerializeField] private float worldEventInterval = 90f; // 맵 위험 간격 시험값
+        [Min(0.1f)] [SerializeField] private float worldEventWarning = 3f; // 맵 위험 공통 예고 시간 시험값
+        [Min(0.1f)] [SerializeField] private float locustSpeed = 12f; // 황충떼 이동 속도 시험값
+        [Min(1f)] [SerializeField] private float locustWidth = 8f; // 황충떼 이동 폭 시험값
+        [Min(0)] [SerializeField] private int locustDamage = 10; // 황충떼 공용 체력 피해 시험값
+        [Min(0.1f)] [SerializeField] private float rockfallDuration = 0.7f; // 낙석 하강 시간 시험값
+        [Min(0)] [SerializeField] private int rockfallDamage = 10; // 낙석 공용 체력 피해 시험값
         [Range(0f, 1f)] [SerializeField] private float specialZoneChance; // 청크 특수 지역 확률 임시값
         [Range(0, 2)] [SerializeField] private int obstaclePattern; // 사전 배치 패턴 종류
         [Min(0.5f)] [SerializeField] private float zoneRadius = 2.5f; // 특수 지역 반경 임시값
@@ -108,6 +116,14 @@ namespace ProjectEpsilon.World // 맵 영역
         public int ObstacleMaximumCount => Mathf.Clamp(obstacleMaximumCount, ObstacleMinimumCount, 4); // 안전한 최대 장애물 수
         public float SafeCorridorWidth => Mathf.Max(3f, safeCorridorWidth); // 최소 폭을 보장한 연결 통로
         public float PlayerObstacleClearance => Mathf.Max(0f, playerObstacleClearance); // 안전한 플레이어 보호 거리
+        public float WorldEventFirstTime => Mathf.Max(0f, worldEventFirstTime); // 안전한 첫 맵 위험 시각
+        public float WorldEventInterval => Mathf.Max(1f, worldEventInterval); // 안전한 맵 위험 간격
+        public float WorldEventWarning => Mathf.Max(0.1f, worldEventWarning); // 안전한 위험 예고 시간
+        public float LocustSpeed => Mathf.Max(0.1f, locustSpeed); // 안전한 황충떼 속도
+        public float LocustWidth => Mathf.Max(1f, locustWidth); // 안전한 황충떼 폭
+        public int LocustDamage => Mathf.Max(0, locustDamage); // 안전한 황충떼 피해
+        public float RockfallDuration => Mathf.Max(0.1f, rockfallDuration); // 안전한 낙석 하강 시간
+        public int RockfallDamage => Mathf.Max(0, rockfallDamage); // 안전한 낙석 피해
         public float SpecialZoneChance => Mathf.Clamp01(specialZoneChance); // 안전한 특수 지역 확률
         public int ObstaclePattern => Mathf.Clamp(obstaclePattern, 0, 2); // 안전한 패턴 번호
         public float ZoneRadius => Mathf.Max(0.5f, zoneRadius); // 안전한 지역 반경

@@ -45,6 +45,14 @@ MonoBehaviour:
   obstacleMaximumCount: 3
   safeCorridorWidth: 4
   playerObstacleClearance: 5.5
+  worldEventFirstTime: 90
+  worldEventInterval: 90
+  worldEventWarning: 3
+  locustSpeed: 12
+  locustWidth: 8
+  locustDamage: 10
+  rockfallDuration: 0.7
+  rockfallDamage: 10
   specialZoneChance: 0.18
   obstaclePattern: 1
   zoneRadius: 2.5

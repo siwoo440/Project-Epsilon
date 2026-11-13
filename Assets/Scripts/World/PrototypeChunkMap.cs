@@ -83,6 +83,10 @@ namespace ProjectEpsilon.World // 맵 영역
         private void Start() // 실제 플레이어 위치 연결
         {
             player = FindFirstObjectByType<SnakeMovement>(); // 실제 플레이어 조회
+            if (GetComponent<WorldEventController>() == null) // 공통 맵 위험 중복 확인
+            { // 조건 시작
+                gameObject.AddComponent<WorldEventController>(); // 기존 청크에 공통 위험 연결
+            } // 조건 종료
         }
         private void Update() // 실제 플레이어 주변 청크 갱신
         {
@@ -302,6 +306,56 @@ namespace ProjectEpsilon.World // 맵 영역
             string selectedName = names[Random.Range(0, names.Length)]; // 실제 장애물 종류 추첨
             CreateObstacleAt(chunk, position, folder, selectedName); // 기존 장애물 표시와 충돌 생성
         }
+
+        public bool CanPlaceRockfallDebris(Vector3 position) // 낙석 잔해의 안전한 위치 확인
+        { // 함수 시작
+            if (profile == null || OverlapsPlayer(position)) // 맵과 현재 뱀 위치 확인
+            { // 조건 시작
+                return false; // 플레이어 주변 생성 차단
+            } // 조건 종료
+            Vector2Int coordinate = new Vector2Int(Mathf.FloorToInt(position.x / ChunkSize), Mathf.FloorToInt(position.y / ChunkSize)); // 실제 청크 좌표
+            GameObject chunk = GetChunk(coordinate); // 실제 활성 청크
+            if (chunk == null) // 활성 청크 부재 확인
+            { // 조건 시작
+                return false; // 이탈 청크 생성 차단
+            } // 조건 종료
+            Vector3 local = position - chunk.transform.position; // 실제 청크 내부 위치
+            float edge = profile.SafeCorridorWidth * 0.5f + 1.2f; // 기존 안전 통로 여유
+            float middle = ChunkSize * 0.5f; // 실제 청크 중앙
+            if (local.x <= edge || local.x >= ChunkSize - edge || local.y <= edge || local.y >= ChunkSize - edge || Mathf.Abs(local.x - middle) <= edge || Mathf.Abs(local.y - middle) <= edge) // 청크 경계와 중앙 통로 확인
+            { // 조건 시작
+                return false; // 연결 통로의 잔해 차단
+            } // 조건 종료
+            foreach (SnakeContactHazard obstacle in chunk.GetComponentsInChildren<SnakeContactHazard>()) // 기존 장애물 순회
+            { // 반복 시작
+                if (obstacle != null && Vector2.Distance(obstacle.transform.position, position) < 1.3f) // 기존 장애물 간격 확인
+                { // 조건 시작
+                    return false; // 겹친 잔해 차단
+                } // 조건 종료
+            } // 반복 종료
+            foreach (PrototypeSpecialZone zone in chunk.GetComponentsInChildren<PrototypeSpecialZone>()) // 기존 특수 지역 순회
+            { // 반복 시작
+                if (zone != null && Vector2.Distance(zone.transform.position, position) < zone.Radius + 1.2f) // 지역 출입 공간 확인
+                { // 조건 시작
+                    return false; // 지역 위 잔해 차단
+                } // 조건 종료
+            } // 반복 종료
+            return true; // 안전한 잔해 후보
+        } // 함수 종료
+
+        public bool TryCreateRockfallDebris(Vector3 position) // 기존 장애물을 이용한 낙석 잔해 생성
+        { // 함수 시작
+            if (!CanPlaceRockfallDebris(position)) // 현재 위치 안전 재확인
+            { // 조건 시작
+                return false; // 안전하지 않은 잔해 생략
+            } // 조건 종료
+            Vector2Int coordinate = new Vector2Int(Mathf.FloorToInt(position.x / ChunkSize), Mathf.FloorToInt(position.y / ChunkSize)); // 실제 청크 좌표
+            GameObject chunk = GetChunk(coordinate); // 실제 활성 청크
+            string folder = profile.ObstaclePattern == 1 ? "Ruins" : profile.ObstaclePattern == 2 ? "Swamp" : "Plains"; // 맵별 장애물 이미지 폴더
+            string artwork = profile.ObstaclePattern == 1 ? "무너진_벽체" : profile.ObstaclePattern == 2 ? "암반_섬" : "바위_군락"; // 맵별 기존 잔해 이미지
+            CreateObstacleAt(chunk.transform, position, folder, artwork); // 기존 충돌과 표시 재사용
+            return true; // 실제 잔해 생성 완료
+        } // 함수 종료
 
         private bool OverlapsPlayer(Vector3 position) // 기존 뱀 위치와 장애물 간격 확인
         { // 함수 시작

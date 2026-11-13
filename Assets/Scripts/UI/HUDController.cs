@@ -17,6 +17,72 @@ namespace ProjectEpsilon.UI // 프로젝트 기능 영역
         private Text sizedExperienceText; // 글자 크기 기준 경험치 표시
         private int baseLevelFontSize; // 원래 레벨 글자 크기
         private int baseExperienceFontSize; // 원래 경험치 글자 크기
+        private GameObject worldWarning; // 실제 맵 위험 예고판
+        private Text worldWarningText; // 실제 위험 이름
+        private Image worldWarningFill; // 실제 위험 예고 게이지
+        private static Sprite worldWarningSprite; // 공용 게이지 흰색 이미지
+
+        public void SetWorldWarning(string message, float progress) // 맵 위험 예고와 게이지 갱신
+        { // 함수 시작
+            if (string.IsNullOrEmpty(message)) // 실제 예고 종료 확인
+            { // 조건 시작
+                if (worldWarning != null) // 기존 예고판 확인
+                { // 조건 시작
+                    worldWarning.SetActive(false); // 종료된 예고 숨김
+                } // 조건 종료
+                return; // 표시 갱신 종료
+            } // 조건 종료
+            if (worldWarning == null) // 실제 예고판 생성 확인
+            { // 조건 시작
+                if (healthText == null || healthText.canvas == null || healthText.font == null) // 기존 HUD 구성 확인
+                { // 조건 시작
+                    return; // HUD 준비 전 표시 생략
+                } // 조건 종료
+                worldWarning = new GameObject("WorldHazardWarning", typeof(RectTransform), typeof(Image)); // 실제 위험 예고판
+                RectTransform frame = (RectTransform)worldWarning.transform; // 실제 예고판 영역
+                frame.SetParent(healthText.canvas.transform, false); // 기존 전투 화면에 연결
+                frame.anchorMin = frame.anchorMax = new Vector2(0.5f, 1f); // 화면 위 중앙 기준
+                frame.pivot = new Vector2(0.5f, 1f); // 예고판 위쪽 기준
+                frame.anchoredPosition = new Vector2(0f, -125f); // 타이머 아래 예고 위치
+                frame.sizeDelta = new Vector2(300f, 58f); // 예고판 크기
+                Image background = worldWarning.GetComponent<Image>(); // 실제 예고 배경
+                background.color = new Color(0.08f, 0.06f, 0.04f, 0.9f); // 어두운 예고 배경
+                background.raycastTarget = false; // 전투 입력 차단 방지
+                GameObject label = new GameObject("WarningText", typeof(RectTransform), typeof(Text)); // 실제 예고 문구
+                label.transform.SetParent(frame, false); // 예고판에 문구 연결
+                RectTransform labelRect = (RectTransform)label.transform; // 실제 문구 영역
+                labelRect.anchorMin = new Vector2(0f, 0.3f); // 문구 아래쪽 기준
+                labelRect.anchorMax = Vector2.one; // 문구 위쪽 기준
+                labelRect.offsetMin = Vector2.zero; // 문구 아래 여백
+                labelRect.offsetMax = Vector2.zero; // 문구 위 여백
+                worldWarningText = label.GetComponent<Text>(); // 실제 예고 문구
+                worldWarningText.font = healthText.font; // 기존 한국어 글꼴 재사용
+                worldWarningText.fontSize = 22; // 실제 예고 글자 크기
+                worldWarningText.alignment = TextAnchor.MiddleCenter; // 예고 문구 가운데 정렬
+                worldWarningText.color = Color.white; // 예고 문구 색상
+                worldWarningText.raycastTarget = false; // 전투 입력 차단 방지
+                GameObject fill = new GameObject("WarningGauge", typeof(RectTransform), typeof(Image)); // 실제 예고 게이지
+                fill.transform.SetParent(frame, false); // 예고판에 게이지 연결
+                RectTransform fillRect = (RectTransform)fill.transform; // 실제 게이지 영역
+                fillRect.anchorMin = new Vector2(0f, 0f); // 게이지 왼쪽 아래 기준
+                fillRect.anchorMax = new Vector2(1f, 0.25f); // 게이지 가로 크기 기준
+                fillRect.offsetMin = new Vector2(4f, 4f); // 게이지 안쪽 여백
+                fillRect.offsetMax = new Vector2(-4f, 0f); // 게이지 오른쪽 여백
+                worldWarningFill = fill.GetComponent<Image>(); // 실제 게이지 이미지
+                if (worldWarningSprite == null) // 공용 게이지 이미지 확인
+                { // 조건 시작
+                    worldWarningSprite = Sprite.Create(Texture2D.whiteTexture, new Rect(0f, 0f, Texture2D.whiteTexture.width, Texture2D.whiteTexture.height), new Vector2(0.5f, 0.5f), Texture2D.whiteTexture.width); // 실제 채우기용 흰색 이미지
+                } // 조건 종료
+                worldWarningFill.sprite = worldWarningSprite; // 실제 게이지 이미지 연결
+                worldWarningFill.type = Image.Type.Filled; // 채워지는 막대 설정
+                worldWarningFill.fillMethod = Image.FillMethod.Horizontal; // 왼쪽에서 오른쪽 충전
+                worldWarningFill.color = new Color(1f, 0.55f, 0.1f); // 위험 게이지 색상
+                worldWarningFill.raycastTarget = false; // 전투 입력 차단 방지
+            } // 조건 종료
+            worldWarning.SetActive(true); // 실제 예고 표시
+            worldWarningText.text = message; // 현재 위험 이름 표시
+            worldWarningFill.fillAmount = Mathf.Clamp01(progress); // 실제 예고 진행도 표시
+        } // 함수 종료
 
         private void Start() // 시작 기능 선언
         {
