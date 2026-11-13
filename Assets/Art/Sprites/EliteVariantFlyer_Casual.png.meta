@@ -1,0 +1,481 @@
+fileFormatVersion: 2
+guid: 518bbc754b2094a4f80b146acfb78d13
+TextureImporter:
+  internalIDToNameTable:
+  - first:
+      213: 8129193287696735646
+    second: EliteVariantFlyer_Casual_0
+  - first:
+      213: -8494211337165428829
+    second: EliteVariantFlyer_Casual_1
+  - first:
+      213: 2140356650293159942
+    second: EliteVariantFlyer_Casual_2
+  - first:
+      213: 1275377300649035903
+    second: EliteVariantFlyer_Casual_3
+  - first:
+      213: -3227639565686345952
+    second: EliteVariantFlyer_Casual_4
+  - first:
+      213: 189044967756202020
+    second: EliteVariantFlyer_Casual_5
+  - first:
+      213: -7543571608486392197
+    second: EliteVariantFlyer_Casual_6
+  - first:
+      213: 1893357908065721249
+    second: EliteVariantFlyer_Casual_7
+  - first:
+      213: 6788077554350367313
+    second: EliteVariantFlyer_Casual_8
+  - first:
+      213: 4723938895824290209
+    second: EliteVariantFlyer_Casual_9
+  - first:
+      213: 8397883831343231370
+    second: EliteVariantFlyer_Casual_10
+  - first:
+      213: -4024107615925697241
+    second: EliteVariantFlyer_Casual_11
+  - first:
+      213: -300621663194047817
+    second: EliteVariantFlyer_Casual_12
+  - first:
+      213: 1881147812909649367
+    second: EliteVariantFlyer_Casual_13
+  externalObjects: {}
+  serializedVersion: 13
+  mipmaps:
+    mipMapMode: 0
+    enableMipMap: 0
+    sRGBTexture: 1
+    linearTexture: 0
+    fadeOut: 0
+    borderMipMap: 0
+    mipMapsPreserveCoverage: 0
+    alphaTestReferenceValue: 0.5
+    mipMapFadeDistanceStart: 1
+    mipMapFadeDistanceEnd: 3
+  bumpmap:
+    convertToNormalMap: 0
+    externalNormalMap: 0
+    heightScale: 0.25
+    normalMapFilter: 0
+    flipGreenChannel: 0
+  isReadable: 0
+  streamingMipmaps: 0
+  streamingMipmapsPriority: 0
+  vTOnly: 0
+  ignoreMipmapLimit: 0
+  grayScaleToAlpha: 0
+  generateCubemap: 6
+  cubemapConvolution: 0
+  seamlessCubemap: 0
+  textureFormat: 1
+  maxTextureSize: 2048
+  textureSettings:
+    serializedVersion: 2
+    filterMode: 1
+    aniso: 1
+    mipBias: 0
+    wrapU: 1
+    wrapV: 1
+    wrapW: 1
+  nPOTScale: 0
+  lightmap: 0
+  compressionQuality: 50
+  spriteMode: 1
+  spriteExtrude: 1
+  spriteMeshType: 1
+  alignment: 0
+  spritePivot: {x: 0.5, y: 0.5}
+  spritePixelsToUnits: 1000
+  spriteBorder: {x: 0, y: 0, z: 0, w: 0}
+  spriteGenerateFallbackPhysicsShape: 1
+  alphaUsage: 1
+  alphaIsTransparency: 1
+  spriteTessellationDetail: -1
+  textureType: 8
+  textureShape: 1
+  singleChannelComponent: 0
+  flipbookRows: 1
+  flipbookColumns: 1
+  maxTextureSizeSet: 0
+  compressionQualitySet: 0
+  textureFormatSet: 0
+  ignorePngGamma: 0
+  applyGammaDecoding: 0
+  swizzle: 50462976
+  cookieLightType: 0
+  platformSettings:
+  - serializedVersion: 4
+    buildTarget: DefaultTexturePlatform
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 4
+    buildTarget: Standalone
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  spriteSheet:
+    serializedVersion: 2
+    sprites:
+    - serializedVersion: 2
+      name: EliteVariantFlyer_Casual_0
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 24
+        width: 1235
+        height: 1212
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData:
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: e9d57af8932b0d070800000000000000
+      internalID: 8129193287696735646
+      vertices: []
+      indices:
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: EliteVariantFlyer_Casual_1
+      rect:
+        serializedVersion: 2
+        x: 520
+        y: 1125
+        width: 14
+        height: 14
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData:
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 3a7a8290bcf7e1a80800000000000000
+      internalID: -8494211337165428829
+      vertices: []
+      indices:
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: EliteVariantFlyer_Casual_2
+      rect:
+        serializedVersion: 2
+        x: 319
+        y: 1004
+        width: 6
+        height: 8
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData:
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 6086e59880314bd10800000000000000
+      internalID: 2140356650293159942
+      vertices: []
+      indices:
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: EliteVariantFlyer_Casual_3
+      rect:
+        serializedVersion: 2
+        x: 324
+        y: 985
+        width: 27
+        height: 30
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData:
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: f7848cfc5ec03b110800000000000000
+      internalID: 1275377300649035903
+      vertices: []
+      indices:
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: EliteVariantFlyer_Casual_4
+      rect:
+        serializedVersion: 2
+        x: 739
+        y: 146
+        width: 10
+        height: 9
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData:
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 02fe4407aee1533d0800000000000000
+      internalID: -3227639565686345952
+      vertices: []
+      indices:
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: EliteVariantFlyer_Casual_5
+      rect:
+        serializedVersion: 2
+        x: 754
+        y: 150
+        width: 11
+        height: 12
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData:
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 4200fa5856f9f9200800000000000000
+      internalID: 189044967756202020
+      vertices: []
+      indices:
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: EliteVariantFlyer_Casual_6
+      rect:
+        serializedVersion: 2
+        x: 764
+        y: 146
+        width: 7
+        height: 13
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData:
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: b7e4272f699df4790800000000000000
+      internalID: -7543571608486392197
+      vertices: []
+      indices:
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: EliteVariantFlyer_Casual_7
+      rect:
+        serializedVersion: 2
+        x: 836
+        y: 145
+        width: 15
+        height: 16
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData:
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 1ab1fe66cfe864a10800000000000000
+      internalID: 1893357908065721249
+      vertices: []
+      indices:
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: EliteVariantFlyer_Casual_8
+      rect:
+        serializedVersion: 2
+        x: 305
+        y: 119
+        width: 8
+        height: 10
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData:
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 1522bd62298143e50800000000000000
+      internalID: 6788077554350367313
+      vertices: []
+      indices:
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: EliteVariantFlyer_Casual_9
+      rect:
+        serializedVersion: 2
+        x: 311
+        y: 126
+        width: 6
+        height: 9
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData:
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 1a10242b56dce8140800000000000000
+      internalID: 4723938895824290209
+      vertices: []
+      indices:
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: EliteVariantFlyer_Casual_10
+      rect:
+        serializedVersion: 2
+        x: 858
+        y: 97
+        width: 43
+        height: 48
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData:
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: a81b538c9d64b8470800000000000000
+      internalID: 8397883831343231370
+      vertices: []
+      indices:
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: EliteVariantFlyer_Casual_11
+      rect:
+        serializedVersion: 2
+        x: 950
+        y: 122
+        width: 16
+        height: 17
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData:
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 7250ec6a17f7728c0800000000000000
+      internalID: -4024107615925697241
+      vertices: []
+      indices:
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: EliteVariantFlyer_Casual_12
+      rect:
+        serializedVersion: 2
+        x: 697
+        y: 87
+        width: 9
+        height: 9
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData:
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 7ba1889a03af3dbf0800000000000000
+      internalID: -300621663194047817
+      vertices: []
+      indices:
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: EliteVariantFlyer_Casual_13
+      rect:
+        serializedVersion: 2
+        x: 496
+        y: 31
+        width: 12
+        height: 14
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData:
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 7dd8b7618fd2b1a10800000000000000
+      internalID: 1881147812909649367
+      vertices: []
+      indices:
+      edges: []
+      weights: []
+    outline: []
+    customData:
+    physicsShape: []
+    bones: []
+    spriteID: 5e97eb03825dee720800000000000000
+    internalID: 0
+    vertices: []
+    indices:
+    edges: []
+    weights: []
+    secondaryTextures: []
+    spriteCustomMetadata:
+      entries: []
+    nameFileIdTable:
+      EliteVariantFlyer_Casual_0: 8129193287696735646
+      EliteVariantFlyer_Casual_1: -8494211337165428829
+      EliteVariantFlyer_Casual_10: 8397883831343231370
+      EliteVariantFlyer_Casual_11: -4024107615925697241
+      EliteVariantFlyer_Casual_12: -300621663194047817
+      EliteVariantFlyer_Casual_13: 1881147812909649367
+      EliteVariantFlyer_Casual_2: 2140356650293159942
+      EliteVariantFlyer_Casual_3: 1275377300649035903
+      EliteVariantFlyer_Casual_4: -3227639565686345952
+      EliteVariantFlyer_Casual_5: 189044967756202020
+      EliteVariantFlyer_Casual_6: -7543571608486392197
+      EliteVariantFlyer_Casual_7: 1893357908065721249
+      EliteVariantFlyer_Casual_8: 6788077554350367313
+      EliteVariantFlyer_Casual_9: 4723938895824290209
+  mipmapLimitGroupName:
+  pSDRemoveMatte: 0
+  userData:
+  assetBundleName:
+  assetBundleVariant:

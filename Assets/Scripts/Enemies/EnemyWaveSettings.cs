@@ -25,8 +25,20 @@ namespace ProjectEpsilon.Enemies // 적 출현 영역
         [SerializeField] private EnemyWaveStage[] stages; // 시간별 출현 구간 목록
         [SerializeField] private EarlyEnemySettings[] additionalEnemies; // 추가 일반 적과 조정 가능한 시험값
         [SerializeField] private EarlyEnemySettings[] additionalEliteRounds; // 후속 회차별 전용 엘리트 시험값
+        [SerializeField, Range(0f, 1f)] private float enhancedEliteChance = 0.25f; // 후속 회차 강화형 확률 시험값
+        [SerializeField, Min(1f)] private float enhancedHealthMultiplier = 3f; // 강화형 기본 체력 배율 시험값
+        [SerializeField, Min(1f)] private float enhancedDamageMultiplier = 1.5f; // 강화형 기본 피해 배율 시험값
+        [SerializeField] private Sprite[] enhancedEnemySprites; // 일반 적 종류별 강화형 원본 이미지
         public EarlyEnemySettings[] AdditionalEnemies => additionalEnemies; // 실제 추가 적 목록
         public EarlyEnemySettings[] AdditionalEliteRounds => additionalEliteRounds; // 실제 후속 엘리트 목록
+        public float EnhancedEliteChance => Mathf.Clamp01(enhancedEliteChance); // 안전한 강화형 출현 확률
+        public float EnhancedHealthMultiplier => Mathf.Max(1f, enhancedHealthMultiplier); // 안전한 강화형 체력 배율
+        public float EnhancedDamageMultiplier => Mathf.Max(1f, enhancedDamageMultiplier); // 안전한 강화형 피해 배율
+        public Sprite GetEnhancedSprite(EarlyEnemyKind kind) // 실제 적 종류의 강화형 이미지 조회
+        { // 함수 시작
+            int index = (int)kind; // 실제 적 종류 번호
+            return enhancedEnemySprites != null && index >= 0 && index < enhancedEnemySprites.Length ? enhancedEnemySprites[index] : null; // 유효 이미지 또는 기본 이미지
+        } // 함수 종료
 
         public float ResolveMultiplier(float elapsed, bool health) // 분 단위 능력치 배율
         {

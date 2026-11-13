@@ -50,6 +50,8 @@ namespace ProjectEpsilon.Editor // 배치 시험 영역
         private static void Verify() // 실제 엘리트 일정과 공격 확인
         { // 함수 시작
             EnemyWaveSettings wave = Resources.Load<EnemyWaveSettings>("EnemyWaveSettings"); // 실제 출현 데이터
+            Require(wave != null, "실제 출현 데이터 누락"); // 실제 웨이브 설정 확인
+            typeof(EnemyWaveSettings).GetField("enhancedEliteChance", Private).SetValue(wave, 0f); // 전용 회차를 확인할 시험 확률
             PropertyInfo roundsProperty = typeof(EnemyWaveSettings).GetProperty("AdditionalEliteRounds"); // 실제 추가 회차 설정
             Require(wave != null && roundsProperty != null, "추가 엘리트 회차 설정 누락"); // 실제 구현 확인
             EarlyEnemySettings[] rounds = (EarlyEnemySettings[])roundsProperty.GetValue(wave); // 실제 추가 회차 데이터

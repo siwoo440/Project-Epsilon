@@ -1,0 +1,663 @@
+fileFormatVersion: 2
+guid: 264fd3f70bfdf70419c4217aca6381ae
+TextureImporter:
+  internalIDToNameTable:
+  - first:
+      213: 2887488668043213403
+    second: EliteVariantChaser_Casual_0
+  - first:
+      213: -2276665826664003268
+    second: EliteVariantChaser_Casual_1
+  - first:
+      213: 3618455200474876800
+    second: EliteVariantChaser_Casual_2
+  - first:
+      213: -3098764698324659325
+    second: EliteVariantChaser_Casual_3
+  - first:
+      213: 1841168642221991588
+    second: EliteVariantChaser_Casual_4
+  - first:
+      213: 7250137713533386175
+    second: EliteVariantChaser_Casual_5
+  - first:
+      213: -7165189702833582456
+    second: EliteVariantChaser_Casual_6
+  - first:
+      213: 5654009890297674625
+    second: EliteVariantChaser_Casual_7
+  - first:
+      213: 6201821116065742703
+    second: EliteVariantChaser_Casual_8
+  - first:
+      213: 7102485728257782183
+    second: EliteVariantChaser_Casual_9
+  - first:
+      213: 6976991361746645293
+    second: EliteVariantChaser_Casual_10
+  - first:
+      213: -4441925288378014240
+    second: EliteVariantChaser_Casual_11
+  - first:
+      213: -1657063337536349310
+    second: EliteVariantChaser_Casual_12
+  - first:
+      213: 3374180327351697634
+    second: EliteVariantChaser_Casual_13
+  - first:
+      213: 3150708065900654472
+    second: EliteVariantChaser_Casual_14
+  - first:
+      213: -5833881366540242173
+    second: EliteVariantChaser_Casual_15
+  - first:
+      213: -1221357402157249372
+    second: EliteVariantChaser_Casual_16
+  - first:
+      213: -6854770152513821174
+    second: EliteVariantChaser_Casual_17
+  - first:
+      213: -1806193038104025256
+    second: EliteVariantChaser_Casual_18
+  - first:
+      213: -9084673785534149193
+    second: EliteVariantChaser_Casual_19
+  - first:
+      213: 5468013205679625977
+    second: EliteVariantChaser_Casual_20
+  externalObjects: {}
+  serializedVersion: 13
+  mipmaps:
+    mipMapMode: 0
+    enableMipMap: 0
+    sRGBTexture: 1
+    linearTexture: 0
+    fadeOut: 0
+    borderMipMap: 0
+    mipMapsPreserveCoverage: 0
+    alphaTestReferenceValue: 0.5
+    mipMapFadeDistanceStart: 1
+    mipMapFadeDistanceEnd: 3
+  bumpmap:
+    convertToNormalMap: 0
+    externalNormalMap: 0
+    heightScale: 0.25
+    normalMapFilter: 0
+    flipGreenChannel: 0
+  isReadable: 0
+  streamingMipmaps: 0
+  streamingMipmapsPriority: 0
+  vTOnly: 0
+  ignoreMipmapLimit: 0
+  grayScaleToAlpha: 0
+  generateCubemap: 6
+  cubemapConvolution: 0
+  seamlessCubemap: 0
+  textureFormat: 1
+  maxTextureSize: 2048
+  textureSettings:
+    serializedVersion: 2
+    filterMode: 1
+    aniso: 1
+    mipBias: 0
+    wrapU: 1
+    wrapV: 1
+    wrapW: 1
+  nPOTScale: 0
+  lightmap: 0
+  compressionQuality: 50
+  spriteMode: 1
+  spriteExtrude: 1
+  spriteMeshType: 1
+  alignment: 0
+  spritePivot: {x: 0.5, y: 0.5}
+  spritePixelsToUnits: 1000
+  spriteBorder: {x: 0, y: 0, z: 0, w: 0}
+  spriteGenerateFallbackPhysicsShape: 1
+  alphaUsage: 1
+  alphaIsTransparency: 1
+  spriteTessellationDetail: -1
+  textureType: 8
+  textureShape: 1
+  singleChannelComponent: 0
+  flipbookRows: 1
+  flipbookColumns: 1
+  maxTextureSizeSet: 0
+  compressionQualitySet: 0
+  textureFormatSet: 0
+  ignorePngGamma: 0
+  applyGammaDecoding: 0
+  swizzle: 50462976
+  cookieLightType: 0
+  platformSettings:
+  - serializedVersion: 4
+    buildTarget: DefaultTexturePlatform
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 4
+    buildTarget: Standalone
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  spriteSheet:
+    serializedVersion: 2
+    sprites:
+    - serializedVersion: 2
+      name: EliteVariantChaser_Casual_0
+      rect:
+        serializedVersion: 2
+        x: 32
+        y: 0
+        width: 1177
+        height: 1220
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData:
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: b5a7eaf15ab621820800000000000000
+      internalID: 2887488668043213403
+      vertices: []
+      indices:
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: EliteVariantChaser_Casual_1
+      rect:
+        serializedVersion: 2
+        x: 56
+        y: 972
+        width: 62
+        height: 131
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData:
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: c39cb613e78a760e0800000000000000
+      internalID: -2276665826664003268
+      vertices: []
+      indices:
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: EliteVariantChaser_Casual_2
+      rect:
+        serializedVersion: 2
+        x: 86
+        y: 1050
+        width: 6
+        height: 7
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData:
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 08b48fb55d5573230800000000000000
+      internalID: 3618455200474876800
+      vertices: []
+      indices:
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: EliteVariantChaser_Casual_3
+      rect:
+        serializedVersion: 2
+        x: 1083
+        y: 689
+        width: 7
+        height: 10
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData:
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 38396d1cce9fef4d0800000000000000
+      internalID: -3098764698324659325
+      vertices: []
+      indices:
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: EliteVariantChaser_Casual_4
+      rect:
+        serializedVersion: 2
+        x: 129
+        y: 658
+        width: 9
+        height: 10
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData:
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 4a6ea3b00252d8910800000000000000
+      internalID: 1841168642221991588
+      vertices: []
+      indices:
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: EliteVariantChaser_Casual_5
+      rect:
+        serializedVersion: 2
+        x: 1053
+        y: 634
+        width: 7
+        height: 11
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData:
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: fbdf1db66d9ad9460800000000000000
+      internalID: 7250137713533386175
+      vertices: []
+      indices:
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: EliteVariantChaser_Casual_6
+      rect:
+        serializedVersion: 2
+        x: 1059
+        y: 633
+        width: 7
+        height: 12
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData:
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 88e41569de1209c90800000000000000
+      internalID: -7165189702833582456
+      vertices: []
+      indices:
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: EliteVariantChaser_Casual_7
+      rect:
+        serializedVersion: 2
+        x: 149
+        y: 578
+        width: 19
+        height: 19
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData:
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 18bfcbbf904177e40800000000000000
+      internalID: 5654009890297674625
+      vertices: []
+      indices:
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: EliteVariantChaser_Casual_8
+      rect:
+        serializedVersion: 2
+        x: 1112
+        y: 507
+        width: 12
+        height: 17
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData:
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: f6f7d97427b411650800000000000000
+      internalID: 6201821116065742703
+      vertices: []
+      indices:
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: EliteVariantChaser_Casual_9
+      rect:
+        serializedVersion: 2
+        x: 112
+        y: 417
+        width: 10
+        height: 10
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData:
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 7a13617a329119260800000000000000
+      internalID: 7102485728257782183
+      vertices: []
+      indices:
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: EliteVariantChaser_Casual_10
+      rect:
+        serializedVersion: 2
+        x: 120
+        y: 419
+        width: 6
+        height: 7
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData:
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: d21b0e58da043d060800000000000000
+      internalID: 6976991361746645293
+      vertices: []
+      indices:
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: EliteVariantChaser_Casual_11
+      rect:
+        serializedVersion: 2
+        x: 137
+        y: 417
+        width: 7
+        height: 25
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData:
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 0e5676b0c7c1b52c0800000000000000
+      internalID: -4441925288378014240
+      vertices: []
+      indices:
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: EliteVariantChaser_Casual_12
+      rect:
+        serializedVersion: 2
+        x: 1101
+        y: 401
+        width: 19
+        height: 27
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData:
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 28b92db8cade009e0800000000000000
+      internalID: -1657063337536349310
+      vertices: []
+      indices:
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: EliteVariantChaser_Casual_13
+      rect:
+        serializedVersion: 2
+        x: 129
+        y: 399
+        width: 15
+        height: 13
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData:
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 2e0c8eb612f73de20800000000000000
+      internalID: 3374180327351697634
+      vertices: []
+      indices:
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: EliteVariantChaser_Casual_14
+      rect:
+        serializedVersion: 2
+        x: 142
+        y: 400
+        width: 6
+        height: 15
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData:
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 88f67f2fa4099bb20800000000000000
+      internalID: 3150708065900654472
+      vertices: []
+      indices:
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: EliteVariantChaser_Casual_15
+      rect:
+        serializedVersion: 2
+        x: 930
+        y: 117
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData:
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 303399d6ec3e90fa0800000000000000
+      internalID: -5833881366540242173
+      vertices: []
+      indices:
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: EliteVariantChaser_Casual_16
+      rect:
+        serializedVersion: 2
+        x: 924
+        y: 95
+        width: 7
+        height: 10
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData:
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 4ac8f9ce9eddc0fe0800000000000000
+      internalID: -1221357402157249372
+      vertices: []
+      indices:
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: EliteVariantChaser_Casual_17
+      rect:
+        serializedVersion: 2
+        x: 930
+        y: 95
+        width: 8
+        height: 11
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData:
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: a06a67a4dd6fed0a0800000000000000
+      internalID: -6854770152513821174
+      vertices: []
+      indices:
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: EliteVariantChaser_Casual_18
+      rect:
+        serializedVersion: 2
+        x: 930
+        y: 83
+        width: 9
+        height: 19
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData:
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 857a600600d1fe6e0800000000000000
+      internalID: -1806193038104025256
+      vertices: []
+      indices:
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: EliteVariantChaser_Casual_19
+      rect:
+        serializedVersion: 2
+        x: 715
+        y: 79
+        width: 6
+        height: 7
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData:
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 7bd0fe02351cce180800000000000000
+      internalID: -9084673785534149193
+      vertices: []
+      indices:
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: EliteVariantChaser_Casual_20
+      rect:
+        serializedVersion: 2
+        x: 653
+        y: 0
+        width: 49
+        height: 19
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData:
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 9f6ddaf2a0942eb40800000000000000
+      internalID: 5468013205679625977
+      vertices: []
+      indices:
+      edges: []
+      weights: []
+    outline: []
+    customData:
+    physicsShape: []
+    bones: []
+    spriteID: 5e97eb03825dee720800000000000000
+    internalID: 0
+    vertices: []
+    indices:
+    edges: []
+    weights: []
+    secondaryTextures: []
+    spriteCustomMetadata:
+      entries: []
+    nameFileIdTable:
+      EliteVariantChaser_Casual_0: 2887488668043213403
+      EliteVariantChaser_Casual_1: -2276665826664003268
+      EliteVariantChaser_Casual_10: 6976991361746645293
+      EliteVariantChaser_Casual_11: -4441925288378014240
+      EliteVariantChaser_Casual_12: -1657063337536349310
+      EliteVariantChaser_Casual_13: 3374180327351697634
+      EliteVariantChaser_Casual_14: 3150708065900654472
+      EliteVariantChaser_Casual_15: -5833881366540242173
+      EliteVariantChaser_Casual_16: -1221357402157249372
+      EliteVariantChaser_Casual_17: -6854770152513821174
+      EliteVariantChaser_Casual_18: -1806193038104025256
+      EliteVariantChaser_Casual_19: -9084673785534149193
+      EliteVariantChaser_Casual_2: 3618455200474876800
+      EliteVariantChaser_Casual_20: 5468013205679625977
+      EliteVariantChaser_Casual_3: -3098764698324659325
+      EliteVariantChaser_Casual_4: 1841168642221991588
+      EliteVariantChaser_Casual_5: 7250137713533386175
+      EliteVariantChaser_Casual_6: -7165189702833582456
+      EliteVariantChaser_Casual_7: 5654009890297674625
+      EliteVariantChaser_Casual_8: 6201821116065742703
+      EliteVariantChaser_Casual_9: 7102485728257782183
+  mipmapLimitGroupName:
+  pSDRemoveMatte: 0
+  userData:
+  assetBundleName:
+  assetBundleVariant:

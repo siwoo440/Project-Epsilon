@@ -117,7 +117,7 @@ namespace ProjectEpsilon.Enemies // 적 영역
         }
         private Vector2 TargetPosition() // 목표 위치 조회
         {
-            if (settings.kind == EarlyEnemyKind.Predator && body != null && body.BodySegments.Count > 0) // 몸통 우선 추적 확인
+            if ((settings.kind == EarlyEnemyKind.Predator || settings.kind == EarlyEnemyKind.Elite && settings.elitePattern == ElitePattern.BodyPressure) && body != null && body.BodySegments.Count > 0) // 기존 몸통 추적과 전용 압박 행동 확인
             {
                 float best = float.MaxValue; // 최근접 거리 초기화
                 Vector2 target = player.transform.position; // 기본 목표 설정

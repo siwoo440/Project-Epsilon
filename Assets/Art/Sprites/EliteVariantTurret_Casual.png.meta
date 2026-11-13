@@ -1,0 +1,637 @@
+fileFormatVersion: 2
+guid: ac206c3177c307341ba6010a1718e43c
+TextureImporter:
+  internalIDToNameTable:
+  - first:
+      213: -8603702554794922352
+    second: EliteVariantTurret_Casual_0
+  - first:
+      213: -2349681400283095725
+    second: EliteVariantTurret_Casual_1
+  - first:
+      213: 2529411945243185995
+    second: EliteVariantTurret_Casual_2
+  - first:
+      213: -5417301415029213908
+    second: EliteVariantTurret_Casual_3
+  - first:
+      213: -1866765337310793827
+    second: EliteVariantTurret_Casual_4
+  - first:
+      213: 2289034725137819370
+    second: EliteVariantTurret_Casual_5
+  - first:
+      213: -354201383997372117
+    second: EliteVariantTurret_Casual_6
+  - first:
+      213: -3036766461744310233
+    second: EliteVariantTurret_Casual_7
+  - first:
+      213: -4816652753394896922
+    second: EliteVariantTurret_Casual_8
+  - first:
+      213: -5153485421185998156
+    second: EliteVariantTurret_Casual_9
+  - first:
+      213: -3885676006139597153
+    second: EliteVariantTurret_Casual_10
+  - first:
+      213: 973773209474868730
+    second: EliteVariantTurret_Casual_11
+  - first:
+      213: -7595132157297542645
+    second: EliteVariantTurret_Casual_12
+  - first:
+      213: -7935123123156347807
+    second: EliteVariantTurret_Casual_13
+  - first:
+      213: 6811690820392357654
+    second: EliteVariantTurret_Casual_14
+  - first:
+      213: 1206465723317113281
+    second: EliteVariantTurret_Casual_15
+  - first:
+      213: 5960960761212268542
+    second: EliteVariantTurret_Casual_16
+  - first:
+      213: -7024028357386381204
+    second: EliteVariantTurret_Casual_17
+  - first:
+      213: -4423273704773466138
+    second: EliteVariantTurret_Casual_18
+  - first:
+      213: 5620448751676305344
+    second: EliteVariantTurret_Casual_19
+  externalObjects: {}
+  serializedVersion: 13
+  mipmaps:
+    mipMapMode: 0
+    enableMipMap: 0
+    sRGBTexture: 1
+    linearTexture: 0
+    fadeOut: 0
+    borderMipMap: 0
+    mipMapsPreserveCoverage: 0
+    alphaTestReferenceValue: 0.5
+    mipMapFadeDistanceStart: 1
+    mipMapFadeDistanceEnd: 3
+  bumpmap:
+    convertToNormalMap: 0
+    externalNormalMap: 0
+    heightScale: 0.25
+    normalMapFilter: 0
+    flipGreenChannel: 0
+  isReadable: 0
+  streamingMipmaps: 0
+  streamingMipmapsPriority: 0
+  vTOnly: 0
+  ignoreMipmapLimit: 0
+  grayScaleToAlpha: 0
+  generateCubemap: 6
+  cubemapConvolution: 0
+  seamlessCubemap: 0
+  textureFormat: 1
+  maxTextureSize: 2048
+  textureSettings:
+    serializedVersion: 2
+    filterMode: 1
+    aniso: 1
+    mipBias: 0
+    wrapU: 1
+    wrapV: 1
+    wrapW: 1
+  nPOTScale: 0
+  lightmap: 0
+  compressionQuality: 50
+  spriteMode: 1
+  spriteExtrude: 1
+  spriteMeshType: 1
+  alignment: 0
+  spritePivot: {x: 0.5, y: 0.5}
+  spritePixelsToUnits: 1000
+  spriteBorder: {x: 0, y: 0, z: 0, w: 0}
+  spriteGenerateFallbackPhysicsShape: 1
+  alphaUsage: 1
+  alphaIsTransparency: 1
+  spriteTessellationDetail: -1
+  textureType: 8
+  textureShape: 1
+  singleChannelComponent: 0
+  flipbookRows: 1
+  flipbookColumns: 1
+  maxTextureSizeSet: 0
+  compressionQualitySet: 0
+  textureFormatSet: 0
+  ignorePngGamma: 0
+  applyGammaDecoding: 0
+  swizzle: 50462976
+  cookieLightType: 0
+  platformSettings:
+  - serializedVersion: 4
+    buildTarget: DefaultTexturePlatform
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 4
+    buildTarget: Standalone
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  spriteSheet:
+    serializedVersion: 2
+    sprites:
+    - serializedVersion: 2
+      name: EliteVariantTurret_Casual_0
+      rect:
+        serializedVersion: 2
+        x: 48
+        y: 0
+        width: 1127
+        height: 1150
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData:
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 09ee35c5c12899880800000000000000
+      internalID: -8603702554794922352
+      vertices: []
+      indices:
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: EliteVariantTurret_Casual_1
+      rect:
+        serializedVersion: 2
+        x: 1157
+        y: 712
+        width: 46
+        height: 22
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData:
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 35d98c03731446fd0800000000000000
+      internalID: -2349681400283095725
+      vertices: []
+      indices:
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: EliteVariantTurret_Casual_2
+      rect:
+        serializedVersion: 2
+        x: 1163
+        y: 708
+        width: 10
+        height: 12
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData:
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: b4399d643c64a1320800000000000000
+      internalID: 2529411945243185995
+      vertices: []
+      indices:
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: EliteVariantTurret_Casual_3
+      rect:
+        serializedVersion: 2
+        x: 1135
+        y: 656
+        width: 16
+        height: 17
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData:
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: c2576fba011e1d4b0800000000000000
+      internalID: -5417301415029213908
+      vertices: []
+      indices:
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: EliteVariantTurret_Casual_4
+      rect:
+        serializedVersion: 2
+        x: 1149
+        y: 644
+        width: 20
+        height: 13
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData:
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: d9fe396f0dae716e0800000000000000
+      internalID: -1866765337310793827
+      vertices: []
+      indices:
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: EliteVariantTurret_Casual_5
+      rect:
+        serializedVersion: 2
+        x: 786
+        y: 126
+        width: 9
+        height: 15
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData:
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: ae6af5664f844cf10800000000000000
+      internalID: 2289034725137819370
+      vertices: []
+      indices:
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: EliteVariantTurret_Casual_6
+      rect:
+        serializedVersion: 2
+        x: 520
+        y: 48
+        width: 28
+        height: 59
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData:
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: b2982e7c7bf951bf0800000000000000
+      internalID: -354201383997372117
+      vertices: []
+      indices:
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: EliteVariantTurret_Casual_7
+      rect:
+        serializedVersion: 2
+        x: 593
+        y: 71
+        width: 9
+        height: 7
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData:
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 72819e51efc3bd5d0800000000000000
+      internalID: -3036766461744310233
+      vertices: []
+      indices:
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: EliteVariantTurret_Casual_8
+      rect:
+        serializedVersion: 2
+        x: 739
+        y: 73
+        width: 8
+        height: 6
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData:
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 6ef6d7b27dfc72db0800000000000000
+      internalID: -4816652753394896922
+      vertices: []
+      indices:
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: EliteVariantTurret_Casual_9
+      rect:
+        serializedVersion: 2
+        x: 868
+        y: 57
+        width: 15
+        height: 17
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData:
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 4b2ed0350542b78b0800000000000000
+      internalID: -5153485421185998156
+      vertices: []
+      indices:
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: EliteVariantTurret_Casual_10
+      rect:
+        serializedVersion: 2
+        x: 571
+        y: 63
+        width: 7
+        height: 9
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData:
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: f9e6ac5724e431ac0800000000000000
+      internalID: -3885676006139597153
+      vertices: []
+      indices:
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: EliteVariantTurret_Casual_11
+      rect:
+        serializedVersion: 2
+        x: 876
+        y: 42
+        width: 31
+        height: 24
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData:
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: af5aa822399838d00800000000000000
+      internalID: 973773209474868730
+      vertices: []
+      indices:
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: EliteVariantTurret_Casual_12
+      rect:
+        serializedVersion: 2
+        x: 920
+        y: 55
+        width: 12
+        height: 16
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData:
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: b0a322e2b8ba89690800000000000000
+      internalID: -7595132157297542645
+      vertices: []
+      indices:
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: EliteVariantTurret_Casual_13
+      rect:
+        serializedVersion: 2
+        x: 930
+        y: 55
+        width: 11
+        height: 10
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData:
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 1641743cf87c0e190800000000000000
+      internalID: -7935123123156347807
+      vertices: []
+      indices:
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: EliteVariantTurret_Casual_14
+      rect:
+        serializedVersion: 2
+        x: 981
+        y: 46
+        width: 15
+        height: 20
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData:
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 61f864516bcf78e50800000000000000
+      internalID: 6811690820392357654
+      vertices: []
+      indices:
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: EliteVariantTurret_Casual_15
+      rect:
+        serializedVersion: 2
+        x: 514
+        y: 47
+        width: 10
+        height: 11
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData:
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 1c15008ee2a3eb010800000000000000
+      internalID: 1206465723317113281
+      vertices: []
+      indices:
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: EliteVariantTurret_Casual_16
+      rect:
+        serializedVersion: 2
+        x: 519
+        y: 47
+        width: 8
+        height: 9
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData:
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: eff6914da3699b250800000000000000
+      internalID: 5960960761212268542
+      vertices: []
+      indices:
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: EliteVariantTurret_Casual_17
+      rect:
+        serializedVersion: 2
+        x: 563
+        y: 49
+        width: 9
+        height: 8
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData:
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: c68d6b18c63a58e90800000000000000
+      internalID: -7024028357386381204
+      vertices: []
+      indices:
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: EliteVariantTurret_Casual_18
+      rect:
+        serializedVersion: 2
+        x: 904
+        y: 47
+        width: 11
+        height: 15
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData:
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 6e7c6a240006d92c0800000000000000
+      internalID: -4423273704773466138
+      vertices: []
+      indices:
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: EliteVariantTurret_Casual_19
+      rect:
+        serializedVersion: 2
+        x: 303
+        y: 7
+        width: 12
+        height: 12
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData:
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 0cf24f97c58dffd40800000000000000
+      internalID: 5620448751676305344
+      vertices: []
+      indices:
+      edges: []
+      weights: []
+    outline: []
+    customData:
+    physicsShape: []
+    bones: []
+    spriteID: 5e97eb03825dee720800000000000000
+    internalID: 0
+    vertices: []
+    indices:
+    edges: []
+    weights: []
+    secondaryTextures: []
+    spriteCustomMetadata:
+      entries: []
+    nameFileIdTable:
+      EliteVariantTurret_Casual_0: -8603702554794922352
+      EliteVariantTurret_Casual_1: -2349681400283095725
+      EliteVariantTurret_Casual_10: -3885676006139597153
+      EliteVariantTurret_Casual_11: 973773209474868730
+      EliteVariantTurret_Casual_12: -7595132157297542645
+      EliteVariantTurret_Casual_13: -7935123123156347807
+      EliteVariantTurret_Casual_14: 6811690820392357654
+      EliteVariantTurret_Casual_15: 1206465723317113281
+      EliteVariantTurret_Casual_16: 5960960761212268542
+      EliteVariantTurret_Casual_17: -7024028357386381204
+      EliteVariantTurret_Casual_18: -4423273704773466138
+      EliteVariantTurret_Casual_19: 5620448751676305344
+      EliteVariantTurret_Casual_2: 2529411945243185995
+      EliteVariantTurret_Casual_3: -5417301415029213908
+      EliteVariantTurret_Casual_4: -1866765337310793827
+      EliteVariantTurret_Casual_5: 2289034725137819370
+      EliteVariantTurret_Casual_6: -354201383997372117
+      EliteVariantTurret_Casual_7: -3036766461744310233
+      EliteVariantTurret_Casual_8: -4816652753394896922
+      EliteVariantTurret_Casual_9: -5153485421185998156
+  mipmapLimitGroupName:
+  pSDRemoveMatte: 0
+  userData:
+  assetBundleName:
+  assetBundleVariant:

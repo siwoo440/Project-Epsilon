@@ -1,0 +1,377 @@
+fileFormatVersion: 2
+guid: 960c4fc74babd044694f68ddec5ed1e2
+TextureImporter:
+  internalIDToNameTable:
+  - first:
+      213: -3513795106684523582
+    second: EliteVariantCharger_Casual_0
+  - first:
+      213: -5136027690507706444
+    second: EliteVariantCharger_Casual_1
+  - first:
+      213: -5966342034472935397
+    second: EliteVariantCharger_Casual_2
+  - first:
+      213: 7925840904018370162
+    second: EliteVariantCharger_Casual_3
+  - first:
+      213: -7860090736778401225
+    second: EliteVariantCharger_Casual_4
+  - first:
+      213: -5152930556651964346
+    second: EliteVariantCharger_Casual_5
+  - first:
+      213: 9095136328565660596
+    second: EliteVariantCharger_Casual_6
+  - first:
+      213: 4829463935247161273
+    second: EliteVariantCharger_Casual_7
+  - first:
+      213: -3243618919479015810
+    second: EliteVariantCharger_Casual_8
+  - first:
+      213: 8241359427244900316
+    second: EliteVariantCharger_Casual_9
+  externalObjects: {}
+  serializedVersion: 13
+  mipmaps:
+    mipMapMode: 0
+    enableMipMap: 0
+    sRGBTexture: 1
+    linearTexture: 0
+    fadeOut: 0
+    borderMipMap: 0
+    mipMapsPreserveCoverage: 0
+    alphaTestReferenceValue: 0.5
+    mipMapFadeDistanceStart: 1
+    mipMapFadeDistanceEnd: 3
+  bumpmap:
+    convertToNormalMap: 0
+    externalNormalMap: 0
+    heightScale: 0.25
+    normalMapFilter: 0
+    flipGreenChannel: 0
+  isReadable: 0
+  streamingMipmaps: 0
+  streamingMipmapsPriority: 0
+  vTOnly: 0
+  ignoreMipmapLimit: 0
+  grayScaleToAlpha: 0
+  generateCubemap: 6
+  cubemapConvolution: 0
+  seamlessCubemap: 0
+  textureFormat: 1
+  maxTextureSize: 2048
+  textureSettings:
+    serializedVersion: 2
+    filterMode: 1
+    aniso: 1
+    mipBias: 0
+    wrapU: 1
+    wrapV: 1
+    wrapW: 1
+  nPOTScale: 0
+  lightmap: 0
+  compressionQuality: 50
+  spriteMode: 1
+  spriteExtrude: 1
+  spriteMeshType: 1
+  alignment: 0
+  spritePivot: {x: 0.5, y: 0.5}
+  spritePixelsToUnits: 1000
+  spriteBorder: {x: 0, y: 0, z: 0, w: 0}
+  spriteGenerateFallbackPhysicsShape: 1
+  alphaUsage: 1
+  alphaIsTransparency: 1
+  spriteTessellationDetail: -1
+  textureType: 8
+  textureShape: 1
+  singleChannelComponent: 0
+  flipbookRows: 1
+  flipbookColumns: 1
+  maxTextureSizeSet: 0
+  compressionQualitySet: 0
+  textureFormatSet: 0
+  ignorePngGamma: 0
+  applyGammaDecoding: 0
+  swizzle: 50462976
+  cookieLightType: 0
+  platformSettings:
+  - serializedVersion: 4
+    buildTarget: DefaultTexturePlatform
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 4
+    buildTarget: Standalone
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  spriteSheet:
+    serializedVersion: 2
+    sprites:
+    - serializedVersion: 2
+      name: EliteVariantCharger_Casual_0
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 923
+        width: 124
+        height: 304
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData:
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 2cb2094a7fd7c3fc0800000000000000
+      internalID: -3513795106684523582
+      vertices: []
+      indices:
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: EliteVariantCharger_Casual_1
+      rect:
+        serializedVersion: 2
+        x: 20
+        y: 0
+        width: 1221
+        height: 1233
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData:
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 4bfd7bef60a29b8b0800000000000000
+      internalID: -5136027690507706444
+      vertices: []
+      indices:
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: EliteVariantCharger_Casual_2
+      rect:
+        serializedVersion: 2
+        x: 1168
+        y: 708
+        width: 8
+        height: 10
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData:
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: b1062cad78b433da0800000000000000
+      internalID: -5966342034472935397
+      vertices: []
+      indices:
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: EliteVariantCharger_Casual_3
+      rect:
+        serializedVersion: 2
+        x: 54
+        y: 320
+        width: 9
+        height: 18
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData:
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 27e964e2f4e3efd60800000000000000
+      internalID: 7925840904018370162
+      vertices: []
+      indices:
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: EliteVariantCharger_Casual_4
+      rect:
+        serializedVersion: 2
+        x: 110
+        y: 194
+        width: 12
+        height: 9
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData:
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 73a2cf39e195be290800000000000000
+      internalID: -7860090736778401225
+      vertices: []
+      indices:
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: EliteVariantCharger_Casual_5
+      rect:
+        serializedVersion: 2
+        x: 506
+        y: 23
+        width: 6
+        height: 6
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData:
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 648f08ac5fc1d78b0800000000000000
+      internalID: -5152930556651964346
+      vertices: []
+      indices:
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: EliteVariantCharger_Casual_6
+      rect:
+        serializedVersion: 2
+        x: 546
+        y: 17
+        width: 8
+        height: 7
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData:
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 4bb18ef7d4a683e70800000000000000
+      internalID: 9095136328565660596
+      vertices: []
+      indices:
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: EliteVariantCharger_Casual_7
+      rect:
+        serializedVersion: 2
+        x: 731
+        y: 17
+        width: 10
+        height: 9
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData:
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 9b797fb8cd3b50340800000000000000
+      internalID: 4829463935247161273
+      vertices: []
+      indices:
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: EliteVariantCharger_Casual_8
+      rect:
+        serializedVersion: 2
+        x: 739
+        y: 15
+        width: 8
+        height: 9
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData:
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: e7687b537c95cf2d0800000000000000
+      internalID: -3243618919479015810
+      vertices: []
+      indices:
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: EliteVariantCharger_Casual_9
+      rect:
+        serializedVersion: 2
+        x: 537
+        y: 16
+        width: 7
+        height: 6
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData:
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: cdfbf370cb03f5270800000000000000
+      internalID: 8241359427244900316
+      vertices: []
+      indices:
+      edges: []
+      weights: []
+    outline: []
+    customData:
+    physicsShape: []
+    bones: []
+    spriteID: 5e97eb03825dee720800000000000000
+    internalID: 0
+    vertices: []
+    indices:
+    edges: []
+    weights: []
+    secondaryTextures: []
+    spriteCustomMetadata:
+      entries: []
+    nameFileIdTable:
+      EliteVariantCharger_Casual_0: -3513795106684523582
+      EliteVariantCharger_Casual_1: -5136027690507706444
+      EliteVariantCharger_Casual_2: -5966342034472935397
+      EliteVariantCharger_Casual_3: 7925840904018370162
+      EliteVariantCharger_Casual_4: -7860090736778401225
+      EliteVariantCharger_Casual_5: -5152930556651964346
+      EliteVariantCharger_Casual_6: 9095136328565660596
+      EliteVariantCharger_Casual_7: 4829463935247161273
+      EliteVariantCharger_Casual_8: -3243618919479015810
+      EliteVariantCharger_Casual_9: 8241359427244900316
+  mipmapLimitGroupName:
+  pSDRemoveMatte: 0
+  userData:
+  assetBundleName:
+  assetBundleVariant:

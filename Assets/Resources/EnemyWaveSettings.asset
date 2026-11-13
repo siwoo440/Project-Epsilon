@@ -121,6 +121,7 @@ MonoBehaviour:
     slowZoneDuration: 3
     knockbackDistanceMultiplier: 1
     elitePattern: 0
+    isEnhancedElite: 0
     eliteSummonInterval: 6
     eliteSummonMaximum: 3
     eliteSummonRadius: 2
@@ -145,6 +146,7 @@ MonoBehaviour:
     slowZoneDuration: 3
     knockbackDistanceMultiplier: 1
     elitePattern: 0
+    isEnhancedElite: 0
     eliteSummonInterval: 6
     eliteSummonMaximum: 3
     eliteSummonRadius: 2
@@ -169,6 +171,7 @@ MonoBehaviour:
     slowZoneDuration: 3
     knockbackDistanceMultiplier: 1
     elitePattern: 0
+    isEnhancedElite: 0
     eliteSummonInterval: 6
     eliteSummonMaximum: 3
     eliteSummonRadius: 2
@@ -193,6 +196,7 @@ MonoBehaviour:
     slowZoneDuration: 3
     knockbackDistanceMultiplier: 1
     elitePattern: 0
+    isEnhancedElite: 0
     eliteSummonInterval: 6
     eliteSummonMaximum: 3
     eliteSummonRadius: 2
@@ -217,6 +221,7 @@ MonoBehaviour:
     slowZoneDuration: 3
     knockbackDistanceMultiplier: 0.5
     elitePattern: 0
+    isEnhancedElite: 0
     eliteSummonInterval: 6
     eliteSummonMaximum: 3
     eliteSummonRadius: 2
@@ -242,6 +247,7 @@ MonoBehaviour:
     slowZoneDuration: 0
     knockbackDistanceMultiplier: 1
     elitePattern: 1
+    isEnhancedElite: 0
     eliteSummonInterval: 6
     eliteSummonMaximum: 3
     eliteSummonRadius: 2
@@ -266,6 +272,7 @@ MonoBehaviour:
     slowZoneDuration: 0
     knockbackDistanceMultiplier: 1
     elitePattern: 2
+    isEnhancedElite: 0
     eliteSummonInterval: 6
     eliteSummonMaximum: 3
     eliteSummonRadius: 2
@@ -273,3 +280,41 @@ MonoBehaviour:
     firstAppearance: 720
     color: {r: 1, g: 1, b: 1, a: 1}
     enemySprite: {fileID: 21300000, guid: c961e3aae62c1674c8c134d0007d6be0, type: 3}
+  - kind: 3
+    health: 160
+    damage: 15
+    speedRatio: 0.9
+    attackInterval: 1.5
+    projectileCount: 1
+    projectileWarningDuration: 0.6
+    projectileSpreadDegrees: 0
+    opposedProjectileFan: 0
+    chargeWarningDuration: 0
+    chargeDuration: 0
+    chargeSpeedMultiplier: 0
+    slowZoneRadius: 0
+    slowZoneMultiplier: 0
+    slowZoneDuration: 0
+    knockbackDistanceMultiplier: 1
+    elitePattern: 3
+    isEnhancedElite: 0
+    eliteSummonInterval: 6
+    eliteSummonMaximum: 3
+    eliteSummonRadius: 2
+    experience: 20
+    firstAppearance: 960
+    color: {r: 1, g: 1, b: 1, a: 1}
+    enemySprite: {fileID: 21300000, guid: 96959c49118037c4db5a04377f4f5a49, type: 3}
+  enhancedEliteChance: 0.25
+  enhancedHealthMultiplier: 3
+  enhancedDamageMultiplier: 1.5
+  enhancedEnemySprites:
+  - {fileID: 21300000, guid: 264fd3f70bfdf70419c4217aca6381ae, type: 3}
+  - {fileID: 21300000, guid: bec2cbe3a2e8dc1488d2f33ca36539e7, type: 3}
+  - {fileID: 21300000, guid: 594a3107b452c374da2c657c938f7596, type: 3}
+  - {fileID: 0}
+  - {fileID: 21300000, guid: 960c4fc74babd044694f68ddec5ed1e2, type: 3}
+  - {fileID: 21300000, guid: 70f69026cca98c4408ad7a74f3a9c41f, type: 3}
+  - {fileID: 21300000, guid: 518bbc754b2094a4f80b146acfb78d13, type: 3}
+  - {fileID: 21300000, guid: ac206c3177c307341ba6010a1718e43c, type: 3}
+  - {fileID: 21300000, guid: 8ed4aca32d79ae849bbe5a4f1e53be6d, type: 3}

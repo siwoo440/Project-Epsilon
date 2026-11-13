@@ -24,7 +24,8 @@ namespace ProjectEpsilon.Enemies // 적 영역
     { // 열거형 시작
         Charge, // 기존 돌진 절단형
         Ranged, // 원거리 봉쇄형
-        Summoner // 일반 적 소환형
+        Summoner, // 일반 적 소환형
+        BodyPressure // 최근접 몸통 압박형
     } // 열거형 종료
     [Serializable] // 편집기 설정 허용
     public sealed class EarlyEnemySettings // 조정 가능한 적 설정
@@ -46,6 +47,7 @@ namespace ProjectEpsilon.Enemies // 적 영역
         public float slowZoneDuration = 3f; // 적 감속 지대 지속 시간
         [Range(0f, 1f)] public float knockbackDistanceMultiplier = 1f; // 넉백 거리 배율 시험값
         public ElitePattern elitePattern; // 전용 엘리트 행동 종류
+        public bool isEnhancedElite; // 일반 적 강화형 엘리트 여부
         public float eliteSummonInterval = 6f; // 소환 간격 시험값
         public int eliteSummonMaximum = 3; // 동시 소환 상한 시험값
         public float eliteSummonRadius = 2f; // 소환 거리 시험값
@@ -301,7 +303,7 @@ namespace ProjectEpsilon.Enemies // 적 영역
         } // 함수 종료
         private float NormalSpawnWeight(EarlyEnemySettings setting) // 현재 시점의 유효 출현 가중치
         { // 함수 시작
-            if (setting == null || setting.kind == EarlyEnemyKind.Elite || elapsed < setting.firstAppearance) // 미해금 적과 엘리트 확인
+            if (setting == null || setting.kind == EarlyEnemyKind.Elite || setting.isEnhancedElite || elapsed < setting.firstAppearance) // 미해금 적과 엘리트 확인
             { // 조건 시작
                 return 0f; // 일반 적 추첨 제외
             } // 조건 종료
@@ -413,13 +415,14 @@ namespace ProjectEpsilon.Enemies // 적 영역
         {
             EarlyEnemySettings source = setting; // 원본 적 능력치 보존
             setting = ScaleNormalEnemy(source); // 모든 일반 적과 엘리트의 능력치 복사
+            bool elite = setting.kind == EarlyEnemyKind.Elite || setting.isEnhancedElite; // 전용 또는 일반 강화형 엘리트 확인
             GameObject enemy = new GameObject("EarlyEnemy_" + setting.kind); // 적 오브젝트 생성
             enemy.transform.position = position; // 실제 출현 위치
             SpriteRenderer renderer = enemy.AddComponent<SpriteRenderer>(); // 적 렌더러 생성
             renderer.sprite = setting.enemySprite != null ? setting.enemySprite : visual; // 종류별 이미지 또는 기존 대체 이미지
             renderer.color = setting.enemySprite != null ? Color.white : setting.color; // 전용 이미지 원색 또는 기존 구분 색상
             renderer.sortingOrder = 8; // 적 표시 순서
-            enemy.transform.localScale = Vector3.one * (setting.kind == EarlyEnemyKind.Elite ? 1.6f : 1f); // 적 크기 두 배 적용
+            enemy.transform.localScale = Vector3.one * (elite ? 1.6f : 1f); // 실제 엘리트 표시 크기
             CircleCollider2D collider = enemy.AddComponent<CircleCollider2D>(); // 적 충돌체 생성
             collider.isTrigger = true; // 접촉 감지 설정
             Rigidbody2D rigidbody = enemy.AddComponent<Rigidbody2D>(); // 적 물리체 생성
@@ -435,7 +438,7 @@ namespace ProjectEpsilon.Enemies // 적 영역
             if (!bossSummon) // 일반 적 보상 여부
             {
                 EnemyDropController drop = enemy.AddComponent<EnemyDropController>(); // 기존 보상 적용
-                drop.Configure(setting.experience, healAmount, healDropChance, bodyRepairDropChance, visual, setting.kind != EarlyEnemyKind.Elite && setting.experience == 2 ? 2 : 1); // 기존 일반 적 보상 유지
+                drop.Configure(setting.experience, healAmount, healDropChance, bodyRepairDropChance, visual, !elite && setting.experience == 2 ? 2 : 1); // 기존 일반 적과 엘리트 보상 유지
             }
             SnakeContactHazard hazard = enemy.AddComponent<SnakeContactHazard>(); // 머리 직접 충돌 판정
             hazard.Configure(SnakeContactHazardType.EnemyDirect); // 적 직접 충돌 종류
@@ -452,12 +455,12 @@ namespace ProjectEpsilon.Enemies // 적 영역
             {
                 bossSummonTargets.Add(target); // 무보상 소환 적 구분
             }
-            if (setting.kind == EarlyEnemyKind.Elite) // 엘리트 확인
+            if (elite) // 전용 또는 강화형 엘리트 확인
             {
                 eliteTargets.Add(target); // 정리 제외 대상 등록
             }
             target.Died += HandleEnemyDied; // 처치 시 수량 갱신 연결
-            if (setting.kind == EarlyEnemyKind.Elite) // 엘리트 종류 확인
+            if (elite) // 전용 또는 강화형 엘리트 확인
             { // 조건 시작
                 EliteSpawned?.Invoke(); // 실제 엘리트 출현 알림
             } // 조건 종료
@@ -483,12 +486,16 @@ namespace ProjectEpsilon.Enemies // 적 영역
             }
         }
         private EarlyEnemySettings ScaleNormalEnemy(EarlyEnemySettings source) // 일반 적 능력치 복사와 구간 배율 적용
-        {
+        { // 함수 시작
+            return CopyEnemySettings(source, CurrentNormalHealthMultiplier, CurrentNormalDamageMultiplier); // 실제 구간 배율을 적용한 설정
+        } // 함수 종료
+        private static EarlyEnemySettings CopyEnemySettings(EarlyEnemySettings source, float healthMultiplier, float damageMultiplier) // 원본과 분리된 적 설정 복사
+        { // 함수 시작
             return new EarlyEnemySettings // 원본과 분리된 출현 적 설정
-            {
+            { // 설정 시작
                 kind = source.kind, // 기존 행동 종류
-                health = Mathf.Ceil(source.health * CurrentNormalHealthMultiplier), // 구간 체력 배율과 올림
-                damage = Mathf.CeilToInt(source.damage * CurrentNormalDamageMultiplier), // 구간 피해 배율과 올림
+                health = Mathf.Ceil(source.health * healthMultiplier), // 체력 배율과 올림
+                damage = Mathf.CeilToInt(source.damage * damageMultiplier), // 피해 배율과 올림
                 speedRatio = source.speedRatio, // 기존 이동 속도
                 attackInterval = source.attackInterval, // 기존 공격 간격
                 projectileCount = source.projectileCount, // 기존 투사체 수
@@ -503,6 +510,7 @@ namespace ProjectEpsilon.Enemies // 적 영역
                 slowZoneDuration = source.slowZoneDuration, // 적 감속 지대 지속 시간
                 knockbackDistanceMultiplier = source.knockbackDistanceMultiplier, // 적별 넉백 거리 배율
                 elitePattern = source.elitePattern, // 전용 엘리트 행동 종류
+                isEnhancedElite = source.isEnhancedElite, // 일반 적 강화형 엘리트 여부
                 eliteSummonInterval = source.eliteSummonInterval, // 엘리트 소환 간격
                 eliteSummonMaximum = source.eliteSummonMaximum, // 엘리트 소환 상한
                 eliteSummonRadius = source.eliteSummonRadius, // 엘리트 소환 거리
@@ -510,8 +518,24 @@ namespace ProjectEpsilon.Enemies // 적 영역
                 firstAppearance = source.firstAppearance, // 기존 최초 출현 시각
                 color = source.color, // 기존 표시 색상
                 enemySprite = source.enemySprite // 기존 적 이미지
-            };
-        }
+            }; // 설정 종료
+        } // 함수 종료
+        private EarlyEnemySettings CreateEnhancedElite(EarlyEnemySettings source) // 기존 일반 적의 강화형 생성
+        { // 함수 시작
+            if (source == null || waveSettings == null) // 실제 일반 적과 강화 설정 확인
+            { // 조건 시작
+                return null; // 유효한 강화형 부재
+            } // 조건 종료
+            EarlyEnemySettings elite = CopyEnemySettings(source, waveSettings.EnhancedHealthMultiplier, waveSettings.EnhancedDamageMultiplier); // 기존 행동을 보존한 기본 강화
+            elite.isEnhancedElite = true; // 실제 엘리트 처리
+            elite.experience = enemies != null && enemies.Length > 3 && enemies[3] != null ? enemies[3].experience : 20; // 기존 엘리트 경험치
+            Sprite sprite = waveSettings.GetEnhancedSprite(source.kind); // 실제 일반 적 종류의 강화형 이미지
+            if (sprite != null) // 실제 강화형 이미지 확인
+            { // 조건 시작
+                elite.enemySprite = sprite; // 기획서 강화형 원본 이미지 적용
+            } // 조건 종료
+            return elite; // 실제 강화형 설정 반환
+        } // 함수 종료
         private float ResolveSpawnDistance(Vector2 direction) // 화면 밖 출현 거리
         {
             float minimum = Mathf.Max(2f, spawnDistance); // 기존 최소 출현 거리
@@ -647,6 +671,16 @@ namespace ProjectEpsilon.Enemies // 적 영역
             int round = pendingEliteRounds.Dequeue(); // 가장 오래된 회차 소비
             EarlyEnemySettings[] additionalRounds = waveSettings == null ? null : waveSettings.AdditionalEliteRounds; // 조정 가능한 후속 회차
             EarlyEnemySettings selected = round > 0 && additionalRounds != null && round - 1 < additionalRounds.Length ? additionalRounds[round - 1] : null; // 해당 후속 회차 설정
+            float enhancedChance = waveSettings == null ? 0f : waveSettings.EnhancedEliteChance; // 실제 강화형 시험 확률
+            if (round > 0 && enhancedChance > 0f && (enhancedChance >= 1f || UnityEngine.Random.value < enhancedChance)) // 후속 회차 강화형 추첨
+            { // 조건 시작
+                EarlyEnemySettings enhanced = CreateEnhancedElite(SelectNormalEnemy()); // 현재 해금된 일반 적의 강화형
+                if (enhanced != null) // 실제 강화형 생성 확인
+                { // 조건 시작
+                    Spawn(enhanced); // 기존 일정과 상한을 따르는 강화형 출현
+                    return; // 전용형 중복 출현 방지
+                } // 조건 종료
+            } // 조건 종료
             Spawn(selected != null && selected.kind == EarlyEnemyKind.Elite ? selected : enemies[3]); // 유효한 전용 엘리트 또는 기존 기본 엘리트 출현
         }
     }
