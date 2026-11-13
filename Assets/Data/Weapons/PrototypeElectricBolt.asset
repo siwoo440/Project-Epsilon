@@ -14,7 +14,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::ProjectEpsilon.Data.WeaponData
   id: electric_bolt
   displayName: 전기 직사 포탑
-  artwork: {fileID: 21300000, guid: f873d6246f772fb41a1fb370949f0060, type: 3}
+  artwork: {fileID: 21300000, guid: 64be7efe83277654d8f1fd8ab295dcb1, type: 3}
+  icon: {fileID: 21300000, guid: 381c6536e27f542479c0f25913368678, type: 3}
   attribute: 3
   attackType: 1
   baseDamage: 8

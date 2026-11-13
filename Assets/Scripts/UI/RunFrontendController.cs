@@ -439,7 +439,7 @@ namespace ProjectEpsilon.UI // 실제 메뉴 영역
                 }
                 float x = -520f + index * 520f; // 실제 후보 가로 위치
                 CreateButton(panel, "FrontendStartingWeaponButton" + index, weapon.DisplayName + "  ★1", new Vector2(x, -115f), new Vector2(460f, 110f), () => sceneContext.StartRun(selected)); // 실제 포탑 선택과 출격
-                Preview(panel, "FrontendStartingWeaponImage" + index, weapon.Artwork, new Vector2(x, 145f), new Vector2(210f, 210f)); // 실제 포탑 이미지
+                Preview(panel, "FrontendStartingWeaponImage" + index, weapon.Icon, new Vector2(x, 145f), new Vector2(210f, 210f)); // 실제 포탑 아이콘
             }
             CreateButton(panel, "FrontendStartingWeaponBackButton", "뒤로", new Vector2(-520f, -350f), new Vector2(260f, 75f), () => Show(FrontendStage.Maps)); // 실제 맵 선택 복귀
         }

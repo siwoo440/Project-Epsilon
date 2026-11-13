@@ -1,0 +1,715 @@
+fileFormatVersion: 2
+guid: b857cabbdab5bb046b8486610fc30620
+TextureImporter:
+  internalIDToNameTable:
+  - first:
+      213: -7775158303800920254
+    second: Icon_Turret_DarkBlade_0
+  - first:
+      213: -121887746401096901
+    second: Icon_Turret_DarkBlade_1
+  - first:
+      213: -534222051134674780
+    second: Icon_Turret_DarkBlade_2
+  - first:
+      213: -3850294135874644059
+    second: Icon_Turret_DarkBlade_3
+  - first:
+      213: 8806743078325711813
+    second: Icon_Turret_DarkBlade_4
+  - first:
+      213: -6358966560115745956
+    second: Icon_Turret_DarkBlade_5
+  - first:
+      213: 7972444218152907534
+    second: Icon_Turret_DarkBlade_6
+  - first:
+      213: -2793775791989651999
+    second: Icon_Turret_DarkBlade_7
+  - first:
+      213: 1862712661467376681
+    second: Icon_Turret_DarkBlade_8
+  - first:
+      213: 7935193931430165733
+    second: Icon_Turret_DarkBlade_9
+  - first:
+      213: -5872079610559367233
+    second: Icon_Turret_DarkBlade_10
+  - first:
+      213: -7441610924499517875
+    second: Icon_Turret_DarkBlade_11
+  - first:
+      213: -5546165982950717196
+    second: Icon_Turret_DarkBlade_12
+  - first:
+      213: -2321387177191432387
+    second: Icon_Turret_DarkBlade_13
+  - first:
+      213: -3723759683718644796
+    second: Icon_Turret_DarkBlade_14
+  - first:
+      213: 728330452420978349
+    second: Icon_Turret_DarkBlade_15
+  - first:
+      213: 7660789558682750613
+    second: Icon_Turret_DarkBlade_16
+  - first:
+      213: 8652028818741516311
+    second: Icon_Turret_DarkBlade_17
+  - first:
+      213: 7816469086014688376
+    second: Icon_Turret_DarkBlade_18
+  - first:
+      213: 6109726489853800779
+    second: Icon_Turret_DarkBlade_19
+  - first:
+      213: -8860480656552083957
+    second: Icon_Turret_DarkBlade_20
+  - first:
+      213: -5772203219292424140
+    second: Icon_Turret_DarkBlade_21
+  - first:
+      213: 6760817034945562838
+    second: Icon_Turret_DarkBlade_22
+  externalObjects: {}
+  serializedVersion: 13
+  mipmaps:
+    mipMapMode: 0
+    enableMipMap: 0
+    sRGBTexture: 1
+    linearTexture: 0
+    fadeOut: 0
+    borderMipMap: 0
+    mipMapsPreserveCoverage: 0
+    alphaTestReferenceValue: 0.5
+    mipMapFadeDistanceStart: 1
+    mipMapFadeDistanceEnd: 3
+  bumpmap:
+    convertToNormalMap: 0
+    externalNormalMap: 0
+    heightScale: 0.25
+    normalMapFilter: 0
+    flipGreenChannel: 0
+  isReadable: 0
+  streamingMipmaps: 0
+  streamingMipmapsPriority: 0
+  vTOnly: 0
+  ignoreMipmapLimit: 0
+  grayScaleToAlpha: 0
+  generateCubemap: 6
+  cubemapConvolution: 0
+  seamlessCubemap: 0
+  textureFormat: 1
+  maxTextureSize: 2048
+  textureSettings:
+    serializedVersion: 2
+    filterMode: 1
+    aniso: 1
+    mipBias: 0
+    wrapU: 1
+    wrapV: 1
+    wrapW: 1
+  nPOTScale: 0
+  lightmap: 0
+  compressionQuality: 50
+  spriteMode: 1
+  spriteExtrude: 1
+  spriteMeshType: 1
+  alignment: 0
+  spritePivot: {x: 0.5, y: 0.5}
+  spritePixelsToUnits: 100
+  spriteBorder: {x: 0, y: 0, z: 0, w: 0}
+  spriteGenerateFallbackPhysicsShape: 1
+  alphaUsage: 1
+  alphaIsTransparency: 1
+  spriteTessellationDetail: -1
+  textureType: 8
+  textureShape: 1
+  singleChannelComponent: 0
+  flipbookRows: 1
+  flipbookColumns: 1
+  maxTextureSizeSet: 0
+  compressionQualitySet: 0
+  textureFormatSet: 0
+  ignorePngGamma: 0
+  applyGammaDecoding: 0
+  swizzle: 50462976
+  cookieLightType: 0
+  platformSettings:
+  - serializedVersion: 4
+    buildTarget: DefaultTexturePlatform
+    maxTextureSize: 512
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 4
+    buildTarget: Standalone
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  spriteSheet:
+    serializedVersion: 2
+    sprites:
+    - serializedVersion: 2
+      name: Icon_Turret_DarkBlade_0
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 15
+        width: 1241
+        height: 1219
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData:
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 247748d97b6191490800000000000000
+      internalID: -7775158303800920254
+      vertices: []
+      indices:
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Icon_Turret_DarkBlade_1
+      rect:
+        serializedVersion: 2
+        x: 530
+        y: 1142
+        width: 6
+        height: 6
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData:
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: b3b2a4d8db7fe4ef0800000000000000
+      internalID: -121887746401096901
+      vertices: []
+      indices:
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Icon_Turret_DarkBlade_2
+      rect:
+        serializedVersion: 2
+        x: 535
+        y: 1140
+        width: 9
+        height: 14
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData:
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 4a8efeaffdf0698f0800000000000000
+      internalID: -534222051134674780
+      vertices: []
+      indices:
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Icon_Turret_DarkBlade_3
+      rect:
+        serializedVersion: 2
+        x: 565
+        y: 1110
+        width: 125
+        height: 66
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData:
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 5a71c6612e1019ac0800000000000000
+      internalID: -3850294135874644059
+      vertices: []
+      indices:
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Icon_Turret_DarkBlade_4
+      rect:
+        serializedVersion: 2
+        x: 1077
+        y: 1148
+        width: 7
+        height: 12
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData:
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 5c3fbbb6b26d73a70800000000000000
+      internalID: 8806743078325711813
+      vertices: []
+      indices:
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Icon_Turret_DarkBlade_5
+      rect:
+        serializedVersion: 2
+        x: 589
+        y: 1078
+        width: 23
+        height: 17
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData:
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: c5b96b5da9960c7a0800000000000000
+      internalID: -6358966560115745956
+      vertices: []
+      indices:
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Icon_Turret_DarkBlade_6
+      rect:
+        serializedVersion: 2
+        x: 418
+        y: 1044
+        width: 7
+        height: 9
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData:
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: e03fe9ec6cfc3ae60800000000000000
+      internalID: 7972444218152907534
+      vertices: []
+      indices:
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Icon_Turret_DarkBlade_7
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 276
+        width: 7
+        height: 17
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData:
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 1e50f5028b38a39d0800000000000000
+      internalID: -2793775791989651999
+      vertices: []
+      indices:
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Icon_Turret_DarkBlade_8
+      rect:
+        serializedVersion: 2
+        x: 115
+        y: 196
+        width: 10
+        height: 11
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData:
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 92ca269eb4fa9d910800000000000000
+      internalID: 1862712661467376681
+      vertices: []
+      indices:
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Icon_Turret_DarkBlade_9
+      rect:
+        serializedVersion: 2
+        x: 828
+        y: 174
+        width: 23
+        height: 29
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData:
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 5ecfab296d87f1e60800000000000000
+      internalID: 7935193931430165733
+      vertices: []
+      indices:
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Icon_Turret_DarkBlade_10
+      rect:
+        serializedVersion: 2
+        x: 850
+        y: 189
+        width: 9
+        height: 14
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData:
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: fb77bcfa4be228ea0800000000000000
+      internalID: -5872079610559367233
+      vertices: []
+      indices:
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Icon_Turret_DarkBlade_11
+      rect:
+        serializedVersion: 2
+        x: 803
+        y: 160
+        width: 22
+        height: 17
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData:
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: d4e3a80aa461ab890800000000000000
+      internalID: -7441610924499517875
+      vertices: []
+      indices:
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Icon_Turret_DarkBlade_12
+      rect:
+        serializedVersion: 2
+        x: 747
+        y: 137
+        width: 6
+        height: 6
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData:
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 4f80ed06c6f0803b0800000000000000
+      internalID: -5546165982950717196
+      vertices: []
+      indices:
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Icon_Turret_DarkBlade_13
+      rect:
+        serializedVersion: 2
+        x: 752
+        y: 128
+        width: 11
+        height: 18
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData:
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: d3f9b5d59a6c8cfd0800000000000000
+      internalID: -2321387177191432387
+      vertices: []
+      indices:
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Icon_Turret_DarkBlade_14
+      rect:
+        serializedVersion: 2
+        x: 762
+        y: 134
+        width: 9
+        height: 13
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData:
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 4cb77070c4c825cc0800000000000000
+      internalID: -3723759683718644796
+      vertices: []
+      indices:
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Icon_Turret_DarkBlade_15
+      rect:
+        serializedVersion: 2
+        x: 802
+        y: 142
+        width: 9
+        height: 12
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData:
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: da6e6a700bc8b1a00800000000000000
+      internalID: 728330452420978349
+      vertices: []
+      indices:
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Icon_Turret_DarkBlade_16
+      rect:
+        serializedVersion: 2
+        x: 727
+        y: 115
+        width: 6
+        height: 6
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData:
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 59e8e48d387905a60800000000000000
+      internalID: 7660789558682750613
+      vertices: []
+      indices:
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Icon_Turret_DarkBlade_17
+      rect:
+        serializedVersion: 2
+        x: 770
+        y: 109
+        width: 17
+        height: 13
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData:
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 718d787ce5e221870800000000000000
+      internalID: 8652028818741516311
+      vertices: []
+      indices:
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Icon_Turret_DarkBlade_18
+      rect:
+        serializedVersion: 2
+        x: 496
+        y: 46
+        width: 160
+        height: 65
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData:
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 87c4ab5683da97c60800000000000000
+      internalID: 7816469086014688376
+      vertices: []
+      indices:
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Icon_Turret_DarkBlade_19
+      rect:
+        serializedVersion: 2
+        x: 635
+        y: 61
+        width: 37
+        height: 23
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData:
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: b41b78e2fdb1ac450800000000000000
+      internalID: 6109726489853800779
+      vertices: []
+      indices:
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Icon_Turret_DarkBlade_20
+      rect:
+        serializedVersion: 2
+        x: 713
+        y: 77
+        width: 11
+        height: 20
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData:
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: b0e3ef6a9cf390580800000000000000
+      internalID: -8860480656552083957
+      vertices: []
+      indices:
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Icon_Turret_DarkBlade_21
+      rect:
+        serializedVersion: 2
+        x: 719
+        y: 71
+        width: 16
+        height: 20
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData:
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 43875b621c305efa0800000000000000
+      internalID: -5772203219292424140
+      vertices: []
+      indices:
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Icon_Turret_DarkBlade_22
+      rect:
+        serializedVersion: 2
+        x: 643
+        y: 49
+        width: 7
+        height: 7
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData:
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 6d8075fd54f33dd50800000000000000
+      internalID: 6760817034945562838
+      vertices: []
+      indices:
+      edges: []
+      weights: []
+    outline: []
+    customData:
+    physicsShape: []
+    bones: []
+    spriteID: 5e97eb03825dee720800000000000000
+    internalID: 0
+    vertices: []
+    indices:
+    edges: []
+    weights: []
+    secondaryTextures: []
+    spriteCustomMetadata:
+      entries: []
+    nameFileIdTable:
+      Icon_Turret_DarkBlade_0: -7775158303800920254
+      Icon_Turret_DarkBlade_1: -121887746401096901
+      Icon_Turret_DarkBlade_10: -5872079610559367233
+      Icon_Turret_DarkBlade_11: -7441610924499517875
+      Icon_Turret_DarkBlade_12: -5546165982950717196
+      Icon_Turret_DarkBlade_13: -2321387177191432387
+      Icon_Turret_DarkBlade_14: -3723759683718644796
+      Icon_Turret_DarkBlade_15: 728330452420978349
+      Icon_Turret_DarkBlade_16: 7660789558682750613
+      Icon_Turret_DarkBlade_17: 8652028818741516311
+      Icon_Turret_DarkBlade_18: 7816469086014688376
+      Icon_Turret_DarkBlade_19: 6109726489853800779
+      Icon_Turret_DarkBlade_2: -534222051134674780
+      Icon_Turret_DarkBlade_20: -8860480656552083957
+      Icon_Turret_DarkBlade_21: -5772203219292424140
+      Icon_Turret_DarkBlade_22: 6760817034945562838
+      Icon_Turret_DarkBlade_3: -3850294135874644059
+      Icon_Turret_DarkBlade_4: 8806743078325711813
+      Icon_Turret_DarkBlade_5: -6358966560115745956
+      Icon_Turret_DarkBlade_6: 7972444218152907534
+      Icon_Turret_DarkBlade_7: -2793775791989651999
+      Icon_Turret_DarkBlade_8: 1862712661467376681
+      Icon_Turret_DarkBlade_9: 7935193931430165733
+  mipmapLimitGroupName:
+  pSDRemoveMatte: 0
+  userData:
+  assetBundleName:
+  assetBundleVariant:

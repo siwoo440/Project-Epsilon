@@ -14,7 +14,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::ProjectEpsilon.Data.WeaponData
   id: debug_pulse
   displayName: 화염 범위 포탑
-  artwork: {fileID: 21300000, guid: f873d6246f772fb41a1fb370949f0060, type: 3}
+  artwork: {fileID: 21300000, guid: c33ba7d702703d941ae5accca339a567, type: 3}
+  icon: {fileID: 21300000, guid: d28ec5611b3dfbd4e9b7363a885d15cb, type: 3}
   attribute: 1
   attackType: 3
   baseDamage: 5

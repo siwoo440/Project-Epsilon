@@ -14,7 +14,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::ProjectEpsilon.Data.WeaponData
   id: explosion_blade
   displayName: 폭발 근접 포탑
-  artwork: {fileID: 21300000, guid: f873d6246f772fb41a1fb370949f0060, type: 3}
+  artwork: {fileID: 21300000, guid: 8048ac1e780776a469479dc7c6655c88, type: 3}
+  icon: {fileID: 21300000, guid: 7f80e63e23fbf0e44a336f9ebe8c820b, type: 3}
   attribute: 5
   attackType: 0
   baseDamage: 9

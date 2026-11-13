@@ -1,0 +1,2353 @@
+fileFormatVersion: 2
+guid: 59c8a8cd4c45ca9409cd27a4be4f202f
+TextureImporter:
+  internalIDToNameTable:
+  - first:
+      213: 6176602787116066907
+    second: Turret_DarkDagger_0
+  - first:
+      213: -5059441082256744609
+    second: Turret_DarkDagger_1
+  - first:
+      213: -8398073190715203128
+    second: Turret_DarkDagger_2
+  - first:
+      213: -4250148881697522677
+    second: Turret_DarkDagger_3
+  - first:
+      213: -8290509574204843262
+    second: Turret_DarkDagger_4
+  - first:
+      213: 8764922987297964160
+    second: Turret_DarkDagger_5
+  - first:
+      213: -1255352665206700346
+    second: Turret_DarkDagger_6
+  - first:
+      213: 4102456215909459938
+    second: Turret_DarkDagger_7
+  - first:
+      213: -8233175883050750254
+    second: Turret_DarkDagger_8
+  - first:
+      213: -3710944474864887855
+    second: Turret_DarkDagger_9
+  - first:
+      213: -8678531578619229733
+    second: Turret_DarkDagger_10
+  - first:
+      213: -5041558717579559009
+    second: Turret_DarkDagger_11
+  - first:
+      213: 7137783103849746129
+    second: Turret_DarkDagger_12
+  - first:
+      213: -626987402519632124
+    second: Turret_DarkDagger_13
+  - first:
+      213: -1722333306509955553
+    second: Turret_DarkDagger_14
+  - first:
+      213: 1792258963115447077
+    second: Turret_DarkDagger_15
+  - first:
+      213: -5711861898520911847
+    second: Turret_DarkDagger_16
+  - first:
+      213: 3842469304963905429
+    second: Turret_DarkDagger_17
+  - first:
+      213: -2343314283239116999
+    second: Turret_DarkDagger_18
+  - first:
+      213: -7637717613140711911
+    second: Turret_DarkDagger_19
+  - first:
+      213: -3222278186785778428
+    second: Turret_DarkDagger_20
+  - first:
+      213: -436146998583004350
+    second: Turret_DarkDagger_21
+  - first:
+      213: 987851956603267174
+    second: Turret_DarkDagger_22
+  - first:
+      213: 4133873729447992923
+    second: Turret_DarkDagger_23
+  - first:
+      213: -9219072583269277197
+    second: Turret_DarkDagger_24
+  - first:
+      213: 3407565864387655296
+    second: Turret_DarkDagger_25
+  - first:
+      213: -1196196883595108598
+    second: Turret_DarkDagger_26
+  - first:
+      213: 4888197039112065606
+    second: Turret_DarkDagger_27
+  - first:
+      213: 5265558001008054900
+    second: Turret_DarkDagger_28
+  - first:
+      213: -1071127381056088132
+    second: Turret_DarkDagger_29
+  - first:
+      213: -6993930885735757130
+    second: Turret_DarkDagger_30
+  - first:
+      213: 3905561992999375280
+    second: Turret_DarkDagger_31
+  - first:
+      213: 2320719119075816664
+    second: Turret_DarkDagger_32
+  - first:
+      213: 3656555150430886674
+    second: Turret_DarkDagger_33
+  - first:
+      213: -2954067924057766021
+    second: Turret_DarkDagger_34
+  - first:
+      213: -1896860530771487943
+    second: Turret_DarkDagger_35
+  - first:
+      213: -1304844850015290932
+    second: Turret_DarkDagger_36
+  - first:
+      213: 2105599535138757876
+    second: Turret_DarkDagger_37
+  - first:
+      213: 4041533600626428436
+    second: Turret_DarkDagger_38
+  - first:
+      213: 6899611254131368399
+    second: Turret_DarkDagger_39
+  - first:
+      213: -8624689352119205926
+    second: Turret_DarkDagger_40
+  - first:
+      213: 9191144998055257273
+    second: Turret_DarkDagger_41
+  - first:
+      213: 8882939151559934225
+    second: Turret_DarkDagger_42
+  - first:
+      213: 9110490809633605732
+    second: Turret_DarkDagger_43
+  - first:
+      213: 4870059500767006133
+    second: Turret_DarkDagger_44
+  - first:
+      213: -8295587749926206926
+    second: Turret_DarkDagger_45
+  - first:
+      213: -321253039208913182
+    second: Turret_DarkDagger_46
+  - first:
+      213: -7038992958718612724
+    second: Turret_DarkDagger_47
+  - first:
+      213: -4500690766241553689
+    second: Turret_DarkDagger_48
+  - first:
+      213: -2319552709637789862
+    second: Turret_DarkDagger_49
+  - first:
+      213: 1084892582524245133
+    second: Turret_DarkDagger_50
+  - first:
+      213: 3186579365208636706
+    second: Turret_DarkDagger_51
+  - first:
+      213: 4627709665471277745
+    second: Turret_DarkDagger_52
+  - first:
+      213: -7553679769146192848
+    second: Turret_DarkDagger_53
+  - first:
+      213: 7211608439190015738
+    second: Turret_DarkDagger_54
+  - first:
+      213: 2862271735776671512
+    second: Turret_DarkDagger_55
+  - first:
+      213: -3025579337123173647
+    second: Turret_DarkDagger_56
+  - first:
+      213: 4053763850273609210
+    second: Turret_DarkDagger_57
+  - first:
+      213: 1740605851359608017
+    second: Turret_DarkDagger_58
+  - first:
+      213: -8864515942045733367
+    second: Turret_DarkDagger_59
+  - first:
+      213: -7137777299462414990
+    second: Turret_DarkDagger_60
+  - first:
+      213: -3060119248543735751
+    second: Turret_DarkDagger_61
+  - first:
+      213: -8585904194654528352
+    second: Turret_DarkDagger_62
+  - first:
+      213: -7782321187584760323
+    second: Turret_DarkDagger_63
+  - first:
+      213: -7020366730033051595
+    second: Turret_DarkDagger_64
+  - first:
+      213: 3403766898228266407
+    second: Turret_DarkDagger_65
+  - first:
+      213: 8165952812811927627
+    second: Turret_DarkDagger_66
+  - first:
+      213: -2250038617793355932
+    second: Turret_DarkDagger_67
+  - first:
+      213: -2110391332302114945
+    second: Turret_DarkDagger_68
+  - first:
+      213: 1728671795998891443
+    second: Turret_DarkDagger_69
+  - first:
+      213: -8176812278748986383
+    second: Turret_DarkDagger_70
+  - first:
+      213: 4612158421782327581
+    second: Turret_DarkDagger_71
+  - first:
+      213: -5418094081911129371
+    second: Turret_DarkDagger_72
+  - first:
+      213: -1884618668710572332
+    second: Turret_DarkDagger_73
+  - first:
+      213: -4663574347128224226
+    second: Turret_DarkDagger_74
+  - first:
+      213: 2866985012357421496
+    second: Turret_DarkDagger_75
+  - first:
+      213: -6154046006469126110
+    second: Turret_DarkDagger_76
+  - first:
+      213: 3948061306264830481
+    second: Turret_DarkDagger_77
+  - first:
+      213: 1139014780695832255
+    second: Turret_DarkDagger_78
+  - first:
+      213: -4183784041853543662
+    second: Turret_DarkDagger_79
+  - first:
+      213: -1975535190425790889
+    second: Turret_DarkDagger_80
+  - first:
+      213: -6148295506570757954
+    second: Turret_DarkDagger_81
+  - first:
+      213: 6139304625346046354
+    second: Turret_DarkDagger_82
+  - first:
+      213: 8388692115411066840
+    second: Turret_DarkDagger_83
+  - first:
+      213: 2536648544233916377
+    second: Turret_DarkDagger_84
+  - first:
+      213: 9109356471181613088
+    second: Turret_DarkDagger_85
+  externalObjects: {}
+  serializedVersion: 13
+  mipmaps:
+    mipMapMode: 0
+    enableMipMap: 0
+    sRGBTexture: 1
+    linearTexture: 0
+    fadeOut: 0
+    borderMipMap: 0
+    mipMapsPreserveCoverage: 0
+    alphaTestReferenceValue: 0.5
+    mipMapFadeDistanceStart: 1
+    mipMapFadeDistanceEnd: 3
+  bumpmap:
+    convertToNormalMap: 0
+    externalNormalMap: 0
+    heightScale: 0.25
+    normalMapFilter: 0
+    flipGreenChannel: 0
+  isReadable: 0
+  streamingMipmaps: 0
+  streamingMipmapsPriority: 0
+  vTOnly: 0
+  ignoreMipmapLimit: 0
+  grayScaleToAlpha: 0
+  generateCubemap: 6
+  cubemapConvolution: 0
+  seamlessCubemap: 0
+  textureFormat: 1
+  maxTextureSize: 2048
+  textureSettings:
+    serializedVersion: 2
+    filterMode: 1
+    aniso: 1
+    mipBias: 0
+    wrapU: 1
+    wrapV: 1
+    wrapW: 1
+  nPOTScale: 0
+  lightmap: 0
+  compressionQuality: 50
+  spriteMode: 1
+  spriteExtrude: 1
+  spriteMeshType: 1
+  alignment: 0
+  spritePivot: {x: 0.5, y: 0.5}
+  spritePixelsToUnits: 1000
+  spriteBorder: {x: 0, y: 0, z: 0, w: 0}
+  spriteGenerateFallbackPhysicsShape: 1
+  alphaUsage: 1
+  alphaIsTransparency: 1
+  spriteTessellationDetail: -1
+  textureType: 8
+  textureShape: 1
+  singleChannelComponent: 0
+  flipbookRows: 1
+  flipbookColumns: 1
+  maxTextureSizeSet: 0
+  compressionQualitySet: 0
+  textureFormatSet: 0
+  ignorePngGamma: 0
+  applyGammaDecoding: 0
+  swizzle: 50462976
+  cookieLightType: 0
+  platformSettings:
+  - serializedVersion: 4
+    buildTarget: DefaultTexturePlatform
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 4
+    buildTarget: Standalone
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  spriteSheet:
+    serializedVersion: 2
+    sprites:
+    - serializedVersion: 2
+      name: Turret_DarkDagger_0
+      rect:
+        serializedVersion: 2
+        x: 167
+        y: 1173
+        width: 59
+        height: 61
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData:
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: b58adb48283b7b550800000000000000
+      internalID: 6176602787116066907
+      vertices: []
+      indices:
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Turret_DarkDagger_1
+      rect:
+        serializedVersion: 2
+        x: 458
+        y: 1116
+        width: 86
+        height: 104
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData:
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: f5f911a442149c9b0800000000000000
+      internalID: -5059441082256744609
+      vertices: []
+      indices:
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Turret_DarkDagger_2
+      rect:
+        serializedVersion: 2
+        x: 575
+        y: 1177
+        width: 54
+        height: 39
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData:
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 8c160bd8dec047b80800000000000000
+      internalID: -8398073190715203128
+      vertices: []
+      indices:
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Turret_DarkDagger_3
+      rect:
+        serializedVersion: 2
+        x: 627
+        y: 1148
+        width: 45
+        height: 82
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData:
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: b0c35ef3c107405c0800000000000000
+      internalID: -4250148881697522677
+      vertices: []
+      indices:
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Turret_DarkDagger_4
+      rect:
+        serializedVersion: 2
+        x: 673
+        y: 1155
+        width: 86
+        height: 60
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData:
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 20b9b8e977132fc80800000000000000
+      internalID: -8290509574204843262
+      vertices: []
+      indices:
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Turret_DarkDagger_5
+      rect:
+        serializedVersion: 2
+        x: 721
+        y: 1207
+        width: 26
+        height: 25
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData:
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 0800d85b40343a970800000000000000
+      internalID: 8764922987297964160
+      vertices: []
+      indices:
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Turret_DarkDagger_6
+      rect:
+        serializedVersion: 2
+        x: 840
+        y: 1110
+        width: 79
+        height: 106
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData:
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 6c6c382f667149ee0800000000000000
+      internalID: -1255352665206700346
+      vertices: []
+      indices:
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Turret_DarkDagger_7
+      rect:
+        serializedVersion: 2
+        x: 956
+        y: 1114
+        width: 120
+        height: 107
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData:
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 2e760ef413adee830800000000000000
+      internalID: 4102456215909459938
+      vertices: []
+      indices:
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Turret_DarkDagger_8
+      rect:
+        serializedVersion: 2
+        x: 20
+        y: 1076
+        width: 78
+        height: 108
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData:
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 2de6275d722edbd80800000000000000
+      internalID: -8233175883050750254
+      vertices: []
+      indices:
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Turret_DarkDagger_9
+      rect:
+        serializedVersion: 2
+        x: 223
+        y: 1140
+        width: 67
+        height: 47
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData:
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 1d7da7a59a3108cc0800000000000000
+      internalID: -3710944474864887855
+      vertices: []
+      indices:
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Turret_DarkDagger_10
+      rect:
+        serializedVersion: 2
+        x: 506
+        y: 1156
+        width: 8
+        height: 10
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData:
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: bd904649289af8780800000000000000
+      internalID: -8678531578619229733
+      vertices: []
+      indices:
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Turret_DarkDagger_11
+      rect:
+        serializedVersion: 2
+        x: 512
+        y: 1162
+        width: 6
+        height: 6
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData:
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: f9f7564ce09c80ab0800000000000000
+      internalID: -5041558717579559009
+      vertices: []
+      indices:
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Turret_DarkDagger_12
+      rect:
+        serializedVersion: 2
+        x: 518
+        y: 1167
+        width: 8
+        height: 7
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData:
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 1decfb45aef7e0360800000000000000
+      internalID: 7137783103849746129
+      vertices: []
+      indices:
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Turret_DarkDagger_13
+      rect:
+        serializedVersion: 2
+        x: 520
+        y: 1156
+        width: 38
+        height: 42
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData:
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 4072c22874e7c47f0800000000000000
+      internalID: -626987402519632124
+      vertices: []
+      indices:
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Turret_DarkDagger_14
+      rect:
+        serializedVersion: 2
+        x: 734
+        y: 1148
+        width: 17
+        height: 18
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData:
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: f1e66a8abfa0918e0800000000000000
+      internalID: -1722333306509955553
+      vertices: []
+      indices:
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Turret_DarkDagger_15
+      rect:
+        serializedVersion: 2
+        x: 747
+        y: 1169
+        width: 10
+        height: 7
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData:
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 523910af7026fd810800000000000000
+      internalID: 1792258963115447077
+      vertices: []
+      indices:
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Turret_DarkDagger_16
+      rect:
+        serializedVersion: 2
+        x: 758
+        y: 1166
+        width: 17
+        height: 18
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData:
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 910a294bdd36bb0b0800000000000000
+      internalID: -5711861898520911847
+      vertices: []
+      indices:
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Turret_DarkDagger_17
+      rect:
+        serializedVersion: 2
+        x: 770
+        y: 1147
+        width: 53
+        height: 40
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData:
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 59737be7971335530800000000000000
+      internalID: 3842469304963905429
+      vertices: []
+      indices:
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Turret_DarkDagger_18
+      rect:
+        serializedVersion: 2
+        x: 1188
+        y: 1068
+        width: 21
+        height: 100
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData:
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 93fee662310ea7fd0800000000000000
+      internalID: -2343314283239116999
+      vertices: []
+      indices:
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Turret_DarkDagger_19
+      rect:
+        serializedVersion: 2
+        x: 390
+        y: 1079
+        width: 63
+        height: 79
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData:
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 916e0061c40610690800000000000000
+      internalID: -7637717613140711911
+      vertices: []
+      indices:
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Turret_DarkDagger_20
+      rect:
+        serializedVersion: 2
+        x: 504
+        y: 1146
+        width: 6
+        height: 6
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData:
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 405d42dbf0b2843d0800000000000000
+      internalID: -3222278186785778428
+      vertices: []
+      indices:
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Turret_DarkDagger_21
+      rect:
+        serializedVersion: 2
+        x: 750
+        y: 1142
+        width: 17
+        height: 17
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData:
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 2437b979d9e72f9f0800000000000000
+      internalID: -436146998583004350
+      vertices: []
+      indices:
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Turret_DarkDagger_22
+      rect:
+        serializedVersion: 2
+        x: 762
+        y: 1140
+        width: 7
+        height: 11
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData:
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 6682304ee1e85bd00800000000000000
+      internalID: 987851956603267174
+      vertices: []
+      indices:
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Turret_DarkDagger_23
+      rect:
+        serializedVersion: 2
+        x: 780
+        y: 1116
+        width: 43
+        height: 30
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData:
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: b5e111631487e5930800000000000000
+      internalID: 4133873729447992923
+      vertices: []
+      indices:
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Turret_DarkDagger_24
+      rect:
+        serializedVersion: 2
+        x: 303
+        y: 1116
+        width: 12
+        height: 11
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData:
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 3f121bb84564f0080800000000000000
+      internalID: -9219072583269277197
+      vertices: []
+      indices:
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Turret_DarkDagger_25
+      rect:
+        serializedVersion: 2
+        x: 741
+        y: 1124
+        width: 32
+        height: 15
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData:
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 086b29f791b1a4f20800000000000000
+      internalID: 3407565864387655296
+      vertices: []
+      indices:
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Turret_DarkDagger_26
+      rect:
+        serializedVersion: 2
+        x: 772
+        y: 1126
+        width: 11
+        height: 16
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData:
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: a0f52e7a541466fe0800000000000000
+      internalID: -1196196883595108598
+      vertices: []
+      indices:
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Turret_DarkDagger_27
+      rect:
+        serializedVersion: 2
+        x: 56
+        y: 0
+        width: 1185
+        height: 1117
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData:
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 642146cee4d56d340800000000000000
+      internalID: 4888197039112065606
+      vertices: []
+      indices:
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Turret_DarkDagger_28
+      rect:
+        serializedVersion: 2
+        x: 151
+        y: 1100
+        width: 9
+        height: 13
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData:
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 4721d429a15031940800000000000000
+      internalID: 5265558001008054900
+      vertices: []
+      indices:
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Turret_DarkDagger_29
+      rect:
+        serializedVersion: 2
+        x: 201
+        y: 1090
+        width: 19
+        height: 21
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData:
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: cb715fe62579221f0800000000000000
+      internalID: -1071127381056088132
+      vertices: []
+      indices:
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Turret_DarkDagger_30
+      rect:
+        serializedVersion: 2
+        x: 309
+        y: 1074
+        width: 44
+        height: 47
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData:
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 6ba46143ae090fe90800000000000000
+      internalID: -6993930885735757130
+      vertices: []
+      indices:
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Turret_DarkDagger_31
+      rect:
+        serializedVersion: 2
+        x: 502
+        y: 1096
+        width: 8
+        height: 6
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData:
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 0b19ef8a0f7533630800000000000000
+      internalID: 3905561992999375280
+      vertices: []
+      indices:
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Turret_DarkDagger_32
+      rect:
+        serializedVersion: 2
+        x: 878
+        y: 1093
+        width: 7
+        height: 10
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData:
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 8d4b8fb3eb9d43020800000000000000
+      internalID: 2320719119075816664
+      vertices: []
+      indices:
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Turret_DarkDagger_33
+      rect:
+        serializedVersion: 2
+        x: 924
+        y: 1092
+        width: 6
+        height: 8
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData:
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 21bde0b3981beb230800000000000000
+      internalID: 3656555150430886674
+      vertices: []
+      indices:
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Turret_DarkDagger_34
+      rect:
+        serializedVersion: 2
+        x: 1049
+        y: 1086
+        width: 27
+        height: 33
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData:
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: b774928dfda0107d0800000000000000
+      internalID: -2954067924057766021
+      vertices: []
+      indices:
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Turret_DarkDagger_35
+      rect:
+        serializedVersion: 2
+        x: 1060
+        y: 1092
+        width: 8
+        height: 10
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData:
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 93318e2b56ffca5e0800000000000000
+      internalID: -1896860530771487943
+      vertices: []
+      indices:
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Turret_DarkDagger_36
+      rect:
+        serializedVersion: 2
+        x: 217
+        y: 885
+        width: 125
+        height: 193
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData:
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: cc937d3b58244ede0800000000000000
+      internalID: -1304844850015290932
+      vertices: []
+      indices:
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Turret_DarkDagger_37
+      rect:
+        serializedVersion: 2
+        x: 303
+        y: 1057
+        width: 14
+        height: 22
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData:
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 4fc5c2b0f97983d10800000000000000
+      internalID: 2105599535138757876
+      vertices: []
+      indices:
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Turret_DarkDagger_38
+      rect:
+        serializedVersion: 2
+        x: 834
+        y: 1078
+        width: 9
+        height: 15
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData:
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 41ac4259569661830800000000000000
+      internalID: 4041533600626428436
+      vertices: []
+      indices:
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Turret_DarkDagger_39
+      rect:
+        serializedVersion: 2
+        x: 852
+        y: 1030
+        width: 39
+        height: 64
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData:
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: fc1a9c241e750cf50800000000000000
+      internalID: 6899611254131368399
+      vertices: []
+      indices:
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Turret_DarkDagger_40
+      rect:
+        serializedVersion: 2
+        x: 881
+        y: 1056
+        width: 38
+        height: 36
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData:
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: adf37d4dab2fe4880800000000000000
+      internalID: -8624689352119205926
+      vertices: []
+      indices:
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Turret_DarkDagger_41
+      rect:
+        serializedVersion: 2
+        x: 1180
+        y: 1023
+        width: 29
+        height: 40
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData:
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 9b42130dda18d8f70800000000000000
+      internalID: 9191144998055257273
+      vertices: []
+      indices:
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Turret_DarkDagger_42
+      rect:
+        serializedVersion: 2
+        x: 1163
+        y: 993
+        width: 48
+        height: 22
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData:
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 111c322381a864b70800000000000000
+      internalID: 8882939151559934225
+      vertices: []
+      indices:
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Turret_DarkDagger_43
+      rect:
+        serializedVersion: 2
+        x: 40
+        y: 676
+        width: 72
+        height: 104
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData:
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 4680ca53f17fe6e70800000000000000
+      internalID: 9110490809633605732
+      vertices: []
+      indices:
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Turret_DarkDagger_44
+      rect:
+        serializedVersion: 2
+        x: 48
+        y: 773
+        width: 25
+        height: 17
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData:
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 5bdcb32305de59340800000000000000
+      internalID: 4870059500767006133
+      vertices: []
+      indices:
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Turret_DarkDagger_45
+      rect:
+        serializedVersion: 2
+        x: 104
+        y: 708
+        width: 12
+        height: 12
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData:
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 2320192b4e620ec80800000000000000
+      internalID: -8295587749926206926
+      vertices: []
+      indices:
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Turret_DarkDagger_46
+      rect:
+        serializedVersion: 2
+        x: 1149
+        y: 708
+        width: 6
+        height: 6
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData:
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 2e620fa101eaa8bf0800000000000000
+      internalID: -321253039208913182
+      vertices: []
+      indices:
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Turret_DarkDagger_47
+      rect:
+        serializedVersion: 2
+        x: 1153
+        y: 684
+        width: 42
+        height: 47
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData:
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: c0be91fb239705e90800000000000000
+      internalID: -7038992958718612724
+      vertices: []
+      indices:
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Turret_DarkDagger_48
+      rect:
+        serializedVersion: 2
+        x: 94
+        y: 642
+        width: 24
+        height: 35
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData:
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 7e2aa4208955a81c0800000000000000
+      internalID: -4500690766241553689
+      vertices: []
+      indices:
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Turret_DarkDagger_49
+      rect:
+        serializedVersion: 2
+        x: 1129
+        y: 653
+        width: 34
+        height: 41
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData:
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: a57ae30a91b4fcfd0800000000000000
+      internalID: -2319552709637789862
+      vertices: []
+      indices:
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Turret_DarkDagger_50
+      rect:
+        serializedVersion: 2
+        x: 30
+        y: 553
+        width: 21
+        height: 52
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData:
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: d8450d84e005e0f00800000000000000
+      internalID: 1084892582524245133
+      vertices: []
+      indices:
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Turret_DarkDagger_51
+      rect:
+        serializedVersion: 2
+        x: 1180
+        y: 594
+        width: 8
+        height: 13
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData:
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 22db9d7ac01093c20800000000000000
+      internalID: 3186579365208636706
+      vertices: []
+      indices:
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Turret_DarkDagger_52
+      rect:
+        serializedVersion: 2
+        x: 1160
+        y: 533
+        width: 9
+        height: 8
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData:
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 1baae0e0c6de83040800000000000000
+      internalID: 4627709665471277745
+      vertices: []
+      indices:
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Turret_DarkDagger_53
+      rect:
+        serializedVersion: 2
+        x: 80
+        y: 501
+        width: 8
+        height: 7
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData:
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 03c8cf46540fb2790800000000000000
+      internalID: -7553679769146192848
+      vertices: []
+      indices:
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Turret_DarkDagger_54
+      rect:
+        serializedVersion: 2
+        x: 1147
+        y: 503
+        width: 6
+        height: 6
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData:
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: afe412daaa7c41460800000000000000
+      internalID: 7211608439190015738
+      vertices: []
+      indices:
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Turret_DarkDagger_55
+      rect:
+        serializedVersion: 2
+        x: 102
+        y: 483
+        width: 14
+        height: 14
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData:
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 817fb9d8af4d8b720800000000000000
+      internalID: 2862271735776671512
+      vertices: []
+      indices:
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Turret_DarkDagger_56
+      rect:
+        serializedVersion: 2
+        x: 107
+        y: 492
+        width: 9
+        height: 7
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData:
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 1fae2038f9bf206d0800000000000000
+      internalID: -3025579337123173647
+      vertices: []
+      indices:
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Turret_DarkDagger_57
+      rect:
+        serializedVersion: 2
+        x: 1115
+        y: 435
+        width: 32
+        height: 49
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData:
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: af5d0ea7ebcd14830800000000000000
+      internalID: 4053763850273609210
+      vertices: []
+      indices:
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Turret_DarkDagger_58
+      rect:
+        serializedVersion: 2
+        x: 317
+        y: 128
+        width: 68
+        height: 49
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData:
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 1dc7148bccfd72810800000000000000
+      internalID: 1740605851359608017
+      vertices: []
+      indices:
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Turret_DarkDagger_59
+      rect:
+        serializedVersion: 2
+        x: 487
+        y: 111
+        width: 33
+        height: 36
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData:
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 90ea39887b9eaf480800000000000000
+      internalID: -8864515942045733367
+      vertices: []
+      indices:
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Turret_DarkDagger_60
+      rect:
+        serializedVersion: 2
+        x: 579
+        y: 126
+        width: 15
+        height: 18
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData:
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 27d12bb1d5581fc90800000000000000
+      internalID: -7137777299462414990
+      vertices: []
+      indices:
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Turret_DarkDagger_61
+      rect:
+        serializedVersion: 2
+        x: 723
+        y: 136
+        width: 32
+        height: 27
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData:
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 9302734b1c54885d0800000000000000
+      internalID: -3060119248543735751
+      vertices: []
+      indices:
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Turret_DarkDagger_62
+      rect:
+        serializedVersion: 2
+        x: 754
+        y: 138
+        width: 49
+        height: 34
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData:
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 0ac941200adb8d880800000000000000
+      internalID: -8585904194654528352
+      vertices: []
+      indices:
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Turret_DarkDagger_63
+      rect:
+        serializedVersion: 2
+        x: 884
+        y: 127
+        width: 21
+        height: 24
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData:
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: df5a306cc14aff390800000000000000
+      internalID: -7782321187584760323
+      vertices: []
+      indices:
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Turret_DarkDagger_64
+      rect:
+        serializedVersion: 2
+        x: 386
+        y: 103
+        width: 31
+        height: 30
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData:
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 538c86f87a5a29e90800000000000000
+      internalID: -7020366730033051595
+      vertices: []
+      indices:
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Turret_DarkDagger_65
+      rect:
+        serializedVersion: 2
+        x: 747
+        y: 21
+        width: 108
+        height: 94
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData:
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 7a50123c5fb9c3f20800000000000000
+      internalID: 3403766898228266407
+      vertices: []
+      indices:
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Turret_DarkDagger_66
+      rect:
+        serializedVersion: 2
+        x: 848
+        y: 110
+        width: 7
+        height: 9
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData:
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: b40c14471da435170800000000000000
+      internalID: 8165952812811927627
+      vertices: []
+      indices:
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Turret_DarkDagger_67
+      rect:
+        serializedVersion: 2
+        x: 882
+        y: 111
+        width: 11
+        height: 12
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData:
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 46f148f5cc146c0e0800000000000000
+      internalID: -2250038617793355932
+      vertices: []
+      indices:
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Turret_DarkDagger_68
+      rect:
+        serializedVersion: 2
+        x: 402
+        y: 23
+        width: 89
+        height: 84
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData:
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: f7fa11db34266b2e0800000000000000
+      internalID: -2110391332302114945
+      vertices: []
+      indices:
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Turret_DarkDagger_69
+      rect:
+        serializedVersion: 2
+        x: 721
+        y: 101
+        width: 6
+        height: 6
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData:
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 3bd10cde6d97df710800000000000000
+      internalID: 1728671795998891443
+      vertices: []
+      indices:
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Turret_DarkDagger_70
+      rect:
+        serializedVersion: 2
+        x: 1155
+        y: 103
+        width: 6
+        height: 6
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData:
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 1f34d1a1e80268e80800000000000000
+      internalID: -8176812278748986383
+      vertices: []
+      indices:
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Turret_DarkDagger_71
+      rect:
+        serializedVersion: 2
+        x: 611
+        y: 84
+        width: 11
+        height: 15
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData:
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: d11792af5ada10040800000000000000
+      internalID: 4612158421782327581
+      vertices: []
+      indices:
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Turret_DarkDagger_72
+      rect:
+        serializedVersion: 2
+        x: 932
+        y: 87
+        width: 6
+        height: 6
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData:
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 5ea7a0883201fc4b0800000000000000
+      internalID: -5418094081911129371
+      vertices: []
+      indices:
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Turret_DarkDagger_73
+      rect:
+        serializedVersion: 2
+        x: 944
+        y: 91
+        width: 10
+        height: 10
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData:
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 4decf625e4d78d5e0800000000000000
+      internalID: -1884618668710572332
+      vertices: []
+      indices:
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Turret_DarkDagger_74
+      rect:
+        serializedVersion: 2
+        x: 946
+        y: 87
+        width: 9
+        height: 9
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData:
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: e164cc707d7a74fb0800000000000000
+      internalID: -4663574347128224226
+      vertices: []
+      indices:
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Turret_DarkDagger_75
+      rect:
+        serializedVersion: 2
+        x: 954
+        y: 88
+        width: 8
+        height: 13
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData:
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 8b9dee5cda399c720800000000000000
+      internalID: 2866985012357421496
+      vertices: []
+      indices:
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Turret_DarkDagger_76
+      rect:
+        serializedVersion: 2
+        x: 514
+        y: 49
+        width: 26
+        height: 26
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData:
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 2281ffc33cf689aa0800000000000000
+      internalID: -6154046006469126110
+      vertices: []
+      indices:
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Turret_DarkDagger_77
+      rect:
+        serializedVersion: 2
+        x: 539
+        y: 63
+        width: 7
+        height: 11
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData:
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 112416f17d45ac630800000000000000
+      internalID: 3948061306264830481
+      vertices: []
+      indices:
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Turret_DarkDagger_78
+      rect:
+        serializedVersion: 2
+        x: 545
+        y: 49
+        width: 21
+        height: 26
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData:
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: fb66b4588e79ecf00800000000000000
+      internalID: 1139014780695832255
+      vertices: []
+      indices:
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Turret_DarkDagger_79
+      rect:
+        serializedVersion: 2
+        x: 705
+        y: 29
+        width: 42
+        height: 40
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData:
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 21b1f50a49630f5c0800000000000000
+      internalID: -4183784041853543662
+      vertices: []
+      indices:
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Turret_DarkDagger_80
+      rect:
+        serializedVersion: 2
+        x: 486
+        y: 7
+        width: 50
+        height: 39
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData:
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 756136d063d7594e0800000000000000
+      internalID: -1975535190425790889
+      vertices: []
+      indices:
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Turret_DarkDagger_81
+      rect:
+        serializedVersion: 2
+        x: 603
+        y: 39
+        width: 7
+        height: 9
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData:
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: eb838b4dfcddcaaa0800000000000000
+      internalID: -6148295506570757954
+      vertices: []
+      indices:
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Turret_DarkDagger_82
+      rect:
+        serializedVersion: 2
+        x: 619
+        y: 45
+        width: 7
+        height: 14
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData:
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 299e9a18701333550800000000000000
+      internalID: 6139304625346046354
+      vertices: []
+      indices:
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Turret_DarkDagger_83
+      rect:
+        serializedVersion: 2
+        x: 378
+        y: 31
+        width: 7
+        height: 12
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData:
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 8df5235a80f9a6470800000000000000
+      internalID: 8388692115411066840
+      vertices: []
+      indices:
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Turret_DarkDagger_84
+      rect:
+        serializedVersion: 2
+        x: 492
+        y: 0
+        width: 206
+        height: 42
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData:
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 9d70317496cf33320800000000000000
+      internalID: 2536648544233916377
+      vertices: []
+      indices:
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Turret_DarkDagger_85
+      rect:
+        serializedVersion: 2
+        x: 536
+        y: 31
+        width: 6
+        height: 9
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData:
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 0289f25727fea6e70800000000000000
+      internalID: 9109356471181613088
+      vertices: []
+      indices:
+      edges: []
+      weights: []
+    outline: []
+    customData:
+    physicsShape: []
+    bones: []
+    spriteID: 5e97eb03825dee720800000000000000
+    internalID: 0
+    vertices: []
+    indices:
+    edges: []
+    weights: []
+    secondaryTextures: []
+    spriteCustomMetadata:
+      entries: []
+    nameFileIdTable:
+      Turret_DarkDagger_0: 6176602787116066907
+      Turret_DarkDagger_1: -5059441082256744609
+      Turret_DarkDagger_10: -8678531578619229733
+      Turret_DarkDagger_11: -5041558717579559009
+      Turret_DarkDagger_12: 7137783103849746129
+      Turret_DarkDagger_13: -626987402519632124
+      Turret_DarkDagger_14: -1722333306509955553
+      Turret_DarkDagger_15: 1792258963115447077
+      Turret_DarkDagger_16: -5711861898520911847
+      Turret_DarkDagger_17: 3842469304963905429
+      Turret_DarkDagger_18: -2343314283239116999
+      Turret_DarkDagger_19: -7637717613140711911
+      Turret_DarkDagger_2: -8398073190715203128
+      Turret_DarkDagger_20: -3222278186785778428
+      Turret_DarkDagger_21: -436146998583004350
+      Turret_DarkDagger_22: 987851956603267174
+      Turret_DarkDagger_23: 4133873729447992923
+      Turret_DarkDagger_24: -9219072583269277197
+      Turret_DarkDagger_25: 3407565864387655296
+      Turret_DarkDagger_26: -1196196883595108598
+      Turret_DarkDagger_27: 4888197039112065606
+      Turret_DarkDagger_28: 5265558001008054900
+      Turret_DarkDagger_29: -1071127381056088132
+      Turret_DarkDagger_3: -4250148881697522677
+      Turret_DarkDagger_30: -6993930885735757130
+      Turret_DarkDagger_31: 3905561992999375280
+      Turret_DarkDagger_32: 2320719119075816664
+      Turret_DarkDagger_33: 3656555150430886674
+      Turret_DarkDagger_34: -2954067924057766021
+      Turret_DarkDagger_35: -1896860530771487943
+      Turret_DarkDagger_36: -1304844850015290932
+      Turret_DarkDagger_37: 2105599535138757876
+      Turret_DarkDagger_38: 4041533600626428436
+      Turret_DarkDagger_39: 6899611254131368399
+      Turret_DarkDagger_4: -8290509574204843262
+      Turret_DarkDagger_40: -8624689352119205926
+      Turret_DarkDagger_41: 9191144998055257273
+      Turret_DarkDagger_42: 8882939151559934225
+      Turret_DarkDagger_43: 9110490809633605732
+      Turret_DarkDagger_44: 4870059500767006133
+      Turret_DarkDagger_45: -8295587749926206926
+      Turret_DarkDagger_46: -321253039208913182
+      Turret_DarkDagger_47: -7038992958718612724
+      Turret_DarkDagger_48: -4500690766241553689
+      Turret_DarkDagger_49: -2319552709637789862
+      Turret_DarkDagger_5: 8764922987297964160
+      Turret_DarkDagger_50: 1084892582524245133
+      Turret_DarkDagger_51: 3186579365208636706
+      Turret_DarkDagger_52: 4627709665471277745
+      Turret_DarkDagger_53: -7553679769146192848
+      Turret_DarkDagger_54: 7211608439190015738
+      Turret_DarkDagger_55: 2862271735776671512
+      Turret_DarkDagger_56: -3025579337123173647
+      Turret_DarkDagger_57: 4053763850273609210
+      Turret_DarkDagger_58: 1740605851359608017
+      Turret_DarkDagger_59: -8864515942045733367
+      Turret_DarkDagger_6: -1255352665206700346
+      Turret_DarkDagger_60: -7137777299462414990
+      Turret_DarkDagger_61: -3060119248543735751
+      Turret_DarkDagger_62: -8585904194654528352
+      Turret_DarkDagger_63: -7782321187584760323
+      Turret_DarkDagger_64: -7020366730033051595
+      Turret_DarkDagger_65: 3403766898228266407
+      Turret_DarkDagger_66: 8165952812811927627
+      Turret_DarkDagger_67: -2250038617793355932
+      Turret_DarkDagger_68: -2110391332302114945
+      Turret_DarkDagger_69: 1728671795998891443
+      Turret_DarkDagger_7: 4102456215909459938
+      Turret_DarkDagger_70: -8176812278748986383
+      Turret_DarkDagger_71: 4612158421782327581
+      Turret_DarkDagger_72: -5418094081911129371
+      Turret_DarkDagger_73: -1884618668710572332
+      Turret_DarkDagger_74: -4663574347128224226
+      Turret_DarkDagger_75: 2866985012357421496
+      Turret_DarkDagger_76: -6154046006469126110
+      Turret_DarkDagger_77: 3948061306264830481
+      Turret_DarkDagger_78: 1139014780695832255
+      Turret_DarkDagger_79: -4183784041853543662
+      Turret_DarkDagger_8: -8233175883050750254
+      Turret_DarkDagger_80: -1975535190425790889
+      Turret_DarkDagger_81: -6148295506570757954
+      Turret_DarkDagger_82: 6139304625346046354
+      Turret_DarkDagger_83: 8388692115411066840
+      Turret_DarkDagger_84: 2536648544233916377
+      Turret_DarkDagger_85: 9109356471181613088
+      Turret_DarkDagger_9: -3710944474864887855
+  mipmapLimitGroupName:
+  pSDRemoveMatte: 0
+  userData:
+  assetBundleName:
+  assetBundleVariant:

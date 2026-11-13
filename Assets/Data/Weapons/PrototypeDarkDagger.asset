@@ -14,7 +14,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::ProjectEpsilon.Data.WeaponData
   id: dark_dagger
   displayName: 암흑 속사 근접 포탑
-  artwork: {fileID: 21300000, guid: f873d6246f772fb41a1fb370949f0060, type: 3}
+  artwork: {fileID: 21300000, guid: 59c8a8cd4c45ca9409cd27a4be4f202f, type: 3}
+  icon: {fileID: 21300000, guid: 45079597aaebeb3469b456e605acc4f9, type: 3}
   attribute: 7
   attackType: 0
   baseDamage: 6

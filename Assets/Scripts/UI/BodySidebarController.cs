@@ -188,9 +188,9 @@ namespace ProjectEpsilon.UI // 실제 전투 화면 영역
                 rows[index].SetActive(visible); // 실제 현재 몸통만 표시
                 SnakeWeaponSlot slot = visible && index < weapons.Slots.Count ? weapons.Slots[index] : null; // 실제 해당 몸통 슬롯
                 WeaponData weapon = slot == null || slot.IsEmpty ? null : slot.Weapon; // 실제 장착 포탑
-                icons[index].sprite = weapon == null ? null : weapon.Artwork; // 실제 해당 포탑 이미지
-                icons[index].enabled = weapon != null && weapon.Artwork != null; // 실제 이미지 존재 여부
-                icons[index].color = weapon == null ? Color.white : weapon.ArtworkTint; // 실제 포탑 속성 색상
+                icons[index].sprite = weapon == null ? null : weapon.Icon; // 실제 해당 포탑 아이콘
+                icons[index].enabled = weapon != null && weapon.Icon != null; // 실제 아이콘 존재 여부
+                icons[index].color = weapon == null ? Color.white : weapon.ArtworkDisplayTint; // 원본 포탑 그림 색상 유지
                 labels[index].text = weapon == null ? "-" : WeaponDisplayNames.Attribute(weapon.Attribute) + " · " + weapon.DisplayName + " ★" + slot.Grade; // 실제 속성과 포탑 이름·등급
             }
         }

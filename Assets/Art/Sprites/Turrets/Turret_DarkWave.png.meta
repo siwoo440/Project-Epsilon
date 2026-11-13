@@ -1,0 +1,585 @@
+fileFormatVersion: 2
+guid: fa48ec7cc4fec76499081aee95de4ce9
+TextureImporter:
+  internalIDToNameTable:
+  - first:
+      213: 229233072318458819
+    second: Turret_DarkWave_0
+  - first:
+      213: 2092878145275589607
+    second: Turret_DarkWave_1
+  - first:
+      213: -7396821436926908867
+    second: Turret_DarkWave_2
+  - first:
+      213: 5463475565702163701
+    second: Turret_DarkWave_3
+  - first:
+      213: -5550223515746090158
+    second: Turret_DarkWave_4
+  - first:
+      213: 7274853790114300702
+    second: Turret_DarkWave_5
+  - first:
+      213: -7032617765881624835
+    second: Turret_DarkWave_6
+  - first:
+      213: 3787141809888902812
+    second: Turret_DarkWave_7
+  - first:
+      213: 2986860733232684528
+    second: Turret_DarkWave_8
+  - first:
+      213: 8880155067954244947
+    second: Turret_DarkWave_9
+  - first:
+      213: 1673521559681209203
+    second: Turret_DarkWave_10
+  - first:
+      213: 3909399687854520128
+    second: Turret_DarkWave_11
+  - first:
+      213: -8317421500661625618
+    second: Turret_DarkWave_12
+  - first:
+      213: -3145792511377347647
+    second: Turret_DarkWave_13
+  - first:
+      213: 757401753432523828
+    second: Turret_DarkWave_14
+  - first:
+      213: -612769064739535161
+    second: Turret_DarkWave_15
+  - first:
+      213: 7236004766034475867
+    second: Turret_DarkWave_16
+  - first:
+      213: -6666193501833661925
+    second: Turret_DarkWave_17
+  externalObjects: {}
+  serializedVersion: 13
+  mipmaps:
+    mipMapMode: 0
+    enableMipMap: 0
+    sRGBTexture: 1
+    linearTexture: 0
+    fadeOut: 0
+    borderMipMap: 0
+    mipMapsPreserveCoverage: 0
+    alphaTestReferenceValue: 0.5
+    mipMapFadeDistanceStart: 1
+    mipMapFadeDistanceEnd: 3
+  bumpmap:
+    convertToNormalMap: 0
+    externalNormalMap: 0
+    heightScale: 0.25
+    normalMapFilter: 0
+    flipGreenChannel: 0
+  isReadable: 0
+  streamingMipmaps: 0
+  streamingMipmapsPriority: 0
+  vTOnly: 0
+  ignoreMipmapLimit: 0
+  grayScaleToAlpha: 0
+  generateCubemap: 6
+  cubemapConvolution: 0
+  seamlessCubemap: 0
+  textureFormat: 1
+  maxTextureSize: 2048
+  textureSettings:
+    serializedVersion: 2
+    filterMode: 1
+    aniso: 1
+    mipBias: 0
+    wrapU: 1
+    wrapV: 1
+    wrapW: 1
+  nPOTScale: 0
+  lightmap: 0
+  compressionQuality: 50
+  spriteMode: 1
+  spriteExtrude: 1
+  spriteMeshType: 1
+  alignment: 0
+  spritePivot: {x: 0.5, y: 0.5}
+  spritePixelsToUnits: 1000
+  spriteBorder: {x: 0, y: 0, z: 0, w: 0}
+  spriteGenerateFallbackPhysicsShape: 1
+  alphaUsage: 1
+  alphaIsTransparency: 1
+  spriteTessellationDetail: -1
+  textureType: 8
+  textureShape: 1
+  singleChannelComponent: 0
+  flipbookRows: 1
+  flipbookColumns: 1
+  maxTextureSizeSet: 0
+  compressionQualitySet: 0
+  textureFormatSet: 0
+  ignorePngGamma: 0
+  applyGammaDecoding: 0
+  swizzle: 50462976
+  cookieLightType: 0
+  platformSettings:
+  - serializedVersion: 4
+    buildTarget: DefaultTexturePlatform
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 4
+    buildTarget: Standalone
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  spriteSheet:
+    serializedVersion: 2
+    sprites:
+    - serializedVersion: 2
+      name: Turret_DarkWave_0
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 0
+        width: 1203
+        height: 1238
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData:
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 3cb2056c3466e2300800000000000000
+      internalID: 229233072318458819
+      vertices: []
+      indices:
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Turret_DarkWave_1
+      rect:
+        serializedVersion: 2
+        x: 95
+        y: 909
+        width: 11
+        height: 8
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData:
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 7e37457a5956b0d10800000000000000
+      internalID: 2092878145275589607
+      vertices: []
+      indices:
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Turret_DarkWave_2
+      rect:
+        serializedVersion: 2
+        x: 1127
+        y: 899
+        width: 32
+        height: 19
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData:
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: d362af8d716395990800000000000000
+      internalID: -7396821436926908867
+      vertices: []
+      indices:
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Turret_DarkWave_3
+      rect:
+        serializedVersion: 2
+        x: 1180
+        y: 811
+        width: 27
+        height: 90
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData:
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 5fc24bc841a22db40800000000000000
+      internalID: 5463475565702163701
+      vertices: []
+      indices:
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Turret_DarkWave_4
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 445
+        width: 5
+        height: 51
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData:
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 2534fe76e15a9f2b0800000000000000
+      internalID: -5550223515746090158
+      vertices: []
+      indices:
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Turret_DarkWave_5
+      rect:
+        serializedVersion: 2
+        x: 64
+        y: 378
+        width: 7
+        height: 8
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData:
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: e13caa07af875f460800000000000000
+      internalID: 7274853790114300702
+      vertices: []
+      indices:
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Turret_DarkWave_6
+      rect:
+        serializedVersion: 2
+        x: 1180
+        y: 351
+        width: 59
+        height: 92
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData:
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: df6468ff66f176e90800000000000000
+      internalID: -7032617765881624835
+      vertices: []
+      indices:
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Turret_DarkWave_7
+      rect:
+        serializedVersion: 2
+        x: 1161
+        y: 326
+        width: 28
+        height: 14
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData:
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: c9e35743961ae8430800000000000000
+      internalID: 3787141809888902812
+      vertices: []
+      indices:
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Turret_DarkWave_8
+      rect:
+        serializedVersion: 2
+        x: 1147
+        y: 130
+        width: 6
+        height: 9
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData:
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 0fd95e50306737920800000000000000
+      internalID: 2986860733232684528
+      vertices: []
+      indices:
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Turret_DarkWave_9
+      rect:
+        serializedVersion: 2
+        x: 906
+        y: 79
+        width: 9
+        height: 12
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData:
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 35d2cc73cf5ac3b70800000000000000
+      internalID: 8880155067954244947
+      vertices: []
+      indices:
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Turret_DarkWave_10
+      rect:
+        serializedVersion: 2
+        x: 940
+        y: 79
+        width: 6
+        height: 7
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData:
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 37391c8edfa893710800000000000000
+      internalID: 1673521559681209203
+      vertices: []
+      indices:
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Turret_DarkWave_11
+      rect:
+        serializedVersion: 2
+        x: 899
+        y: 47
+        width: 18
+        height: 23
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData:
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 047779f9d4af04630800000000000000
+      internalID: 3909399687854520128
+      vertices: []
+      indices:
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Turret_DarkWave_12
+      rect:
+        serializedVersion: 2
+        x: 924
+        y: 66
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData:
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: eec0ed57635929c80800000000000000
+      internalID: -8317421500661625618
+      vertices: []
+      indices:
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Turret_DarkWave_13
+      rect:
+        serializedVersion: 2
+        x: 364
+        y: 45
+        width: 19
+        height: 20
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData:
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 1cbe446c066e754d0800000000000000
+      internalID: -3145792511377347647
+      vertices: []
+      indices:
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Turret_DarkWave_14
+      rect:
+        serializedVersion: 2
+        x: 878
+        y: 31
+        width: 23
+        height: 25
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData:
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 4348a91c1e4d28a00800000000000000
+      internalID: 757401753432523828
+      vertices: []
+      indices:
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Turret_DarkWave_15
+      rect:
+        serializedVersion: 2
+        x: 430
+        y: 15
+        width: 23
+        height: 19
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData:
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 7c60ade38c10f77f0800000000000000
+      internalID: -612769064739535161
+      vertices: []
+      indices:
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Turret_DarkWave_16
+      rect:
+        serializedVersion: 2
+        x: 1149
+        y: 31
+        width: 8
+        height: 7
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData:
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: b5bb4882ff37b6460800000000000000
+      internalID: 7236004766034475867
+      vertices: []
+      indices:
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Turret_DarkWave_17
+      rect:
+        serializedVersion: 2
+        x: 924
+        y: 23
+        width: 8
+        height: 7
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData:
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: b12ff2f345cec73a0800000000000000
+      internalID: -6666193501833661925
+      vertices: []
+      indices:
+      edges: []
+      weights: []
+    outline: []
+    customData:
+    physicsShape: []
+    bones: []
+    spriteID: 5e97eb03825dee720800000000000000
+    internalID: 0
+    vertices: []
+    indices:
+    edges: []
+    weights: []
+    secondaryTextures: []
+    spriteCustomMetadata:
+      entries: []
+    nameFileIdTable:
+      Turret_DarkWave_0: 229233072318458819
+      Turret_DarkWave_1: 2092878145275589607
+      Turret_DarkWave_10: 1673521559681209203
+      Turret_DarkWave_11: 3909399687854520128
+      Turret_DarkWave_12: -8317421500661625618
+      Turret_DarkWave_13: -3145792511377347647
+      Turret_DarkWave_14: 757401753432523828
+      Turret_DarkWave_15: -612769064739535161
+      Turret_DarkWave_16: 7236004766034475867
+      Turret_DarkWave_17: -6666193501833661925
+      Turret_DarkWave_2: -7396821436926908867
+      Turret_DarkWave_3: 5463475565702163701
+      Turret_DarkWave_4: -5550223515746090158
+      Turret_DarkWave_5: 7274853790114300702
+      Turret_DarkWave_6: -7032617765881624835
+      Turret_DarkWave_7: 3787141809888902812
+      Turret_DarkWave_8: 2986860733232684528
+      Turret_DarkWave_9: 8880155067954244947
+  mipmapLimitGroupName:
+  pSDRemoveMatte: 0
+  userData:
+  assetBundleName:
+  assetBundleVariant:

@@ -91,7 +91,7 @@ namespace ProjectEpsilon.Combat // 전투 영역
                     visuals[owner] = renderer; // 몸통별 표시기 보관
                 }
                 renderer.sprite = slot.Weapon.Artwork; // 실제 장착 무기 이미지
-                renderer.color = slot.Weapon.ArtworkTint; // 속성별 포탑 색상 표시
+                renderer.color = slot.Weapon.ArtworkDisplayTint; // 원본 포탑 그림 색상 유지
                 renderer.sortingOrder = 30; // 몸통 위 표시 순서
                 renderer.transform.localScale = Vector3.one * Mathf.Max(0.01f, visualScale); // 실제 몸통 기준 크기
                 renderer.gameObject.SetActive(true); // 실제 무기 표시

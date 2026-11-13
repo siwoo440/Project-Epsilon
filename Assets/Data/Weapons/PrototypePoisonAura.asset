@@ -14,7 +14,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::ProjectEpsilon.Data.WeaponData
   id: poison_aura
   displayName: 독 범위 포탑
-  artwork: {fileID: 21300000, guid: f873d6246f772fb41a1fb370949f0060, type: 3}
+  artwork: {fileID: 21300000, guid: 852451be1ac77f54eb5e946bf85d5018, type: 3}
+  icon: {fileID: 21300000, guid: 6dfebf17fec374c4cb8ffe63cacaa228, type: 3}
   attribute: 4
   attackType: 3
   baseDamage: 6

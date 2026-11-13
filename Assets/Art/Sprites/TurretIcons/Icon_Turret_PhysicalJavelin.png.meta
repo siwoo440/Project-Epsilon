@@ -1,0 +1,403 @@
+fileFormatVersion: 2
+guid: cbfd275a5b9daa2438ffcb1dcc6eea5d
+TextureImporter:
+  internalIDToNameTable:
+  - first:
+      213: -4399826294644237887
+    second: Icon_Turret_PhysicalJavelin_0
+  - first:
+      213: 1089509692090182363
+    second: Icon_Turret_PhysicalJavelin_1
+  - first:
+      213: 1100444371507220419
+    second: Icon_Turret_PhysicalJavelin_2
+  - first:
+      213: 9170797137158558040
+    second: Icon_Turret_PhysicalJavelin_3
+  - first:
+      213: -5237486354333025976
+    second: Icon_Turret_PhysicalJavelin_4
+  - first:
+      213: 8062713031791015308
+    second: Icon_Turret_PhysicalJavelin_5
+  - first:
+      213: -2485356489384932104
+    second: Icon_Turret_PhysicalJavelin_6
+  - first:
+      213: -5073343536053884243
+    second: Icon_Turret_PhysicalJavelin_7
+  - first:
+      213: 1888857051579734891
+    second: Icon_Turret_PhysicalJavelin_8
+  - first:
+      213: 7902393969784331210
+    second: Icon_Turret_PhysicalJavelin_9
+  - first:
+      213: 5800159147571147992
+    second: Icon_Turret_PhysicalJavelin_10
+  externalObjects: {}
+  serializedVersion: 13
+  mipmaps:
+    mipMapMode: 0
+    enableMipMap: 0
+    sRGBTexture: 1
+    linearTexture: 0
+    fadeOut: 0
+    borderMipMap: 0
+    mipMapsPreserveCoverage: 0
+    alphaTestReferenceValue: 0.5
+    mipMapFadeDistanceStart: 1
+    mipMapFadeDistanceEnd: 3
+  bumpmap:
+    convertToNormalMap: 0
+    externalNormalMap: 0
+    heightScale: 0.25
+    normalMapFilter: 0
+    flipGreenChannel: 0
+  isReadable: 0
+  streamingMipmaps: 0
+  streamingMipmapsPriority: 0
+  vTOnly: 0
+  ignoreMipmapLimit: 0
+  grayScaleToAlpha: 0
+  generateCubemap: 6
+  cubemapConvolution: 0
+  seamlessCubemap: 0
+  textureFormat: 1
+  maxTextureSize: 2048
+  textureSettings:
+    serializedVersion: 2
+    filterMode: 1
+    aniso: 1
+    mipBias: 0
+    wrapU: 1
+    wrapV: 1
+    wrapW: 1
+  nPOTScale: 0
+  lightmap: 0
+  compressionQuality: 50
+  spriteMode: 1
+  spriteExtrude: 1
+  spriteMeshType: 1
+  alignment: 0
+  spritePivot: {x: 0.5, y: 0.5}
+  spritePixelsToUnits: 100
+  spriteBorder: {x: 0, y: 0, z: 0, w: 0}
+  spriteGenerateFallbackPhysicsShape: 1
+  alphaUsage: 1
+  alphaIsTransparency: 1
+  spriteTessellationDetail: -1
+  textureType: 8
+  textureShape: 1
+  singleChannelComponent: 0
+  flipbookRows: 1
+  flipbookColumns: 1
+  maxTextureSizeSet: 0
+  compressionQualitySet: 0
+  textureFormatSet: 0
+  ignorePngGamma: 0
+  applyGammaDecoding: 0
+  swizzle: 50462976
+  cookieLightType: 0
+  platformSettings:
+  - serializedVersion: 4
+    buildTarget: DefaultTexturePlatform
+    maxTextureSize: 512
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 4
+    buildTarget: Standalone
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  spriteSheet:
+    serializedVersion: 2
+    sprites:
+    - serializedVersion: 2
+      name: Icon_Turret_PhysicalJavelin_0
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 0
+        width: 1231
+        height: 1222
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData:
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 1c99e4adb4da0f2c0800000000000000
+      internalID: -4399826294644237887
+      vertices: []
+      indices:
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Icon_Turret_PhysicalJavelin_1
+      rect:
+        serializedVersion: 2
+        x: 32
+        y: 570
+        width: 7
+        height: 11
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData:
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: bda6160ea47be1f00800000000000000
+      internalID: 1089509692090182363
+      vertices: []
+      indices:
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Icon_Turret_PhysicalJavelin_2
+      rect:
+        serializedVersion: 2
+        x: 1192
+        y: 564
+        width: 13
+        height: 14
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData:
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 3cf04c25350954f00800000000000000
+      internalID: 1100444371507220419
+      vertices: []
+      indices:
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Icon_Turret_PhysicalJavelin_3
+      rect:
+        serializedVersion: 2
+        x: 1196
+        y: 503
+        width: 19
+        height: 28
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData:
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 85151834867354f70800000000000000
+      internalID: 9170797137158558040
+      vertices: []
+      indices:
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Icon_Turret_PhysicalJavelin_4
+      rect:
+        serializedVersion: 2
+        x: 86
+        y: 483
+        width: 10
+        height: 14
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData:
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 849360ef8e5b057b0800000000000000
+      internalID: -5237486354333025976
+      vertices: []
+      indices:
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Icon_Turret_PhysicalJavelin_5
+      rect:
+        serializedVersion: 2
+        x: 1220
+        y: 424
+        width: 9
+        height: 10
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData:
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: c85f0d9c8c284ef60800000000000000
+      internalID: 8062713031791015308
+      vertices: []
+      indices:
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Icon_Turret_PhysicalJavelin_6
+      rect:
+        serializedVersion: 2
+        x: 1228
+        y: 425
+        width: 7
+        height: 8
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData:
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 8fccffdd07d328dd0800000000000000
+      internalID: -2485356489384932104
+      vertices: []
+      indices:
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Icon_Turret_PhysicalJavelin_7
+      rect:
+        serializedVersion: 2
+        x: 1174
+        y: 314
+        width: 9
+        height: 9
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData:
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: daaebf50fecd799b0800000000000000
+      internalID: -5073343536053884243
+      vertices: []
+      indices:
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Icon_Turret_PhysicalJavelin_8
+      rect:
+        serializedVersion: 2
+        x: 102
+        y: 190
+        width: 34
+        height: 27
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData:
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: b6bd6e61b71963a10800000000000000
+      internalID: 1888857051579734891
+      vertices: []
+      indices:
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Icon_Turret_PhysicalJavelin_9
+      rect:
+        serializedVersion: 2
+        x: 122
+        y: 172
+        width: 27
+        height: 29
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData:
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: acb1f246271faad60800000000000000
+      internalID: 7902393969784331210
+      vertices: []
+      indices:
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Icon_Turret_PhysicalJavelin_10
+      rect:
+        serializedVersion: 2
+        x: 153
+        y: 142
+        width: 31
+        height: 13
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData:
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 8d4f5bf930e4e7050800000000000000
+      internalID: 5800159147571147992
+      vertices: []
+      indices:
+      edges: []
+      weights: []
+    outline: []
+    customData:
+    physicsShape: []
+    bones: []
+    spriteID: 5e97eb03825dee720800000000000000
+    internalID: 0
+    vertices: []
+    indices:
+    edges: []
+    weights: []
+    secondaryTextures: []
+    spriteCustomMetadata:
+      entries: []
+    nameFileIdTable:
+      Icon_Turret_PhysicalJavelin_0: -4399826294644237887
+      Icon_Turret_PhysicalJavelin_1: 1089509692090182363
+      Icon_Turret_PhysicalJavelin_10: 5800159147571147992
+      Icon_Turret_PhysicalJavelin_2: 1100444371507220419
+      Icon_Turret_PhysicalJavelin_3: 9170797137158558040
+      Icon_Turret_PhysicalJavelin_4: -5237486354333025976
+      Icon_Turret_PhysicalJavelin_5: 8062713031791015308
+      Icon_Turret_PhysicalJavelin_6: -2485356489384932104
+      Icon_Turret_PhysicalJavelin_7: -5073343536053884243
+      Icon_Turret_PhysicalJavelin_8: 1888857051579734891
+      Icon_Turret_PhysicalJavelin_9: 7902393969784331210
+  mipmapLimitGroupName:
+  pSDRemoveMatte: 0
+  userData:
+  assetBundleName:
+  assetBundleVariant:

@@ -14,7 +14,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::ProjectEpsilon.Data.WeaponData
   id: explosion_wave
   displayName: 폭발 파동 포탑
-  artwork: {fileID: 21300000, guid: f873d6246f772fb41a1fb370949f0060, type: 3}
+  artwork: {fileID: 21300000, guid: 2fbd575eac132304ca8b0f9d556bcd4c, type: 3}
+  icon: {fileID: 21300000, guid: f44f5146f9a310346a926f295f58932e, type: 3}
   attribute: 5
   attackType: 3
   baseDamage: 9

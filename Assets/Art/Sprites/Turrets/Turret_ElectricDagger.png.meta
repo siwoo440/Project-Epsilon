@@ -1,0 +1,533 @@
+fileFormatVersion: 2
+guid: 9e3c4e872011b8745a780692017112be
+TextureImporter:
+  internalIDToNameTable:
+  - first:
+      213: -1961065139467657362
+    second: Turret_ElectricDagger_0
+  - first:
+      213: -7102550243410339142
+    second: Turret_ElectricDagger_1
+  - first:
+      213: 6500169640273543278
+    second: Turret_ElectricDagger_2
+  - first:
+      213: 8910458965459966499
+    second: Turret_ElectricDagger_3
+  - first:
+      213: 2673316839640278621
+    second: Turret_ElectricDagger_4
+  - first:
+      213: 1870889720176855736
+    second: Turret_ElectricDagger_5
+  - first:
+      213: -809934298998796579
+    second: Turret_ElectricDagger_6
+  - first:
+      213: 149329991460137345
+    second: Turret_ElectricDagger_7
+  - first:
+      213: -8495326075622495593
+    second: Turret_ElectricDagger_8
+  - first:
+      213: -9052129274337768412
+    second: Turret_ElectricDagger_9
+  - first:
+      213: -6246292914959052178
+    second: Turret_ElectricDagger_10
+  - first:
+      213: -1717484487376384700
+    second: Turret_ElectricDagger_11
+  - first:
+      213: -7914595621657058660
+    second: Turret_ElectricDagger_12
+  - first:
+      213: 7322543038507893287
+    second: Turret_ElectricDagger_13
+  - first:
+      213: 312496204765641734
+    second: Turret_ElectricDagger_14
+  - first:
+      213: 4176130781821836894
+    second: Turret_ElectricDagger_15
+  externalObjects: {}
+  serializedVersion: 13
+  mipmaps:
+    mipMapMode: 0
+    enableMipMap: 0
+    sRGBTexture: 1
+    linearTexture: 0
+    fadeOut: 0
+    borderMipMap: 0
+    mipMapsPreserveCoverage: 0
+    alphaTestReferenceValue: 0.5
+    mipMapFadeDistanceStart: 1
+    mipMapFadeDistanceEnd: 3
+  bumpmap:
+    convertToNormalMap: 0
+    externalNormalMap: 0
+    heightScale: 0.25
+    normalMapFilter: 0
+    flipGreenChannel: 0
+  isReadable: 0
+  streamingMipmaps: 0
+  streamingMipmapsPriority: 0
+  vTOnly: 0
+  ignoreMipmapLimit: 0
+  grayScaleToAlpha: 0
+  generateCubemap: 6
+  cubemapConvolution: 0
+  seamlessCubemap: 0
+  textureFormat: 1
+  maxTextureSize: 2048
+  textureSettings:
+    serializedVersion: 2
+    filterMode: 1
+    aniso: 1
+    mipBias: 0
+    wrapU: 1
+    wrapV: 1
+    wrapW: 1
+  nPOTScale: 0
+  lightmap: 0
+  compressionQuality: 50
+  spriteMode: 1
+  spriteExtrude: 1
+  spriteMeshType: 1
+  alignment: 0
+  spritePivot: {x: 0.5, y: 0.5}
+  spritePixelsToUnits: 1000
+  spriteBorder: {x: 0, y: 0, z: 0, w: 0}
+  spriteGenerateFallbackPhysicsShape: 1
+  alphaUsage: 1
+  alphaIsTransparency: 1
+  spriteTessellationDetail: -1
+  textureType: 8
+  textureShape: 1
+  singleChannelComponent: 0
+  flipbookRows: 1
+  flipbookColumns: 1
+  maxTextureSizeSet: 0
+  compressionQualitySet: 0
+  textureFormatSet: 0
+  ignorePngGamma: 0
+  applyGammaDecoding: 0
+  swizzle: 50462976
+  cookieLightType: 0
+  platformSettings:
+  - serializedVersion: 4
+    buildTarget: DefaultTexturePlatform
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 4
+    buildTarget: Standalone
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  spriteSheet:
+    serializedVersion: 2
+    sprites:
+    - serializedVersion: 2
+      name: Turret_ElectricDagger_0
+      rect:
+        serializedVersion: 2
+        x: 24
+        y: 0
+        width: 1217
+        height: 1219
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData:
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: e6fd0a455a5e8c4e0800000000000000
+      internalID: -1961065139467657362
+      vertices: []
+      indices:
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Turret_ElectricDagger_1
+      rect:
+        serializedVersion: 2
+        x: 1153
+        y: 1144
+        width: 6
+        height: 6
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData:
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: aba992e3f2cae6d90800000000000000
+      internalID: -7102550243410339142
+      vertices: []
+      indices:
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Turret_ElectricDagger_2
+      rect:
+        serializedVersion: 2
+        x: 651
+        y: 1124
+        width: 7
+        height: 12
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData:
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: e60884439dd353a50800000000000000
+      internalID: 6500169640273543278
+      vertices: []
+      indices:
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Turret_ElectricDagger_3
+      rect:
+        serializedVersion: 2
+        x: 657
+        y: 1124
+        width: 7
+        height: 9
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData:
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 32a9fed283f48ab70800000000000000
+      internalID: 8910458965459966499
+      vertices: []
+      indices:
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Turret_ElectricDagger_4
+      rect:
+        serializedVersion: 2
+        x: 665
+        y: 1104
+        width: 58
+        height: 32
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData:
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: d5624d67087891520800000000000000
+      internalID: 2673316839640278621
+      vertices: []
+      indices:
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Turret_ElectricDagger_5
+      rect:
+        serializedVersion: 2
+        x: 657
+        y: 1102
+        width: 11
+        height: 18
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData:
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 8ba4211c94cb6f910800000000000000
+      internalID: 1870889720176855736
+      vertices: []
+      indices:
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Turret_ElectricDagger_6
+      rect:
+        serializedVersion: 2
+        x: 751
+        y: 1074
+        width: 38
+        height: 35
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData:
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: dde85c8db0982c4f0800000000000000
+      internalID: -809934298998796579
+      vertices: []
+      indices:
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Turret_ElectricDagger_7
+      rect:
+        serializedVersion: 2
+        x: 750
+        y: 1078
+        width: 13
+        height: 9
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData:
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 1892b4706d6821200800000000000000
+      internalID: 149329991460137345
+      vertices: []
+      indices:
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Turret_ElectricDagger_8
+      rect:
+        serializedVersion: 2
+        x: 884
+        y: 1032
+        width: 7
+        height: 12
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData:
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 79a6863c1f98a1a80800000000000000
+      internalID: -8495326075622495593
+      vertices: []
+      indices:
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Turret_ElectricDagger_9
+      rect:
+        serializedVersion: 2
+        x: 890
+        y: 1027
+        width: 11
+        height: 12
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData:
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 42cce2e9260606280800000000000000
+      internalID: -9052129274337768412
+      vertices: []
+      indices:
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Turret_ElectricDagger_10
+      rect:
+        serializedVersion: 2
+        x: 360
+        y: 166
+        width: 9
+        height: 16
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData:
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: e6293d820b5b059a0800000000000000
+      internalID: -6246292914959052178
+      vertices: []
+      indices:
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Turret_ElectricDagger_11
+      rect:
+        serializedVersion: 2
+        x: 874
+        y: 158
+        width: 27
+        height: 25
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData:
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 44dcfa655f44a28e0800000000000000
+      internalID: -1717484487376384700
+      vertices: []
+      indices:
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Turret_ElectricDagger_12
+      rect:
+        serializedVersion: 2
+        x: 810
+        y: 82
+        width: 13
+        height: 21
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData:
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: c92e4462735b92290800000000000000
+      internalID: -7914595621657058660
+      vertices: []
+      indices:
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Turret_ElectricDagger_13
+      rect:
+        serializedVersion: 2
+        x: 490
+        y: 33
+        width: 7
+        height: 13
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData:
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 722c5c6d816ee9560800000000000000
+      internalID: 7322543038507893287
+      vertices: []
+      indices:
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Turret_ElectricDagger_14
+      rect:
+        serializedVersion: 2
+        x: 731
+        y: 31
+        width: 6
+        height: 6
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData:
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 60cb6be74a5365400800000000000000
+      internalID: 312496204765641734
+      vertices: []
+      indices:
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Turret_ElectricDagger_15
+      rect:
+        serializedVersion: 2
+        x: 721
+        y: 15
+        width: 16
+        height: 16
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData:
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: e5e901ae1d894f930800000000000000
+      internalID: 4176130781821836894
+      vertices: []
+      indices:
+      edges: []
+      weights: []
+    outline: []
+    customData:
+    physicsShape: []
+    bones: []
+    spriteID: 5e97eb03825dee720800000000000000
+    internalID: 0
+    vertices: []
+    indices:
+    edges: []
+    weights: []
+    secondaryTextures: []
+    spriteCustomMetadata:
+      entries: []
+    nameFileIdTable:
+      Turret_ElectricDagger_0: -1961065139467657362
+      Turret_ElectricDagger_1: -7102550243410339142
+      Turret_ElectricDagger_10: -6246292914959052178
+      Turret_ElectricDagger_11: -1717484487376384700
+      Turret_ElectricDagger_12: -7914595621657058660
+      Turret_ElectricDagger_13: 7322543038507893287
+      Turret_ElectricDagger_14: 312496204765641734
+      Turret_ElectricDagger_15: 4176130781821836894
+      Turret_ElectricDagger_2: 6500169640273543278
+      Turret_ElectricDagger_3: 8910458965459966499
+      Turret_ElectricDagger_4: 2673316839640278621
+      Turret_ElectricDagger_5: 1870889720176855736
+      Turret_ElectricDagger_6: -809934298998796579
+      Turret_ElectricDagger_7: 149329991460137345
+      Turret_ElectricDagger_8: -8495326075622495593
+      Turret_ElectricDagger_9: -9052129274337768412
+  mipmapLimitGroupName:
+  pSDRemoveMatte: 0
+  userData:
+  assetBundleName:
+  assetBundleVariant:

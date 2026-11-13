@@ -1,0 +1,403 @@
+fileFormatVersion: 2
+guid: a7cde41e8253bee4dbed5bfba087945b
+TextureImporter:
+  internalIDToNameTable:
+  - first:
+      213: 3845730496378084544
+    second: Turret_PoisonDagger_0
+  - first:
+      213: 1249021537381682927
+    second: Turret_PoisonDagger_1
+  - first:
+      213: -5803165416312956034
+    second: Turret_PoisonDagger_2
+  - first:
+      213: 1904433309671667521
+    second: Turret_PoisonDagger_3
+  - first:
+      213: -4574359195797415544
+    second: Turret_PoisonDagger_4
+  - first:
+      213: 5193509152329184220
+    second: Turret_PoisonDagger_5
+  - first:
+      213: -7589134951182161027
+    second: Turret_PoisonDagger_6
+  - first:
+      213: -6107746082101704425
+    second: Turret_PoisonDagger_7
+  - first:
+      213: -1691349098336019946
+    second: Turret_PoisonDagger_8
+  - first:
+      213: -325928044788625760
+    second: Turret_PoisonDagger_9
+  - first:
+      213: -4338577121589977690
+    second: Turret_PoisonDagger_10
+  externalObjects: {}
+  serializedVersion: 13
+  mipmaps:
+    mipMapMode: 0
+    enableMipMap: 0
+    sRGBTexture: 1
+    linearTexture: 0
+    fadeOut: 0
+    borderMipMap: 0
+    mipMapsPreserveCoverage: 0
+    alphaTestReferenceValue: 0.5
+    mipMapFadeDistanceStart: 1
+    mipMapFadeDistanceEnd: 3
+  bumpmap:
+    convertToNormalMap: 0
+    externalNormalMap: 0
+    heightScale: 0.25
+    normalMapFilter: 0
+    flipGreenChannel: 0
+  isReadable: 0
+  streamingMipmaps: 0
+  streamingMipmapsPriority: 0
+  vTOnly: 0
+  ignoreMipmapLimit: 0
+  grayScaleToAlpha: 0
+  generateCubemap: 6
+  cubemapConvolution: 0
+  seamlessCubemap: 0
+  textureFormat: 1
+  maxTextureSize: 2048
+  textureSettings:
+    serializedVersion: 2
+    filterMode: 1
+    aniso: 1
+    mipBias: 0
+    wrapU: 1
+    wrapV: 1
+    wrapW: 1
+  nPOTScale: 0
+  lightmap: 0
+  compressionQuality: 50
+  spriteMode: 1
+  spriteExtrude: 1
+  spriteMeshType: 1
+  alignment: 0
+  spritePivot: {x: 0.5, y: 0.5}
+  spritePixelsToUnits: 1000
+  spriteBorder: {x: 0, y: 0, z: 0, w: 0}
+  spriteGenerateFallbackPhysicsShape: 1
+  alphaUsage: 1
+  alphaIsTransparency: 1
+  spriteTessellationDetail: -1
+  textureType: 8
+  textureShape: 1
+  singleChannelComponent: 0
+  flipbookRows: 1
+  flipbookColumns: 1
+  maxTextureSizeSet: 0
+  compressionQualitySet: 0
+  textureFormatSet: 0
+  ignorePngGamma: 0
+  applyGammaDecoding: 0
+  swizzle: 50462976
+  cookieLightType: 0
+  platformSettings:
+  - serializedVersion: 4
+    buildTarget: DefaultTexturePlatform
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 4
+    buildTarget: Standalone
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  spriteSheet:
+    serializedVersion: 2
+    sprites:
+    - serializedVersion: 2
+      name: Turret_PoisonDagger_0
+      rect:
+        serializedVersion: 2
+        x: 520
+        y: 1213
+        width: 10
+        height: 11
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData:
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 0cc908ac287ce5530800000000000000
+      internalID: 3845730496378084544
+      vertices: []
+      indices:
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Turret_PoisonDagger_1
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 0
+        width: 1205
+        height: 1172
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData:
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: fee827c787a655110800000000000000
+      internalID: 1249021537381682927
+      vertices: []
+      indices:
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Turret_PoisonDagger_2
+      rect:
+        serializedVersion: 2
+        x: 1141
+        y: 1140
+        width: 14
+        height: 7
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData:
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: e7b95d3ecc3077fa0800000000000000
+      internalID: -5803165416312956034
+      vertices: []
+      indices:
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Turret_PoisonDagger_3
+      rect:
+        serializedVersion: 2
+        x: 404
+        y: 66
+        width: 7
+        height: 8
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData:
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 147b6694108ed6a10800000000000000
+      internalID: 1904433309671667521
+      vertices: []
+      indices:
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Turret_PoisonDagger_4
+      rect:
+        serializedVersion: 2
+        x: 424
+        y: 37
+        width: 9
+        height: 17
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData:
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 88914732c8c9480c0800000000000000
+      internalID: -4574359195797415544
+      vertices: []
+      indices:
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Turret_PoisonDagger_5
+      rect:
+        serializedVersion: 2
+        x: 460
+        y: 19
+        width: 21
+        height: 29
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData:
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: cd33252ce0d031840800000000000000
+      internalID: 5193509152329184220
+      vertices: []
+      indices:
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Turret_PoisonDagger_6
+      rect:
+        serializedVersion: 2
+        x: 506
+        y: 47
+        width: 6
+        height: 6
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData:
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: d7b294a88f9fda690800000000000000
+      internalID: -7589134951182161027
+      vertices: []
+      indices:
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Turret_PoisonDagger_7
+      rect:
+        serializedVersion: 2
+        x: 514
+        y: 37
+        width: 10
+        height: 10
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData:
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 7194b0e6c4dec3ba0800000000000000
+      internalID: -6107746082101704425
+      vertices: []
+      indices:
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Turret_PoisonDagger_8
+      rect:
+        serializedVersion: 2
+        x: 478
+        y: 13
+        width: 56
+        height: 22
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData:
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 61a118ac4fe1788e0800000000000000
+      internalID: -1691349098336019946
+      vertices: []
+      indices:
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Turret_PoisonDagger_9
+      rect:
+        serializedVersion: 2
+        x: 702
+        y: 0
+        width: 23
+        height: 18
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData:
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 0ae490c8b221a7bf0800000000000000
+      internalID: -325928044788625760
+      vertices: []
+      indices:
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Turret_PoisonDagger_10
+      rect:
+        serializedVersion: 2
+        x: 721
+        y: 15
+        width: 16
+        height: 17
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData:
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 6ad1efc38174ac3c0800000000000000
+      internalID: -4338577121589977690
+      vertices: []
+      indices:
+      edges: []
+      weights: []
+    outline: []
+    customData:
+    physicsShape: []
+    bones: []
+    spriteID: 5e97eb03825dee720800000000000000
+    internalID: 0
+    vertices: []
+    indices:
+    edges: []
+    weights: []
+    secondaryTextures: []
+    spriteCustomMetadata:
+      entries: []
+    nameFileIdTable:
+      Turret_PoisonDagger_0: 3845730496378084544
+      Turret_PoisonDagger_1: 1249021537381682927
+      Turret_PoisonDagger_10: -4338577121589977690
+      Turret_PoisonDagger_2: -5803165416312956034
+      Turret_PoisonDagger_3: 1904433309671667521
+      Turret_PoisonDagger_4: -4574359195797415544
+      Turret_PoisonDagger_5: 5193509152329184220
+      Turret_PoisonDagger_6: -7589134951182161027
+      Turret_PoisonDagger_7: -6107746082101704425
+      Turret_PoisonDagger_8: -1691349098336019946
+      Turret_PoisonDagger_9: -325928044788625760
+  mipmapLimitGroupName:
+  pSDRemoveMatte: 0
+  userData:
+  assetBundleName:
+  assetBundleVariant:

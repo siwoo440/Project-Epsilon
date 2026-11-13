@@ -1,0 +1,611 @@
+fileFormatVersion: 2
+guid: b252b7e0ab4434f42ace9655ba1d907a
+TextureImporter:
+  internalIDToNameTable:
+  - first:
+      213: 4537573621019692860
+    second: Turret_HolyDagger_0
+  - first:
+      213: 4115494082641768689
+    second: Turret_HolyDagger_1
+  - first:
+      213: 6796623740001296132
+    second: Turret_HolyDagger_2
+  - first:
+      213: 308365457547351744
+    second: Turret_HolyDagger_3
+  - first:
+      213: 1204942636789027941
+    second: Turret_HolyDagger_4
+  - first:
+      213: 4732196443924793823
+    second: Turret_HolyDagger_5
+  - first:
+      213: 8889297302078924242
+    second: Turret_HolyDagger_6
+  - first:
+      213: -8956300927948299323
+    second: Turret_HolyDagger_7
+  - first:
+      213: 1975245945151344178
+    second: Turret_HolyDagger_8
+  - first:
+      213: 8743544564661564379
+    second: Turret_HolyDagger_9
+  - first:
+      213: -38545005363002584
+    second: Turret_HolyDagger_10
+  - first:
+      213: -2572618566169922216
+    second: Turret_HolyDagger_11
+  - first:
+      213: 6796845255166269896
+    second: Turret_HolyDagger_12
+  - first:
+      213: -7241154579041779563
+    second: Turret_HolyDagger_13
+  - first:
+      213: -4538332634012767756
+    second: Turret_HolyDagger_14
+  - first:
+      213: -3694084039280748645
+    second: Turret_HolyDagger_15
+  - first:
+      213: -2032391945591038522
+    second: Turret_HolyDagger_16
+  - first:
+      213: 8300080040822693815
+    second: Turret_HolyDagger_17
+  - first:
+      213: 9050284049135538997
+    second: Turret_HolyDagger_18
+  externalObjects: {}
+  serializedVersion: 13
+  mipmaps:
+    mipMapMode: 0
+    enableMipMap: 0
+    sRGBTexture: 1
+    linearTexture: 0
+    fadeOut: 0
+    borderMipMap: 0
+    mipMapsPreserveCoverage: 0
+    alphaTestReferenceValue: 0.5
+    mipMapFadeDistanceStart: 1
+    mipMapFadeDistanceEnd: 3
+  bumpmap:
+    convertToNormalMap: 0
+    externalNormalMap: 0
+    heightScale: 0.25
+    normalMapFilter: 0
+    flipGreenChannel: 0
+  isReadable: 0
+  streamingMipmaps: 0
+  streamingMipmapsPriority: 0
+  vTOnly: 0
+  ignoreMipmapLimit: 0
+  grayScaleToAlpha: 0
+  generateCubemap: 6
+  cubemapConvolution: 0
+  seamlessCubemap: 0
+  textureFormat: 1
+  maxTextureSize: 2048
+  textureSettings:
+    serializedVersion: 2
+    filterMode: 1
+    aniso: 1
+    mipBias: 0
+    wrapU: 1
+    wrapV: 1
+    wrapW: 1
+  nPOTScale: 0
+  lightmap: 0
+  compressionQuality: 50
+  spriteMode: 1
+  spriteExtrude: 1
+  spriteMeshType: 1
+  alignment: 0
+  spritePivot: {x: 0.5, y: 0.5}
+  spritePixelsToUnits: 1000
+  spriteBorder: {x: 0, y: 0, z: 0, w: 0}
+  spriteGenerateFallbackPhysicsShape: 1
+  alphaUsage: 1
+  alphaIsTransparency: 1
+  spriteTessellationDetail: -1
+  textureType: 8
+  textureShape: 1
+  singleChannelComponent: 0
+  flipbookRows: 1
+  flipbookColumns: 1
+  maxTextureSizeSet: 0
+  compressionQualitySet: 0
+  textureFormatSet: 0
+  ignorePngGamma: 0
+  applyGammaDecoding: 0
+  swizzle: 50462976
+  cookieLightType: 0
+  platformSettings:
+  - serializedVersion: 4
+    buildTarget: DefaultTexturePlatform
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 4
+    buildTarget: Standalone
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  spriteSheet:
+    serializedVersion: 2
+    sprites:
+    - serializedVersion: 2
+      name: Turret_HolyDagger_0
+      rect:
+        serializedVersion: 2
+        x: 42
+        y: 166
+        width: 1151
+        height: 1042
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData:
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: c3fcf0fca23b8fe30800000000000000
+      internalID: 4537573621019692860
+      vertices: []
+      indices:
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Turret_HolyDagger_1
+      rect:
+        serializedVersion: 2
+        x: 1190
+        y: 1140
+        width: 47
+        height: 20
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData:
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 1f0b517301c2d1930800000000000000
+      internalID: 4115494082641768689
+      vertices: []
+      indices:
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Turret_HolyDagger_2
+      rect:
+        serializedVersion: 2
+        x: 1035
+        y: 1116
+        width: 9
+        height: 13
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData:
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 40f93ce0845725e50800000000000000
+      internalID: 6796623740001296132
+      vertices: []
+      indices:
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Turret_HolyDagger_3
+      rect:
+        serializedVersion: 2
+        x: 88
+        y: 836
+        width: 7
+        height: 9
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData:
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 0c65c16ffb8874400800000000000000
+      internalID: 308365457547351744
+      vertices: []
+      indices:
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Turret_HolyDagger_4
+      rect:
+        serializedVersion: 2
+        x: 94
+        y: 835
+        width: 10
+        height: 16
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData:
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 5645880b1f0d8b010800000000000000
+      internalID: 1204942636789027941
+      vertices: []
+      indices:
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Turret_HolyDagger_5
+      rect:
+        serializedVersion: 2
+        x: 1155
+        y: 740
+        width: 82
+        height: 96
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData:
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: fd9018fe7932ca140800000000000000
+      internalID: 4732196443924793823
+      vertices: []
+      indices:
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Turret_HolyDagger_6
+      rect:
+        serializedVersion: 2
+        x: 90
+        y: 785
+        width: 16
+        height: 19
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData:
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 2d5a0497cc02d5b70800000000000000
+      internalID: 8889297302078924242
+      vertices: []
+      indices:
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Turret_HolyDagger_7
+      rect:
+        serializedVersion: 2
+        x: 102
+        y: 787
+        width: 10
+        height: 14
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData:
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 5c3e32032c3d4b380800000000000000
+      internalID: -8956300927948299323
+      vertices: []
+      indices:
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Turret_HolyDagger_8
+      rect:
+        serializedVersion: 2
+        x: 1109
+        y: 738
+        width: 32
+        height: 36
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData:
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 23ec6c8c8bb796b10800000000000000
+      internalID: 1975245945151344178
+      vertices: []
+      indices:
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Turret_HolyDagger_9
+      rect:
+        serializedVersion: 2
+        x: 1133
+        y: 773
+        width: 8
+        height: 7
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData:
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: bd3337ec47f475970800000000000000
+      internalID: 8743544564661564379
+      vertices: []
+      indices:
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Turret_HolyDagger_10
+      rect:
+        serializedVersion: 2
+        x: 1139
+        y: 763
+        width: 10
+        height: 13
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData:
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 8230977958f077ff0800000000000000
+      internalID: -38545005363002584
+      vertices: []
+      indices:
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Turret_HolyDagger_11
+      rect:
+        serializedVersion: 2
+        x: 1137
+        y: 751
+        width: 11
+        height: 9
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData:
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 855fddc5b093c4cd0800000000000000
+      internalID: -2572618566169922216
+      vertices: []
+      indices:
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Turret_HolyDagger_12
+      rect:
+        serializedVersion: 2
+        x: 1141
+        y: 746
+        width: 6
+        height: 6
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData:
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 8c91c739fbe335e50800000000000000
+      internalID: 6796845255166269896
+      vertices: []
+      indices:
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Turret_HolyDagger_13
+      rect:
+        serializedVersion: 2
+        x: 1146
+        y: 747
+        width: 13
+        height: 17
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData:
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 59085809640428b90800000000000000
+      internalID: -7241154579041779563
+      vertices: []
+      indices:
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Turret_HolyDagger_14
+      rect:
+        serializedVersion: 2
+        x: 1117
+        y: 720
+        width: 11
+        height: 13
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData:
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 4f92b15b38a9401c0800000000000000
+      internalID: -4538332634012767756
+      vertices: []
+      indices:
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Turret_HolyDagger_15
+      rect:
+        serializedVersion: 2
+        x: 1135
+        y: 717
+        width: 8
+        height: 7
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData:
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: b971b3c632afbbcc0800000000000000
+      internalID: -3694084039280748645
+      vertices: []
+      indices:
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Turret_HolyDagger_16
+      rect:
+        serializedVersion: 2
+        x: 1131
+        y: 690
+        width: 12
+        height: 11
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData:
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 6cd5ea62b4e7bc3e0800000000000000
+      internalID: -2032391945591038522
+      vertices: []
+      indices:
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Turret_HolyDagger_17
+      rect:
+        serializedVersion: 2
+        x: 1170
+        y: 676
+        width: 17
+        height: 27
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData:
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 7bfdb8842decf2370800000000000000
+      internalID: 8300080040822693815
+      vertices: []
+      indices:
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Turret_HolyDagger_18
+      rect:
+        serializedVersion: 2
+        x: 850
+        y: 128
+        width: 45
+        height: 67
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData:
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 5339b196461199d70800000000000000
+      internalID: 9050284049135538997
+      vertices: []
+      indices:
+      edges: []
+      weights: []
+    outline: []
+    customData:
+    physicsShape: []
+    bones: []
+    spriteID: 5e97eb03825dee720800000000000000
+    internalID: 0
+    vertices: []
+    indices:
+    edges: []
+    weights: []
+    secondaryTextures: []
+    spriteCustomMetadata:
+      entries: []
+    nameFileIdTable:
+      Turret_HolyDagger_0: 4537573621019692860
+      Turret_HolyDagger_1: 4115494082641768689
+      Turret_HolyDagger_10: -38545005363002584
+      Turret_HolyDagger_11: -2572618566169922216
+      Turret_HolyDagger_12: 6796845255166269896
+      Turret_HolyDagger_13: -7241154579041779563
+      Turret_HolyDagger_14: -4538332634012767756
+      Turret_HolyDagger_15: -3694084039280748645
+      Turret_HolyDagger_16: -2032391945591038522
+      Turret_HolyDagger_17: 8300080040822693815
+      Turret_HolyDagger_18: 9050284049135538997
+      Turret_HolyDagger_2: 6796623740001296132
+      Turret_HolyDagger_3: 308365457547351744
+      Turret_HolyDagger_4: 1204942636789027941
+      Turret_HolyDagger_5: 4732196443924793823
+      Turret_HolyDagger_6: 8889297302078924242
+      Turret_HolyDagger_7: -8956300927948299323
+      Turret_HolyDagger_8: 1975245945151344178
+      Turret_HolyDagger_9: 8743544564661564379
+  mipmapLimitGroupName:
+  pSDRemoveMatte: 0
+  userData:
+  assetBundleName:
+  assetBundleVariant:

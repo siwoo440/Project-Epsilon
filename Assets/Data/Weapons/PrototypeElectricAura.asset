@@ -14,7 +14,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::ProjectEpsilon.Data.WeaponData
   id: electric_aura
   displayName: 전기 범위 포탑
-  artwork: {fileID: 21300000, guid: f873d6246f772fb41a1fb370949f0060, type: 3}
+  artwork: {fileID: 21300000, guid: d59998d294f41fb40b831757127b43b2, type: 3}
+  icon: {fileID: 21300000, guid: 2e909130cca62da4d94e9e67b8706100, type: 3}
   attribute: 3
   attackType: 3
   baseDamage: 6

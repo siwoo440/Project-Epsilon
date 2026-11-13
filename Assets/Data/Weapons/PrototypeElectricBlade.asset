@@ -14,7 +14,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::ProjectEpsilon.Data.WeaponData
   id: electric_blade
   displayName: 전기 근접 포탑
-  artwork: {fileID: 21300000, guid: f873d6246f772fb41a1fb370949f0060, type: 3}
+  artwork: {fileID: 21300000, guid: 381b21858c9537d41a1ad0f191997312, type: 3}
+  icon: {fileID: 21300000, guid: 14acc5d14a5d2ed4d8f6dc35e8d16733, type: 3}
   attribute: 3
   attackType: 0
   baseDamage: 9

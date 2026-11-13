@@ -81,6 +81,7 @@ namespace ProjectEpsilon.Editor // 배치 시험 영역
             Require(panel != null && weapon != null, "Reward panel or weapon missing."); // 실제 시험 구성 확인
             WeaponData fire = AssetDatabase.LoadAssetAtPath<WeaponData>("Assets/Data/Weapons/DebugBlaster.asset"); // 실제 화염 포탑 데이터
             Require(fire != null, "Fire turret missing."); // 실제 화염 포탑 확인
+            Require(weapon.Artwork != null && fire.Artwork != null && weapon.Artwork != fire.Artwork, "Different turret types share artwork."); // 근접과 직선 포탑 구분 확인
             var candidates = new List<WeaponRewardCandidate> { new WeaponRewardCandidate(weapon, 1), new WeaponRewardCandidate(fire, 1), new WeaponRewardCandidate(weapon, 1) }; // 실제 속성별 후보 준비
             panel.ShowStartingWeapons(candidates); // 실제 시작 보상 화면 열기
             Canvas.ForceUpdateCanvases(); // 실제 화면 배치 갱신
@@ -93,10 +94,11 @@ namespace ProjectEpsilon.Editor // 배치 시험 영역
                 buttons[index] = field.GetValue(panel) as Button; // 실제 카드 버튼 저장
                 Require(buttons[index] != null && buttons[index].interactable, "Reward button missing or disabled."); // 실제 카드 입력 확인
                 RectTransform image = buttons[index].transform.Find("WeaponArtwork") as RectTransform; // 실제 무기 이미지 영역
+                Require(image != null && image.GetComponent<Image>().sprite == candidates[index].Weapon.Icon, "Reward image differs from its turret data."); // 각 보상 아이콘과 데이터 일치 확인
                 Require(image != null && image.gameObject.activeSelf && Mathf.Abs(image.sizeDelta.x - 96f) < 0.001f && Mathf.Abs(image.sizeDelta.y - 96f) < 0.001f, "Reward artwork is not double size."); // 기존 사십팔 대비 두 배 크기 확인
                 Require(!image.GetComponent<Image>().raycastTarget, "Reward artwork blocks button input."); // 이미지 입력 차단 방지 확인
             }
-            Require(buttons[1].transform.Find("WeaponArtwork").GetComponent<Image>().color == fire.ArtworkTint, "Reward icon did not show turret attribute color."); // 실제 화염 포탑 후보 색상 확인
+            Require(buttons[1].transform.Find("WeaponArtwork").GetComponent<Image>().color == fire.ArtworkDisplayTint, "Reward icon did not preserve turret artwork colors."); // 포탑 그림의 원본 색상 확인
             RectTransform first = (RectTransform)buttons[0].transform; // 실제 첫 카드 영역
             RectTransform second = (RectTransform)buttons[1].transform; // 실제 둘째 카드 영역
             RectTransform third = (RectTransform)buttons[2].transform; // 실제 셋째 카드 영역

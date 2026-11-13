@@ -14,7 +14,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::ProjectEpsilon.Data.WeaponData
   id: electric_dagger
   displayName: 전기 속사 근접 포탑
-  artwork: {fileID: 21300000, guid: f873d6246f772fb41a1fb370949f0060, type: 3}
+  artwork: {fileID: 21300000, guid: 9e3c4e872011b8745a780692017112be, type: 3}
+  icon: {fileID: 21300000, guid: ec4630861c41dc14598ab8bac204dfd3, type: 3}
   attribute: 3
   attackType: 0
   baseDamage: 6

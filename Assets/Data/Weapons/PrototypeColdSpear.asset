@@ -14,7 +14,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::ProjectEpsilon.Data.WeaponData
   id: cold_spear
   displayName: 냉기 관통 포탑
-  artwork: {fileID: 21300000, guid: f873d6246f772fb41a1fb370949f0060, type: 3}
+  artwork: {fileID: 21300000, guid: 92bd813333fd10544b235c076083ee9b, type: 3}
+  icon: {fileID: 21300000, guid: d4254ddc8164c644d923868f08257ee9, type: 3}
   attribute: 2
   attackType: 1
   baseDamage: 7

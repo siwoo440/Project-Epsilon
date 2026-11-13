@@ -14,7 +14,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::ProjectEpsilon.Data.WeaponData
   id: dark_blade
   displayName: 암흑 근접 포탑
-  artwork: {fileID: 21300000, guid: f873d6246f772fb41a1fb370949f0060, type: 3}
+  artwork: {fileID: 21300000, guid: b088c78d56e5c8e4790e91a7b889edcf, type: 3}
+  icon: {fileID: 21300000, guid: b857cabbdab5bb046b8486610fc30620, type: 3}
   attribute: 7
   attackType: 0
   baseDamage: 9

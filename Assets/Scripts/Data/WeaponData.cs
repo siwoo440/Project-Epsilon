@@ -9,6 +9,7 @@ namespace ProjectEpsilon.Data // 프로젝트 기능 영역
         [SerializeField] private string id = "weapon_id"; // 필드·식별자 설정
         [SerializeField] private string displayName = "포탑"; // 필드·이름 설정
         [SerializeField] private Sprite artwork; // 무기 장착 이미지
+        [SerializeField] private Sprite icon; // 포탑 선택과 패널 아이콘
 
         [Header("Classification")] // 대상 설정
         [SerializeField] private WeaponAttribute attribute = WeaponAttribute.Physical; // 필드·포탑 설정
@@ -42,7 +43,9 @@ namespace ProjectEpsilon.Data // 프로젝트 기능 영역
         public string Id => id; // 식별자 값 반환
         public string DisplayName => displayName; // 이름 값 반환
         public Sprite Artwork => artwork; // 무기 표시 이미지
-        public Color ArtworkTint // 속성별 포탑 표시 색상
+        public Sprite Icon => icon != null ? icon : artwork; // 아이콘과 기존 그림 대체
+        public Color ArtworkDisplayTint => Color.white; // 원본 포탑 그림 색상 유지
+        public Color ArtworkTint // 속성별 공격 효과 색상
         {
             get // 색상 조회
             {

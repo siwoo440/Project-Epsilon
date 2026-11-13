@@ -14,7 +14,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::ProjectEpsilon.Data.WeaponData
   id: holy_dagger
   displayName: 신성 속사 근접 포탑
-  artwork: {fileID: 21300000, guid: f873d6246f772fb41a1fb370949f0060, type: 3}
+  artwork: {fileID: 21300000, guid: b252b7e0ab4434f42ace9655ba1d907a, type: 3}
+  icon: {fileID: 21300000, guid: 25dc48f2823c8124da73baa77c4a9003, type: 3}
   attribute: 6
   attackType: 0
   baseDamage: 6

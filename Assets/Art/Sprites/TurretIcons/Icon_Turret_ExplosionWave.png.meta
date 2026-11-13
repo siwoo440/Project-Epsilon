@@ -1,0 +1,949 @@
+fileFormatVersion: 2
+guid: f44f5146f9a310346a926f295f58932e
+TextureImporter:
+  internalIDToNameTable:
+  - first:
+      213: -1558509786238909383
+    second: Icon_Turret_ExplosionWave_0
+  - first:
+      213: 6911987019226416089
+    second: Icon_Turret_ExplosionWave_1
+  - first:
+      213: 7065878376957798301
+    second: Icon_Turret_ExplosionWave_2
+  - first:
+      213: -9026064820499964229
+    second: Icon_Turret_ExplosionWave_3
+  - first:
+      213: -2899626794052623535
+    second: Icon_Turret_ExplosionWave_4
+  - first:
+      213: -754487873481584004
+    second: Icon_Turret_ExplosionWave_5
+  - first:
+      213: 6552326031371522904
+    second: Icon_Turret_ExplosionWave_6
+  - first:
+      213: 7800098349235784469
+    second: Icon_Turret_ExplosionWave_7
+  - first:
+      213: -7027656516318492718
+    second: Icon_Turret_ExplosionWave_8
+  - first:
+      213: 8869222728916709744
+    second: Icon_Turret_ExplosionWave_9
+  - first:
+      213: -3200097994165333231
+    second: Icon_Turret_ExplosionWave_10
+  - first:
+      213: 4132507363143651763
+    second: Icon_Turret_ExplosionWave_11
+  - first:
+      213: 2294202960820933663
+    second: Icon_Turret_ExplosionWave_12
+  - first:
+      213: -7791847787124235903
+    second: Icon_Turret_ExplosionWave_13
+  - first:
+      213: -770990283777649268
+    second: Icon_Turret_ExplosionWave_14
+  - first:
+      213: 7558021506934523584
+    second: Icon_Turret_ExplosionWave_15
+  - first:
+      213: -4755131811108884540
+    second: Icon_Turret_ExplosionWave_16
+  - first:
+      213: 5076890333465447884
+    second: Icon_Turret_ExplosionWave_17
+  - first:
+      213: -2444313058897100335
+    second: Icon_Turret_ExplosionWave_18
+  - first:
+      213: -6601860926326890570
+    second: Icon_Turret_ExplosionWave_19
+  - first:
+      213: 2092904030616251834
+    second: Icon_Turret_ExplosionWave_20
+  - first:
+      213: -7804444456818465732
+    second: Icon_Turret_ExplosionWave_21
+  - first:
+      213: 7334322675743118059
+    second: Icon_Turret_ExplosionWave_22
+  - first:
+      213: -7627730230093483409
+    second: Icon_Turret_ExplosionWave_23
+  - first:
+      213: 7785301519968349810
+    second: Icon_Turret_ExplosionWave_24
+  - first:
+      213: 6019524652012288558
+    second: Icon_Turret_ExplosionWave_25
+  - first:
+      213: -2787746731693726854
+    second: Icon_Turret_ExplosionWave_26
+  - first:
+      213: -612869670058460382
+    second: Icon_Turret_ExplosionWave_27
+  - first:
+      213: -4767209099462706309
+    second: Icon_Turret_ExplosionWave_28
+  - first:
+      213: 7239316667227902043
+    second: Icon_Turret_ExplosionWave_29
+  - first:
+      213: -870508242585622424
+    second: Icon_Turret_ExplosionWave_30
+  - first:
+      213: -5446187201051629841
+    second: Icon_Turret_ExplosionWave_31
+  externalObjects: {}
+  serializedVersion: 13
+  mipmaps:
+    mipMapMode: 0
+    enableMipMap: 0
+    sRGBTexture: 1
+    linearTexture: 0
+    fadeOut: 0
+    borderMipMap: 0
+    mipMapsPreserveCoverage: 0
+    alphaTestReferenceValue: 0.5
+    mipMapFadeDistanceStart: 1
+    mipMapFadeDistanceEnd: 3
+  bumpmap:
+    convertToNormalMap: 0
+    externalNormalMap: 0
+    heightScale: 0.25
+    normalMapFilter: 0
+    flipGreenChannel: 0
+  isReadable: 0
+  streamingMipmaps: 0
+  streamingMipmapsPriority: 0
+  vTOnly: 0
+  ignoreMipmapLimit: 0
+  grayScaleToAlpha: 0
+  generateCubemap: 6
+  cubemapConvolution: 0
+  seamlessCubemap: 0
+  textureFormat: 1
+  maxTextureSize: 2048
+  textureSettings:
+    serializedVersion: 2
+    filterMode: 1
+    aniso: 1
+    mipBias: 0
+    wrapU: 1
+    wrapV: 1
+    wrapW: 1
+  nPOTScale: 0
+  lightmap: 0
+  compressionQuality: 50
+  spriteMode: 1
+  spriteExtrude: 1
+  spriteMeshType: 1
+  alignment: 0
+  spritePivot: {x: 0.5, y: 0.5}
+  spritePixelsToUnits: 100
+  spriteBorder: {x: 0, y: 0, z: 0, w: 0}
+  spriteGenerateFallbackPhysicsShape: 1
+  alphaUsage: 1
+  alphaIsTransparency: 1
+  spriteTessellationDetail: -1
+  textureType: 8
+  textureShape: 1
+  singleChannelComponent: 0
+  flipbookRows: 1
+  flipbookColumns: 1
+  maxTextureSizeSet: 0
+  compressionQualitySet: 0
+  textureFormatSet: 0
+  ignorePngGamma: 0
+  applyGammaDecoding: 0
+  swizzle: 50462976
+  cookieLightType: 0
+  platformSettings:
+  - serializedVersion: 4
+    buildTarget: DefaultTexturePlatform
+    maxTextureSize: 512
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 4
+    buildTarget: Standalone
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  spriteSheet:
+    serializedVersion: 2
+    sprites:
+    - serializedVersion: 2
+      name: Icon_Turret_ExplosionWave_0
+      rect:
+        serializedVersion: 2
+        x: 498
+        y: 1160
+        width: 17
+        height: 14
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData:
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 93482445b9f0f5ae0800000000000000
+      internalID: -1558509786238909383
+      vertices: []
+      indices:
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Icon_Turret_ExplosionWave_1
+      rect:
+        serializedVersion: 2
+        x: 514
+        y: 1157
+        width: 174
+        height: 61
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData:
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 9d30a1d929f4cef50800000000000000
+      internalID: 6911987019226416089
+      vertices: []
+      indices:
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Icon_Turret_ExplosionWave_2
+      rect:
+        serializedVersion: 2
+        x: 201
+        y: 33
+        width: 944
+        height: 1109
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData:
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: d97eeac72fa0f0260800000000000000
+      internalID: 7065878376957798301
+      vertices: []
+      indices:
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Icon_Turret_ExplosionWave_3
+      rect:
+        serializedVersion: 2
+        x: 440
+        y: 1110
+        width: 12
+        height: 22
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData:
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: bbe137e2ed9fcb280800000000000000
+      internalID: -9026064820499964229
+      vertices: []
+      indices:
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Icon_Turret_ExplosionWave_4
+      rect:
+        serializedVersion: 2
+        x: 102
+        y: 755
+        width: 28
+        height: 19
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData:
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 153e94f2bc472c7d0800000000000000
+      internalID: -2899626794052623535
+      vertices: []
+      indices:
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Icon_Turret_ExplosionWave_5
+      rect:
+        serializedVersion: 2
+        x: 1131
+        y: 711
+        width: 42
+        height: 61
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData:
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: c725ac9c6458785f0800000000000000
+      internalID: -754487873481584004
+      vertices: []
+      indices:
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Icon_Turret_ExplosionWave_6
+      rect:
+        serializedVersion: 2
+        x: 1145
+        y: 768
+        width: 18
+        height: 20
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData:
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 853d1705fc98eea50800000000000000
+      internalID: 6552326031371522904
+      vertices: []
+      indices:
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Icon_Turret_ExplosionWave_7
+      rect:
+        serializedVersion: 2
+        x: 80
+        y: 728
+        width: 18
+        height: 29
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData:
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 51b4f473f148f3c60800000000000000
+      internalID: 7800098349235784469
+      vertices: []
+      indices:
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Icon_Turret_ExplosionWave_8
+      rect:
+        serializedVersion: 2
+        x: 94
+        y: 744
+        width: 6
+        height: 6
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData:
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 2d7806de1afb87e90800000000000000
+      internalID: -7027656516318492718
+      vertices: []
+      indices:
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Icon_Turret_ExplosionWave_9
+      rect:
+        serializedVersion: 2
+        x: 92
+        y: 694
+        width: 14
+        height: 38
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData:
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 071b6eea41fc51b70800000000000000
+      internalID: 8869222728916709744
+      vertices: []
+      indices:
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Icon_Turret_ExplosionWave_10
+      rect:
+        serializedVersion: 2
+        x: 1149
+        y: 700
+        width: 12
+        height: 13
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData:
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 113d55344d7f693d0800000000000000
+      internalID: -3200097994165333231
+      vertices: []
+      indices:
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Icon_Turret_ExplosionWave_11
+      rect:
+        serializedVersion: 2
+        x: 1149
+        y: 684
+        width: 10
+        height: 11
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData:
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 3b11dd34d8d995930800000000000000
+      internalID: 4132507363143651763
+      vertices: []
+      indices:
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Icon_Turret_ExplosionWave_12
+      rect:
+        serializedVersion: 2
+        x: 1147
+        y: 674
+        width: 12
+        height: 13
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData:
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: f14916a0075a6df10800000000000000
+      internalID: 2294202960820933663
+      vertices: []
+      indices:
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Icon_Turret_ExplosionWave_13
+      rect:
+        serializedVersion: 2
+        x: 70
+        y: 618
+        width: 52
+        height: 51
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData:
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 181eb8878bbcdd390800000000000000
+      internalID: -7791847787124235903
+      vertices: []
+      indices:
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Icon_Turret_ExplosionWave_14
+      rect:
+        serializedVersion: 2
+        x: 84
+        y: 660
+        width: 6
+        height: 13
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData:
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: c85d72afb64ec45f0800000000000000
+      internalID: -770990283777649268
+      vertices: []
+      indices:
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Icon_Turret_ExplosionWave_15
+      rect:
+        serializedVersion: 2
+        x: 84
+        y: 654
+        width: 6
+        height: 6
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData:
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 0c64895348c73e860800000000000000
+      internalID: 7558021506934523584
+      vertices: []
+      indices:
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Icon_Turret_ExplosionWave_16
+      rect:
+        serializedVersion: 2
+        x: 1159
+        y: 642
+        width: 11
+        height: 11
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData:
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 4cfe1b2cfc0620eb0800000000000000
+      internalID: -4755131811108884540
+      vertices: []
+      indices:
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Icon_Turret_ExplosionWave_17
+      rect:
+        serializedVersion: 2
+        x: 1157
+        y: 614
+        width: 12
+        height: 14
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData:
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: ccd82d91cdcb47640800000000000000
+      internalID: 5076890333465447884
+      vertices: []
+      indices:
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Icon_Turret_ExplosionWave_18
+      rect:
+        serializedVersion: 2
+        x: 1163
+        y: 624
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData:
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 1d10794393e041ed0800000000000000
+      internalID: -2444313058897100335
+      vertices: []
+      indices:
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Icon_Turret_ExplosionWave_19
+      rect:
+        serializedVersion: 2
+        x: 80
+        y: 556
+        width: 22
+        height: 31
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData:
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 6bf11c5377a7164a0800000000000000
+      internalID: -6601860926326890570
+      vertices: []
+      indices:
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Icon_Turret_ExplosionWave_20
+      rect:
+        serializedVersion: 2
+        x: 1133
+        y: 499
+        width: 42
+        height: 58
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData:
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: abd6ddd802d7b0d10800000000000000
+      internalID: 2092904030616251834
+      vertices: []
+      indices:
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Icon_Turret_ExplosionWave_21
+      rect:
+        serializedVersion: 2
+        x: 1155
+        y: 554
+        width: 32
+        height: 30
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData:
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: c34a112cd1b01b390800000000000000
+      internalID: -7804444456818465732
+      vertices: []
+      indices:
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Icon_Turret_ExplosionWave_22
+      rect:
+        serializedVersion: 2
+        x: 79
+        y: 513
+        width: 21
+        height: 18
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData:
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: be2d2cb5d9fb8c560800000000000000
+      internalID: 7334322675743118059
+      vertices: []
+      indices:
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Icon_Turret_ExplosionWave_23
+      rect:
+        serializedVersion: 2
+        x: 96
+        y: 529
+        width: 14
+        height: 10
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData:
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: f62f4c8e4cbd42690800000000000000
+      internalID: -7627730230093483409
+      vertices: []
+      indices:
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Icon_Turret_ExplosionWave_24
+      rect:
+        serializedVersion: 2
+        x: 86
+        y: 473
+        width: 18
+        height: 34
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData:
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 27ea50feb72fa0c60800000000000000
+      internalID: 7785301519968349810
+      vertices: []
+      indices:
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Icon_Turret_ExplosionWave_25
+      rect:
+        serializedVersion: 2
+        x: 1145
+        y: 485
+        width: 22
+        height: 17
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData:
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: e2a36e737c5a98350800000000000000
+      internalID: 6019524652012288558
+      vertices: []
+      indices:
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Icon_Turret_ExplosionWave_26
+      rect:
+        serializedVersion: 2
+        x: 1163
+        y: 495
+        width: 6
+        height: 6
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData:
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: a73a3ad1e1fef49d0800000000000000
+      internalID: -2787746731693726854
+      vertices: []
+      indices:
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Icon_Turret_ExplosionWave_27
+      rect:
+        serializedVersion: 2
+        x: 102
+        y: 475
+        width: 18
+        height: 17
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData:
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 22bfd8e3846ae77f0800000000000000
+      internalID: -612869670058460382
+      vertices: []
+      indices:
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Icon_Turret_ExplosionWave_28
+      rect:
+        serializedVersion: 2
+        x: 109
+        y: 473
+        width: 8
+        height: 9
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData:
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: b7bf380f49877ddb0800000000000000
+      internalID: -4767209099462706309
+      vertices: []
+      indices:
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Icon_Turret_ExplosionWave_29
+      rect:
+        serializedVersion: 2
+        x: 118
+        y: 471
+        width: 12
+        height: 13
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData:
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: b501fae3728377460800000000000000
+      internalID: 7239316667227902043
+      vertices: []
+      indices:
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Icon_Turret_ExplosionWave_30
+      rect:
+        serializedVersion: 2
+        x: 1124
+        y: 471
+        width: 17
+        height: 20
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData:
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 86862a29d555be3f0800000000000000
+      internalID: -870508242585622424
+      vertices: []
+      indices:
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Icon_Turret_ExplosionWave_31
+      rect:
+        serializedVersion: 2
+        x: 567
+        y: 63
+        width: 15
+        height: 12
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData:
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: fe6e90588914b64b0800000000000000
+      internalID: -5446187201051629841
+      vertices: []
+      indices:
+      edges: []
+      weights: []
+    outline: []
+    customData:
+    physicsShape: []
+    bones: []
+    spriteID: 5e97eb03825dee720800000000000000
+    internalID: 0
+    vertices: []
+    indices:
+    edges: []
+    weights: []
+    secondaryTextures: []
+    spriteCustomMetadata:
+      entries: []
+    nameFileIdTable:
+      Icon_Turret_ExplosionWave_0: -1558509786238909383
+      Icon_Turret_ExplosionWave_1: 6911987019226416089
+      Icon_Turret_ExplosionWave_10: -3200097994165333231
+      Icon_Turret_ExplosionWave_11: 4132507363143651763
+      Icon_Turret_ExplosionWave_12: 2294202960820933663
+      Icon_Turret_ExplosionWave_13: -7791847787124235903
+      Icon_Turret_ExplosionWave_14: -770990283777649268
+      Icon_Turret_ExplosionWave_15: 7558021506934523584
+      Icon_Turret_ExplosionWave_16: -4755131811108884540
+      Icon_Turret_ExplosionWave_17: 5076890333465447884
+      Icon_Turret_ExplosionWave_18: -2444313058897100335
+      Icon_Turret_ExplosionWave_19: -6601860926326890570
+      Icon_Turret_ExplosionWave_2: 7065878376957798301
+      Icon_Turret_ExplosionWave_20: 2092904030616251834
+      Icon_Turret_ExplosionWave_21: -7804444456818465732
+      Icon_Turret_ExplosionWave_22: 7334322675743118059
+      Icon_Turret_ExplosionWave_23: -7627730230093483409
+      Icon_Turret_ExplosionWave_24: 7785301519968349810
+      Icon_Turret_ExplosionWave_25: 6019524652012288558
+      Icon_Turret_ExplosionWave_26: -2787746731693726854
+      Icon_Turret_ExplosionWave_27: -612869670058460382
+      Icon_Turret_ExplosionWave_28: -4767209099462706309
+      Icon_Turret_ExplosionWave_29: 7239316667227902043
+      Icon_Turret_ExplosionWave_3: -9026064820499964229
+      Icon_Turret_ExplosionWave_30: -870508242585622424
+      Icon_Turret_ExplosionWave_31: -5446187201051629841
+      Icon_Turret_ExplosionWave_4: -2899626794052623535
+      Icon_Turret_ExplosionWave_5: -754487873481584004
+      Icon_Turret_ExplosionWave_6: 6552326031371522904
+      Icon_Turret_ExplosionWave_7: 7800098349235784469
+      Icon_Turret_ExplosionWave_8: -7027656516318492718
+      Icon_Turret_ExplosionWave_9: 8869222728916709744
+  mipmapLimitGroupName:
+  pSDRemoveMatte: 0
+  userData:
+  assetBundleName:
+  assetBundleVariant:

@@ -426,7 +426,7 @@ namespace ProjectEpsilon.UI // 프로젝트 기능 영역
                 candidateIndex < candidates.Count && // 후보·순서 처리
                 candidates[candidateIndex].IsValid; // 후보·순서 처리
 
-            WeaponCandidateArtwork.Set(button, label, hasCandidate ? candidates[candidateIndex].Weapon.Artwork : null, hasCandidate ? candidates[candidateIndex].Weapon.ArtworkTint : Color.white); // 실제 속성별 포탑 후보 표시
+            WeaponCandidateArtwork.Set(button, label, hasCandidate ? candidates[candidateIndex].Weapon.Icon : null, hasCandidate ? candidates[candidateIndex].Weapon.ArtworkDisplayTint : Color.white); // 포탑 아이콘 후보 표시
 
             if (button != null) // 버튼 조건 확인
             {

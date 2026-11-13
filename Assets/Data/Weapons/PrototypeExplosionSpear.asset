@@ -14,7 +14,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::ProjectEpsilon.Data.WeaponData
   id: explosion_spear
   displayName: 폭발 관통 포탑
-  artwork: {fileID: 21300000, guid: f873d6246f772fb41a1fb370949f0060, type: 3}
+  artwork: {fileID: 21300000, guid: eb4ac69e3a91c3f4c9447578fd708b00, type: 3}
+  icon: {fileID: 21300000, guid: a6db7075133ced34c9f00de9287eea43, type: 3}
   attribute: 5
   attackType: 1
   baseDamage: 7

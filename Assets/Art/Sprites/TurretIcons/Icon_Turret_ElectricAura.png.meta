@@ -1,0 +1,455 @@
+fileFormatVersion: 2
+guid: 2e909130cca62da4d94e9e67b8706100
+TextureImporter:
+  internalIDToNameTable:
+  - first:
+      213: -3503822721959882850
+    second: Icon_Turret_ElectricAura_0
+  - first:
+      213: 3339775883420710375
+    second: Icon_Turret_ElectricAura_1
+  - first:
+      213: 7535111550984399906
+    second: Icon_Turret_ElectricAura_2
+  - first:
+      213: -6110860714373442134
+    second: Icon_Turret_ElectricAura_3
+  - first:
+      213: 7436731351033937564
+    second: Icon_Turret_ElectricAura_4
+  - first:
+      213: 1468662861825317896
+    second: Icon_Turret_ElectricAura_5
+  - first:
+      213: 5694601352533751058
+    second: Icon_Turret_ElectricAura_6
+  - first:
+      213: -4765445699514118050
+    second: Icon_Turret_ElectricAura_7
+  - first:
+      213: 8008296864813409124
+    second: Icon_Turret_ElectricAura_8
+  - first:
+      213: 4857481849662858742
+    second: Icon_Turret_ElectricAura_9
+  - first:
+      213: -7522120756663713379
+    second: Icon_Turret_ElectricAura_10
+  - first:
+      213: 6135634314143143489
+    second: Icon_Turret_ElectricAura_11
+  - first:
+      213: 3186393209933596778
+    second: Icon_Turret_ElectricAura_12
+  externalObjects: {}
+  serializedVersion: 13
+  mipmaps:
+    mipMapMode: 0
+    enableMipMap: 0
+    sRGBTexture: 1
+    linearTexture: 0
+    fadeOut: 0
+    borderMipMap: 0
+    mipMapsPreserveCoverage: 0
+    alphaTestReferenceValue: 0.5
+    mipMapFadeDistanceStart: 1
+    mipMapFadeDistanceEnd: 3
+  bumpmap:
+    convertToNormalMap: 0
+    externalNormalMap: 0
+    heightScale: 0.25
+    normalMapFilter: 0
+    flipGreenChannel: 0
+  isReadable: 0
+  streamingMipmaps: 0
+  streamingMipmapsPriority: 0
+  vTOnly: 0
+  ignoreMipmapLimit: 0
+  grayScaleToAlpha: 0
+  generateCubemap: 6
+  cubemapConvolution: 0
+  seamlessCubemap: 0
+  textureFormat: 1
+  maxTextureSize: 2048
+  textureSettings:
+    serializedVersion: 2
+    filterMode: 1
+    aniso: 1
+    mipBias: 0
+    wrapU: 1
+    wrapV: 1
+    wrapW: 1
+  nPOTScale: 0
+  lightmap: 0
+  compressionQuality: 50
+  spriteMode: 1
+  spriteExtrude: 1
+  spriteMeshType: 1
+  alignment: 0
+  spritePivot: {x: 0.5, y: 0.5}
+  spritePixelsToUnits: 100
+  spriteBorder: {x: 0, y: 0, z: 0, w: 0}
+  spriteGenerateFallbackPhysicsShape: 1
+  alphaUsage: 1
+  alphaIsTransparency: 1
+  spriteTessellationDetail: -1
+  textureType: 8
+  textureShape: 1
+  singleChannelComponent: 0
+  flipbookRows: 1
+  flipbookColumns: 1
+  maxTextureSizeSet: 0
+  compressionQualitySet: 0
+  textureFormatSet: 0
+  ignorePngGamma: 0
+  applyGammaDecoding: 0
+  swizzle: 50462976
+  cookieLightType: 0
+  platformSettings:
+  - serializedVersion: 4
+    buildTarget: DefaultTexturePlatform
+    maxTextureSize: 512
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 4
+    buildTarget: Standalone
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  spriteSheet:
+    serializedVersion: 2
+    sprites:
+    - serializedVersion: 2
+      name: Icon_Turret_ElectricAura_0
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 0
+        width: 1239
+        height: 1240
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData:
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: e9f83a56ccbef5fc0800000000000000
+      internalID: -3503822721959882850
+      vertices: []
+      indices:
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Icon_Turret_ElectricAura_1
+      rect:
+        serializedVersion: 2
+        x: 563
+        y: 1207
+        width: 51
+        height: 19
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData:
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 7e535b89874495e20800000000000000
+      internalID: 3339775883420710375
+      vertices: []
+      indices:
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Icon_Turret_ElectricAura_2
+      rect:
+        serializedVersion: 2
+        x: 619
+        y: 1196
+        width: 73
+        height: 34
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData:
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 22c2e5b6808129860800000000000000
+      internalID: 7535111550984399906
+      vertices: []
+      indices:
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Icon_Turret_ElectricAura_3
+      rect:
+        serializedVersion: 2
+        x: 715
+        y: 1206
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData:
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: aa591e79e8cd13ba0800000000000000
+      internalID: -6110860714373442134
+      vertices: []
+      indices:
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Icon_Turret_ElectricAura_4
+      rect:
+        serializedVersion: 2
+        x: 713
+        y: 1196
+        width: 6
+        height: 6
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData:
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: c9e736423c3943760800000000000000
+      internalID: 7436731351033937564
+      vertices: []
+      indices:
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Icon_Turret_ElectricAura_5
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 827
+        width: 49
+        height: 43
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData:
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 80c18ed671db16410800000000000000
+      internalID: 1468662861825317896
+      vertices: []
+      indices:
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Icon_Turret_ElectricAura_6
+      rect:
+        serializedVersion: 2
+        x: 56
+        y: 857
+        width: 13
+        height: 16
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData:
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 215bb3342c9470f40800000000000000
+      internalID: 5694601352533751058
+      vertices: []
+      indices:
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Icon_Turret_ElectricAura_7
+      rect:
+        serializedVersion: 2
+        x: 70
+        y: 850
+        width: 7
+        height: 10
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData:
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: e505c0c726cbdddb0800000000000000
+      internalID: -4765445699514118050
+      vertices: []
+      indices:
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Icon_Turret_ElectricAura_8
+      rect:
+        serializedVersion: 2
+        x: 1186
+        y: 698
+        width: 14
+        height: 7
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData:
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 463e31b919f232f60800000000000000
+      internalID: 8008296864813409124
+      vertices: []
+      indices:
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Icon_Turret_ElectricAura_9
+      rect:
+        serializedVersion: 2
+        x: 66
+        y: 389
+        width: 13
+        height: 15
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData:
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 6f5ef08910e396340800000000000000
+      internalID: 4857481849662858742
+      vertices: []
+      indices:
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Icon_Turret_ElectricAura_10
+      rect:
+        serializedVersion: 2
+        x: 1196
+        y: 377
+        width: 25
+        height: 40
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData:
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: d918775960f0c9790800000000000000
+      internalID: -7522120756663713379
+      vertices: []
+      indices:
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Icon_Turret_ElectricAura_11
+      rect:
+        serializedVersion: 2
+        x: 1189
+        y: 369
+        width: 12
+        height: 12
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData:
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 146133696e6262550800000000000000
+      internalID: 6135634314143143489
+      vertices: []
+      indices:
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Icon_Turret_ElectricAura_12
+      rect:
+        serializedVersion: 2
+        x: 55
+        y: 294
+        width: 8
+        height: 10
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData:
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: a680fc00eb7583c20800000000000000
+      internalID: 3186393209933596778
+      vertices: []
+      indices:
+      edges: []
+      weights: []
+    outline: []
+    customData:
+    physicsShape: []
+    bones: []
+    spriteID: 5e97eb03825dee720800000000000000
+    internalID: 0
+    vertices: []
+    indices:
+    edges: []
+    weights: []
+    secondaryTextures: []
+    spriteCustomMetadata:
+      entries: []
+    nameFileIdTable:
+      Icon_Turret_ElectricAura_0: -3503822721959882850
+      Icon_Turret_ElectricAura_1: 3339775883420710375
+      Icon_Turret_ElectricAura_10: -7522120756663713379
+      Icon_Turret_ElectricAura_11: 6135634314143143489
+      Icon_Turret_ElectricAura_12: 3186393209933596778
+      Icon_Turret_ElectricAura_2: 7535111550984399906
+      Icon_Turret_ElectricAura_3: -6110860714373442134
+      Icon_Turret_ElectricAura_4: 7436731351033937564
+      Icon_Turret_ElectricAura_5: 1468662861825317896
+      Icon_Turret_ElectricAura_6: 5694601352533751058
+      Icon_Turret_ElectricAura_7: -4765445699514118050
+      Icon_Turret_ElectricAura_8: 8008296864813409124
+      Icon_Turret_ElectricAura_9: 4857481849662858742
+  mipmapLimitGroupName:
+  pSDRemoveMatte: 0
+  userData:
+  assetBundleName:
+  assetBundleVariant:

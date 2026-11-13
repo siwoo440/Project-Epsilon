@@ -1,0 +1,1417 @@
+fileFormatVersion: 2
+guid: 00533952156824941b20dcf5c921d044
+TextureImporter:
+  internalIDToNameTable:
+  - first:
+      213: 1466509829731519458
+    second: Turret_HolySpear_0
+  - first:
+      213: -5152652370198768560
+    second: Turret_HolySpear_1
+  - first:
+      213: -2211771262843829425
+    second: Turret_HolySpear_2
+  - first:
+      213: -6228840509770134750
+    second: Turret_HolySpear_3
+  - first:
+      213: 8724719971366085716
+    second: Turret_HolySpear_4
+  - first:
+      213: -7825670684734462357
+    second: Turret_HolySpear_5
+  - first:
+      213: 2154085653682531906
+    second: Turret_HolySpear_6
+  - first:
+      213: -1083890643454409146
+    second: Turret_HolySpear_7
+  - first:
+      213: -592742493046947293
+    second: Turret_HolySpear_8
+  - first:
+      213: -8153909967428992031
+    second: Turret_HolySpear_9
+  - first:
+      213: -5039647053729150619
+    second: Turret_HolySpear_10
+  - first:
+      213: -1764528975349516560
+    second: Turret_HolySpear_11
+  - first:
+      213: -211213041371635198
+    second: Turret_HolySpear_12
+  - first:
+      213: 3172591384011885346
+    second: Turret_HolySpear_13
+  - first:
+      213: 209038639486443122
+    second: Turret_HolySpear_14
+  - first:
+      213: 2143352710875707015
+    second: Turret_HolySpear_15
+  - first:
+      213: -7032673752132895362
+    second: Turret_HolySpear_16
+  - first:
+      213: 917687953865865390
+    second: Turret_HolySpear_17
+  - first:
+      213: 3245427080115904513
+    second: Turret_HolySpear_18
+  - first:
+      213: -5996661793689036792
+    second: Turret_HolySpear_19
+  - first:
+      213: -1039594572245828820
+    second: Turret_HolySpear_20
+  - first:
+      213: -812249279678249030
+    second: Turret_HolySpear_21
+  - first:
+      213: 7613845018851359808
+    second: Turret_HolySpear_22
+  - first:
+      213: 6135531372974382925
+    second: Turret_HolySpear_23
+  - first:
+      213: 319722426150788760
+    second: Turret_HolySpear_24
+  - first:
+      213: -2929850221195861805
+    second: Turret_HolySpear_25
+  - first:
+      213: -2762334387404900951
+    second: Turret_HolySpear_26
+  - first:
+      213: -2433103117476876053
+    second: Turret_HolySpear_27
+  - first:
+      213: -3196606318790711994
+    second: Turret_HolySpear_28
+  - first:
+      213: -2313922508642510007
+    second: Turret_HolySpear_29
+  - first:
+      213: -2931579690261237859
+    second: Turret_HolySpear_30
+  - first:
+      213: 4036005100041281422
+    second: Turret_HolySpear_31
+  - first:
+      213: -446474401200576972
+    second: Turret_HolySpear_32
+  - first:
+      213: -7803662484392848990
+    second: Turret_HolySpear_33
+  - first:
+      213: -5812092950225619239
+    second: Turret_HolySpear_34
+  - first:
+      213: -4456314310646996120
+    second: Turret_HolySpear_35
+  - first:
+      213: -3519675072530114496
+    second: Turret_HolySpear_36
+  - first:
+      213: 5254796830555718264
+    second: Turret_HolySpear_37
+  - first:
+      213: -1981170026021086539
+    second: Turret_HolySpear_38
+  - first:
+      213: -4160830960469200644
+    second: Turret_HolySpear_39
+  - first:
+      213: -7422723685995609535
+    second: Turret_HolySpear_40
+  - first:
+      213: -5007163979610367846
+    second: Turret_HolySpear_41
+  - first:
+      213: 8577610971639831230
+    second: Turret_HolySpear_42
+  - first:
+      213: 729794816860111839
+    second: Turret_HolySpear_43
+  - first:
+      213: 4615485983573522972
+    second: Turret_HolySpear_44
+  - first:
+      213: 8117538407581535507
+    second: Turret_HolySpear_45
+  - first:
+      213: 1747095687965465773
+    second: Turret_HolySpear_46
+  - first:
+      213: -4084308370426731394
+    second: Turret_HolySpear_47
+  - first:
+      213: -5533590419783226235
+    second: Turret_HolySpear_48
+  - first:
+      213: -6551276065168189095
+    second: Turret_HolySpear_49
+  externalObjects: {}
+  serializedVersion: 13
+  mipmaps:
+    mipMapMode: 0
+    enableMipMap: 0
+    sRGBTexture: 1
+    linearTexture: 0
+    fadeOut: 0
+    borderMipMap: 0
+    mipMapsPreserveCoverage: 0
+    alphaTestReferenceValue: 0.5
+    mipMapFadeDistanceStart: 1
+    mipMapFadeDistanceEnd: 3
+  bumpmap:
+    convertToNormalMap: 0
+    externalNormalMap: 0
+    heightScale: 0.25
+    normalMapFilter: 0
+    flipGreenChannel: 0
+  isReadable: 0
+  streamingMipmaps: 0
+  streamingMipmapsPriority: 0
+  vTOnly: 0
+  ignoreMipmapLimit: 0
+  grayScaleToAlpha: 0
+  generateCubemap: 6
+  cubemapConvolution: 0
+  seamlessCubemap: 0
+  textureFormat: 1
+  maxTextureSize: 2048
+  textureSettings:
+    serializedVersion: 2
+    filterMode: 1
+    aniso: 1
+    mipBias: 0
+    wrapU: 1
+    wrapV: 1
+    wrapW: 1
+  nPOTScale: 0
+  lightmap: 0
+  compressionQuality: 50
+  spriteMode: 1
+  spriteExtrude: 1
+  spriteMeshType: 1
+  alignment: 0
+  spritePivot: {x: 0.5, y: 0.5}
+  spritePixelsToUnits: 1000
+  spriteBorder: {x: 0, y: 0, z: 0, w: 0}
+  spriteGenerateFallbackPhysicsShape: 1
+  alphaUsage: 1
+  alphaIsTransparency: 1
+  spriteTessellationDetail: -1
+  textureType: 8
+  textureShape: 1
+  singleChannelComponent: 0
+  flipbookRows: 1
+  flipbookColumns: 1
+  maxTextureSizeSet: 0
+  compressionQualitySet: 0
+  textureFormatSet: 0
+  ignorePngGamma: 0
+  applyGammaDecoding: 0
+  swizzle: 50462976
+  cookieLightType: 0
+  platformSettings:
+  - serializedVersion: 4
+    buildTarget: DefaultTexturePlatform
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 4
+    buildTarget: Standalone
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  spriteSheet:
+    serializedVersion: 2
+    sprites:
+    - serializedVersion: 2
+      name: Turret_HolySpear_0
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 451
+        width: 196
+        height: 736
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData:
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 2eb04c49be61a5410800000000000000
+      internalID: 1466509829731519458
+      vertices: []
+      indices:
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Turret_HolySpear_1
+      rect:
+        serializedVersion: 2
+        x: 88
+        y: 1068
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData:
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 0545a3f18f91e78b0800000000000000
+      internalID: -5152652370198768560
+      vertices: []
+      indices:
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Turret_HolySpear_2
+      rect:
+        serializedVersion: 2
+        x: 169
+        y: 0
+        width: 1042
+        height: 1234
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData:
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: f43c6c141c53e41e0800000000000000
+      internalID: -2211771262843829425
+      vertices: []
+      indices:
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Turret_HolySpear_3
+      rect:
+        serializedVersion: 2
+        x: 940
+        y: 1036
+        width: 8
+        height: 7
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData:
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 22b8694ee86be89a0800000000000000
+      internalID: -6228840509770134750
+      vertices: []
+      indices:
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Turret_HolySpear_4
+      rect:
+        serializedVersion: 2
+        x: 989
+        y: 849
+        width: 236
+        height: 389
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData:
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 4542802a69e641970800000000000000
+      internalID: 8724719971366085716
+      vertices: []
+      indices:
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Turret_HolySpear_5
+      rect:
+        serializedVersion: 2
+        x: 1103
+        y: 1084
+        width: 30
+        height: 11
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData:
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: b66e63379f1a56390800000000000000
+      internalID: -7825670684734462357
+      vertices: []
+      indices:
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Turret_HolySpear_6
+      rect:
+        serializedVersion: 2
+        x: 1141
+        y: 1036
+        width: 10
+        height: 9
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData:
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 24e238b3d79d4ed10800000000000000
+      internalID: 2154085653682531906
+      vertices: []
+      indices:
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Turret_HolySpear_7
+      rect:
+        serializedVersion: 2
+        x: 1145
+        y: 951
+        width: 6
+        height: 6
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData:
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 646c785d33f35f0f0800000000000000
+      internalID: -1083890643454409146
+      vertices: []
+      indices:
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Turret_HolySpear_8
+      rect:
+        serializedVersion: 2
+        x: 1163
+        y: 980
+        width: 12
+        height: 12
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData:
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 32248a2d7d726c7f0800000000000000
+      internalID: -592742493046947293
+      vertices: []
+      indices:
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Turret_HolySpear_9
+      rect:
+        serializedVersion: 2
+        x: 84
+        y: 658
+        width: 14
+        height: 12
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData:
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 1e3c0ecf51e77de80800000000000000
+      internalID: -8153909967428992031
+      vertices: []
+      indices:
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Turret_HolySpear_10
+      rect:
+        serializedVersion: 2
+        x: 94
+        y: 666
+        width: 20
+        height: 11
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData:
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 5694121b4b39f0ab0800000000000000
+      internalID: -5039647053729150619
+      vertices: []
+      indices:
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Turret_HolySpear_11
+      rect:
+        serializedVersion: 2
+        x: 161
+        y: 465
+        width: 15
+        height: 23
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData:
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 0f6786cee322387e0800000000000000
+      internalID: -1764528975349516560
+      vertices: []
+      indices:
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Turret_HolySpear_12
+      rect:
+        serializedVersion: 2
+        x: 183
+        y: 455
+        width: 11
+        height: 13
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData:
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 2022d11abde911df0800000000000000
+      internalID: -211213041371635198
+      vertices: []
+      indices:
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Turret_HolySpear_13
+      rect:
+        serializedVersion: 2
+        x: 916
+        y: 656
+        width: 23
+        height: 29
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData:
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 22b4e7dfd0f470c20800000000000000
+      internalID: 3172591384011885346
+      vertices: []
+      indices:
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Turret_HolySpear_14
+      rect:
+        serializedVersion: 2
+        x: 934
+        y: 584
+        width: 16
+        height: 13
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData:
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 27e9beaf887a6e200800000000000000
+      internalID: 209038639486443122
+      vertices: []
+      indices:
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Turret_HolySpear_15
+      rect:
+        serializedVersion: 2
+        x: 936
+        y: 608
+        width: 12
+        height: 13
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData:
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 786fd104fe7bebd10800000000000000
+      internalID: 2143352710875707015
+      vertices: []
+      indices:
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Turret_HolySpear_16
+      rect:
+        serializedVersion: 2
+        x: 938
+        y: 638
+        width: 30
+        height: 31
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData:
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: e7db7eeab7ce66e90800000000000000
+      internalID: -7032673752132895362
+      vertices: []
+      indices:
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Turret_HolySpear_17
+      rect:
+        serializedVersion: 2
+        x: 946
+        y: 570
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData:
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: ea874d8f4584cbc00800000000000000
+      internalID: 917687953865865390
+      vertices: []
+      indices:
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Turret_HolySpear_18
+      rect:
+        serializedVersion: 2
+        x: 952
+        y: 588
+        width: 16
+        height: 18
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData:
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 100edbefbb21a0d20800000000000000
+      internalID: 3245427080115904513
+      vertices: []
+      indices:
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Turret_HolySpear_19
+      rect:
+        serializedVersion: 2
+        x: 965
+        y: 538
+        width: 9
+        height: 10
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData:
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 808120dced397cca0800000000000000
+      internalID: -5996661793689036792
+      vertices: []
+      indices:
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Turret_HolySpear_20
+      rect:
+        serializedVersion: 2
+        x: 989
+        y: 648
+        width: 29
+        height: 29
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData:
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: c2bfcda9e3e9291f0800000000000000
+      internalID: -1039594572245828820
+      vertices: []
+      indices:
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Turret_HolySpear_21
+      rect:
+        serializedVersion: 2
+        x: 1029
+        y: 594
+        width: 7
+        height: 10
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData:
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: ab706b7659f4ab4f0800000000000000
+      internalID: -812249279678249030
+      vertices: []
+      indices:
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Turret_HolySpear_22
+      rect:
+        serializedVersion: 2
+        x: 1036
+        y: 483
+        width: 8
+        height: 9
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData:
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 04c338b64bfc9a960800000000000000
+      internalID: 7613845018851359808
+      vertices: []
+      indices:
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Turret_HolySpear_23
+      rect:
+        serializedVersion: 2
+        x: 1071
+        y: 459
+        width: 11
+        height: 15
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData:
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: d4f176ab649c52550800000000000000
+      internalID: 6135531372974382925
+      vertices: []
+      indices:
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Turret_HolySpear_24
+      rect:
+        serializedVersion: 2
+        x: 1077
+        y: 455
+        width: 164
+        height: 303
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData:
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 89e91754ad1ef6400800000000000000
+      internalID: 319722426150788760
+      vertices: []
+      indices:
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Turret_HolySpear_25
+      rect:
+        serializedVersion: 2
+        x: 1078
+        y: 459
+        width: 24
+        height: 31
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData:
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 3d065803fb41757d0800000000000000
+      internalID: -2929850221195861805
+      vertices: []
+      indices:
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Turret_HolySpear_26
+      rect:
+        serializedVersion: 2
+        x: 56
+        y: 240
+        width: 54
+        height: 207
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData:
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 9a572e792873aa9d0800000000000000
+      internalID: -2762334387404900951
+      vertices: []
+      indices:
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Turret_HolySpear_27
+      rect:
+        serializedVersion: 2
+        x: 201
+        y: 383
+        width: 33
+        height: 27
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData:
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: be035e41b91eb3ed0800000000000000
+      internalID: -2433103117476876053
+      vertices: []
+      indices:
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Turret_HolySpear_28
+      rect:
+        serializedVersion: 2
+        x: 209
+        y: 349
+        width: 13
+        height: 15
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData:
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 645e5b94d7f53a3d0800000000000000
+      internalID: -3196606318790711994
+      vertices: []
+      indices:
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Turret_HolySpear_29
+      rect:
+        serializedVersion: 2
+        x: 233
+        y: 331
+        width: 7
+        height: 13
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData:
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 94b1592fcbb43efd0800000000000000
+      internalID: -2313922508642510007
+      vertices: []
+      indices:
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Turret_HolySpear_30
+      rect:
+        serializedVersion: 2
+        x: 239
+        y: 335
+        width: 9
+        height: 14
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData:
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: d9faa3bcdcfe057d0800000000000000
+      internalID: -2931579690261237859
+      vertices: []
+      indices:
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Turret_HolySpear_31
+      rect:
+        serializedVersion: 2
+        x: 239
+        y: 272
+        width: 17
+        height: 32
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData:
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: e8f10ab3145c20830800000000000000
+      internalID: 4036005100041281422
+      vertices: []
+      indices:
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Turret_HolySpear_32
+      rect:
+        serializedVersion: 2
+        x: 249
+        y: 357
+        width: 7
+        height: 13
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData:
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 436622bc5edcdc9f0800000000000000
+      internalID: -446474401200576972
+      vertices: []
+      indices:
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Turret_HolySpear_33
+      rect:
+        serializedVersion: 2
+        x: 263
+        y: 230
+        width: 38
+        height: 23
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData:
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 2a1d8b6e052d3b390800000000000000
+      internalID: -7803662484392848990
+      vertices: []
+      indices:
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Turret_HolySpear_34
+      rect:
+        serializedVersion: 2
+        x: 269
+        y: 280
+        width: 11
+        height: 9
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData:
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 9d6ff3c614c475fa0800000000000000
+      internalID: -5812092950225619239
+      vertices: []
+      indices:
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Turret_HolySpear_35
+      rect:
+        serializedVersion: 2
+        x: 922
+        y: 158
+        width: 92
+        height: 100
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData:
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 863656abebdf722c0800000000000000
+      internalID: -4456314310646996120
+      vertices: []
+      indices:
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Turret_HolySpear_36
+      rect:
+        serializedVersion: 2
+        x: 979
+        y: 311
+        width: 89
+        height: 103
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData:
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 0489b096b2a972fc0800000000000000
+      internalID: -3519675072530114496
+      vertices: []
+      indices:
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Turret_HolySpear_37
+      rect:
+        serializedVersion: 2
+        x: 1007
+        y: 283
+        width: 29
+        height: 24
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData:
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 8724f1450e9cce840800000000000000
+      internalID: 5254796830555718264
+      vertices: []
+      indices:
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Turret_HolySpear_38
+      rect:
+        serializedVersion: 2
+        x: 266
+        y: 219
+        width: 6
+        height: 6
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData:
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 5ba9c57ab587184e0800000000000000
+      internalID: -1981170026021086539
+      vertices: []
+      indices:
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Turret_HolySpear_39
+      rect:
+        serializedVersion: 2
+        x: 267
+        y: 167
+        width: 52
+        height: 62
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData:
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: cf039c65942c146c0800000000000000
+      internalID: -4160830960469200644
+      vertices: []
+      indices:
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Turret_HolySpear_40
+      rect:
+        serializedVersion: 2
+        x: 265
+        y: 192
+        width: 7
+        height: 14
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData:
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 1428a5682203df890800000000000000
+      internalID: -7422723685995609535
+      vertices: []
+      indices:
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Turret_HolySpear_41
+      rect:
+        serializedVersion: 2
+        x: 265
+        y: 187
+        width: 7
+        height: 8
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData:
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: a98513fb3eaf28ab0800000000000000
+      internalID: -5007163979610367846
+      vertices: []
+      indices:
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Turret_HolySpear_42
+      rect:
+        serializedVersion: 2
+        x: 199
+        y: 119
+        width: 9
+        height: 15
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData:
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: ebad51a8bbbc90770800000000000000
+      internalID: 8577610971639831230
+      vertices: []
+      indices:
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Turret_HolySpear_43
+      rect:
+        serializedVersion: 2
+        x: 930
+        y: 129
+        width: 22
+        height: 28
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData:
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: fd34ed1f480c02a00800000000000000
+      internalID: 729794816860111839
+      vertices: []
+      indices:
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Turret_HolySpear_44
+      rect:
+        serializedVersion: 2
+        x: 979
+        y: 115
+        width: 11
+        height: 16
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData:
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: c1ab1b45c008d0040800000000000000
+      internalID: 4615485983573522972
+      vertices: []
+      indices:
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Turret_HolySpear_45
+      rect:
+        serializedVersion: 2
+        x: 64
+        y: 69
+        width: 78
+        height: 58
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData:
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 31dcc725c2a47a070800000000000000
+      internalID: 8117538407581535507
+      vertices: []
+      indices:
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Turret_HolySpear_46
+      rect:
+        serializedVersion: 2
+        x: 989
+        y: 113
+        width: 7
+        height: 15
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData:
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: dac5ccd854eee3810800000000000000
+      internalID: 1747095687965465773
+      vertices: []
+      indices:
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Turret_HolySpear_47
+      rect:
+        serializedVersion: 2
+        x: 295
+        y: 86
+        width: 8
+        height: 6
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData:
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: e746f8b3d2f9157c0800000000000000
+      internalID: -4084308370426731394
+      vertices: []
+      indices:
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Turret_HolySpear_48
+      rect:
+        serializedVersion: 2
+        x: 874
+        y: 72
+        width: 7
+        height: 10
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData:
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 58ce058d4dcb433b0800000000000000
+      internalID: -5533590419783226235
+      vertices: []
+      indices:
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Turret_HolySpear_49
+      rect:
+        serializedVersion: 2
+        x: 946
+        y: 63
+        width: 15
+        height: 19
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData:
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 959912ef0213515a0800000000000000
+      internalID: -6551276065168189095
+      vertices: []
+      indices:
+      edges: []
+      weights: []
+    outline: []
+    customData:
+    physicsShape: []
+    bones: []
+    spriteID: 5e97eb03825dee720800000000000000
+    internalID: 0
+    vertices: []
+    indices:
+    edges: []
+    weights: []
+    secondaryTextures: []
+    spriteCustomMetadata:
+      entries: []
+    nameFileIdTable:
+      Turret_HolySpear_0: 1466509829731519458
+      Turret_HolySpear_1: -5152652370198768560
+      Turret_HolySpear_10: -5039647053729150619
+      Turret_HolySpear_11: -1764528975349516560
+      Turret_HolySpear_12: -211213041371635198
+      Turret_HolySpear_13: 3172591384011885346
+      Turret_HolySpear_14: 209038639486443122
+      Turret_HolySpear_15: 2143352710875707015
+      Turret_HolySpear_16: -7032673752132895362
+      Turret_HolySpear_17: 917687953865865390
+      Turret_HolySpear_18: 3245427080115904513
+      Turret_HolySpear_19: -5996661793689036792
+      Turret_HolySpear_2: -2211771262843829425
+      Turret_HolySpear_20: -1039594572245828820
+      Turret_HolySpear_21: -812249279678249030
+      Turret_HolySpear_22: 7613845018851359808
+      Turret_HolySpear_23: 6135531372974382925
+      Turret_HolySpear_24: 319722426150788760
+      Turret_HolySpear_25: -2929850221195861805
+      Turret_HolySpear_26: -2762334387404900951
+      Turret_HolySpear_27: -2433103117476876053
+      Turret_HolySpear_28: -3196606318790711994
+      Turret_HolySpear_29: -2313922508642510007
+      Turret_HolySpear_3: -6228840509770134750
+      Turret_HolySpear_30: -2931579690261237859
+      Turret_HolySpear_31: 4036005100041281422
+      Turret_HolySpear_32: -446474401200576972
+      Turret_HolySpear_33: -7803662484392848990
+      Turret_HolySpear_34: -5812092950225619239
+      Turret_HolySpear_35: -4456314310646996120
+      Turret_HolySpear_36: -3519675072530114496
+      Turret_HolySpear_37: 5254796830555718264
+      Turret_HolySpear_38: -1981170026021086539
+      Turret_HolySpear_39: -4160830960469200644
+      Turret_HolySpear_4: 8724719971366085716
+      Turret_HolySpear_40: -7422723685995609535
+      Turret_HolySpear_41: -5007163979610367846
+      Turret_HolySpear_42: 8577610971639831230
+      Turret_HolySpear_43: 729794816860111839
+      Turret_HolySpear_44: 4615485983573522972
+      Turret_HolySpear_45: 8117538407581535507
+      Turret_HolySpear_46: 1747095687965465773
+      Turret_HolySpear_47: -4084308370426731394
+      Turret_HolySpear_48: -5533590419783226235
+      Turret_HolySpear_49: -6551276065168189095
+      Turret_HolySpear_5: -7825670684734462357
+      Turret_HolySpear_6: 2154085653682531906
+      Turret_HolySpear_7: -1083890643454409146
+      Turret_HolySpear_8: -592742493046947293
+      Turret_HolySpear_9: -8153909967428992031
+  mipmapLimitGroupName:
+  pSDRemoveMatte: 0
+  userData:
+  assetBundleName:
+  assetBundleVariant:

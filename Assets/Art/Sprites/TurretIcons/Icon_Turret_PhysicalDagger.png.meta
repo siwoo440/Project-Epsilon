@@ -1,0 +1,1287 @@
+fileFormatVersion: 2
+guid: a1c17003431bc3749935c586624e700e
+TextureImporter:
+  internalIDToNameTable:
+  - first:
+      213: 1678276900691776414
+    second: Icon_Turret_PhysicalDagger_0
+  - first:
+      213: -2712802266109086593
+    second: Icon_Turret_PhysicalDagger_1
+  - first:
+      213: 4664594976996760389
+    second: Icon_Turret_PhysicalDagger_2
+  - first:
+      213: 5025552644885502277
+    second: Icon_Turret_PhysicalDagger_3
+  - first:
+      213: 1720306365328225454
+    second: Icon_Turret_PhysicalDagger_4
+  - first:
+      213: 7603958627971119327
+    second: Icon_Turret_PhysicalDagger_5
+  - first:
+      213: 491347464708613188
+    second: Icon_Turret_PhysicalDagger_6
+  - first:
+      213: 4008823376509292886
+    second: Icon_Turret_PhysicalDagger_7
+  - first:
+      213: 8805336006609219157
+    second: Icon_Turret_PhysicalDagger_8
+  - first:
+      213: 1480259484155137494
+    second: Icon_Turret_PhysicalDagger_9
+  - first:
+      213: -8294915308244483412
+    second: Icon_Turret_PhysicalDagger_10
+  - first:
+      213: -230923367545835689
+    second: Icon_Turret_PhysicalDagger_11
+  - first:
+      213: 3869232431714423511
+    second: Icon_Turret_PhysicalDagger_12
+  - first:
+      213: 2949733530045359843
+    second: Icon_Turret_PhysicalDagger_13
+  - first:
+      213: -769948702230647018
+    second: Icon_Turret_PhysicalDagger_14
+  - first:
+      213: 686046428450327563
+    second: Icon_Turret_PhysicalDagger_15
+  - first:
+      213: -2870469255827274086
+    second: Icon_Turret_PhysicalDagger_16
+  - first:
+      213: -6652587367765355216
+    second: Icon_Turret_PhysicalDagger_17
+  - first:
+      213: -8666314388255562623
+    second: Icon_Turret_PhysicalDagger_18
+  - first:
+      213: 2642579741299592194
+    second: Icon_Turret_PhysicalDagger_19
+  - first:
+      213: -7722890694861765729
+    second: Icon_Turret_PhysicalDagger_20
+  - first:
+      213: -2648277708226930788
+    second: Icon_Turret_PhysicalDagger_21
+  - first:
+      213: 8229761006204542096
+    second: Icon_Turret_PhysicalDagger_22
+  - first:
+      213: 5671954985001542954
+    second: Icon_Turret_PhysicalDagger_23
+  - first:
+      213: -1200618639487891469
+    second: Icon_Turret_PhysicalDagger_24
+  - first:
+      213: -1267401944254254144
+    second: Icon_Turret_PhysicalDagger_25
+  - first:
+      213: -57663518122014928
+    second: Icon_Turret_PhysicalDagger_26
+  - first:
+      213: 3826074811068586026
+    second: Icon_Turret_PhysicalDagger_27
+  - first:
+      213: -1022368796094416905
+    second: Icon_Turret_PhysicalDagger_28
+  - first:
+      213: -8237801437132741673
+    second: Icon_Turret_PhysicalDagger_29
+  - first:
+      213: 23995430763654703
+    second: Icon_Turret_PhysicalDagger_30
+  - first:
+      213: 1408581304776415644
+    second: Icon_Turret_PhysicalDagger_31
+  - first:
+      213: 4657409659788574087
+    second: Icon_Turret_PhysicalDagger_32
+  - first:
+      213: -7096739549286230722
+    second: Icon_Turret_PhysicalDagger_33
+  - first:
+      213: -6481959651838481943
+    second: Icon_Turret_PhysicalDagger_34
+  - first:
+      213: -926867216974347141
+    second: Icon_Turret_PhysicalDagger_35
+  - first:
+      213: 4251710365446399513
+    second: Icon_Turret_PhysicalDagger_36
+  - first:
+      213: -7224866141996245669
+    second: Icon_Turret_PhysicalDagger_37
+  - first:
+      213: -8841940162930008443
+    second: Icon_Turret_PhysicalDagger_38
+  - first:
+      213: -8928050357901872578
+    second: Icon_Turret_PhysicalDagger_39
+  - first:
+      213: -7968344281863519785
+    second: Icon_Turret_PhysicalDagger_40
+  - first:
+      213: 5162043701647339503
+    second: Icon_Turret_PhysicalDagger_41
+  - first:
+      213: 2827823635193477405
+    second: Icon_Turret_PhysicalDagger_42
+  - first:
+      213: 6637146614244063397
+    second: Icon_Turret_PhysicalDagger_43
+  - first:
+      213: 5344487702335378241
+    second: Icon_Turret_PhysicalDagger_44
+  externalObjects: {}
+  serializedVersion: 13
+  mipmaps:
+    mipMapMode: 0
+    enableMipMap: 0
+    sRGBTexture: 1
+    linearTexture: 0
+    fadeOut: 0
+    borderMipMap: 0
+    mipMapsPreserveCoverage: 0
+    alphaTestReferenceValue: 0.5
+    mipMapFadeDistanceStart: 1
+    mipMapFadeDistanceEnd: 3
+  bumpmap:
+    convertToNormalMap: 0
+    externalNormalMap: 0
+    heightScale: 0.25
+    normalMapFilter: 0
+    flipGreenChannel: 0
+  isReadable: 0
+  streamingMipmaps: 0
+  streamingMipmapsPriority: 0
+  vTOnly: 0
+  ignoreMipmapLimit: 0
+  grayScaleToAlpha: 0
+  generateCubemap: 6
+  cubemapConvolution: 0
+  seamlessCubemap: 0
+  textureFormat: 1
+  maxTextureSize: 2048
+  textureSettings:
+    serializedVersion: 2
+    filterMode: 1
+    aniso: 1
+    mipBias: 0
+    wrapU: 1
+    wrapV: 1
+    wrapW: 1
+  nPOTScale: 0
+  lightmap: 0
+  compressionQuality: 50
+  spriteMode: 1
+  spriteExtrude: 1
+  spriteMeshType: 1
+  alignment: 0
+  spritePivot: {x: 0.5, y: 0.5}
+  spritePixelsToUnits: 100
+  spriteBorder: {x: 0, y: 0, z: 0, w: 0}
+  spriteGenerateFallbackPhysicsShape: 1
+  alphaUsage: 1
+  alphaIsTransparency: 1
+  spriteTessellationDetail: -1
+  textureType: 8
+  textureShape: 1
+  singleChannelComponent: 0
+  flipbookRows: 1
+  flipbookColumns: 1
+  maxTextureSizeSet: 0
+  compressionQualitySet: 0
+  textureFormatSet: 0
+  ignorePngGamma: 0
+  applyGammaDecoding: 0
+  swizzle: 50462976
+  cookieLightType: 0
+  platformSettings:
+  - serializedVersion: 4
+    buildTarget: DefaultTexturePlatform
+    maxTextureSize: 512
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 4
+    buildTarget: Standalone
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  spriteSheet:
+    serializedVersion: 2
+    sprites:
+    - serializedVersion: 2
+      name: Icon_Turret_PhysicalDagger_0
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 0
+        width: 1217
+        height: 1234
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData:
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: e931a7403ff6a4710800000000000000
+      internalID: 1678276900691776414
+      vertices: []
+      indices:
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Icon_Turret_PhysicalDagger_1
+      rect:
+        serializedVersion: 2
+        x: 434
+        y: 1225
+        width: 21
+        height: 13
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData:
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: f7471b646b03a5ad0800000000000000
+      internalID: -2712802266109086593
+      vertices: []
+      indices:
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Icon_Turret_PhysicalDagger_2
+      rect:
+        serializedVersion: 2
+        x: 104
+        y: 966
+        width: 8
+        height: 9
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData:
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 54b96f0ea68fbb040800000000000000
+      internalID: 4664594976996760389
+      vertices: []
+      indices:
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Icon_Turret_PhysicalDagger_3
+      rect:
+        serializedVersion: 2
+        x: 1172
+        y: 947
+        width: 21
+        height: 22
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData:
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 549dc6601895eb540800000000000000
+      internalID: 5025552644885502277
+      vertices: []
+      indices:
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Icon_Turret_PhysicalDagger_4
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 829
+        width: 65
+        height: 106
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData:
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: ea47b325681cfd710800000000000000
+      internalID: 1720306365328225454
+      vertices: []
+      indices:
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Icon_Turret_PhysicalDagger_5
+      rect:
+        serializedVersion: 2
+        x: 32
+        y: 931
+        width: 17
+        height: 18
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData:
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: fd83cfaa510b68960800000000000000
+      internalID: 7603958627971119327
+      vertices: []
+      indices:
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Icon_Turret_PhysicalDagger_6
+      rect:
+        serializedVersion: 2
+        x: 1180
+        y: 883
+        width: 35
+        height: 55
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData:
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 444ee377aed91d600800000000000000
+      internalID: 491347464708613188
+      vertices: []
+      indices:
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Icon_Turret_PhysicalDagger_7
+      rect:
+        serializedVersion: 2
+        x: 1192
+        y: 923
+        width: 31
+        height: 36
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData:
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 6515e1c0f9332a730800000000000000
+      internalID: 4008823376509292886
+      vertices: []
+      indices:
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Icon_Turret_PhysicalDagger_8
+      rect:
+        serializedVersion: 2
+        x: 1172
+        y: 907
+        width: 9
+        height: 16
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData:
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 55e26e10276d23a70800000000000000
+      internalID: 8805336006609219157
+      vertices: []
+      indices:
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Icon_Turret_PhysicalDagger_9
+      rect:
+        serializedVersion: 2
+        x: 1180
+        y: 907
+        width: 9
+        height: 11
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData:
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 6dd48787820fa8410800000000000000
+      internalID: 1480259484155137494
+      vertices: []
+      indices:
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Icon_Turret_PhysicalDagger_10
+      rect:
+        serializedVersion: 2
+        x: 1133
+        y: 859
+        width: 14
+        height: 11
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData:
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: ca2432ab97a82ec80800000000000000
+      internalID: -8294915308244483412
+      vertices: []
+      indices:
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Icon_Turret_PhysicalDagger_11
+      rect:
+        serializedVersion: 2
+        x: 66
+        y: 773
+        width: 9
+        height: 12
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData:
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 75fe713bb689bccf0800000000000000
+      internalID: -230923367545835689
+      vertices: []
+      indices:
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Icon_Turret_PhysicalDagger_12
+      rect:
+        serializedVersion: 2
+        x: 80
+        y: 765
+        width: 16
+        height: 15
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData:
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 7d252c5856642b530800000000000000
+      internalID: 3869232431714423511
+      vertices: []
+      indices:
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Icon_Turret_PhysicalDagger_13
+      rect:
+        serializedVersion: 2
+        x: 96
+        y: 730
+        width: 12
+        height: 14
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData:
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 3e6a968640f8fe820800000000000000
+      internalID: 2949733530045359843
+      vertices: []
+      indices:
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Icon_Turret_PhysicalDagger_14
+      rect:
+        serializedVersion: 2
+        x: 100
+        y: 741
+        width: 10
+        height: 9
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData:
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 61fe4441cb79055f0800000000000000
+      internalID: -769948702230647018
+      vertices: []
+      indices:
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Icon_Turret_PhysicalDagger_15
+      rect:
+        serializedVersion: 2
+        x: 1109
+        y: 716
+        width: 9
+        height: 18
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData:
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: b0c05338793558900800000000000000
+      internalID: 686046428450327563
+      vertices: []
+      indices:
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Icon_Turret_PhysicalDagger_16
+      rect:
+        serializedVersion: 2
+        x: 1117
+        y: 714
+        width: 7
+        height: 9
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData:
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: a964cb39b6b0a28d0800000000000000
+      internalID: -2870469255827274086
+      vertices: []
+      indices:
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Icon_Turret_PhysicalDagger_17
+      rect:
+        serializedVersion: 2
+        x: 112
+        y: 692
+        width: 18
+        height: 20
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData:
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 035581339034da3a0800000000000000
+      internalID: -6652587367765355216
+      vertices: []
+      indices:
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Icon_Turret_PhysicalDagger_18
+      rect:
+        serializedVersion: 2
+        x: 108
+        y: 658
+        width: 12
+        height: 17
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData:
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 184ab20eaf01bb780800000000000000
+      internalID: -8666314388255562623
+      vertices: []
+      indices:
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Icon_Turret_PhysicalDagger_19
+      rect:
+        serializedVersion: 2
+        x: 1093
+        y: 652
+        width: 7
+        height: 7
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData:
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 20c4ec216445ca420800000000000000
+      internalID: 2642579741299592194
+      vertices: []
+      indices:
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Icon_Turret_PhysicalDagger_20
+      rect:
+        serializedVersion: 2
+        x: 1067
+        y: 634
+        width: 9
+        height: 17
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData:
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: f934895a4d7c2d490800000000000000
+      internalID: -7722890694861765729
+      vertices: []
+      indices:
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Icon_Turret_PhysicalDagger_21
+      rect:
+        serializedVersion: 2
+        x: 1087
+        y: 638
+        width: 7
+        height: 7
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData:
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: c975c8e947d6f3bd0800000000000000
+      internalID: -2648277708226930788
+      vertices: []
+      indices:
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Icon_Turret_PhysicalDagger_22
+      rect:
+        serializedVersion: 2
+        x: 1091
+        y: 634
+        width: 9
+        height: 10
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData:
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 09cde21380cf53270800000000000000
+      internalID: 8229761006204542096
+      vertices: []
+      indices:
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Icon_Turret_PhysicalDagger_23
+      rect:
+        serializedVersion: 2
+        x: 116
+        y: 580
+        width: 24
+        height: 28
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData:
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: a25e50fe105d6be40800000000000000
+      internalID: 5671954985001542954
+      vertices: []
+      indices:
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Icon_Turret_PhysicalDagger_24
+      rect:
+        serializedVersion: 2
+        x: 175
+        y: 591
+        width: 21
+        height: 19
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData:
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 3f78c9265bb865fe0800000000000000
+      internalID: -1200618639487891469
+      vertices: []
+      indices:
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Icon_Turret_PhysicalDagger_25
+      rect:
+        serializedVersion: 2
+        x: 142
+        y: 576
+        width: 6
+        height: 7
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData:
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 0c3f51d85a8496ee0800000000000000
+      internalID: -1267401944254254144
+      vertices: []
+      indices:
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Icon_Turret_PhysicalDagger_26
+      rect:
+        serializedVersion: 2
+        x: 167
+        y: 562
+        width: 7
+        height: 14
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData:
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 03786d5f553233ff0800000000000000
+      internalID: -57663518122014928
+      vertices: []
+      indices:
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Icon_Turret_PhysicalDagger_27
+      rect:
+        serializedVersion: 2
+        x: 1075
+        y: 548
+        width: 23
+        height: 36
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData:
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: a2810dde4c2f81530800000000000000
+      internalID: 3826074811068586026
+      vertices: []
+      indices:
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Icon_Turret_PhysicalDagger_28
+      rect:
+        serializedVersion: 2
+        x: 129
+        y: 499
+        width: 63
+        height: 74
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData:
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 7f739572ff0dfc1f0800000000000000
+      internalID: -1022368796094416905
+      vertices: []
+      indices:
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Icon_Turret_PhysicalDagger_29
+      rect:
+        serializedVersion: 2
+        x: 1041
+        y: 505
+        width: 29
+        height: 45
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData:
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 7d320891d337dad80800000000000000
+      internalID: -8237801437132741673
+      vertices: []
+      indices:
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Icon_Turret_PhysicalDagger_30
+      rect:
+        serializedVersion: 2
+        x: 1059
+        y: 548
+        width: 12
+        height: 15
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData:
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: f2e66e697bf355000800000000000000
+      internalID: 23995430763654703
+      vertices: []
+      indices:
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Icon_Turret_PhysicalDagger_31
+      rect:
+        serializedVersion: 2
+        x: 1099
+        y: 539
+        width: 13
+        height: 18
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData:
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: c995474db394c8310800000000000000
+      internalID: 1408581304776415644
+      vertices: []
+      indices:
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Icon_Turret_PhysicalDagger_32
+      rect:
+        serializedVersion: 2
+        x: 159
+        y: 489
+        width: 9
+        height: 10
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData:
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 78dbb29d86172a040800000000000000
+      internalID: 4657409659788574087
+      vertices: []
+      indices:
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Icon_Turret_PhysicalDagger_33
+      rect:
+        serializedVersion: 2
+        x: 1055
+        y: 437
+        width: 21
+        height: 14
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData:
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: e351455eaf0538d90800000000000000
+      internalID: -7096739549286230722
+      vertices: []
+      indices:
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Icon_Turret_PhysicalDagger_34
+      rect:
+        serializedVersion: 2
+        x: 1059
+        y: 403
+        width: 9
+        height: 12
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData:
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 9e9a0cf1a047b06a0800000000000000
+      internalID: -6481959651838481943
+      vertices: []
+      indices:
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Icon_Turret_PhysicalDagger_35
+      rect:
+        serializedVersion: 2
+        x: 167
+        y: 311
+        width: 7
+        height: 13
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData:
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: b740a4a4d2b1323f0800000000000000
+      internalID: -926867216974347141
+      vertices: []
+      indices:
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Icon_Turret_PhysicalDagger_36
+      rect:
+        serializedVersion: 2
+        x: 169
+        y: 322
+        width: 7
+        height: 8
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData:
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 91667440d0c110b30800000000000000
+      internalID: 4251710365446399513
+      vertices: []
+      indices:
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Icon_Turret_PhysicalDagger_37
+      rect:
+        serializedVersion: 2
+        x: 386
+        y: 63
+        width: 9
+        height: 10
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData:
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: b5d1198d58e1cbb90800000000000000
+      internalID: -7224866141996245669
+      vertices: []
+      indices:
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Icon_Turret_PhysicalDagger_38
+      rect:
+        serializedVersion: 2
+        x: 392
+        y: 63
+        width: 23
+        height: 34
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData:
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 58e1c47b44e1b4580800000000000000
+      internalID: -8841940162930008443
+      vertices: []
+      indices:
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Icon_Turret_PhysicalDagger_39
+      rect:
+        serializedVersion: 2
+        x: 798
+        y: 53
+        width: 15
+        height: 13
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData:
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: e32b5789081391480800000000000000
+      internalID: -8928050357901872578
+      vertices: []
+      indices:
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Icon_Turret_PhysicalDagger_40
+      rect:
+        serializedVersion: 2
+        x: 888
+        y: 65
+        width: 19
+        height: 26
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData:
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 7d1828ff711ca6190800000000000000
+      internalID: -7968344281863519785
+      vertices: []
+      indices:
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Icon_Turret_PhysicalDagger_41
+      rect:
+        serializedVersion: 2
+        x: 906
+        y: 63
+        width: 9
+        height: 19
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData:
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: fef6bbf956343a740800000000000000
+      internalID: 5162043701647339503
+      vertices: []
+      indices:
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Icon_Turret_PhysicalDagger_42
+      rect:
+        serializedVersion: 2
+        x: 820
+        y: 55
+        width: 11
+        height: 9
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData:
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: d19392f1d927e3720800000000000000
+      internalID: 2827823635193477405
+      vertices: []
+      indices:
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Icon_Turret_PhysicalDagger_43
+      rect:
+        serializedVersion: 2
+        x: 520
+        y: 29
+        width: 6
+        height: 6
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData:
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 5a834383ea1eb1c50800000000000000
+      internalID: 6637146614244063397
+      vertices: []
+      indices:
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Icon_Turret_PhysicalDagger_44
+      rect:
+        serializedVersion: 2
+        x: 754
+        y: 33
+        width: 27
+        height: 21
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData:
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 143d42cbf3f6b2a40800000000000000
+      internalID: 5344487702335378241
+      vertices: []
+      indices:
+      edges: []
+      weights: []
+    outline: []
+    customData:
+    physicsShape: []
+    bones: []
+    spriteID: 5e97eb03825dee720800000000000000
+    internalID: 0
+    vertices: []
+    indices:
+    edges: []
+    weights: []
+    secondaryTextures: []
+    spriteCustomMetadata:
+      entries: []
+    nameFileIdTable:
+      Icon_Turret_PhysicalDagger_0: 1678276900691776414
+      Icon_Turret_PhysicalDagger_1: -2712802266109086593
+      Icon_Turret_PhysicalDagger_10: -8294915308244483412
+      Icon_Turret_PhysicalDagger_11: -230923367545835689
+      Icon_Turret_PhysicalDagger_12: 3869232431714423511
+      Icon_Turret_PhysicalDagger_13: 2949733530045359843
+      Icon_Turret_PhysicalDagger_14: -769948702230647018
+      Icon_Turret_PhysicalDagger_15: 686046428450327563
+      Icon_Turret_PhysicalDagger_16: -2870469255827274086
+      Icon_Turret_PhysicalDagger_17: -6652587367765355216
+      Icon_Turret_PhysicalDagger_18: -8666314388255562623
+      Icon_Turret_PhysicalDagger_19: 2642579741299592194
+      Icon_Turret_PhysicalDagger_2: 4664594976996760389
+      Icon_Turret_PhysicalDagger_20: -7722890694861765729
+      Icon_Turret_PhysicalDagger_21: -2648277708226930788
+      Icon_Turret_PhysicalDagger_22: 8229761006204542096
+      Icon_Turret_PhysicalDagger_23: 5671954985001542954
+      Icon_Turret_PhysicalDagger_24: -1200618639487891469
+      Icon_Turret_PhysicalDagger_25: -1267401944254254144
+      Icon_Turret_PhysicalDagger_26: -57663518122014928
+      Icon_Turret_PhysicalDagger_27: 3826074811068586026
+      Icon_Turret_PhysicalDagger_28: -1022368796094416905
+      Icon_Turret_PhysicalDagger_29: -8237801437132741673
+      Icon_Turret_PhysicalDagger_3: 5025552644885502277
+      Icon_Turret_PhysicalDagger_30: 23995430763654703
+      Icon_Turret_PhysicalDagger_31: 1408581304776415644
+      Icon_Turret_PhysicalDagger_32: 4657409659788574087
+      Icon_Turret_PhysicalDagger_33: -7096739549286230722
+      Icon_Turret_PhysicalDagger_34: -6481959651838481943
+      Icon_Turret_PhysicalDagger_35: -926867216974347141
+      Icon_Turret_PhysicalDagger_36: 4251710365446399513
+      Icon_Turret_PhysicalDagger_37: -7224866141996245669
+      Icon_Turret_PhysicalDagger_38: -8841940162930008443
+      Icon_Turret_PhysicalDagger_39: -8928050357901872578
+      Icon_Turret_PhysicalDagger_4: 1720306365328225454
+      Icon_Turret_PhysicalDagger_40: -7968344281863519785
+      Icon_Turret_PhysicalDagger_41: 5162043701647339503
+      Icon_Turret_PhysicalDagger_42: 2827823635193477405
+      Icon_Turret_PhysicalDagger_43: 6637146614244063397
+      Icon_Turret_PhysicalDagger_44: 5344487702335378241
+      Icon_Turret_PhysicalDagger_5: 7603958627971119327
+      Icon_Turret_PhysicalDagger_6: 491347464708613188
+      Icon_Turret_PhysicalDagger_7: 4008823376509292886
+      Icon_Turret_PhysicalDagger_8: 8805336006609219157
+      Icon_Turret_PhysicalDagger_9: 1480259484155137494
+  mipmapLimitGroupName:
+  pSDRemoveMatte: 0
+  userData:
+  assetBundleName:
+  assetBundleVariant:

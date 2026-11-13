@@ -1,0 +1,819 @@
+fileFormatVersion: 2
+guid: 06f98544659171f4c8fa18fb213d3707
+TextureImporter:
+  internalIDToNameTable:
+  - first:
+      213: -1217555689886963274
+    second: Turret_ColdAura_0
+  - first:
+      213: 3755338571019637302
+    second: Turret_ColdAura_1
+  - first:
+      213: 2676822462375396959
+    second: Turret_ColdAura_2
+  - first:
+      213: -6680158688284288837
+    second: Turret_ColdAura_3
+  - first:
+      213: 4713846959424834775
+    second: Turret_ColdAura_4
+  - first:
+      213: -7168706299551195660
+    second: Turret_ColdAura_5
+  - first:
+      213: 294448952750344510
+    second: Turret_ColdAura_6
+  - first:
+      213: -4681358689642639232
+    second: Turret_ColdAura_7
+  - first:
+      213: 8000601970782698068
+    second: Turret_ColdAura_8
+  - first:
+      213: 4654811248070476863
+    second: Turret_ColdAura_9
+  - first:
+      213: 3378186330053679057
+    second: Turret_ColdAura_10
+  - first:
+      213: -1139272491269278795
+    second: Turret_ColdAura_11
+  - first:
+      213: -4621672074988925530
+    second: Turret_ColdAura_12
+  - first:
+      213: 2964811362561847832
+    second: Turret_ColdAura_13
+  - first:
+      213: 4929516380474642107
+    second: Turret_ColdAura_14
+  - first:
+      213: -4917036730463717961
+    second: Turret_ColdAura_15
+  - first:
+      213: -4886525711181672693
+    second: Turret_ColdAura_16
+  - first:
+      213: -1978867586814488749
+    second: Turret_ColdAura_17
+  - first:
+      213: -2132637886438258275
+    second: Turret_ColdAura_18
+  - first:
+      213: -356682139912549977
+    second: Turret_ColdAura_19
+  - first:
+      213: -8608979279317525501
+    second: Turret_ColdAura_20
+  - first:
+      213: 6420603184040843978
+    second: Turret_ColdAura_21
+  - first:
+      213: -2343004337411245824
+    second: Turret_ColdAura_22
+  - first:
+      213: 5057253711655965248
+    second: Turret_ColdAura_23
+  - first:
+      213: 6452457956391893196
+    second: Turret_ColdAura_24
+  - first:
+      213: 459534096836915917
+    second: Turret_ColdAura_25
+  - first:
+      213: -4106891647833469330
+    second: Turret_ColdAura_26
+  externalObjects: {}
+  serializedVersion: 13
+  mipmaps:
+    mipMapMode: 0
+    enableMipMap: 0
+    sRGBTexture: 1
+    linearTexture: 0
+    fadeOut: 0
+    borderMipMap: 0
+    mipMapsPreserveCoverage: 0
+    alphaTestReferenceValue: 0.5
+    mipMapFadeDistanceStart: 1
+    mipMapFadeDistanceEnd: 3
+  bumpmap:
+    convertToNormalMap: 0
+    externalNormalMap: 0
+    heightScale: 0.25
+    normalMapFilter: 0
+    flipGreenChannel: 0
+  isReadable: 0
+  streamingMipmaps: 0
+  streamingMipmapsPriority: 0
+  vTOnly: 0
+  ignoreMipmapLimit: 0
+  grayScaleToAlpha: 0
+  generateCubemap: 6
+  cubemapConvolution: 0
+  seamlessCubemap: 0
+  textureFormat: 1
+  maxTextureSize: 2048
+  textureSettings:
+    serializedVersion: 2
+    filterMode: 1
+    aniso: 1
+    mipBias: 0
+    wrapU: 1
+    wrapV: 1
+    wrapW: 1
+  nPOTScale: 0
+  lightmap: 0
+  compressionQuality: 50
+  spriteMode: 1
+  spriteExtrude: 1
+  spriteMeshType: 1
+  alignment: 0
+  spritePivot: {x: 0.5, y: 0.5}
+  spritePixelsToUnits: 1000
+  spriteBorder: {x: 0, y: 0, z: 0, w: 0}
+  spriteGenerateFallbackPhysicsShape: 1
+  alphaUsage: 1
+  alphaIsTransparency: 1
+  spriteTessellationDetail: -1
+  textureType: 8
+  textureShape: 1
+  singleChannelComponent: 0
+  flipbookRows: 1
+  flipbookColumns: 1
+  maxTextureSizeSet: 0
+  compressionQualitySet: 0
+  textureFormatSet: 0
+  ignorePngGamma: 0
+  applyGammaDecoding: 0
+  swizzle: 50462976
+  cookieLightType: 0
+  platformSettings:
+  - serializedVersion: 4
+    buildTarget: DefaultTexturePlatform
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 4
+    buildTarget: Standalone
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  spriteSheet:
+    serializedVersion: 2
+    sprites:
+    - serializedVersion: 2
+      name: Turret_ColdAura_0
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 0
+        width: 1235
+        height: 1227
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData:
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 6b9280a0d8f5a1fe0800000000000000
+      internalID: -1217555689886963274
+      vertices: []
+      indices:
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Turret_ColdAura_1
+      rect:
+        serializedVersion: 2
+        x: 215
+        y: 1197
+        width: 13
+        height: 11
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData:
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 632d2f0a884ad1430800000000000000
+      internalID: 3755338571019637302
+      vertices: []
+      indices:
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Turret_ColdAura_2
+      rect:
+        serializedVersion: 2
+        x: 536
+        y: 1162
+        width: 8
+        height: 70
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData:
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: f560cacd8dbf52520800000000000000
+      internalID: 2676822462375396959
+      vertices: []
+      indices:
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Turret_ColdAura_3
+      rect:
+        serializedVersion: 2
+        x: 199
+        y: 1181
+        width: 8
+        height: 7
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData:
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: bb85395e01f4b43a0800000000000000
+      internalID: -6680158688284288837
+      vertices: []
+      indices:
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Turret_ColdAura_4
+      rect:
+        serializedVersion: 2
+        x: 354
+        y: 1181
+        width: 7
+        height: 10
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData:
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 7dc8216a5d2fa6140800000000000000
+      internalID: 4713846959424834775
+      vertices: []
+      indices:
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Turret_ColdAura_5
+      rect:
+        serializedVersion: 2
+        x: 374
+        y: 1179
+        width: 7
+        height: 10
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData:
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 4fd552c1a93a38c90800000000000000
+      internalID: -7168706299551195660
+      vertices: []
+      indices:
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Turret_ColdAura_6
+      rect:
+        serializedVersion: 2
+        x: 161
+        y: 1144
+        width: 17
+        height: 16
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData:
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: e398b2133c7161400800000000000000
+      internalID: 294448952750344510
+      vertices: []
+      indices:
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Turret_ColdAura_7
+      rect:
+        serializedVersion: 2
+        x: 186
+        y: 1150
+        width: 8
+        height: 9
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData:
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 08099ad1319780fb0800000000000000
+      internalID: -4681358689642639232
+      vertices: []
+      indices:
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Turret_ColdAura_8
+      rect:
+        serializedVersion: 2
+        x: 221
+        y: 1130
+        width: 23
+        height: 36
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData:
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 45afac97a19d70f60800000000000000
+      internalID: 8000601970782698068
+      vertices: []
+      indices:
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Turret_ColdAura_9
+      rect:
+        serializedVersion: 2
+        x: 295
+        y: 1156
+        width: 8
+        height: 11
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData:
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: f34cbb9fa26399040800000000000000
+      internalID: 4654811248070476863
+      vertices: []
+      indices:
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Turret_ColdAura_10
+      rect:
+        serializedVersion: 2
+        x: 514
+        y: 1153
+        width: 21
+        height: 17
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData:
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 1d71eeb919ab1ee20800000000000000
+      internalID: 3378186330053679057
+      vertices: []
+      indices:
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Turret_ColdAura_11
+      rect:
+        serializedVersion: 2
+        x: 844
+        y: 1159
+        width: 7
+        height: 9
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData:
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 5b3358f84bd7030f0800000000000000
+      internalID: -1139272491269278795
+      vertices: []
+      indices:
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Turret_ColdAura_12
+      rect:
+        serializedVersion: 2
+        x: 191
+        y: 1146
+        width: 7
+        height: 10
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData:
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 6ad41f50cb58cdfb0800000000000000
+      internalID: -4621672074988925530
+      vertices: []
+      indices:
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Turret_ColdAura_13
+      rect:
+        serializedVersion: 2
+        x: 446
+        y: 1148
+        width: 7
+        height: 8
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData:
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 8127a8bd930252920800000000000000
+      internalID: 2964811362561847832
+      vertices: []
+      indices:
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Turret_ColdAura_14
+      rect:
+        serializedVersion: 2
+        x: 161
+        y: 1117
+        width: 20
+        height: 27
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData:
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: bbe09a4c709296440800000000000000
+      internalID: 4929516380474642107
+      vertices: []
+      indices:
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Turret_ColdAura_15
+      rect:
+        serializedVersion: 2
+        x: 181
+        y: 1136
+        width: 7
+        height: 10
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData:
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 7b5792d252d23cbb0800000000000000
+      internalID: -4917036730463717961
+      vertices: []
+      indices:
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Turret_ColdAura_16
+      rect:
+        serializedVersion: 2
+        x: 199
+        y: 1131
+        width: 13
+        height: 13
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData:
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: b0f043f61c29f2cb0800000000000000
+      internalID: -4886525711181672693
+      vertices: []
+      indices:
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Turret_ColdAura_17
+      rect:
+        serializedVersion: 2
+        x: 1021
+        y: 1124
+        width: 7
+        height: 12
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData:
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 35f436e0a66a984e0800000000000000
+      internalID: -1978867586814488749
+      vertices: []
+      indices:
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Turret_ColdAura_18
+      rect:
+        serializedVersion: 2
+        x: 22
+        y: 886
+        width: 7
+        height: 14
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData:
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: d99ce4834295762e0800000000000000
+      internalID: -2132637886438258275
+      vertices: []
+      indices:
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Turret_ColdAura_19
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 822
+        width: 5
+        height: 15
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData:
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 7a949c8cb7fcc0bf0800000000000000
+      internalID: -356682139912549977
+      vertices: []
+      indices:
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Turret_ColdAura_20
+      rect:
+        serializedVersion: 2
+        x: 448
+        y: 87
+        width: 11
+        height: 12
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData:
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 30c949135f2c68880800000000000000
+      internalID: -8608979279317525501
+      vertices: []
+      indices:
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Turret_ColdAura_21
+      rect:
+        serializedVersion: 2
+        x: 679
+        y: 55
+        width: 9
+        height: 9
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData:
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: aca1f7cf3909a1950800000000000000
+      internalID: 6420603184040843978
+      vertices: []
+      indices:
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Turret_ColdAura_22
+      rect:
+        serializedVersion: 2
+        x: 868
+        y: 47
+        width: 7
+        height: 9
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData:
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 009376908f9fb7fd0800000000000000
+      internalID: -2343004337411245824
+      vertices: []
+      indices:
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Turret_ColdAura_23
+      rect:
+        serializedVersion: 2
+        x: 902
+        y: 41
+        width: 17
+        height: 25
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData:
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 042974ec479fe2640800000000000000
+      internalID: 5057253711655965248
+      vertices: []
+      indices:
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Turret_ColdAura_24
+      rect:
+        serializedVersion: 2
+        x: 922
+        y: 53
+        width: 8
+        height: 6
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData:
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: cc8b1e2235cbb8950800000000000000
+      internalID: 6452457956391893196
+      vertices: []
+      indices:
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Turret_ColdAura_25
+      rect:
+        serializedVersion: 2
+        x: 914
+        y: 39
+        width: 10
+        height: 9
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData:
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: dc2f42c83d7906600800000000000000
+      internalID: 459534096836915917
+      vertices: []
+      indices:
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Turret_ColdAura_26
+      rect:
+        serializedVersion: 2
+        x: 804
+        y: 15
+        width: 29
+        height: 19
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData:
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: e6e0ed73ec36107c0800000000000000
+      internalID: -4106891647833469330
+      vertices: []
+      indices:
+      edges: []
+      weights: []
+    outline: []
+    customData:
+    physicsShape: []
+    bones: []
+    spriteID: 5e97eb03825dee720800000000000000
+    internalID: 0
+    vertices: []
+    indices:
+    edges: []
+    weights: []
+    secondaryTextures: []
+    spriteCustomMetadata:
+      entries: []
+    nameFileIdTable:
+      Turret_ColdAura_0: -1217555689886963274
+      Turret_ColdAura_1: 3755338571019637302
+      Turret_ColdAura_10: 3378186330053679057
+      Turret_ColdAura_11: -1139272491269278795
+      Turret_ColdAura_12: -4621672074988925530
+      Turret_ColdAura_13: 2964811362561847832
+      Turret_ColdAura_14: 4929516380474642107
+      Turret_ColdAura_15: -4917036730463717961
+      Turret_ColdAura_16: -4886525711181672693
+      Turret_ColdAura_17: -1978867586814488749
+      Turret_ColdAura_18: -2132637886438258275
+      Turret_ColdAura_19: -356682139912549977
+      Turret_ColdAura_2: 2676822462375396959
+      Turret_ColdAura_20: -8608979279317525501
+      Turret_ColdAura_21: 6420603184040843978
+      Turret_ColdAura_22: -2343004337411245824
+      Turret_ColdAura_23: 5057253711655965248
+      Turret_ColdAura_24: 6452457956391893196
+      Turret_ColdAura_25: 459534096836915917
+      Turret_ColdAura_26: -4106891647833469330
+      Turret_ColdAura_3: -6680158688284288837
+      Turret_ColdAura_4: 4713846959424834775
+      Turret_ColdAura_5: -7168706299551195660
+      Turret_ColdAura_6: 294448952750344510
+      Turret_ColdAura_7: -4681358689642639232
+      Turret_ColdAura_8: 8000601970782698068
+      Turret_ColdAura_9: 4654811248070476863
+  mipmapLimitGroupName:
+  pSDRemoveMatte: 0
+  userData:
+  assetBundleName:
+  assetBundleVariant:

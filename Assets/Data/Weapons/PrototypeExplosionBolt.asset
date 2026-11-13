@@ -14,7 +14,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::ProjectEpsilon.Data.WeaponData
   id: explosion_bolt
   displayName: 폭발 직사 포탑
-  artwork: {fileID: 21300000, guid: f873d6246f772fb41a1fb370949f0060, type: 3}
+  artwork: {fileID: 21300000, guid: e95aaa169190f044689013b6652cc885, type: 3}
+  icon: {fileID: 21300000, guid: 812c1fa636d97614e9f6d8d9a309b5f7, type: 3}
   attribute: 5
   attackType: 1
   baseDamage: 8

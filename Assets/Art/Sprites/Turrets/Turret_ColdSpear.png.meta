@@ -1,0 +1,481 @@
+fileFormatVersion: 2
+guid: 92bd813333fd10544b235c076083ee9b
+TextureImporter:
+  internalIDToNameTable:
+  - first:
+      213: -699596261674168139
+    second: Turret_ColdSpear_0
+  - first:
+      213: -684174689946442525
+    second: Turret_ColdSpear_1
+  - first:
+      213: -3732532959644655205
+    second: Turret_ColdSpear_2
+  - first:
+      213: -8736354147979568304
+    second: Turret_ColdSpear_3
+  - first:
+      213: 4011484838480077577
+    second: Turret_ColdSpear_4
+  - first:
+      213: 6416041704334170491
+    second: Turret_ColdSpear_5
+  - first:
+      213: 3214134425367929915
+    second: Turret_ColdSpear_6
+  - first:
+      213: 5769389909381330369
+    second: Turret_ColdSpear_7
+  - first:
+      213: 3945822215003572983
+    second: Turret_ColdSpear_8
+  - first:
+      213: -857986210385447045
+    second: Turret_ColdSpear_9
+  - first:
+      213: 3699369891653545049
+    second: Turret_ColdSpear_10
+  - first:
+      213: -111614820498803122
+    second: Turret_ColdSpear_11
+  - first:
+      213: 76688026128882321
+    second: Turret_ColdSpear_12
+  - first:
+      213: -4605197916372360395
+    second: Turret_ColdSpear_13
+  externalObjects: {}
+  serializedVersion: 13
+  mipmaps:
+    mipMapMode: 0
+    enableMipMap: 0
+    sRGBTexture: 1
+    linearTexture: 0
+    fadeOut: 0
+    borderMipMap: 0
+    mipMapsPreserveCoverage: 0
+    alphaTestReferenceValue: 0.5
+    mipMapFadeDistanceStart: 1
+    mipMapFadeDistanceEnd: 3
+  bumpmap:
+    convertToNormalMap: 0
+    externalNormalMap: 0
+    heightScale: 0.25
+    normalMapFilter: 0
+    flipGreenChannel: 0
+  isReadable: 0
+  streamingMipmaps: 0
+  streamingMipmapsPriority: 0
+  vTOnly: 0
+  ignoreMipmapLimit: 0
+  grayScaleToAlpha: 0
+  generateCubemap: 6
+  cubemapConvolution: 0
+  seamlessCubemap: 0
+  textureFormat: 1
+  maxTextureSize: 2048
+  textureSettings:
+    serializedVersion: 2
+    filterMode: 1
+    aniso: 1
+    mipBias: 0
+    wrapU: 1
+    wrapV: 1
+    wrapW: 1
+  nPOTScale: 0
+  lightmap: 0
+  compressionQuality: 50
+  spriteMode: 1
+  spriteExtrude: 1
+  spriteMeshType: 1
+  alignment: 0
+  spritePivot: {x: 0.5, y: 0.5}
+  spritePixelsToUnits: 1000
+  spriteBorder: {x: 0, y: 0, z: 0, w: 0}
+  spriteGenerateFallbackPhysicsShape: 1
+  alphaUsage: 1
+  alphaIsTransparency: 1
+  spriteTessellationDetail: -1
+  textureType: 8
+  textureShape: 1
+  singleChannelComponent: 0
+  flipbookRows: 1
+  flipbookColumns: 1
+  maxTextureSizeSet: 0
+  compressionQualitySet: 0
+  textureFormatSet: 0
+  ignorePngGamma: 0
+  applyGammaDecoding: 0
+  swizzle: 50462976
+  cookieLightType: 0
+  platformSettings:
+  - serializedVersion: 4
+    buildTarget: DefaultTexturePlatform
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 4
+    buildTarget: Standalone
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  spriteSheet:
+    serializedVersion: 2
+    sprites:
+    - serializedVersion: 2
+      name: Turret_ColdSpear_0
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 0
+        width: 1241
+        height: 1240
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData:
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 5b058b818e88a46f0800000000000000
+      internalID: -699596261674168139
+      vertices: []
+      indices:
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Turret_ColdSpear_1
+      rect:
+        serializedVersion: 2
+        x: 88
+        y: 771
+        width: 6
+        height: 7
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData:
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 3e4ed619eb25186f0800000000000000
+      internalID: -684174689946442525
+      vertices: []
+      indices:
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Turret_ColdSpear_2
+      rect:
+        serializedVersion: 2
+        x: 1014
+        y: 550
+        width: 6
+        height: 9
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData:
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: b9161fb8c01633cc0800000000000000
+      internalID: -3732532959644655205
+      vertices: []
+      indices:
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Turret_ColdSpear_3
+      rect:
+        serializedVersion: 2
+        x: 104
+        y: 481
+        width: 7
+        height: 6
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData:
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 05bdaa9803c32c680800000000000000
+      internalID: -8736354147979568304
+      vertices: []
+      indices:
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Turret_ColdSpear_4
+      rect:
+        serializedVersion: 2
+        x: 86
+        y: 432
+        width: 7
+        height: 13
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData:
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 9036873f438aba730800000000000000
+      internalID: 4011484838480077577
+      vertices: []
+      indices:
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Turret_ColdSpear_5
+      rect:
+        serializedVersion: 2
+        x: 86
+        y: 427
+        width: 8
+        height: 6
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData:
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: b791eeabfeb5a0950800000000000000
+      internalID: 6416041704334170491
+      vertices: []
+      indices:
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Turret_ColdSpear_6
+      rect:
+        serializedVersion: 2
+        x: 118
+        y: 405
+        width: 7
+        height: 8
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData:
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: b34e86c0b36ea9c20800000000000000
+      internalID: 3214134425367929915
+      vertices: []
+      indices:
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Turret_ColdSpear_7
+      rect:
+        serializedVersion: 2
+        x: 88
+        y: 376
+        width: 6
+        height: 8
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData:
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 1c5b5671e8df01050800000000000000
+      internalID: 5769389909381330369
+      vertices: []
+      indices:
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Turret_ColdSpear_8
+      rect:
+        serializedVersion: 2
+        x: 66
+        y: 342
+        width: 9
+        height: 14
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData:
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 7fa0220166062c630800000000000000
+      internalID: 3945822215003572983
+      vertices: []
+      indices:
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Turret_ColdSpear_9
+      rect:
+        serializedVersion: 2
+        x: 70
+        y: 349
+        width: 13
+        height: 23
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData:
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: b77bac36612d714f0800000000000000
+      internalID: -857986210385447045
+      vertices: []
+      indices:
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Turret_ColdSpear_10
+      rect:
+        serializedVersion: 2
+        x: 88
+        y: 355
+        width: 6
+        height: 7
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData:
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 95ce8ccf05dc65330800000000000000
+      internalID: 3699369891653545049
+      vertices: []
+      indices:
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Turret_ColdSpear_11
+      rect:
+        serializedVersion: 2
+        x: 88
+        y: 326
+        width: 16
+        height: 19
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData:
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: e46ff7089e6737ef0800000000000000
+      internalID: -111614820498803122
+      vertices: []
+      indices:
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Turret_ColdSpear_12
+      rect:
+        serializedVersion: 2
+        x: 80
+        y: 136
+        width: 8
+        height: 9
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData:
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 19a10fb7a53701100800000000000000
+      internalID: 76688026128882321
+      vertices: []
+      indices:
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Turret_ColdSpear_13
+      rect:
+        serializedVersion: 2
+        x: 209
+        y: 39
+        width: 7
+        height: 9
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData:
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 533a14af4ec0710c0800000000000000
+      internalID: -4605197916372360395
+      vertices: []
+      indices:
+      edges: []
+      weights: []
+    outline: []
+    customData:
+    physicsShape: []
+    bones: []
+    spriteID: 5e97eb03825dee720800000000000000
+    internalID: 0
+    vertices: []
+    indices:
+    edges: []
+    weights: []
+    secondaryTextures: []
+    spriteCustomMetadata:
+      entries: []
+    nameFileIdTable:
+      Turret_ColdSpear_0: -699596261674168139
+      Turret_ColdSpear_1: -684174689946442525
+      Turret_ColdSpear_10: 3699369891653545049
+      Turret_ColdSpear_11: -111614820498803122
+      Turret_ColdSpear_12: 76688026128882321
+      Turret_ColdSpear_13: -4605197916372360395
+      Turret_ColdSpear_2: -3732532959644655205
+      Turret_ColdSpear_3: -8736354147979568304
+      Turret_ColdSpear_4: 4011484838480077577
+      Turret_ColdSpear_5: 6416041704334170491
+      Turret_ColdSpear_6: 3214134425367929915
+      Turret_ColdSpear_7: 5769389909381330369
+      Turret_ColdSpear_8: 3945822215003572983
+      Turret_ColdSpear_9: -857986210385447045
+  mipmapLimitGroupName:
+  pSDRemoveMatte: 0
+  userData:
+  assetBundleName:
+  assetBundleVariant:

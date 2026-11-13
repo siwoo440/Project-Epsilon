@@ -14,7 +14,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::ProjectEpsilon.Data.WeaponData
   id: fire_lance
   displayName: 화염 관통 포탑
-  artwork: {fileID: 21300000, guid: f873d6246f772fb41a1fb370949f0060, type: 3}
+  artwork: {fileID: 21300000, guid: b03277bea72c7a94e91d63eb9cb2f538, type: 3}
+  icon: {fileID: 21300000, guid: 7c576f6fa84b62940b2e17d6f981ee01, type: 3}
   attribute: 1
   attackType: 1
   baseDamage: 9

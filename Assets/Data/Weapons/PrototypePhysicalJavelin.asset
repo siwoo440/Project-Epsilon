@@ -14,7 +14,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::ProjectEpsilon.Data.WeaponData
   id: physical_javelin
   displayName: 물리 속사 직사 포탑
-  artwork: {fileID: 21300000, guid: f873d6246f772fb41a1fb370949f0060, type: 3}
+  artwork: {fileID: 21300000, guid: 9b64058910f010e489884ba255d4340a, type: 3}
+  icon: {fileID: 21300000, guid: cbfd275a5b9daa2438ffcb1dcc6eea5d, type: 3}
   attribute: 0
   attackType: 1
   baseDamage: 6

@@ -14,7 +14,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::ProjectEpsilon.Data.WeaponData
   id: poison_blade
   displayName: 독 근접 포탑
-  artwork: {fileID: 21300000, guid: f873d6246f772fb41a1fb370949f0060, type: 3}
+  artwork: {fileID: 21300000, guid: 37c650684ecfc214886cb362574db54e, type: 3}
+  icon: {fileID: 21300000, guid: fa11e2635a06a4a4bbe388fde64f89f0, type: 3}
   attribute: 4
   attackType: 0
   baseDamage: 9

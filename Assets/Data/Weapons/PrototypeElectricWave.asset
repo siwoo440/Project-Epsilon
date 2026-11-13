@@ -14,7 +14,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::ProjectEpsilon.Data.WeaponData
   id: electric_wave
   displayName: 전기 파동 포탑
-  artwork: {fileID: 21300000, guid: f873d6246f772fb41a1fb370949f0060, type: 3}
+  artwork: {fileID: 21300000, guid: 9e86f06cfed52cd43b94bf1322393c80, type: 3}
+  icon: {fileID: 21300000, guid: ee4c69d3ab585ac41be23d1b7917de2e, type: 3}
   attribute: 3
   attackType: 3
   baseDamage: 9

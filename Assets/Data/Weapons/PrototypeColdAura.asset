@@ -14,7 +14,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::ProjectEpsilon.Data.WeaponData
   id: cold_aura
   displayName: 냉기 범위 포탑
-  artwork: {fileID: 21300000, guid: f873d6246f772fb41a1fb370949f0060, type: 3}
+  artwork: {fileID: 21300000, guid: 06f98544659171f4c8fa18fb213d3707, type: 3}
+  icon: {fileID: 21300000, guid: 0fabe681a6abd2a4790e958939a31c8e, type: 3}
   attribute: 2
   attackType: 3
   baseDamage: 6

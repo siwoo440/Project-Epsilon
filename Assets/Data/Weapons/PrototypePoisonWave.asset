@@ -14,7 +14,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::ProjectEpsilon.Data.WeaponData
   id: poison_wave
   displayName: 독 파동 포탑
-  artwork: {fileID: 21300000, guid: f873d6246f772fb41a1fb370949f0060, type: 3}
+  artwork: {fileID: 21300000, guid: 80a3c45bfa6ae0a4d87f048378c892dd, type: 3}
+  icon: {fileID: 21300000, guid: f6648694f25d1174b96e58063388dab9, type: 3}
   attribute: 4
   attackType: 3
   baseDamage: 9

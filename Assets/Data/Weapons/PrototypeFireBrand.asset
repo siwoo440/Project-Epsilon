@@ -14,7 +14,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::ProjectEpsilon.Data.WeaponData
   id: fire_brand
   displayName: 화염 중근접 포탑
-  artwork: {fileID: 21300000, guid: f873d6246f772fb41a1fb370949f0060, type: 3}
+  artwork: {fileID: 21300000, guid: a20adf374c8aab64dabf4640b4207504, type: 3}
+  icon: {fileID: 21300000, guid: 013d6e61604cbfc43bbe2240dba0412b, type: 3}
   attribute: 1
   attackType: 0
   baseDamage: 12

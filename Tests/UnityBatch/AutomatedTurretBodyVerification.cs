@@ -101,7 +101,7 @@ namespace ProjectEpsilon.Editor // 배치 시험 영역
             WeaponData steel = AssetDatabase.LoadAssetAtPath<WeaponData>("Assets/Data/Weapons/DebugBlade.asset"); // 실제 강철 근접 포탑
             WeaponData fire = AssetDatabase.LoadAssetAtPath<WeaponData>("Assets/Data/Weapons/DebugBlaster.asset"); // 실제 화염탄 포탑
             Require(steel != null && fire != null && steel.DisplayName == "강철 근접 포탑" && fire.DisplayName == "화염탄 포탑", "Turret names are not synchronized."); // 실제 시험용 포탑 이름 확인
-            Require(steel.Artwork != null && steel.Artwork.name == "WeaponTurret_Casual" && fire.Artwork == steel.Artwork, "Generated turret artwork missing."); // 실제 공용 포탑 이미지 확인
+            Require(steel.Artwork != null && fire.Artwork != null && fire.Artwork != steel.Artwork, "Distinct turret artwork missing."); // 포탑별 개별 이미지 확인
             weapons.Slots[0].Origin.position = new Vector3(0f, 50f, 0f); // 첫 몸통 시험 위치
             weapons.Slots[1].Origin.position = new Vector3(50f, 50f, 0f); // 둘째 몸통 시험 위치
             Require(weapons.TryEquipAt(0, steel) && weapons.TryEquipAt(1, fire), "Could not equip turrets."); // 실제 두 몸통 무기 장착
@@ -125,7 +125,7 @@ namespace ProjectEpsilon.Editor // 배치 시험 영역
             yield return null; // 대상 제거 후 갱신
             yield return null; // 실제 마지막 방향 유지 대기
             Require(Quaternion.Angle(held, firstVisual.rotation) < 0.1f, "Turret did not retain the last direction without targets."); // 대상 없는 마지막 방향 유지 확인
-            Require(firstVisual.GetComponent<SpriteRenderer>().color != secondVisual.GetComponent<SpriteRenderer>().color, "Turret attributes have no color distinction."); // 속성별 포탑 색상 구분 확인
+            Require(firstVisual.GetComponent<SpriteRenderer>().sprite != secondVisual.GetComponent<SpriteRenderer>().sprite, "Turret types have no artwork distinction."); // 몸통별 포탑 이미지 구분 확인
             AutomatedTurretBodyVerification.Finish(0, "Halved actual player hitboxes/body and per-body moving-target turret aiming."); // 전체 성공 기록
         }
         private static WeaponTarget CreateTarget(string name, Vector3 position) // 실제 전투 표적 생성

@@ -1,0 +1,429 @@
+fileFormatVersion: 2
+guid: c2f08700eae45974ebedcabca4cb33c2
+TextureImporter:
+  internalIDToNameTable:
+  - first:
+      213: -2022092544186732944
+    second: Turret_ExplosionAura_0
+  - first:
+      213: -1615923100106919150
+    second: Turret_ExplosionAura_1
+  - first:
+      213: -5418800034493334586
+    second: Turret_ExplosionAura_2
+  - first:
+      213: 4356171443349323234
+    second: Turret_ExplosionAura_3
+  - first:
+      213: 629153362719344057
+    second: Turret_ExplosionAura_4
+  - first:
+      213: 6089377909032784086
+    second: Turret_ExplosionAura_5
+  - first:
+      213: 959485928557478172
+    second: Turret_ExplosionAura_6
+  - first:
+      213: 6512148352341285702
+    second: Turret_ExplosionAura_7
+  - first:
+      213: -3566464093957556693
+    second: Turret_ExplosionAura_8
+  - first:
+      213: -3500420627484135117
+    second: Turret_ExplosionAura_9
+  - first:
+      213: 8415886497717950415
+    second: Turret_ExplosionAura_10
+  - first:
+      213: 7434959972207264312
+    second: Turret_ExplosionAura_11
+  externalObjects: {}
+  serializedVersion: 13
+  mipmaps:
+    mipMapMode: 0
+    enableMipMap: 0
+    sRGBTexture: 1
+    linearTexture: 0
+    fadeOut: 0
+    borderMipMap: 0
+    mipMapsPreserveCoverage: 0
+    alphaTestReferenceValue: 0.5
+    mipMapFadeDistanceStart: 1
+    mipMapFadeDistanceEnd: 3
+  bumpmap:
+    convertToNormalMap: 0
+    externalNormalMap: 0
+    heightScale: 0.25
+    normalMapFilter: 0
+    flipGreenChannel: 0
+  isReadable: 0
+  streamingMipmaps: 0
+  streamingMipmapsPriority: 0
+  vTOnly: 0
+  ignoreMipmapLimit: 0
+  grayScaleToAlpha: 0
+  generateCubemap: 6
+  cubemapConvolution: 0
+  seamlessCubemap: 0
+  textureFormat: 1
+  maxTextureSize: 2048
+  textureSettings:
+    serializedVersion: 2
+    filterMode: 1
+    aniso: 1
+    mipBias: 0
+    wrapU: 1
+    wrapV: 1
+    wrapW: 1
+  nPOTScale: 0
+  lightmap: 0
+  compressionQuality: 50
+  spriteMode: 1
+  spriteExtrude: 1
+  spriteMeshType: 1
+  alignment: 0
+  spritePivot: {x: 0.5, y: 0.5}
+  spritePixelsToUnits: 1000
+  spriteBorder: {x: 0, y: 0, z: 0, w: 0}
+  spriteGenerateFallbackPhysicsShape: 1
+  alphaUsage: 1
+  alphaIsTransparency: 1
+  spriteTessellationDetail: -1
+  textureType: 8
+  textureShape: 1
+  singleChannelComponent: 0
+  flipbookRows: 1
+  flipbookColumns: 1
+  maxTextureSizeSet: 0
+  compressionQualitySet: 0
+  textureFormatSet: 0
+  ignorePngGamma: 0
+  applyGammaDecoding: 0
+  swizzle: 50462976
+  cookieLightType: 0
+  platformSettings:
+  - serializedVersion: 4
+    buildTarget: DefaultTexturePlatform
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 4
+    buildTarget: Standalone
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  spriteSheet:
+    serializedVersion: 2
+    sprites:
+    - serializedVersion: 2
+      name: Turret_ExplosionAura_0
+      rect:
+        serializedVersion: 2
+        x: 40
+        y: 0
+        width: 1199
+        height: 1246
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData:
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 07ea8c86b8510f3e0800000000000000
+      internalID: -2022092544186732944
+      vertices: []
+      indices:
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Turret_ExplosionAura_1
+      rect:
+        serializedVersion: 2
+        x: 804
+        y: 1140
+        width: 19
+        height: 20
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData:
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 21377c180861399e0800000000000000
+      internalID: -1615923100106919150
+      vertices: []
+      indices:
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Turret_ExplosionAura_2
+      rect:
+        serializedVersion: 2
+        x: 873
+        y: 1147
+        width: 6
+        height: 8
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData:
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 6cb7623241e8cc4b0800000000000000
+      internalID: -5418800034493334586
+      vertices: []
+      indices:
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Turret_ExplosionAura_3
+      rect:
+        serializedVersion: 2
+        x: 30
+        y: 646
+        width: 35
+        height: 62
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData:
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 2ed798509da347c30800000000000000
+      internalID: 4356171443349323234
+      vertices: []
+      indices:
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Turret_ExplosionAura_4
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 467
+        width: 37
+        height: 112
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData:
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 9b5012666a33bb800800000000000000
+      internalID: 629153362719344057
+      vertices: []
+      indices:
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Turret_ExplosionAura_5
+      rect:
+        serializedVersion: 2
+        x: 96
+        y: 473
+        width: 18
+        height: 11
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData:
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 6d0920302f0d18450800000000000000
+      internalID: 6089377909032784086
+      vertices: []
+      indices:
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Turret_ExplosionAura_6
+      rect:
+        serializedVersion: 2
+        x: 1140
+        y: 457
+        width: 7
+        height: 6
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData:
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: c1187a25e57c05d00800000000000000
+      internalID: 959485928557478172
+      vertices: []
+      indices:
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Turret_ExplosionAura_7
+      rect:
+        serializedVersion: 2
+        x: 70
+        y: 417
+        width: 28
+        height: 35
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData:
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 64b92f17c6ccf5a50800000000000000
+      internalID: 6512148352341285702
+      vertices: []
+      indices:
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Turret_ExplosionAura_8
+      rect:
+        serializedVersion: 2
+        x: 1163
+        y: 377
+        width: 6
+        height: 7
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData:
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: b26797f6dcf518ec0800000000000000
+      internalID: -3566464093957556693
+      vertices: []
+      indices:
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Turret_ExplosionAura_9
+      rect:
+        serializedVersion: 2
+        x: 1155
+        y: 363
+        width: 18
+        height: 9
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData:
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 331bb5e3cf10c6fc0800000000000000
+      internalID: -3500420627484135117
+      vertices: []
+      indices:
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Turret_ExplosionAura_10
+      rect:
+        serializedVersion: 2
+        x: 858
+        y: 109
+        width: 15
+        height: 24
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData:
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: fc71c7e2e2c3bc470800000000000000
+      internalID: 8415886497717950415
+      vertices: []
+      indices:
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Turret_ExplosionAura_11
+      rect:
+        serializedVersion: 2
+        x: 500
+        y: 65
+        width: 12
+        height: 9
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData:
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 83289aed3b84e2760800000000000000
+      internalID: 7434959972207264312
+      vertices: []
+      indices:
+      edges: []
+      weights: []
+    outline: []
+    customData:
+    physicsShape: []
+    bones: []
+    spriteID: 5e97eb03825dee720800000000000000
+    internalID: 0
+    vertices: []
+    indices:
+    edges: []
+    weights: []
+    secondaryTextures: []
+    spriteCustomMetadata:
+      entries: []
+    nameFileIdTable:
+      Turret_ExplosionAura_0: -2022092544186732944
+      Turret_ExplosionAura_1: -1615923100106919150
+      Turret_ExplosionAura_10: 8415886497717950415
+      Turret_ExplosionAura_11: 7434959972207264312
+      Turret_ExplosionAura_2: -5418800034493334586
+      Turret_ExplosionAura_3: 4356171443349323234
+      Turret_ExplosionAura_4: 629153362719344057
+      Turret_ExplosionAura_5: 6089377909032784086
+      Turret_ExplosionAura_6: 959485928557478172
+      Turret_ExplosionAura_7: 6512148352341285702
+      Turret_ExplosionAura_8: -3566464093957556693
+      Turret_ExplosionAura_9: -3500420627484135117
+  mipmapLimitGroupName:
+  pSDRemoveMatte: 0
+  userData:
+  assetBundleName:
+  assetBundleVariant:

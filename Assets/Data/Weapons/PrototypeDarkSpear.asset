@@ -14,7 +14,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::ProjectEpsilon.Data.WeaponData
   id: dark_spear
   displayName: 암흑 관통 포탑
-  artwork: {fileID: 21300000, guid: f873d6246f772fb41a1fb370949f0060, type: 3}
+  artwork: {fileID: 21300000, guid: 4c01b735ebc48de4ab84bd983da6fb5d, type: 3}
+  icon: {fileID: 21300000, guid: 47aeefb2916f8554a9d9f9d9b6de3ea3, type: 3}
   attribute: 7
   attackType: 1
   baseDamage: 7

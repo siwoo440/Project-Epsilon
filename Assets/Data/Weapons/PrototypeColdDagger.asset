@@ -14,7 +14,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::ProjectEpsilon.Data.WeaponData
   id: cold_dagger
   displayName: 냉기 속사 근접 포탑
-  artwork: {fileID: 21300000, guid: f873d6246f772fb41a1fb370949f0060, type: 3}
+  artwork: {fileID: 21300000, guid: 499b70ed94e85c24c8eef4d63378339e, type: 3}
+  icon: {fileID: 21300000, guid: 59da8200dfa9b5247bf9723902ff1b42, type: 3}
   attribute: 2
   attackType: 0
   baseDamage: 6

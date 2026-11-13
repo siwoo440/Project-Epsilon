@@ -1,0 +1,455 @@
+fileFormatVersion: 2
+guid: 8ed21098b3dc0d2488747d9aba403d7f
+TextureImporter:
+  internalIDToNameTable:
+  - first:
+      213: -623937162855583300
+    second: Turret_HolyBlade_0
+  - first:
+      213: 2031418266130486293
+    second: Turret_HolyBlade_1
+  - first:
+      213: 3727065230396229297
+    second: Turret_HolyBlade_2
+  - first:
+      213: -1522709106702218976
+    second: Turret_HolyBlade_3
+  - first:
+      213: 1581832804888116802
+    second: Turret_HolyBlade_4
+  - first:
+      213: -6389736848514962814
+    second: Turret_HolyBlade_5
+  - first:
+      213: 8347587953850864524
+    second: Turret_HolyBlade_6
+  - first:
+      213: -5790346273544939204
+    second: Turret_HolyBlade_7
+  - first:
+      213: 3812182599243200842
+    second: Turret_HolyBlade_8
+  - first:
+      213: 3540976677580201951
+    second: Turret_HolyBlade_9
+  - first:
+      213: -3991251576512318392
+    second: Turret_HolyBlade_10
+  - first:
+      213: -6352675548491014362
+    second: Turret_HolyBlade_11
+  - first:
+      213: 3126262208474336090
+    second: Turret_HolyBlade_12
+  externalObjects: {}
+  serializedVersion: 13
+  mipmaps:
+    mipMapMode: 0
+    enableMipMap: 0
+    sRGBTexture: 1
+    linearTexture: 0
+    fadeOut: 0
+    borderMipMap: 0
+    mipMapsPreserveCoverage: 0
+    alphaTestReferenceValue: 0.5
+    mipMapFadeDistanceStart: 1
+    mipMapFadeDistanceEnd: 3
+  bumpmap:
+    convertToNormalMap: 0
+    externalNormalMap: 0
+    heightScale: 0.25
+    normalMapFilter: 0
+    flipGreenChannel: 0
+  isReadable: 0
+  streamingMipmaps: 0
+  streamingMipmapsPriority: 0
+  vTOnly: 0
+  ignoreMipmapLimit: 0
+  grayScaleToAlpha: 0
+  generateCubemap: 6
+  cubemapConvolution: 0
+  seamlessCubemap: 0
+  textureFormat: 1
+  maxTextureSize: 2048
+  textureSettings:
+    serializedVersion: 2
+    filterMode: 1
+    aniso: 1
+    mipBias: 0
+    wrapU: 1
+    wrapV: 1
+    wrapW: 1
+  nPOTScale: 0
+  lightmap: 0
+  compressionQuality: 50
+  spriteMode: 1
+  spriteExtrude: 1
+  spriteMeshType: 1
+  alignment: 0
+  spritePivot: {x: 0.5, y: 0.5}
+  spritePixelsToUnits: 1000
+  spriteBorder: {x: 0, y: 0, z: 0, w: 0}
+  spriteGenerateFallbackPhysicsShape: 1
+  alphaUsage: 1
+  alphaIsTransparency: 1
+  spriteTessellationDetail: -1
+  textureType: 8
+  textureShape: 1
+  singleChannelComponent: 0
+  flipbookRows: 1
+  flipbookColumns: 1
+  maxTextureSizeSet: 0
+  compressionQualitySet: 0
+  textureFormatSet: 0
+  ignorePngGamma: 0
+  applyGammaDecoding: 0
+  swizzle: 50462976
+  cookieLightType: 0
+  platformSettings:
+  - serializedVersion: 4
+    buildTarget: DefaultTexturePlatform
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 4
+    buildTarget: Standalone
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  spriteSheet:
+    serializedVersion: 2
+    sprites:
+    - serializedVersion: 2
+      name: Turret_HolyBlade_0
+      rect:
+        serializedVersion: 2
+        x: 32
+        y: 27
+        width: 1207
+        height: 1193
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData:
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: cb1f3d5c4745757f0800000000000000
+      internalID: -623937162855583300
+      vertices: []
+      indices:
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Turret_HolyBlade_1
+      rect:
+        serializedVersion: 2
+        x: 611
+        y: 1142
+        width: 51
+        height: 94
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData:
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 51492fe662c013c10800000000000000
+      internalID: 2031418266130486293
+      vertices: []
+      indices:
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Turret_HolyBlade_2
+      rect:
+        serializedVersion: 2
+        x: 802
+        y: 1059
+        width: 27
+        height: 25
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData:
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 1b60a78841239b330800000000000000
+      internalID: 3727065230396229297
+      vertices: []
+      indices:
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Turret_HolyBlade_3
+      rect:
+        serializedVersion: 2
+        x: 982
+        y: 1064
+        width: 6
+        height: 11
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData:
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 02903c692204edae0800000000000000
+      internalID: -1522709106702218976
+      vertices: []
+      indices:
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Turret_HolyBlade_4
+      rect:
+        serializedVersion: 2
+        x: 418
+        y: 1050
+        width: 7
+        height: 11
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData:
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 24e7a6d1e8cc3f510800000000000000
+      internalID: 1581832804888116802
+      vertices: []
+      indices:
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Turret_HolyBlade_5
+      rect:
+        serializedVersion: 2
+        x: 743
+        y: 1045
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData:
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 28aaa08c0381357a0800000000000000
+      internalID: -6389736848514962814
+      vertices: []
+      indices:
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Turret_HolyBlade_6
+      rect:
+        serializedVersion: 2
+        x: 820
+        y: 1044
+        width: 7
+        height: 10
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData:
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: c835c90440798d370800000000000000
+      internalID: 8347587953850864524
+      vertices: []
+      indices:
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Turret_HolyBlade_7
+      rect:
+        serializedVersion: 2
+        x: 350
+        y: 222
+        width: 35
+        height: 19
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData:
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: c39d8d62ebe84afa0800000000000000
+      internalID: -5790346273544939204
+      vertices: []
+      indices:
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Turret_HolyBlade_8
+      rect:
+        serializedVersion: 2
+        x: 868
+        y: 216
+        width: 47
+        height: 51
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData:
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: a49f0de40e797e430800000000000000
+      internalID: 3812182599243200842
+      vertices: []
+      indices:
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Turret_HolyBlade_9
+      rect:
+        serializedVersion: 2
+        x: 926
+        y: 226
+        width: 6
+        height: 7
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData:
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: fdf5c110783142130800000000000000
+      internalID: 3540976677580201951
+      vertices: []
+      indices:
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Turret_HolyBlade_10
+      rect:
+        serializedVersion: 2
+        x: 778
+        y: 192
+        width: 17
+        height: 19
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData:
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 844f3c476d93c98c0800000000000000
+      internalID: -3991251576512318392
+      vertices: []
+      indices:
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Turret_HolyBlade_11
+      rect:
+        serializedVersion: 2
+        x: 112
+        y: 111
+        width: 10
+        height: 11
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData:
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 62f12ee1f33c6d7a0800000000000000
+      internalID: -6352675548491014362
+      vertices: []
+      indices:
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Turret_HolyBlade_12
+      rect:
+        serializedVersion: 2
+        x: 303
+        y: 110
+        width: 6
+        height: 6
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData:
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: a5b47da3ae6b26b20800000000000000
+      internalID: 3126262208474336090
+      vertices: []
+      indices:
+      edges: []
+      weights: []
+    outline: []
+    customData:
+    physicsShape: []
+    bones: []
+    spriteID: 5e97eb03825dee720800000000000000
+    internalID: 0
+    vertices: []
+    indices:
+    edges: []
+    weights: []
+    secondaryTextures: []
+    spriteCustomMetadata:
+      entries: []
+    nameFileIdTable:
+      Turret_HolyBlade_0: -623937162855583300
+      Turret_HolyBlade_1: 2031418266130486293
+      Turret_HolyBlade_10: -3991251576512318392
+      Turret_HolyBlade_11: -6352675548491014362
+      Turret_HolyBlade_12: 3126262208474336090
+      Turret_HolyBlade_2: 3727065230396229297
+      Turret_HolyBlade_3: -1522709106702218976
+      Turret_HolyBlade_4: 1581832804888116802
+      Turret_HolyBlade_5: -6389736848514962814
+      Turret_HolyBlade_6: 8347587953850864524
+      Turret_HolyBlade_7: -5790346273544939204
+      Turret_HolyBlade_8: 3812182599243200842
+      Turret_HolyBlade_9: 3540976677580201951
+  mipmapLimitGroupName:
+  pSDRemoveMatte: 0
+  userData:
+  assetBundleName:
+  assetBundleVariant:

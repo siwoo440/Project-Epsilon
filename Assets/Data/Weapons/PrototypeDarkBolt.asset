@@ -14,7 +14,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::ProjectEpsilon.Data.WeaponData
   id: dark_bolt
   displayName: 암흑 직사 포탑
-  artwork: {fileID: 21300000, guid: f873d6246f772fb41a1fb370949f0060, type: 3}
+  artwork: {fileID: 21300000, guid: cd48ea9c287deff4a9ae12a7201f213e, type: 3}
+  icon: {fileID: 21300000, guid: 4484eef7b8bcf7446bff2b9238f45f5e, type: 3}
   attribute: 7
   attackType: 1
   baseDamage: 8

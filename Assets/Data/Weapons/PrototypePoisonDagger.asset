@@ -14,7 +14,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::ProjectEpsilon.Data.WeaponData
   id: poison_dagger
   displayName: 독 속사 근접 포탑
-  artwork: {fileID: 21300000, guid: f873d6246f772fb41a1fb370949f0060, type: 3}
+  artwork: {fileID: 21300000, guid: a7cde41e8253bee4dbed5bfba087945b, type: 3}
+  icon: {fileID: 21300000, guid: 9b099172815645348810175332c70f4f, type: 3}
   attribute: 4
   attackType: 0
   baseDamage: 6

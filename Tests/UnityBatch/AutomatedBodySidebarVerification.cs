@@ -135,21 +135,23 @@ namespace ProjectEpsilon.Editor // 실제 배치 시험 영역
             WeaponData blade = AssetDatabase.LoadAssetAtPath<WeaponData>("Assets/Data/Weapons/DebugBlade.asset"); // 실제 물리 포탑
             WeaponData fire = AssetDatabase.LoadAssetAtPath<WeaponData>("Assets/Data/Weapons/PrototypeFireBrand.asset"); // 실제 화염 포탑
             Require(blade != null && fire != null && weapons.TryEquipAt(0, blade) && weapons.TryEquipAt(1, blade), "Could not equip test turrets."); // 실제 포탑 두 개 장착
-            Require(Icon("SidebarWeapon_1") == blade.Artwork && Icon("SidebarWeapon_2") == blade.Artwork && TextValue("SidebarLabel_1").Contains(blade.DisplayName) && TextValue("SidebarAttribute_0").Contains("2단계"), "Turret image, order or synergy did not update."); // 실제 이미지와 물리 시너지 확인
+            Transform mounted = weapons.Slots[0].Origin.Find("WeaponVisual"); // 실제 몸통 포탑 그림
+            Require(mounted != null && mounted.GetComponent<SpriteRenderer>().sprite == blade.Artwork, "Mounted turret image differs from its data."); // 몸통과 포탑 데이터 일치 확인
+            Require(Icon("SidebarWeapon_1") == blade.Icon && Icon("SidebarWeapon_2") == blade.Icon && TextValue("SidebarLabel_1").Contains(blade.DisplayName) && TextValue("SidebarAttribute_0").Contains("2단계"), "Turret image, order or synergy did not update."); // 실제 아이콘과 물리 시너지 확인
             Text rowLabel = GameObject.Find("SidebarLabel_1").GetComponent<Text>(); // 실제 첫 포탑 이름 글자
             Require(rowLabel.alignment == TextAnchor.MiddleCenter && rowLabel.fontSize >= 22 && !rowLabel.text.Contains("\n") && !rowLabel.text.Contains("기본 공격"), "Turret name is not centered or still shows base attack details."); // 실제 가운데 정렬과 공격 상세 제거 확인
             Require(weapons.TryMergeSlots(0, 1, WeaponMergeUpgrade.Damage), "Could not merge test turrets."); // 실제 같은 포탑 합성
             Require(TextValue("SidebarLabel_1").Contains("★2") && Icon("SidebarWeapon_2") == null && !TextValue("SidebarAttribute_0").Contains("2단계"), "Merge grade or synergy did not update."); // 실제 합성 등급과 단계 갱신 확인
-            Require(weapons.TryEquipAt(1, fire) && Icon("SidebarWeapon_2") == fire.Artwork && TextValue("SidebarLabel_2").Contains("화염"), "Replacement turret image or attribute mismatch."); // 실제 교체 이미지와 속성 확인
+            Require(weapons.TryEquipAt(1, fire) && Icon("SidebarWeapon_2") == fire.Icon && TextValue("SidebarLabel_2").Contains("화염"), "Replacement turret image or attribute mismatch."); // 실제 교체 아이콘과 속성 확인
             Require(body.TryGainBodyFromLevelUp() && Visible("SidebarRow_4"), "Growth row did not appear."); // 실제 몸통 성장 행 확인
-            Require(weapons.TryEquipAt(3, fire) && Icon("SidebarWeapon_4") == fire.Artwork, "Tail turret image mismatch."); // 실제 꼬리 쪽 포탑 확인
+            Require(weapons.TryEquipAt(3, fire) && Icon("SidebarWeapon_4") == fire.Icon, "Tail turret image mismatch."); // 실제 꼬리 쪽 포탑 확인
             Require(body.TryRemoveBody() && !Visible("SidebarRow_4"), "Lost body row remained visible."); // 실제 몸통 손실 행 제거
             Require(body.TryRepairBody() && Visible("SidebarRow_4") && Icon("SidebarWeapon_4") == null, "Repaired body slot was not empty."); // 실제 복구 행과 빈 슬롯 확인
             while (body.CurrentBodyCount < 20) // 실제 절대 몸통 상한까지 성장
             {
                 Require(body.TryGainBodyFromLevelUp(), "Could not grow to maximum body count."); // 실제 성장 성공 확인
             }
-            Require(Visible("SidebarRow_20") && weapons.TryEquipAt(19, fire) && Icon("SidebarWeapon_20") == fire.Artwork, "Twentieth body turret was not displayed."); // 실제 20번 몸통 이미지 확인
+            Require(Visible("SidebarRow_20") && weapons.TryEquipAt(19, fire) && Icon("SidebarWeapon_20") == fire.Icon, "Twentieth body turret was not displayed."); // 실제 20번 몸통 아이콘 확인
             RectTransform lastRow = (RectTransform)GameObject.Find("SidebarRow_20").transform; // 실제 마지막 몸통 행
             Require(lastRow.anchorMin.y >= 0f && lastRow.anchorMax.y <= 1f, "Last body row exceeds sidebar bounds."); // 실제 마지막 행 표시 영역 확인
             Require(body.TryRemoveBody() && !Visible("SidebarRow_20") && body.TryRepairBody() && Visible("SidebarRow_20") && Icon("SidebarWeapon_20") == null, "Twentieth body loss or repair failed."); // 실제 마지막 몸통 손실과 빈 복구 확인

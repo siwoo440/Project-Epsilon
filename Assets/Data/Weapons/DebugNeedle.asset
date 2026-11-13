@@ -14,7 +14,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::ProjectEpsilon.Data.WeaponData
   id: debug_needle
   displayName: 강철 관통 포탑
-  artwork: {fileID: 21300000, guid: f873d6246f772fb41a1fb370949f0060, type: 3}
+  artwork: {fileID: 21300000, guid: 288f4c1645d0f2d418aa8c0410a5bbb2, type: 3}
+  icon: {fileID: 21300000, guid: be8d9128b5fc6434c9aeea0bc09a8efc, type: 3}
   attribute: 0
   attackType: 1
   baseDamage: 8

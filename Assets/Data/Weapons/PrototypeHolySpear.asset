@@ -14,7 +14,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::ProjectEpsilon.Data.WeaponData
   id: holy_spear
   displayName: 신성 관통 포탑
-  artwork: {fileID: 21300000, guid: f873d6246f772fb41a1fb370949f0060, type: 3}
+  artwork: {fileID: 21300000, guid: 00533952156824941b20dcf5c921d044, type: 3}
+  icon: {fileID: 21300000, guid: 1b3bcb31d9799634db0bcea3f9296d4f, type: 3}
   attribute: 6
   attackType: 1
   baseDamage: 7

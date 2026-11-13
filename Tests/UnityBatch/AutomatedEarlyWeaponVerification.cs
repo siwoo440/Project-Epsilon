@@ -239,7 +239,7 @@ namespace ProjectEpsilon.Editor // 편집기 영역
             ClearObjects(); // 이전 표적과 투사체 제거
             activeWeapon = AssetDatabase.LoadAssetAtPath<WeaponData>("Assets/Data/Weapons/" + assetName + ".asset"); // 실제 시험용 무기 데이터
             Require(activeWeapon != null && activeWeapon.AttackType == type && activeWeapon.Attribute == attribute && Mathf.Approximately(activeWeapon.BaseDamage, damage) && Mathf.Approximately(activeWeapon.AttackInterval, interval), "Specification or asset mismatch for " + assetName); // 기획 임시값 및 유형 확인
-            Require(activeWeapon.Artwork != null && activeWeapon.Artwork.name == "WeaponTurret_Casual", "Generated turret artwork missing: " + assetName); // 실제 공용 포탑 이미지 연결 확인
+            Require(activeWeapon.Artwork != null, "Turret artwork missing: " + assetName); // 실제 포탑 이미지 연결 확인
             if (assetName == "DebugNeedle") // 강철 창 확인
             {
                 Require(activeWeapon.ProjectileHitLimit == 2, "Steel spear piercing setting is not two."); // 관통 임시값 확인

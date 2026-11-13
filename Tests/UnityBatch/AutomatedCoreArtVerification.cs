@@ -86,7 +86,7 @@ namespace ProjectEpsilon.Editor // 배치 시험 영역
         private static void VerifyWeapons(SnakeWeaponManager weapons, SnakeBodyManager body) // 실제 무기와 몸통 표시 검증
         {
             string[] files = { "DebugBlade", "DebugNeedle", "DebugNova", "DebugCutter", "DebugBlaster", "DebugPulse" }; // 실제 시험 무기 데이터
-            string[] images = { "WeaponTurret_Casual", "WeaponTurret_Casual", "WeaponTurret_Casual", "WeaponTurret_Casual", "WeaponTurret_Casual", "WeaponTurret_Casual" }; // 실제 공용 포탑 이미지
+            string[] images = { "Turret_PhysicalSteelMelee", "Turret_PhysicalSteelPierce", "Turret_PhysicalSteelShockwave", "Turret_FireMelee", "Turret_FireProjectile", "Turret_FireArea" }; // 기획서 포탑별 이미지
             PropertyInfo art = typeof(WeaponData).GetProperty("Artwork"); // 실제 무기 이미지 속성
             Require(art != null, "Actual weapon artwork property missing."); // 실제 데이터 연결 확인
             Require(weapons.Slots.Count >= 2 && body.CurrentBodyCount >= 2, "Actual weapon slots missing."); // 실제 몸통 슬롯 확인
@@ -119,7 +119,7 @@ namespace ProjectEpsilon.Editor // 배치 시험 영역
         {
             Transform visual = slot.Origin == null ? null : slot.Origin.Find("WeaponVisual"); // 실제 몸통 아래 무기 표시
             SpriteRenderer renderer = visual == null ? null : visual.GetComponent<SpriteRenderer>(); // 실제 무기 표시기
-            Require(renderer != null && visual.gameObject.activeSelf && renderer.sprite == expected && renderer.color == slot.Weapon.ArtworkTint, "Actual weapon visual did not follow its slot."); // 실제 이미지와 색상 확인
+            Require(renderer != null && visual.gameObject.activeSelf && renderer.sprite == expected && renderer.color == slot.Weapon.ArtworkDisplayTint, "Actual weapon visual did not follow its slot."); // 원본 이미지와 색상 확인
             Require(visual.GetComponent<Collider2D>() == null, "Actual weapon decoration added a collider."); // 실제 공격 판정 영향 방지 확인
         }
         private static void VerifyGems(SnakeMovement player) // 실제 경험치 보석 이미지 검증
@@ -164,7 +164,7 @@ namespace ProjectEpsilon.Editor // 배치 시험 영역
             panel.ShowStartingWeapons(new[] { new WeaponRewardCandidate(weapon, 1) }); // 실제 시작 무기 후보 표시
             Transform icon = button == null ? null : button.transform.Find("WeaponArtwork"); // 실제 선택 무기 이미지
             Image image = icon == null ? null : icon.GetComponent<Image>(); // 실제 UI 이미지
-            Require(image != null && icon.gameObject.activeSelf && image.sprite == weapon.Artwork && !image.raycastTarget, "Actual weapon selection image was missing or blocked input."); // 실제 선택 이미지와 입력 확인
+            Require(image != null && icon.gameObject.activeSelf && image.sprite == weapon.Icon && !image.raycastTarget, "Actual weapon selection image was missing or blocked input."); // 실제 선택 아이콘과 입력 확인
             panel.ShowEliteRewards(new[] { "HEAL", "REPAIR", "WEAPON" }, new[] { true, true, true }); // 실제 엘리트 보상 화면 전환
             Require(!icon.gameObject.activeSelf && label.rectTransform.offsetMax == originalOffset, "Actual weapon image or label layout leaked into the elite reward screen."); // 실제 다른 화면 이미지와 문구 복구 확인
             panel.Hide(); // 실제 시험 화면 정리

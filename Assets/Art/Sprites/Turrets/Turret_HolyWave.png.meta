@@ -1,0 +1,1157 @@
+fileFormatVersion: 2
+guid: 547c1e9f3438a4c42ae20cdc1129e440
+TextureImporter:
+  internalIDToNameTable:
+  - first:
+      213: -7533101057842272245
+    second: Turret_HolyWave_0
+  - first:
+      213: -9039262923488064114
+    second: Turret_HolyWave_1
+  - first:
+      213: -8489816649288130761
+    second: Turret_HolyWave_2
+  - first:
+      213: 3493255427048367493
+    second: Turret_HolyWave_3
+  - first:
+      213: -1869949617808068069
+    second: Turret_HolyWave_4
+  - first:
+      213: 5437854912846879587
+    second: Turret_HolyWave_5
+  - first:
+      213: -3185861895389497207
+    second: Turret_HolyWave_6
+  - first:
+      213: -8952912672417280900
+    second: Turret_HolyWave_7
+  - first:
+      213: -4506045171430288625
+    second: Turret_HolyWave_8
+  - first:
+      213: -8838824374759583762
+    second: Turret_HolyWave_9
+  - first:
+      213: 7118504024422685606
+    second: Turret_HolyWave_10
+  - first:
+      213: -5097981354715466729
+    second: Turret_HolyWave_11
+  - first:
+      213: -3547400789599925647
+    second: Turret_HolyWave_12
+  - first:
+      213: 2641074764301340304
+    second: Turret_HolyWave_13
+  - first:
+      213: -6765116708223194632
+    second: Turret_HolyWave_14
+  - first:
+      213: -5304155022306842613
+    second: Turret_HolyWave_15
+  - first:
+      213: -3317046595225181004
+    second: Turret_HolyWave_16
+  - first:
+      213: -7468123231049620715
+    second: Turret_HolyWave_17
+  - first:
+      213: -3969476632861839803
+    second: Turret_HolyWave_18
+  - first:
+      213: -3533288555251402447
+    second: Turret_HolyWave_19
+  - first:
+      213: -6432887971313708800
+    second: Turret_HolyWave_20
+  - first:
+      213: 5745762466658265127
+    second: Turret_HolyWave_21
+  - first:
+      213: 1543061724739011093
+    second: Turret_HolyWave_22
+  - first:
+      213: -5009075219635075048
+    second: Turret_HolyWave_23
+  - first:
+      213: -3626929690252923171
+    second: Turret_HolyWave_24
+  - first:
+      213: -189472191566643243
+    second: Turret_HolyWave_25
+  - first:
+      213: 5313844501025681357
+    second: Turret_HolyWave_26
+  - first:
+      213: -5320119451855389379
+    second: Turret_HolyWave_27
+  - first:
+      213: 6011924667925206058
+    second: Turret_HolyWave_28
+  - first:
+      213: -7847584051952988180
+    second: Turret_HolyWave_29
+  - first:
+      213: -7806951273935064686
+    second: Turret_HolyWave_30
+  - first:
+      213: 1926658976402956087
+    second: Turret_HolyWave_31
+  - first:
+      213: -201082310814695348
+    second: Turret_HolyWave_32
+  - first:
+      213: -57182839518427682
+    second: Turret_HolyWave_33
+  - first:
+      213: 2600652414538260963
+    second: Turret_HolyWave_34
+  - first:
+      213: -6715687927460788475
+    second: Turret_HolyWave_35
+  - first:
+      213: -6500480077399879557
+    second: Turret_HolyWave_36
+  - first:
+      213: 1458764793380609957
+    second: Turret_HolyWave_37
+  - first:
+      213: -668810864352001369
+    second: Turret_HolyWave_38
+  - first:
+      213: 2195971710672485603
+    second: Turret_HolyWave_39
+  externalObjects: {}
+  serializedVersion: 13
+  mipmaps:
+    mipMapMode: 0
+    enableMipMap: 0
+    sRGBTexture: 1
+    linearTexture: 0
+    fadeOut: 0
+    borderMipMap: 0
+    mipMapsPreserveCoverage: 0
+    alphaTestReferenceValue: 0.5
+    mipMapFadeDistanceStart: 1
+    mipMapFadeDistanceEnd: 3
+  bumpmap:
+    convertToNormalMap: 0
+    externalNormalMap: 0
+    heightScale: 0.25
+    normalMapFilter: 0
+    flipGreenChannel: 0
+  isReadable: 0
+  streamingMipmaps: 0
+  streamingMipmapsPriority: 0
+  vTOnly: 0
+  ignoreMipmapLimit: 0
+  grayScaleToAlpha: 0
+  generateCubemap: 6
+  cubemapConvolution: 0
+  seamlessCubemap: 0
+  textureFormat: 1
+  maxTextureSize: 2048
+  textureSettings:
+    serializedVersion: 2
+    filterMode: 1
+    aniso: 1
+    mipBias: 0
+    wrapU: 1
+    wrapV: 1
+    wrapW: 1
+  nPOTScale: 0
+  lightmap: 0
+  compressionQuality: 50
+  spriteMode: 1
+  spriteExtrude: 1
+  spriteMeshType: 1
+  alignment: 0
+  spritePivot: {x: 0.5, y: 0.5}
+  spritePixelsToUnits: 1000
+  spriteBorder: {x: 0, y: 0, z: 0, w: 0}
+  spriteGenerateFallbackPhysicsShape: 1
+  alphaUsage: 1
+  alphaIsTransparency: 1
+  spriteTessellationDetail: -1
+  textureType: 8
+  textureShape: 1
+  singleChannelComponent: 0
+  flipbookRows: 1
+  flipbookColumns: 1
+  maxTextureSizeSet: 0
+  compressionQualitySet: 0
+  textureFormatSet: 0
+  ignorePngGamma: 0
+  applyGammaDecoding: 0
+  swizzle: 50462976
+  cookieLightType: 0
+  platformSettings:
+  - serializedVersion: 4
+    buildTarget: DefaultTexturePlatform
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 4
+    buildTarget: Standalone
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  spriteSheet:
+    serializedVersion: 2
+    sprites:
+    - serializedVersion: 2
+      name: Turret_HolyWave_0
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 0
+        width: 1225
+        height: 1219
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData:
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: b08213eff7c057790800000000000000
+      internalID: -7533101057842272245
+      vertices: []
+      indices:
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Turret_HolyWave_1
+      rect:
+        serializedVersion: 2
+        x: 764
+        y: 1154
+        width: 71
+        height: 65
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData:
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: e8d822e53461e8280800000000000000
+      internalID: -9039262923488064114
+      vertices: []
+      indices:
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Turret_HolyWave_2
+      rect:
+        serializedVersion: 2
+        x: 884
+        y: 1142
+        width: 12
+        height: 12
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData:
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 73fdbfa0dbc1e2a80800000000000000
+      internalID: -8489816649288130761
+      vertices: []
+      indices:
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Turret_HolyWave_3
+      rect:
+        serializedVersion: 2
+        x: 894
+        y: 1140
+        width: 34
+        height: 21
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData:
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 5856ce68d498a7030800000000000000
+      internalID: 3493255427048367493
+      vertices: []
+      indices:
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Turret_HolyWave_4
+      rect:
+        serializedVersion: 2
+        x: 426
+        y: 1140
+        width: 17
+        height: 12
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData:
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: b123ca2eaba9c06e0800000000000000
+      internalID: -1869949617808068069
+      vertices: []
+      indices:
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Turret_HolyWave_5
+      rect:
+        serializedVersion: 2
+        x: 774
+        y: 1124
+        width: 15
+        height: 17
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData:
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 36bd9547b34277b40800000000000000
+      internalID: 5437854912846879587
+      vertices: []
+      indices:
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Turret_HolyWave_6
+      rect:
+        serializedVersion: 2
+        x: 1077
+        y: 980
+        width: 19
+        height: 22
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData:
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 9883bdd4c7b89c3d0800000000000000
+      internalID: -3185861895389497207
+      vertices: []
+      indices:
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Turret_HolyWave_7
+      rect:
+        serializedVersion: 2
+        x: 127
+        y: 889
+        width: 55
+        height: 62
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData:
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: c7c8977eb5dd0c380800000000000000
+      internalID: -8952912672417280900
+      vertices: []
+      indices:
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Turret_HolyWave_8
+      rect:
+        serializedVersion: 2
+        x: 1031
+        y: 937
+        width: 41
+        height: 28
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData:
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: f0398076acf4771c0800000000000000
+      internalID: -4506045171430288625
+      vertices: []
+      indices:
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Turret_HolyWave_9
+      rect:
+        serializedVersion: 2
+        x: 1081
+        y: 932
+        width: 23
+        height: 25
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData:
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: eef046eaf00365580800000000000000
+      internalID: -8838824374759583762
+      vertices: []
+      indices:
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Turret_HolyWave_10
+      rect:
+        serializedVersion: 2
+        x: 1103
+        y: 931
+        width: 21
+        height: 19
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData:
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 6ab17ebd1b10ac260800000000000000
+      internalID: 7118504024422685606
+      vertices: []
+      indices:
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Turret_HolyWave_11
+      rect:
+        serializedVersion: 2
+        x: 145
+        y: 884
+        width: 11
+        height: 11
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData:
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 714be98d7f45049b0800000000000000
+      internalID: -5097981354715466729
+      vertices: []
+      indices:
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Turret_HolyWave_12
+      rect:
+        serializedVersion: 2
+        x: 1043
+        y: 803
+        width: 100
+        height: 130
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData:
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 17ac4fbd6c915cec0800000000000000
+      internalID: -3547400789599925647
+      vertices: []
+      indices:
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Turret_HolyWave_13
+      rect:
+        serializedVersion: 2
+        x: 139
+        y: 839
+        width: 7
+        height: 9
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData:
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 09e0e6f418bf6a420800000000000000
+      internalID: 2641074764301340304
+      vertices: []
+      indices:
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Turret_HolyWave_14
+      rect:
+        serializedVersion: 2
+        x: 143
+        y: 833
+        width: 35
+        height: 37
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData:
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 8f9eb4e623a7d12a0800000000000000
+      internalID: -6765116708223194632
+      vertices: []
+      indices:
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Turret_HolyWave_15
+      rect:
+        serializedVersion: 2
+        x: 1157
+        y: 835
+        width: 6
+        height: 9
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData:
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: b08ebcd1c1bd366b0800000000000000
+      internalID: -5304155022306842613
+      vertices: []
+      indices:
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Turret_HolyWave_16
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 666
+        width: 102
+        height: 130
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData:
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 4b42f2432bb77f1d0800000000000000
+      internalID: -3317046595225181004
+      vertices: []
+      indices:
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Turret_HolyWave_17
+      rect:
+        serializedVersion: 2
+        x: 78
+        y: 795
+        width: 60
+        height: 35
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData:
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 513e17a3d75eb5890800000000000000
+      internalID: -7468123231049620715
+      vertices: []
+      indices:
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Turret_HolyWave_18
+      rect:
+        serializedVersion: 2
+        x: 122
+        y: 744
+        width: 36
+        height: 57
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData:
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 54e6e0a980699e8c0800000000000000
+      internalID: -3969476632861839803
+      vertices: []
+      indices:
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Turret_HolyWave_19
+      rect:
+        serializedVersion: 2
+        x: 1093
+        y: 787
+        width: 7
+        height: 10
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData:
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 139794777cc37fec0800000000000000
+      internalID: -3533288555251402447
+      vertices: []
+      indices:
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Turret_HolyWave_20
+      rect:
+        serializedVersion: 2
+        x: 1155
+        y: 803
+        width: 15
+        height: 25
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData:
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 00196f5197ac9b6a0800000000000000
+      internalID: -6432887971313708800
+      vertices: []
+      indices:
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Turret_HolyWave_21
+      rect:
+        serializedVersion: 2
+        x: 104
+        y: 782
+        width: 10
+        height: 8
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData:
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 72820f4658c0dbf40800000000000000
+      internalID: 5745762466658265127
+      vertices: []
+      indices:
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Turret_HolyWave_22
+      rect:
+        serializedVersion: 2
+        x: 94
+        y: 761
+        width: 6
+        height: 7
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData:
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 5120291967e0a6510800000000000000
+      internalID: 1543061724739011093
+      vertices: []
+      indices:
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Turret_HolyWave_23
+      rect:
+        serializedVersion: 2
+        x: 1137
+        y: 761
+        width: 10
+        height: 15
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData:
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 818807080a03c7ab0800000000000000
+      internalID: -5009075219635075048
+      vertices: []
+      indices:
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Turret_HolyWave_24
+      rect:
+        serializedVersion: 2
+        x: 1149
+        y: 765
+        width: 10
+        height: 9
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData:
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: dde282bb9ae8aadc0800000000000000
+      internalID: -3626929690252923171
+      vertices: []
+      indices:
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Turret_HolyWave_25
+      rect:
+        serializedVersion: 2
+        x: 1133
+        y: 757
+        width: 8
+        height: 7
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData:
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 5dffadeab0cde5df0800000000000000
+      internalID: -189472191566643243
+      vertices: []
+      indices:
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Turret_HolyWave_26
+      rect:
+        serializedVersion: 2
+        x: 1155
+        y: 720
+        width: 16
+        height: 22
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData:
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: dcf6c437b619eb940800000000000000
+      internalID: 5313844501025681357
+      vertices: []
+      indices:
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Turret_HolyWave_27
+      rect:
+        serializedVersion: 2
+        x: 1165
+        y: 716
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData:
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: d3d7385bb832b26b0800000000000000
+      internalID: -5320119451855389379
+      vertices: []
+      indices:
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Turret_HolyWave_28
+      rect:
+        serializedVersion: 2
+        x: 1157
+        y: 610
+        width: 11
+        height: 11
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData:
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: a24171802a5ae6350800000000000000
+      internalID: 6011924667925206058
+      vertices: []
+      indices:
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Turret_HolyWave_29
+      rect:
+        serializedVersion: 2
+        x: 96
+        y: 537
+        width: 18
+        height: 19
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData:
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: cef425e02e7c71390800000000000000
+      internalID: -7847584051952988180
+      vertices: []
+      indices:
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Turret_HolyWave_30
+      rect:
+        serializedVersion: 2
+        x: 1161
+        y: 551
+        width: 8
+        height: 7
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData:
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 291315aed2328a390800000000000000
+      internalID: -7806951273935064686
+      vertices: []
+      indices:
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Turret_HolyWave_31
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 513
+        width: 92
+        height: 32
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData:
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 73fd0d3912edcba10800000000000000
+      internalID: 1926658976402956087
+      vertices: []
+      indices:
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Turret_HolyWave_32
+      rect:
+        serializedVersion: 2
+        x: 90
+        y: 529
+        width: 16
+        height: 20
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData:
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: c40864524bc953df0800000000000000
+      internalID: -201082310814695348
+      vertices: []
+      indices:
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Turret_HolyWave_33
+      rect:
+        serializedVersion: 2
+        x: 1131
+        y: 533
+        width: 8
+        height: 7
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData:
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: ed5814ba288d43ff0800000000000000
+      internalID: -57182839518427682
+      vertices: []
+      indices:
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Turret_HolyWave_34
+      rect:
+        serializedVersion: 2
+        x: 1139
+        y: 512
+        width: 41
+        height: 25
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData:
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 3e1a0d8979f571420800000000000000
+      internalID: 2600652414538260963
+      vertices: []
+      indices:
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Turret_HolyWave_35
+      rect:
+        serializedVersion: 2
+        x: 96
+        y: 513
+        width: 8
+        height: 11
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData:
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 507025549651dc2a0800000000000000
+      internalID: -6715687927460788475
+      vertices: []
+      indices:
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Turret_HolyWave_36
+      rect:
+        serializedVersion: 2
+        x: 64
+        y: 407
+        width: 118
+        height: 67
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData:
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: b7093158fc7a9c5a0800000000000000
+      internalID: -6500480077399879557
+      vertices: []
+      indices:
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Turret_HolyWave_37
+      rect:
+        serializedVersion: 2
+        x: 1073
+        y: 351
+        width: 72
+        height: 94
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData:
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 5af1c48c9d29e3410800000000000000
+      internalID: 1458764793380609957
+      vertices: []
+      indices:
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Turret_HolyWave_38
+      rect:
+        serializedVersion: 2
+        x: 1117
+        y: 441
+        width: 11
+        height: 11
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData:
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 7a28068ff08e7b6f0800000000000000
+      internalID: -668810864352001369
+      vertices: []
+      indices:
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Turret_HolyWave_39
+      rect:
+        serializedVersion: 2
+        x: 183
+        y: 392
+        width: 11
+        height: 12
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData:
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 3ecb077d2a8a97e10800000000000000
+      internalID: 2195971710672485603
+      vertices: []
+      indices:
+      edges: []
+      weights: []
+    outline: []
+    customData:
+    physicsShape: []
+    bones: []
+    spriteID: 5e97eb03825dee720800000000000000
+    internalID: 0
+    vertices: []
+    indices:
+    edges: []
+    weights: []
+    secondaryTextures: []
+    spriteCustomMetadata:
+      entries: []
+    nameFileIdTable:
+      Turret_HolyWave_0: -7533101057842272245
+      Turret_HolyWave_1: -9039262923488064114
+      Turret_HolyWave_10: 7118504024422685606
+      Turret_HolyWave_11: -5097981354715466729
+      Turret_HolyWave_12: -3547400789599925647
+      Turret_HolyWave_13: 2641074764301340304
+      Turret_HolyWave_14: -6765116708223194632
+      Turret_HolyWave_15: -5304155022306842613
+      Turret_HolyWave_16: -3317046595225181004
+      Turret_HolyWave_17: -7468123231049620715
+      Turret_HolyWave_18: -3969476632861839803
+      Turret_HolyWave_19: -3533288555251402447
+      Turret_HolyWave_2: -8489816649288130761
+      Turret_HolyWave_20: -6432887971313708800
+      Turret_HolyWave_21: 5745762466658265127
+      Turret_HolyWave_22: 1543061724739011093
+      Turret_HolyWave_23: -5009075219635075048
+      Turret_HolyWave_24: -3626929690252923171
+      Turret_HolyWave_25: -189472191566643243
+      Turret_HolyWave_26: 5313844501025681357
+      Turret_HolyWave_27: -5320119451855389379
+      Turret_HolyWave_28: 6011924667925206058
+      Turret_HolyWave_29: -7847584051952988180
+      Turret_HolyWave_3: 3493255427048367493
+      Turret_HolyWave_30: -7806951273935064686
+      Turret_HolyWave_31: 1926658976402956087
+      Turret_HolyWave_32: -201082310814695348
+      Turret_HolyWave_33: -57182839518427682
+      Turret_HolyWave_34: 2600652414538260963
+      Turret_HolyWave_35: -6715687927460788475
+      Turret_HolyWave_36: -6500480077399879557
+      Turret_HolyWave_37: 1458764793380609957
+      Turret_HolyWave_38: -668810864352001369
+      Turret_HolyWave_39: 2195971710672485603
+      Turret_HolyWave_4: -1869949617808068069
+      Turret_HolyWave_5: 5437854912846879587
+      Turret_HolyWave_6: -3185861895389497207
+      Turret_HolyWave_7: -8952912672417280900
+      Turret_HolyWave_8: -4506045171430288625
+      Turret_HolyWave_9: -8838824374759583762
+  mipmapLimitGroupName:
+  pSDRemoveMatte: 0
+  userData:
+  assetBundleName:
+  assetBundleVariant:

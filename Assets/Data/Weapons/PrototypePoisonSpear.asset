@@ -14,7 +14,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::ProjectEpsilon.Data.WeaponData
   id: poison_spear
   displayName: 독 관통 포탑
-  artwork: {fileID: 21300000, guid: f873d6246f772fb41a1fb370949f0060, type: 3}
+  artwork: {fileID: 21300000, guid: bd8a6ef858d48054885843f14a066080, type: 3}
+  icon: {fileID: 21300000, guid: 9ec7c5ed004a5254d8e76928f3fbc5aa, type: 3}
   attribute: 4
   attackType: 1
   baseDamage: 7

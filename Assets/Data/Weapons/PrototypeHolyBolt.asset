@@ -14,7 +14,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::ProjectEpsilon.Data.WeaponData
   id: holy_bolt
   displayName: 신성 직사 포탑
-  artwork: {fileID: 21300000, guid: f873d6246f772fb41a1fb370949f0060, type: 3}
+  artwork: {fileID: 21300000, guid: 8c5458ebed2db314680eb358f2e0ccee, type: 3}
+  icon: {fileID: 21300000, guid: a7f1e9a8ff31d2f43bc3ea9a024ed0ae, type: 3}
   attribute: 6
   attackType: 1
   baseDamage: 8

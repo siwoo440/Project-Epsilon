@@ -14,7 +14,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::ProjectEpsilon.Data.WeaponData
   id: dark_aura
   displayName: 암흑 범위 포탑
-  artwork: {fileID: 21300000, guid: f873d6246f772fb41a1fb370949f0060, type: 3}
+  artwork: {fileID: 21300000, guid: 1655b15332f79aa499b20d0e4e79c3e0, type: 3}
+  icon: {fileID: 21300000, guid: aba5eac53bc3d2e418899d5e4ba11b51, type: 3}
   attribute: 7
   attackType: 3
   baseDamage: 6
