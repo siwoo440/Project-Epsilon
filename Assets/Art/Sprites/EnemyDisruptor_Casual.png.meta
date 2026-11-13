@@ -1,0 +1,845 @@
+fileFormatVersion: 2
+guid: 30c222b2d09c3854e8c1e9311a3e2885
+TextureImporter:
+  internalIDToNameTable:
+  - first:
+      213: -2911409386069629824
+    second: EnemyDisruptor_Casual_0
+  - first:
+      213: -1155075564854395781
+    second: EnemyDisruptor_Casual_1
+  - first:
+      213: 1353949187737115131
+    second: EnemyDisruptor_Casual_2
+  - first:
+      213: 7628857508337104829
+    second: EnemyDisruptor_Casual_3
+  - first:
+      213: 3015630105553335160
+    second: EnemyDisruptor_Casual_4
+  - first:
+      213: 1370078047994347649
+    second: EnemyDisruptor_Casual_5
+  - first:
+      213: 6234226099870698130
+    second: EnemyDisruptor_Casual_6
+  - first:
+      213: -5163248990642271422
+    second: EnemyDisruptor_Casual_7
+  - first:
+      213: -2723092666921590634
+    second: EnemyDisruptor_Casual_8
+  - first:
+      213: -637204189439289640
+    second: EnemyDisruptor_Casual_9
+  - first:
+      213: 3428270955521686224
+    second: EnemyDisruptor_Casual_10
+  - first:
+      213: 6911139533616878590
+    second: EnemyDisruptor_Casual_11
+  - first:
+      213: -2333956834739965094
+    second: EnemyDisruptor_Casual_12
+  - first:
+      213: -8196066404755254307
+    second: EnemyDisruptor_Casual_13
+  - first:
+      213: 2796664374539784594
+    second: EnemyDisruptor_Casual_14
+  - first:
+      213: 1453136446141761251
+    second: EnemyDisruptor_Casual_15
+  - first:
+      213: 4457958853075721095
+    second: EnemyDisruptor_Casual_16
+  - first:
+      213: -7949361582865926791
+    second: EnemyDisruptor_Casual_17
+  - first:
+      213: -2526004927039822937
+    second: EnemyDisruptor_Casual_18
+  - first:
+      213: -6119442263006823544
+    second: EnemyDisruptor_Casual_19
+  - first:
+      213: -6926990809635647429
+    second: EnemyDisruptor_Casual_20
+  - first:
+      213: -5195943212622187490
+    second: EnemyDisruptor_Casual_21
+  - first:
+      213: -2707610881489688415
+    second: EnemyDisruptor_Casual_22
+  - first:
+      213: 5491644404705657717
+    second: EnemyDisruptor_Casual_23
+  - first:
+      213: 2877878989665621647
+    second: EnemyDisruptor_Casual_24
+  - first:
+      213: 7178564385179600891
+    second: EnemyDisruptor_Casual_25
+  - first:
+      213: -769174104728211323
+    second: EnemyDisruptor_Casual_26
+  - first:
+      213: 1345836023108402911
+    second: EnemyDisruptor_Casual_27
+  externalObjects: {}
+  serializedVersion: 13
+  mipmaps:
+    mipMapMode: 0
+    enableMipMap: 0
+    sRGBTexture: 1
+    linearTexture: 0
+    fadeOut: 0
+    borderMipMap: 0
+    mipMapsPreserveCoverage: 0
+    alphaTestReferenceValue: 0.5
+    mipMapFadeDistanceStart: 1
+    mipMapFadeDistanceEnd: 3
+  bumpmap:
+    convertToNormalMap: 0
+    externalNormalMap: 0
+    heightScale: 0.25
+    normalMapFilter: 0
+    flipGreenChannel: 0
+  isReadable: 0
+  streamingMipmaps: 0
+  streamingMipmapsPriority: 0
+  vTOnly: 0
+  ignoreMipmapLimit: 0
+  grayScaleToAlpha: 0
+  generateCubemap: 6
+  cubemapConvolution: 0
+  seamlessCubemap: 0
+  textureFormat: 1
+  maxTextureSize: 2048
+  textureSettings:
+    serializedVersion: 2
+    filterMode: 1
+    aniso: 1
+    mipBias: 0
+    wrapU: 1
+    wrapV: 1
+    wrapW: 1
+  nPOTScale: 0
+  lightmap: 0
+  compressionQuality: 50
+  spriteMode: 1
+  spriteExtrude: 1
+  spriteMeshType: 1
+  alignment: 0
+  spritePivot: {x: 0.5, y: 0.5}
+  spritePixelsToUnits: 1000
+  spriteBorder: {x: 0, y: 0, z: 0, w: 0}
+  spriteGenerateFallbackPhysicsShape: 1
+  alphaUsage: 1
+  alphaIsTransparency: 1
+  spriteTessellationDetail: -1
+  textureType: 8
+  textureShape: 1
+  singleChannelComponent: 0
+  flipbookRows: 1
+  flipbookColumns: 1
+  maxTextureSizeSet: 0
+  compressionQualitySet: 0
+  textureFormatSet: 0
+  ignorePngGamma: 0
+  applyGammaDecoding: 0
+  swizzle: 50462976
+  cookieLightType: 0
+  platformSettings:
+  - serializedVersion: 4
+    buildTarget: DefaultTexturePlatform
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 4
+    buildTarget: Standalone
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  spriteSheet:
+    serializedVersion: 2
+    sprites:
+    - serializedVersion: 2
+      name: EnemyDisruptor_Casual_0
+      rect:
+        serializedVersion: 2
+        x: 32
+        y: 0
+        width: 1203
+        height: 1234
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData:
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 084e493b6989897d0800000000000000
+      internalID: -2911409386069629824
+      vertices: []
+      indices:
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: EnemyDisruptor_Casual_1
+      rect:
+        serializedVersion: 2
+        x: 1196
+        y: 857
+        width: 8
+        height: 16
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData:
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: b7cbe14c4e858ffe0800000000000000
+      internalID: -1155075564854395781
+      vertices: []
+      indices:
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: EnemyDisruptor_Casual_2
+      rect:
+        serializedVersion: 2
+        x: 385
+        y: 93
+        width: 32
+        height: 54
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData:
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: bf9dffadc913ac210800000000000000
+      internalID: 1353949187737115131
+      vertices: []
+      indices:
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: EnemyDisruptor_Casual_3
+      rect:
+        serializedVersion: 2
+        x: 434
+        y: 102
+        width: 9
+        height: 14
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData:
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: db731820c752fd960800000000000000
+      internalID: 7628857508337104829
+      vertices: []
+      indices:
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: EnemyDisruptor_Casual_4
+      rect:
+        serializedVersion: 2
+        x: 822
+        y: 113
+        width: 9
+        height: 10
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData:
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 873fa7f7a9ba9d920800000000000000
+      internalID: 3015630105553335160
+      vertices: []
+      indices:
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: EnemyDisruptor_Casual_5
+      rect:
+        serializedVersion: 2
+        x: 826
+        y: 111
+        width: 9
+        height: 11
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData:
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 1808345c9be730310800000000000000
+      internalID: 1370078047994347649
+      vertices: []
+      indices:
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: EnemyDisruptor_Casual_6
+      rect:
+        serializedVersion: 2
+        x: 834
+        y: 111
+        width: 9
+        height: 12
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData:
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 29a03448b9b648650800000000000000
+      internalID: 6234226099870698130
+      vertices: []
+      indices:
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: EnemyDisruptor_Casual_7
+      rect:
+        serializedVersion: 2
+        x: 842
+        y: 94
+        width: 25
+        height: 20
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData:
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 24b8fd926647858b0800000000000000
+      internalID: -5163248990642271422
+      vertices: []
+      indices:
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: EnemyDisruptor_Casual_8
+      rect:
+        serializedVersion: 2
+        x: 930
+        y: 103
+        width: 6
+        height: 6
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData:
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 690eaa1a5a1a53ad0800000000000000
+      internalID: -2723092666921590634
+      vertices: []
+      indices:
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: EnemyDisruptor_Casual_9
+      rect:
+        serializedVersion: 2
+        x: 360
+        y: 87
+        width: 9
+        height: 9
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData:
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 8d6941f6a223827f0800000000000000
+      internalID: -637204189439289640
+      vertices: []
+      indices:
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: EnemyDisruptor_Casual_10
+      rect:
+        serializedVersion: 2
+        x: 412
+        y: 79
+        width: 37
+        height: 21
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData:
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 0dab8a1354aa39f20800000000000000
+      internalID: 3428270955521686224
+      vertices: []
+      indices:
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: EnemyDisruptor_Casual_11
+      rect:
+        serializedVersion: 2
+        x: 715
+        y: 79
+        width: 10
+        height: 10
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData:
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: ef3946ef9cc49ef50800000000000000
+      internalID: 6911139533616878590
+      vertices: []
+      indices:
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: EnemyDisruptor_Casual_12
+      rect:
+        serializedVersion: 2
+        x: 806
+        y: 83
+        width: 7
+        height: 8
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData:
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: a53ba38ef9e1c9fd0800000000000000
+      internalID: -2333956834739965094
+      vertices: []
+      indices:
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: EnemyDisruptor_Casual_13
+      rect:
+        serializedVersion: 2
+        x: 512
+        y: 63
+        width: 11
+        height: 9
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData:
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: dd3dc0d8709b14e80800000000000000
+      internalID: -8196066404755254307
+      vertices: []
+      indices:
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: EnemyDisruptor_Casual_14
+      rect:
+        serializedVersion: 2
+        x: 519
+        y: 63
+        width: 11
+        height: 9
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData:
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 2911f686e6fbfc620800000000000000
+      internalID: 2796664374539784594
+      vertices: []
+      indices:
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: EnemyDisruptor_Casual_15
+      rect:
+        serializedVersion: 2
+        x: 530
+        y: 65
+        width: 7
+        height: 6
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData:
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 3e6047216e39a2410800000000000000
+      internalID: 1453136446141761251
+      vertices: []
+      indices:
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: EnemyDisruptor_Casual_16
+      rect:
+        serializedVersion: 2
+        x: 575
+        y: 63
+        width: 9
+        height: 13
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData:
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 78bd2e425f9dddd30800000000000000
+      internalID: 4457958853075721095
+      vertices: []
+      indices:
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: EnemyDisruptor_Casual_17
+      rect:
+        serializedVersion: 2
+        x: 705
+        y: 67
+        width: 9
+        height: 14
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData:
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 975b32602c13ea190800000000000000
+      internalID: -7949361582865926791
+      vertices: []
+      indices:
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: EnemyDisruptor_Casual_18
+      rect:
+        serializedVersion: 2
+        x: 711
+        y: 66
+        width: 8
+        height: 10
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData:
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 7a3a7e6f6e3d1fcd0800000000000000
+      internalID: -2526004927039822937
+      vertices: []
+      indices:
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: EnemyDisruptor_Casual_19
+      rect:
+        serializedVersion: 2
+        x: 788
+        y: 63
+        width: 7
+        height: 8
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData:
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 88b37f91faf531ba0800000000000000
+      internalID: -6119442263006823544
+      vertices: []
+      indices:
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: EnemyDisruptor_Casual_20
+      rect:
+        serializedVersion: 2
+        x: 233
+        y: 47
+        width: 25
+        height: 18
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData:
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: b3095453f826edf90800000000000000
+      internalID: -6926990809635647429
+      vertices: []
+      indices:
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: EnemyDisruptor_Casual_21
+      rect:
+        serializedVersion: 2
+        x: 338
+        y: 49
+        width: 8
+        height: 15
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData:
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: e147d8a6d2d44e7b0800000000000000
+      internalID: -5195943212622187490
+      vertices: []
+      indices:
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: EnemyDisruptor_Casual_22
+      rect:
+        serializedVersion: 2
+        x: 691
+        y: 55
+        width: 7
+        height: 11
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData:
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 1a823d2bf32ac6ad0800000000000000
+      internalID: -2707610881489688415
+      vertices: []
+      indices:
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: EnemyDisruptor_Casual_23
+      rect:
+        serializedVersion: 2
+        x: 227
+        y: 30
+        width: 11
+        height: 14
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData:
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 5730e377d7d363c40800000000000000
+      internalID: 5491644404705657717
+      vertices: []
+      indices:
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: EnemyDisruptor_Casual_24
+      rect:
+        serializedVersion: 2
+        x: 303
+        y: 37
+        width: 6
+        height: 13
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData:
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: f86549581b740f720800000000000000
+      internalID: 2877878989665621647
+      vertices: []
+      indices:
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: EnemyDisruptor_Casual_25
+      rect:
+        serializedVersion: 2
+        x: 305
+        y: 25
+        width: 20
+        height: 28
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData:
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: bf786ef46426f9360800000000000000
+      internalID: 7178564385179600891
+      vertices: []
+      indices:
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: EnemyDisruptor_Casual_26
+      rect:
+        serializedVersion: 2
+        x: 480
+        y: 39
+        width: 9
+        height: 12
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData:
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 580fe3d1a385355f0800000000000000
+      internalID: -769174104728211323
+      vertices: []
+      indices:
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: EnemyDisruptor_Casual_27
+      rect:
+        serializedVersion: 2
+        x: 577
+        y: 17
+        width: 17
+        height: 9
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData:
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: fdefc438bbe5da210800000000000000
+      internalID: 1345836023108402911
+      vertices: []
+      indices:
+      edges: []
+      weights: []
+    outline: []
+    customData:
+    physicsShape: []
+    bones: []
+    spriteID: 5e97eb03825dee720800000000000000
+    internalID: 0
+    vertices: []
+    indices:
+    edges: []
+    weights: []
+    secondaryTextures: []
+    spriteCustomMetadata:
+      entries: []
+    nameFileIdTable:
+      EnemyDisruptor_Casual_0: -2911409386069629824
+      EnemyDisruptor_Casual_1: -1155075564854395781
+      EnemyDisruptor_Casual_10: 3428270955521686224
+      EnemyDisruptor_Casual_11: 6911139533616878590
+      EnemyDisruptor_Casual_12: -2333956834739965094
+      EnemyDisruptor_Casual_13: -8196066404755254307
+      EnemyDisruptor_Casual_14: 2796664374539784594
+      EnemyDisruptor_Casual_15: 1453136446141761251
+      EnemyDisruptor_Casual_16: 4457958853075721095
+      EnemyDisruptor_Casual_17: -7949361582865926791
+      EnemyDisruptor_Casual_18: -2526004927039822937
+      EnemyDisruptor_Casual_19: -6119442263006823544
+      EnemyDisruptor_Casual_2: 1353949187737115131
+      EnemyDisruptor_Casual_20: -6926990809635647429
+      EnemyDisruptor_Casual_21: -5195943212622187490
+      EnemyDisruptor_Casual_22: -2707610881489688415
+      EnemyDisruptor_Casual_23: 5491644404705657717
+      EnemyDisruptor_Casual_24: 2877878989665621647
+      EnemyDisruptor_Casual_25: 7178564385179600891
+      EnemyDisruptor_Casual_26: -769174104728211323
+      EnemyDisruptor_Casual_27: 1345836023108402911
+      EnemyDisruptor_Casual_3: 7628857508337104829
+      EnemyDisruptor_Casual_4: 3015630105553335160
+      EnemyDisruptor_Casual_5: 1370078047994347649
+      EnemyDisruptor_Casual_6: 6234226099870698130
+      EnemyDisruptor_Casual_7: -5163248990642271422
+      EnemyDisruptor_Casual_8: -2723092666921590634
+      EnemyDisruptor_Casual_9: -637204189439289640
+  mipmapLimitGroupName:
+  pSDRemoveMatte: 0
+  userData:
+  assetBundleName:
+  assetBundleVariant:

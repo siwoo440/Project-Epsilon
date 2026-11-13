@@ -68,7 +68,10 @@ namespace ProjectEpsilon.Editor // 편집기 시험 영역
             PropertyInfo extraProperty = typeof(EnemyWaveSettings).GetProperty("AdditionalEnemies"); // 추가 적 설정 조회
             if (!Check(settings != null && extraProperty != null, "Additional enemy configuration is missing.")) yield break; // 추가 데이터 확인
             IReadOnlyList<EarlyEnemySettings> extra = extraProperty.GetValue(settings) as IReadOnlyList<EarlyEnemySettings>; // 실제 추가 적 목록
-            if (!Check(extra != null && extra.Count == 1 && extra[0] != null, "Beetle data is missing.")) yield break; // 쇠똥구리 설정 확인
+            if (!Check(extra != null && extra.Count >= 1 && extra[0] != null, "Beetle data is missing.")) // 실제 쇠똥구리 설정 확인
+            { // 조건 시작
+                yield break; // 설정 누락 시 시험 종료
+            } // 조건 종료
             EarlyEnemySettings beetle = extra[0]; // 실제 쇠똥구리 데이터
             if (!Check(beetle.kind.ToString() == "Charger" && beetle.health == 30f && beetle.damage == 14 && Mathf.Approximately(beetle.speedRatio, 0.85f) && Mathf.Approximately(beetle.attackInterval, 2.4f) && beetle.experience == 2 && beetle.firstAppearance == 300f && beetle.enemySprite != null, "Beetle data differs from the provisional design.")) yield break; // 실제 기획값과 이미지 확인
             EarlyEnemyWaveSpawner wave = UnityEngine.Object.FindFirstObjectByType<EarlyEnemyWaveSpawner>(); // 실제 적 출현기

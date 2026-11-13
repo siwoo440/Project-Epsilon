@@ -11,7 +11,7 @@ namespace ProjectEpsilon.Enemies // 적 출현 영역
         public int normalEnemyLimit = 40; // 일반 적 최대 수
         public float healthMultiplier = 1f; // 일반 적 체력 배율
         public float damageMultiplier = 1f; // 일반 적 피해 배율
-        [Tooltip("순서: 병정개미, 사마귀, 말벌, 엘리트(0), 쇠똥구리")] public float[] spawnWeights; // 적 행동 종류별 출현 가중치
+        [Tooltip("순서: 병정개미, 사마귀, 말벌, 엘리트(0), 쇠똥구리, 노린재, 잠자리")] public float[] spawnWeights; // 적 행동 종류별 출현 가중치
         public float GetSpawnWeight(EarlyEnemyKind kind) // 현재 구간의 적별 가중치
         { // 함수 시작
             int index = (int)kind; // 적 행동 번호

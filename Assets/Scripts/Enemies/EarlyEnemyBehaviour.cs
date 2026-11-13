@@ -24,6 +24,7 @@ namespace ProjectEpsilon.Enemies // 적 영역
         private WeaponTargetStatusController statuses; // 적 상태 효과 참조
         private WeaponTargetKnockbackController knockback; // 적 넉백 참조
         private float nextAttack; // 다음 공격 시각
+        private float nextSlowZone; // 다음 적 감속 지대 생성 시각
         private float chargePhaseEnd; // 돌진 단계 종료 시각
         private int chargePhase; // 대기 예고 돌진 단계
         private bool chargeCut; // 돌진 중 절단 여부
@@ -49,6 +50,7 @@ namespace ProjectEpsilon.Enemies // 적 영역
             statuses = GetComponent<WeaponTargetStatusController>(); // 상태 효과 조회
             knockback = GetComponent<WeaponTargetKnockbackController>(); // 넉백 조회
             nextAttack = Time.time + Mathf.Max(0.1f, settings.attackInterval); // 첫 공격 시각
+            nextSlowZone = nextAttack; // 첫 감속 지대 생성 시각
         }
         private void FixedUpdate() // 적 이동 처리
         {
@@ -66,6 +68,11 @@ namespace ProjectEpsilon.Enemies // 적 영역
                 return; // 일반 이동 중단
             }
             Vector2 offset = TargetPosition() - movementBody.position; // 목표 방향 계산
+            if (settings.kind == EarlyEnemyKind.Disruptor && Time.time >= nextSlowZone) // 적 감속 지대 생성 시각 확인
+            { // 조건 시작
+                EnemySlowZone.Create(transform.position, settings.slowZoneRadius, settings.slowZoneMultiplier, settings.slowZoneDuration); // 조정 가능한 적 감속 지대 생성
+                nextSlowZone = Time.time + Mathf.Max(0.1f, settings.attackInterval); // 다음 감속 지대 생성 시각
+            } // 조건 종료
             if (settings.enemySprite != null && (statuses == null || statuses.CurrentMovementMultiplier > 0f)) // 전용 이미지와 움직임 가능 상태 확인
             {
                 Vector2 facing = (settings.kind == EarlyEnemyKind.Elite || settings.kind == EarlyEnemyKind.Charger) && chargePhase != 0 ? chargeDirection : settings.kind == EarlyEnemyKind.Shooter ? ShooterTargetPosition() - movementBody.position : offset; // 고정 돌진 또는 실제 추적·발사 목표 방향

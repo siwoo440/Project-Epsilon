@@ -33,6 +33,7 @@ namespace ProjectEpsilon.Player // 프로젝트 기능 영역
             MoveSpeed * // 캐릭터 이동 속도 적용
             ProjectEpsilon.Progression.MetaModifiers.LastBodySpeedMultiplier(bodyManager) * // 마지막 몸통 영구 효과
             ResolveTerrainMultiplier() * // 지형 전용 감속과 면역 적용
+            ProjectEpsilon.Enemies.EnemySlowZone.SpeedMultiplierAt(transform.position) * // 적 감속 지대의 별도 이동 배율
             (Time.time < windUntil ? windMultiplier : 1f) * // 일시적 바람길 이동 배율
             (stamina == null // 스태미나 기능 실행
                 ? 1f // 대상 처리

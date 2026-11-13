@@ -12,22 +12,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 700d1d7ce6aa4b37944e98e4b143f331, type: 3}
   m_Name: EnemyWaveSettings
   m_EditorClassIdentifier: Assembly-CSharp::ProjectEpsilon.Enemies.EnemyWaveSettings
-  additionalEnemies:
-  - kind: 4
-    health: 30
-    damage: 14
-    speedRatio: 0.85
-    attackInterval: 2.4
-    projectileCount: 1
-    projectileSpreadDegrees: 0
-    opposedProjectileFan: 0
-    chargeWarningDuration: 0.6
-    chargeDuration: 0.6
-    chargeSpeedMultiplier: 3
-    experience: 2
-    firstAppearance: 300
-    color: {r: 1, g: 1, b: 1, a: 1}
-    enemySprite: {fileID: 21300000, guid: a684d7bfc6af4ffcb3615d85f3fc3778, type: 3}
   stages:
   - startTime: 0
     spawnInterval: 1.3
@@ -38,6 +22,8 @@ MonoBehaviour:
     - 60
     - 25
     - 15
+    - 0
+    - 0
     - 0
     - 0
   - startTime: 300
@@ -51,6 +37,8 @@ MonoBehaviour:
     - 18
     - 0
     - 8
+    - 0
+    - 0
   - startTime: 600
     spawnInterval: 0.9
     normalEnemyLimit: 110
@@ -62,6 +50,8 @@ MonoBehaviour:
     - 17
     - 0
     - 12
+    - 10
+    - 0
   - startTime: 900
     spawnInterval: 0.7
     normalEnemyLimit: 125
@@ -73,6 +63,8 @@ MonoBehaviour:
     - 15
     - 0
     - 12
+    - 10
+    - 10
   - startTime: 1200
     spawnInterval: 0.6
     normalEnemyLimit: 140
@@ -84,3 +76,63 @@ MonoBehaviour:
     - 14
     - 0
     - 12
+    - 10
+    - 10
+  additionalEnemies:
+  - kind: 4
+    health: 30
+    damage: 14
+    speedRatio: 0.85
+    attackInterval: 2.4
+    projectileCount: 1
+    projectileWarningDuration: 0.35
+    projectileSpreadDegrees: 0
+    opposedProjectileFan: 0
+    chargeWarningDuration: 0.6
+    chargeDuration: 0.6
+    chargeSpeedMultiplier: 3
+    slowZoneRadius: 1.3
+    slowZoneMultiplier: 0.8
+    slowZoneDuration: 3
+    experience: 2
+    firstAppearance: 300
+    color: {r: 1, g: 1, b: 1, a: 1}
+    enemySprite: {fileID: 21300000, guid: a684d7bfc6af4ffcb3615d85f3fc3778, type: 3}
+  - kind: 5
+    health: 28
+    damage: 8
+    speedRatio: 0.65
+    attackInterval: 2.8
+    projectileCount: 1
+    projectileWarningDuration: 0.35
+    projectileSpreadDegrees: 0
+    opposedProjectileFan: 0
+    chargeWarningDuration: 0.6
+    chargeDuration: 0.6
+    chargeSpeedMultiplier: 3
+    slowZoneRadius: 1.3
+    slowZoneMultiplier: 0.8
+    slowZoneDuration: 3
+    experience: 2
+    firstAppearance: 600
+    color: {r: 1, g: 1, b: 1, a: 1}
+    enemySprite: {fileID: 21300000, guid: 30c222b2d09c3854e8c1e9311a3e2885, type: 3}
+  - kind: 6
+    health: 22
+    damage: 9
+    speedRatio: 1.05
+    attackInterval: 1.7
+    projectileCount: 1
+    projectileWarningDuration: 0.35
+    projectileSpreadDegrees: 0
+    opposedProjectileFan: 0
+    chargeWarningDuration: 0.6
+    chargeDuration: 0.6
+    chargeSpeedMultiplier: 3
+    slowZoneRadius: 1.3
+    slowZoneMultiplier: 0.8
+    slowZoneDuration: 3
+    experience: 2
+    firstAppearance: 900
+    color: {r: 1, g: 1, b: 1, a: 1}
+    enemySprite: {fileID: 21300000, guid: 5a9665d560cdb8e4c81b4889132bd7dc, type: 3}

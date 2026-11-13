@@ -14,7 +14,9 @@ namespace ProjectEpsilon.Enemies // 적 영역
         Predator, // 측면 포식자
         Shooter, // 원거리 사수
         Elite, // 돌진 엘리트
-        Charger // 일반 예고 돌진 적
+        Charger, // 일반 예고 돌진 적
+        Disruptor, // 감속 지대 생성 적
+        Flyer // 몸통 통과 비행 적
     }
     [Serializable] // 편집기 설정 허용
     public sealed class EarlyEnemySettings // 조정 가능한 적 설정
@@ -31,6 +33,9 @@ namespace ProjectEpsilon.Enemies // 적 영역
         public float chargeWarningDuration = 0.6f; // 일반 돌진 예고 시간
         public float chargeDuration = 0.6f; // 일반 돌진 지속 시험값
         public float chargeSpeedMultiplier = 3f; // 일반 돌진 속도 시험 배율
+        public float slowZoneRadius = 1.3f; // 적 감속 지대 반경 시험값
+        public float slowZoneMultiplier = 0.8f; // 적 감속 지대 이동 배율 시험값
+        public float slowZoneDuration = 3f; // 적 감속 지대 지속 시간
         public int experience; // 경험치
         public float firstAppearance; // 최초 출현 시간
         public Color color = Color.white; // 구분 색상
@@ -294,6 +299,7 @@ namespace ProjectEpsilon.Enemies // 적 영역
                 merge.CloseMergePanel(); // 기존 재료를 보존한 합성 보류
             }
             pendingEliteRounds.Clear(); // 미출현 엘리트 회차 폐기
+            EnemySlowZone.ClearAll(); // 보스 전환 시 적 감속 지대 정리
             foreach (WeaponTarget target in targets) // 관리 중인 실제 적 순회
             {
                 if (target == null) // 이미 제거된 적 확인
@@ -454,6 +460,9 @@ namespace ProjectEpsilon.Enemies // 적 영역
                 chargeWarningDuration = source.chargeWarningDuration, // 일반 돌진 예고 시간
                 chargeDuration = source.chargeDuration, // 일반 돌진 지속 시간
                 chargeSpeedMultiplier = source.chargeSpeedMultiplier, // 일반 돌진 속도 배율
+                slowZoneRadius = source.slowZoneRadius, // 적 감속 지대 반경
+                slowZoneMultiplier = source.slowZoneMultiplier, // 적 감속 지대 배율
+                slowZoneDuration = source.slowZoneDuration, // 적 감속 지대 지속 시간
                 experience = source.experience, // 기존 경험치
                 firstAppearance = source.firstAppearance, // 기존 최초 출현 시각
                 color = source.color, // 기존 표시 색상
