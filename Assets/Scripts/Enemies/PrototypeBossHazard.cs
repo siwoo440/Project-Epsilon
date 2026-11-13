@@ -45,7 +45,7 @@ namespace ProjectEpsilon.Enemies // 적 영역
             outline.material = outlineMaterial; // 실제 표시 재질 연결
             outline.startWidth = 0.1f; // 표시선 시작 두께
             outline.endWidth = 0.1f; // 표시선 끝 두께
-            outline.sortingOrder = 30; // 전투 위 표시 순서
+            outline.sortingOrder = 40; // 포탑과 적 위 위험 예고 순서
             outline.loop = true; // 원형 표시 연결
             outline.positionCount = rectangular ? 4 : 32; // 구획 또는 원형 표시 좌표 수
             for (int index = 0; index < outline.positionCount; index++) // 실제 표시 좌표 순회

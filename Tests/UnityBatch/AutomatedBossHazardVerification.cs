@@ -153,6 +153,7 @@ namespace ProjectEpsilon.Editor // 배치 시험 영역
             }
             Require(hazard != null && (bool)warningState.GetValue(hazard) && !(bool)activeState.GetValue(hazard), "Actual hazard warning did not appear first."); // 실제 예고 우선 확인
             LineRenderer warning = hazard.GetComponent<LineRenderer>(); // 실제 구역 예고선 조회
+            Require(warning != null && warning.sortingOrder > 30, "Boss hazard warning can be obscured by mounted turrets."); // 포탑 위 위험 예고 순서 확인
             Require(warning != null && warning.enabled && warning.positionCount > 8 && health.CurrentHealth == health.MaximumHealth, "Actual hazard warning visual or safe period missing."); // 실제 예고선과 무피해 확인
             GameManager.Instance.PauseGame(); // 실제 게임 일시정지
             yield return new WaitForSecondsRealtime(0.2f); // 실제 정지 시간 대기

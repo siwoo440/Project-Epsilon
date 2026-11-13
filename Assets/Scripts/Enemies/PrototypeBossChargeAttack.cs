@@ -144,7 +144,7 @@ namespace ProjectEpsilon.Enemies // 적 영역
                 warning.endColor = warning.startColor; // 끝 예고 색상
                 warning.startWidth = 0.18f; // 예고선 시작 두께 임시값
                 warning.endWidth = 0.18f; // 예고선 끝 두께 임시값
-                warning.sortingOrder = 30; // 전투 위 예고 순서
+                warning.sortingOrder = 40; // 포탑과 적 위 예고 순서
                 warning.positionCount = 2; // 실제 예고선 좌표 수
             }
             warning.startColor = cutAttack ? Color.magenta : Color.red; // 단계별 실제 예고 색상

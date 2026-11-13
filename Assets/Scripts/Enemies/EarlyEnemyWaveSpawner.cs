@@ -25,6 +25,7 @@ namespace ProjectEpsilon.Enemies // 적 영역
         public float speedRatio; // 기본 이동 속도 배율
         public float attackInterval; // 공격 간격
         public int projectileCount = 1; // 사격 투사체 수 임시값
+        public float projectileWarningDuration = 0.35f; // 사격 방향 예고 시간 임시값
         public float projectileSpreadDegrees; // 사격 전체 부채각 임시값
         public bool opposedProjectileFan; // 반대 방향 부채꼴 추가 여부
         public float chargeWarningDuration = 0.6f; // 일반 돌진 예고 시간
@@ -442,6 +443,7 @@ namespace ProjectEpsilon.Enemies // 적 영역
                 speedRatio = source.speedRatio, // 기존 이동 속도
                 attackInterval = source.attackInterval, // 기존 공격 간격
                 projectileCount = source.projectileCount, // 기존 투사체 수
+                projectileWarningDuration = source.projectileWarningDuration, // 기존 사격 예고 시간
                 projectileSpreadDegrees = source.projectileSpreadDegrees, // 기존 투사체 각도
                 opposedProjectileFan = source.opposedProjectileFan, // 기존 양방향 사격 여부
                 chargeWarningDuration = source.chargeWarningDuration, // 일반 돌진 예고 시간

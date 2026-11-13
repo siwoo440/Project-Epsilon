@@ -209,6 +209,7 @@ namespace ProjectEpsilon.Editor // 배치 시험 영역
                 yield return null; // 실제 프레임 진행
             }
             LineRenderer warning = boss.GetComponent<LineRenderer>(); // 실제 예고선 조회
+            Require(warning != null && warning.sortingOrder > 30, "Boss charge warning can be obscured by mounted turrets."); // 포탑 위 예고 순서 확인
             Require(warning != null && warning.enabled && !(bool)chargeState.GetValue(charge), "Actual warning did not appear before charge."); // 실제 예고 우선 확인
             Require(health.CurrentHealth == health.MaximumHealth && body.CurrentBodyCount == initialBodies, "Warning alone caused damage or cutting."); // 예고 중 무피해 확인
             if (!phaseTwo) // 첫 단계 정지 시험 확인

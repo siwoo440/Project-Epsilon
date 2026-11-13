@@ -58,6 +58,10 @@ namespace ProjectEpsilon.Enemies // 적 영역
             }
             if (knockback != null && knockback.TryConsumeMovement(Time.fixedDeltaTime, out Vector2 displacement)) // 넉백 우선 확인
             {
+                if (settings.kind == EarlyEnemyKind.Shooter) // 사격 행동 확인
+                { // 조건 시작
+                    HideWarning(); // 넉백 중 이전 사격 예고 제거
+                } // 조건 종료
                 movementBody.MovePosition(movementBody.position + displacement); // 넉백 이동
                 return; // 일반 이동 중단
             }
@@ -78,9 +82,18 @@ namespace ProjectEpsilon.Enemies // 적 영역
             {
                 if (Time.time >= nextAttack) // 사격 주기 확인
                 {
+                    HideWarning(); // 발사 직전 예고 제거
                     FireProjectile(ShooterTargetPosition() - movementBody.position); // 몸통 방향 투사체 발사
                     nextAttack = Time.time + Mathf.Max(0.1f, settings.attackInterval); // 다음 사격 시각
                 }
+                else if (settings.projectileWarningDuration > 0f && Time.time >= nextAttack - settings.projectileWarningDuration) // 발사 전 예고 구간 확인
+                { // 조건 시작
+                    ShowShooterWarning(ShooterTargetPosition() - movementBody.position); // 현재 발사 목표 예고
+                } // 조건 종료
+                else // 발사 예고 구간 밖
+                { // 조건 시작
+                    HideWarning(); // 이전 사격 예고 제거
+                } // 조건 종료
                 if (offset.magnitude < shooterDistance * 0.8f) // 근접 거리 확인
                 {
                     offset = -offset; // 후퇴 방향 설정
@@ -186,23 +199,56 @@ namespace ProjectEpsilon.Enemies // 적 영역
         }
         private void ShowWarning() // 돌진 방향 예고
         {
-            if (warning == null) // 예고선 부재 확인
-            {
-                warning = gameObject.AddComponent<LineRenderer>(); // 예고선 생성
-                warningMaterial = new Material(Shader.Find("Sprites/Default")); // 예고선 전용 재질 생성
-                warning.material = warningMaterial; // 생성한 재질 연결
-                warning.startColor = Color.red; // 시작 색상
-                warning.endColor = Color.red; // 끝 색상
-                warning.startWidth = 0.12f; // 시작 두께
-                warning.endWidth = 0.12f; // 끝 두께
-                warning.sortingOrder = 30; // 예고 표시 순서
-                warning.positionCount = 2; // 예고선 점 수
-            }
+            EnsureWarning(); // 공용 예고선 준비
+            warning.startColor = Color.red; // 돌진 시작 색상
+            warning.endColor = Color.red; // 돌진 끝 색상
+            warning.startWidth = 0.12f; // 돌진 시작 두께
+            warning.endWidth = 0.12f; // 돌진 끝 두께
             warning.enabled = true; // 예고선 표시
             warning.SetPosition(0, transform.position); // 예고선 시작점
             float warningDistance = settings.kind == EarlyEnemyKind.Charger ? player.BaseMoveSpeed * Mathf.Max(0f, settings.speedRatio) * Mathf.Max(1f, eliteChargeMultiplier) * Mathf.Max(0.1f, eliteChargeDuration) * EnemyMovementRules.SpeedMultiplier : 6f * EnemyMovementRules.SpeedMultiplier; // 일반 돌진 실제 거리 또는 기존 엘리트 거리
             warning.SetPosition(1, transform.position + (Vector3)(chargeDirection * warningDistance)); // 맵에 표시할 예고선 끝점
         }
+        private void EnsureWarning() // 공용 예고선 준비
+        { // 함수 시작
+            if (warning == null) // 예고선 부재 확인
+            { // 조건 시작
+                warning = gameObject.AddComponent<LineRenderer>(); // 예고선 생성
+                warningMaterial = new Material(Shader.Find("Sprites/Default")); // 예고선 전용 재질 생성
+                warning.material = warningMaterial; // 생성한 재질 연결
+                warning.sortingOrder = 40; // 포탑과 적 위 예고 순서
+                warning.positionCount = 2; // 예고선 점 수
+            } // 조건 종료
+        } // 함수 종료
+        private void ShowShooterWarning(Vector2 offset) // 사격 방향 예고
+        { // 함수 시작
+            if (offset.sqrMagnitude < 0.001f) // 발사 방향 부재 확인
+            { // 조건 시작
+                HideWarning(); // 유효하지 않은 예고 제거
+                return; // 표시 중단
+            } // 조건 종료
+            EnsureWarning(); // 공용 예고선 준비
+            Color color = new Color(1f, 0.65f, 0.1f, 0.9f); // 사격 예고 색상
+            warning.startColor = color; // 시작 예고 색상
+            warning.endColor = color; // 끝 예고 색상
+            warning.startWidth = 0.08f; // 시작 예고 두께
+            warning.endWidth = 0.08f; // 끝 예고 두께
+            float distance = Mathf.Min(offset.magnitude, Mathf.Max(0f, projectileSpeed) * Mathf.Max(0f, projectileLifetime)); // 목표와 투사체 최대 거리
+            warning.SetPosition(0, transform.position); // 현재 적 위치
+            warning.SetPosition(1, transform.position + (Vector3)(offset.normalized * distance)); // 현재 목표 방향
+            warning.enabled = true; // 사격 예고 표시
+        } // 함수 종료
+        private void HideWarning() // 예고선 숨김
+        { // 함수 시작
+            if (warning != null) // 생성된 예고선 확인
+            { // 조건 시작
+                warning.enabled = false; // 이전 예고 제거
+            } // 조건 종료
+        } // 함수 종료
+        private void OnDisable() // 적 행동 중지 처리
+        { // 함수 시작
+            HideWarning(); // 중지된 행동의 예고 제거
+        } // 함수 종료
         private void OnDestroy() // 적 제거 시 예고 자원 정리
         { // 함수 시작
             if (warningMaterial != null) // 생성한 재질 확인

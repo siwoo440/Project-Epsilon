@@ -212,6 +212,7 @@ namespace ProjectEpsilon.Enemies // 적 영역
                 speedRatio = Mathf.Max(0f, speedRatio), // 임시 이동 속도
                 attackInterval = Mathf.Max(0.1f, attackInterval), // 임시 사격 간격
                 projectileCount = Mathf.Clamp(projectileCount, 1, 9), // 첫 단계 임시 사격 수
+                projectileWarningDuration = 0f, // 기존 보스 사격 예고 유지
                 projectileSpreadDegrees = Mathf.Clamp(projectileSpreadDegrees, 0f, 180f), // 임시 부채꼴 각도
                 opposedProjectileFan = mapBossPattern == 1, // 폐허 보스의 양방향 부채꼴
                 enemySprite = alignVisualWithTarget ? bossVisual : null // 보스 이미지 방향 회전 설정
