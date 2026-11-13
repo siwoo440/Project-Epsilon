@@ -1,0 +1,42 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1f2c56824a1945849be9885523f6e726, type: 3}
+  m_Name: GameplaySoundSettings
+  m_EditorClassIdentifier: Assembly-CSharp::ProjectEpsilon.Audio.GameplaySoundSettings
+  attack:
+    clip: {fileID: 8300000, guid: c485fc6fd1c53244b9bd57530f410137, type: 3}
+    volume: 0.16
+    minimumInterval: 0.12
+  hit:
+    clip: {fileID: 8300000, guid: 064ea3526b179fc4490783b66d2fb5c4, type: 3}
+    volume: 0.35
+    minimumInterval: 0.18
+  bodyLoss:
+    clip: {fileID: 8300000, guid: be1a63a18054f7649809ac5f978f1e09, type: 3}
+    volume: 0.4
+    minimumInterval: 0.2
+  levelUp:
+    clip: {fileID: 8300000, guid: 1365efacd96fe424aa600d7049b34dc0, type: 3}
+    volume: 0.3
+    minimumInterval: 0.18
+  merge:
+    clip: {fileID: 8300000, guid: cd355d41f372d874db16e79d1fbe2fc8, type: 3}
+    volume: 0.3
+    minimumInterval: 0.15
+  elite:
+    clip: {fileID: 8300000, guid: a81e81581c983804eb81b2722fa35107, type: 3}
+    volume: 0.35
+    minimumInterval: 0.5
+  boss:
+    clip: {fileID: 8300000, guid: 007b39909762aea4ebf99696f3af7630, type: 3}
+    volume: 0.4
+    minimumInterval: 1

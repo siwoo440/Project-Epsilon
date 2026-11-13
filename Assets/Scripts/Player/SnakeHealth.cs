@@ -17,6 +17,7 @@ namespace ProjectEpsilon.Player // 프로젝트 기능 영역
         private float healingRemainder; // 캐릭터 회복 배율 소수 누적
 
         public event Action<int, int> HealthChanged; // 이벤트·동작 구성 선언
+        public event Action DamageApplied; // 실제 피해 처리 알림
         public event Action BodyDepleted; // 이벤트·동작 구성 선언
 
         public int CurrentHealth => currentHealth; // 현재·체력 값 반환
@@ -114,6 +115,7 @@ namespace ProjectEpsilon.Player // 프로젝트 기능 영역
                 {
                     RunTelemetry.RecordDamage(origin, 0, 0, absorbedDamage); // 실제 보호막 전량 흡수 기록
                     shieldController.CompleteDamageResolution(); // 보호막 종료 효과 완료
+                    DamageApplied?.Invoke(); // 보호막에 적용된 피해 알림
                     return true; // 피해 처리 성공
                 }
             }
@@ -167,6 +169,7 @@ namespace ProjectEpsilon.Player // 프로젝트 기능 영역
             }
 
             shieldController?.CompleteDamageResolution(); // 체력 처리 뒤 보호막 종료 완료
+            DamageApplied?.Invoke(); // 실제 체력 피해 처리 알림
             return true; // 성공 결과 반환
         }
 

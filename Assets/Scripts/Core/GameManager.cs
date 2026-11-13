@@ -4,6 +4,7 @@ using ProjectEpsilon.Progression; // 시작 무기 선택 참조
 using ProjectEpsilon.Combat; // 최종 보스 대상 참조
 using ProjectEpsilon.UI; // 실제 화면 흐름
 using ProjectEpsilon.Recording; // 선택적 전투 기록
+using ProjectEpsilon.Audio; // 실제 전투 효과음
 
 namespace ProjectEpsilon.Core // 프로젝트 기능 영역
 {
@@ -36,6 +37,10 @@ namespace ProjectEpsilon.Core // 프로젝트 기능 영역
 
             // 전역 관리자 등록
             Instance = this; // 인스턴스 값 설정
+            if (GetComponent<GameplaySoundController>() == null) // 효과음 제어기 중복 확인
+            { // 조건 시작
+                gameObject.AddComponent<GameplaySoundController>(); // 실제 전투 효과음 연결
+            } // 조건 종료
             if (RunTelemetry.IsRequested()) // 전투 기록 실행 옵션 확인
             {
                 telemetry = gameObject.AddComponent<RunTelemetry>(); // 실제 로컬 기록기 생성

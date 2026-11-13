@@ -127,6 +127,7 @@ namespace ProjectEpsilon.Enemies // 적 영역
         private double previousClockTime; // 이전 게임 시간 표본
         private bool hasEnteredBossTransition; // 최종 보스 전환 여부
         public event Action BossTransitionStarted; // 최종 보스 전환 알림
+        public event Action EliteSpawned; // 실제 엘리트 출현 알림
         public event Action<bool> RewardableEnemyDied; // 실제 보상 대상 처치 알림
         public event Action<bool, bool> EnemyDied; // 실제 엘리트와 소환 적 처치 알림
         public float RecordingSpawnInterval => CurrentSpawnInterval; // 기록 시점 일반 적 출현 간격
@@ -412,6 +413,10 @@ namespace ProjectEpsilon.Enemies // 적 영역
                 eliteTargets.Add(target); // 정리 제외 대상 등록
             }
             target.Died += HandleEnemyDied; // 처치 시 수량 갱신 연결
+            if (setting.kind == EarlyEnemyKind.Elite) // 엘리트 종류 확인
+            { // 조건 시작
+                EliteSpawned?.Invoke(); // 실제 엘리트 출현 알림
+            } // 조건 종료
             return target; // 실제 생성 대상 반환
         }
         private void RefreshEnemyScaling() // 생존 적의 분 단위 능력치 갱신
