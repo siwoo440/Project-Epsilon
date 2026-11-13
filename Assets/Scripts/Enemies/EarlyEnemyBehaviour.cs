@@ -23,6 +23,7 @@ namespace ProjectEpsilon.Enemies // 적 영역
         private Rigidbody2D movementBody; // 적 물리체 참조
         private WeaponTargetStatusController statuses; // 적 상태 효과 참조
         private WeaponTargetKnockbackController knockback; // 적 넉백 참조
+        private EnemyVisualMotion visualMotion; // 실제 적 공격 모션
         private float nextAttack; // 다음 공격 시각
         private float nextSlowZone; // 다음 적 감속 지대 생성 시각
         private float chargePhaseEnd; // 돌진 단계 종료 시각
@@ -52,6 +53,7 @@ namespace ProjectEpsilon.Enemies // 적 영역
             movementBody = GetComponent<Rigidbody2D>(); // 물리체 조회
             statuses = GetComponent<WeaponTargetStatusController>(); // 상태 효과 조회
             knockback = GetComponent<WeaponTargetKnockbackController>(); // 넉백 조회
+            visualMotion = GetComponent<EnemyVisualMotion>(); // 실제 시각 모션 조회
             nextAttack = Time.time + Mathf.Max(0.1f, settings.attackInterval); // 첫 공격 시각
             nextSlowZone = nextAttack; // 첫 감속 지대 생성 시각
         }
@@ -74,6 +76,7 @@ namespace ProjectEpsilon.Enemies // 적 영역
             if (settings.kind == EarlyEnemyKind.Disruptor && Time.time >= nextSlowZone) // 적 감속 지대 생성 시각 확인
             { // 조건 시작
                 EnemySlowZone.Create(transform.position, settings.slowZoneRadius, settings.slowZoneMultiplier, settings.slowZoneDuration); // 조정 가능한 적 감속 지대 생성
+                visualMotion?.PlayAttack(); // 실제 지대 생성 모션
                 nextSlowZone = Time.time + Mathf.Max(0.1f, settings.attackInterval); // 다음 감속 지대 생성 시각
             } // 조건 종료
             if (settings.enemySprite != null && (statuses == null || statuses.CurrentMovementMultiplier > 0f)) // 전용 이미지와 움직임 가능 상태 확인
@@ -184,6 +187,7 @@ namespace ProjectEpsilon.Enemies // 적 영역
                 if (Time.time >= chargePhaseEnd) // 예고 종료 확인
                 {
                     chargePhase = 2; // 돌진 단계 진입
+                    visualMotion?.PlayAttack(); // 실제 돌진 시작 모션
                     chargeCut = false; // 돌진 절단 초기화
                     chargeCutPending = false; // 이전 절단 대기 초기화
                     chargePhaseEnd = Time.time + Mathf.Max(0.1f, eliteChargeDuration); // 돌진 종료 시각
@@ -355,6 +359,7 @@ namespace ProjectEpsilon.Enemies // 적 영역
                 health.TakeDamage(damage, DamageOrigin.EnemyMelee); // 기존 즉시 피해 대체
             }
             nextAttack = Time.time + Mathf.Max(0.1f, settings.attackInterval); // 다음 근접 공격 시각
+            visualMotion?.PlayAttack(); // 실제 접촉 공격 모션
         }
         private void HandleEliteCutResolved(bool applied) // 엘리트 절단 결과 처리
         {
@@ -386,6 +391,7 @@ namespace ProjectEpsilon.Enemies // 적 영역
                 return; // 발사 생략
             }
             Vector2 aim = offset.normalized; // 실제 목표 방향 정규화
+            visualMotion?.PlayAttack(); // 실제 사격 모션
             int count = Mathf.Clamp(settings.projectileCount, 1, 9); // 안전한 투사체 수
             float spread = Mathf.Clamp(settings.projectileSpreadDegrees, 0f, 180f); // 안전한 전체 부채각
             WeaponTarget target = GetComponent<WeaponTarget>(); // 실제 사수 전투 상태

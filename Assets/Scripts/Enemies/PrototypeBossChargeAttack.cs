@@ -81,6 +81,7 @@ namespace ProjectEpsilon.Enemies // 적 영역
                 {
                     warningActive = false; // 예고 단계 종료
                     charging = true; // 실제 돌진 단계 시작
+                    GetComponent<EnemyVisualMotion>()?.PlayAttack(); // 실제 보스 돌진 모션
                     phaseEndsAt = Time.time + Mathf.Max(0.1f, chargeDuration); // 실제 돌진 종료 시각
                     warning.enabled = false; // 종료된 예고선 숨김
                 }

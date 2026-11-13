@@ -432,6 +432,7 @@ namespace ProjectEpsilon.Enemies // 적 영역
             WeaponTarget target = enemy.AddComponent<WeaponTarget>(); // 공격 가능 대상 생성
             target.Configure(setting.health); // 적 체력 설정
             enemy.AddComponent<EnemyHitFlash>(); // 실제 피격 표시 연결
+            enemy.AddComponent<EnemyVisualMotion>(); // 충돌체와 독립된 임시 시각 모션
             enemy.AddComponent<WeaponTargetStatusController>(); // 기존 상태 효과 적용
             WeaponTargetKnockbackController knockback = enemy.AddComponent<WeaponTargetKnockbackController>(); // 기존 넉백 적용
             knockback.ConfigureDistanceMultiplier(setting.knockbackDistanceMultiplier); // 적별 넉백 저항 연결

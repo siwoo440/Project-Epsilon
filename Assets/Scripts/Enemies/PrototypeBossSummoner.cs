@@ -57,6 +57,7 @@ namespace ProjectEpsilon.Enemies // 적 영역
             if (summon != null) // 실제 소환 성공 확인
             {
                 summons.Add(summon); // 생존 소환 적 등록
+                GetComponent<EnemyVisualMotion>()?.PlayAttack(); // 실제 소환 모션
             }
         }
         private void HandleBossDied(WeaponTarget target) // 실제 보스 사망 처리

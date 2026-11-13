@@ -63,6 +63,7 @@ namespace ProjectEpsilon.Enemies // 적 영역
             currentHazard = instance.AddComponent<PrototypeBossHazard>(); // 실제 위험 구역 구성
             int actualDamage = Mathf.CeilToInt(damage * boss.OutgoingDamageMultiplier); // 출현 시 보스 피해 배율 확정
             currentHazard.Configure(player, body, health, boss, warningDuration, duration, damageInterval, radius, actualDamage, pattern); // 맵별 예고와 피해 설정
+            GetComponent<EnemyVisualMotion>()?.PlayAttack(); // 실제 위험 구역 공격 모션
             lastHazardAt = Time.time; // 실제 구역 출현 시각
             nextHazardAt = lastHazardAt + interval * (encounter != null && encounter.IsPhaseTwo ? phaseTwoIntervalMultiplier : 1f); // 현재 단계의 다음 출현 시각
         }

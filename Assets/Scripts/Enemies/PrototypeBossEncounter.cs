@@ -202,6 +202,7 @@ namespace ProjectEpsilon.Enemies // 적 영역
             WeaponTarget target = instance.AddComponent<WeaponTarget>(); // 실제 무기 공격 대상
             target.Configure(maximumHealth); // 임시 최대 체력 반영
             instance.AddComponent<EnemyHitFlash>(); // 실제 피격 표시 연결
+            instance.AddComponent<EnemyVisualMotion>(); // 충돌체와 독립된 임시 시각 모션
             instance.AddComponent<WeaponTargetStatusController>().ConfigureColdFreezeResistance(true, coldFreezeSlowMultiplier); // 보스 냉기 빙결 저항 설정
             instance.AddComponent<WeaponTargetKnockbackController>().Configure(true); // 보스 넉백 면역
             settings = new EarlyEnemySettings // 기존 사수 행동의 임시 설정
