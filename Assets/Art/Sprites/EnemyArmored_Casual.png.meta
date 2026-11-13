@@ -1,0 +1,741 @@
+fileFormatVersion: 2
+guid: 737207e6c11aeee4792f2ea8723b1532
+TextureImporter:
+  internalIDToNameTable:
+  - first:
+      213: 4868008181033227362
+    second: EnemyArmored_Casual_0
+  - first:
+      213: 8956610052932892234
+    second: EnemyArmored_Casual_1
+  - first:
+      213: 4060037815533493083
+    second: EnemyArmored_Casual_2
+  - first:
+      213: 4560142313418236551
+    second: EnemyArmored_Casual_3
+  - first:
+      213: -5595176153814343271
+    second: EnemyArmored_Casual_4
+  - first:
+      213: -5642768282664278543
+    second: EnemyArmored_Casual_5
+  - first:
+      213: -917914839709994852
+    second: EnemyArmored_Casual_6
+  - first:
+      213: 690368445903435634
+    second: EnemyArmored_Casual_7
+  - first:
+      213: 5692858867818999836
+    second: EnemyArmored_Casual_8
+  - first:
+      213: 3183463532243046895
+    second: EnemyArmored_Casual_9
+  - first:
+      213: -8702236078809480766
+    second: EnemyArmored_Casual_10
+  - first:
+      213: -8589364174053489796
+    second: EnemyArmored_Casual_11
+  - first:
+      213: -5197088925683428646
+    second: EnemyArmored_Casual_12
+  - first:
+      213: -3462191732817789709
+    second: EnemyArmored_Casual_13
+  - first:
+      213: -5978549739053161437
+    second: EnemyArmored_Casual_14
+  - first:
+      213: 2902160610744284841
+    second: EnemyArmored_Casual_15
+  - first:
+      213: 7400010574078414013
+    second: EnemyArmored_Casual_16
+  - first:
+      213: -7383965347200122264
+    second: EnemyArmored_Casual_17
+  - first:
+      213: 6295204078501720491
+    second: EnemyArmored_Casual_18
+  - first:
+      213: 8298581169374288562
+    second: EnemyArmored_Casual_19
+  - first:
+      213: -1981399941450835132
+    second: EnemyArmored_Casual_20
+  - first:
+      213: -2783638602418111253
+    second: EnemyArmored_Casual_21
+  - first:
+      213: 447465933458221132
+    second: EnemyArmored_Casual_22
+  - first:
+      213: -2522022638132634520
+    second: EnemyArmored_Casual_23
+  externalObjects: {}
+  serializedVersion: 13
+  mipmaps:
+    mipMapMode: 0
+    enableMipMap: 0
+    sRGBTexture: 1
+    linearTexture: 0
+    fadeOut: 0
+    borderMipMap: 0
+    mipMapsPreserveCoverage: 0
+    alphaTestReferenceValue: 0.5
+    mipMapFadeDistanceStart: 1
+    mipMapFadeDistanceEnd: 3
+  bumpmap:
+    convertToNormalMap: 0
+    externalNormalMap: 0
+    heightScale: 0.25
+    normalMapFilter: 0
+    flipGreenChannel: 0
+  isReadable: 0
+  streamingMipmaps: 0
+  streamingMipmapsPriority: 0
+  vTOnly: 0
+  ignoreMipmapLimit: 0
+  grayScaleToAlpha: 0
+  generateCubemap: 6
+  cubemapConvolution: 0
+  seamlessCubemap: 0
+  textureFormat: 1
+  maxTextureSize: 2048
+  textureSettings:
+    serializedVersion: 2
+    filterMode: 1
+    aniso: 1
+    mipBias: 0
+    wrapU: 1
+    wrapV: 1
+    wrapW: 1
+  nPOTScale: 0
+  lightmap: 0
+  compressionQuality: 50
+  spriteMode: 1
+  spriteExtrude: 1
+  spriteMeshType: 1
+  alignment: 0
+  spritePivot: {x: 0.5, y: 0.5}
+  spritePixelsToUnits: 1000
+  spriteBorder: {x: 0, y: 0, z: 0, w: 0}
+  spriteGenerateFallbackPhysicsShape: 1
+  alphaUsage: 1
+  alphaIsTransparency: 1
+  spriteTessellationDetail: -1
+  textureType: 8
+  textureShape: 1
+  singleChannelComponent: 0
+  flipbookRows: 1
+  flipbookColumns: 1
+  maxTextureSizeSet: 0
+  compressionQualitySet: 0
+  textureFormatSet: 0
+  ignorePngGamma: 0
+  applyGammaDecoding: 0
+  swizzle: 50462976
+  cookieLightType: 0
+  platformSettings:
+  - serializedVersion: 4
+    buildTarget: DefaultTexturePlatform
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 4
+    buildTarget: Standalone
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  spriteSheet:
+    serializedVersion: 2
+    sprites:
+    - serializedVersion: 2
+      name: EnemyArmored_Casual_0
+      rect:
+        serializedVersion: 2
+        x: 458
+        y: 1160
+        width: 43
+        height: 59
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData:
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 2645e2a16a3ae8340800000000000000
+      internalID: 4868008181033227362
+      vertices: []
+      indices:
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: EnemyArmored_Casual_1
+      rect:
+        serializedVersion: 2
+        x: 804
+        y: 1100
+        width: 172
+        height: 124
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData:
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: a46f1c493654c4c70800000000000000
+      internalID: 8956610052932892234
+      vertices: []
+      indices:
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: EnemyArmored_Casual_2
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 0
+        width: 1241
+        height: 1139
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData:
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: b5bd689d1e6285830800000000000000
+      internalID: 4060037815533493083
+      vertices: []
+      indices:
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: EnemyArmored_Casual_3
+      rect:
+        serializedVersion: 2
+        x: 346
+        y: 1115
+        width: 58
+        height: 37
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData:
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 782a58cf541e84f30800000000000000
+      internalID: 4560142313418236551
+      vertices: []
+      indices:
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: EnemyArmored_Casual_4
+      rect:
+        serializedVersion: 2
+        x: 838
+        y: 1086
+        width: 13
+        height: 23
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData:
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 991e820cee0f952b0800000000000000
+      internalID: -5595176153814343271
+      vertices: []
+      indices:
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: EnemyArmored_Casual_5
+      rect:
+        serializedVersion: 2
+        x: 898
+        y: 1100
+        width: 9
+        height: 11
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData:
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 1f564f1c42cd0b1b0800000000000000
+      internalID: -5642768282664278543
+      vertices: []
+      indices:
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: EnemyArmored_Casual_6
+      rect:
+        serializedVersion: 2
+        x: 1165
+        y: 712
+        width: 74
+        height: 164
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData:
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: c90b60d0159e243f0800000000000000
+      internalID: -917914839709994852
+      vertices: []
+      indices:
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: EnemyArmored_Casual_7
+      rect:
+        serializedVersion: 2
+        x: 1157
+        y: 481
+        width: 46
+        height: 15
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData:
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 277763e917ea49900800000000000000
+      internalID: 690368445903435634
+      vertices: []
+      indices:
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: EnemyArmored_Casual_8
+      rect:
+        serializedVersion: 2
+        x: 102
+        y: 235
+        width: 8
+        height: 12
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData:
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: c10b8cc6af8110f40800000000000000
+      internalID: 5692858867818999836
+      vertices: []
+      indices:
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: EnemyArmored_Casual_9
+      rect:
+        serializedVersion: 2
+        x: 424
+        y: 143
+        width: 16
+        height: 19
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData:
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: fe1d1c2473fed2c20800000000000000
+      internalID: 3183463532243046895
+      vertices: []
+      indices:
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: EnemyArmored_Casual_10
+      rect:
+        serializedVersion: 2
+        x: 812
+        y: 114
+        width: 27
+        height: 31
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData:
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 2c109fa84627b3780800000000000000
+      internalID: -8702236078809480766
+      vertices: []
+      indices:
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: EnemyArmored_Casual_11
+      rect:
+        serializedVersion: 2
+        x: 900
+        y: 135
+        width: 11
+        height: 16
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData:
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: c734317cac27cc880800000000000000
+      internalID: -8589364174053489796
+      vertices: []
+      indices:
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: EnemyArmored_Casual_12
+      rect:
+        serializedVersion: 2
+        x: 884
+        y: 109
+        width: 27
+        height: 30
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData:
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: ad2d58e482b30e7b0800000000000000
+      internalID: -5197088925683428646
+      vertices: []
+      indices:
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: EnemyArmored_Casual_13
+      rect:
+        serializedVersion: 2
+        x: 906
+        y: 109
+        width: 15
+        height: 14
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData:
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 3fcf91566f2d3ffc0800000000000000
+      internalID: -3462191732817789709
+      vertices: []
+      indices:
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: EnemyArmored_Casual_14
+      rect:
+        serializedVersion: 2
+        x: 161
+        y: 95
+        width: 9
+        height: 10
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData:
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 3246bb320bce70da0800000000000000
+      internalID: -5978549739053161437
+      vertices: []
+      indices:
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: EnemyArmored_Casual_15
+      rect:
+        serializedVersion: 2
+        x: 884
+        y: 83
+        width: 7
+        height: 14
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData:
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 9a63b8cf2bb864820800000000000000
+      internalID: 2902160610744284841
+      vertices: []
+      indices:
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: EnemyArmored_Casual_16
+      rect:
+        serializedVersion: 2
+        x: 892
+        y: 81
+        width: 7
+        height: 11
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData:
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: dbc0412096e12b660800000000000000
+      internalID: 7400010574078414013
+      vertices: []
+      indices:
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: EnemyArmored_Casual_17
+      rect:
+        serializedVersion: 2
+        x: 948
+        y: 80
+        width: 6
+        height: 6
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData:
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 862c75e73a2e68990800000000000000
+      internalID: -7383965347200122264
+      vertices: []
+      indices:
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: EnemyArmored_Casual_18
+      rect:
+        serializedVersion: 2
+        x: 951
+        y: 85
+        width: 9
+        height: 8
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData:
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: ba17fa781ce0d5750800000000000000
+      internalID: 6295204078501720491
+      vertices: []
+      indices:
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: EnemyArmored_Casual_19
+      rect:
+        serializedVersion: 2
+        x: 965
+        y: 65
+        width: 7
+        height: 7
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData:
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 2badc441b9b7a2370800000000000000
+      internalID: 8298581169374288562
+      vertices: []
+      indices:
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: EnemyArmored_Casual_20
+      rect:
+        serializedVersion: 2
+        x: 940
+        y: 47
+        width: 10
+        height: 15
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData:
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 44bd7db4047a084e0800000000000000
+      internalID: -1981399941450835132
+      vertices: []
+      indices:
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: EnemyArmored_Casual_21
+      rect:
+        serializedVersion: 2
+        x: 595
+        y: 15
+        width: 17
+        height: 16
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData:
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: becbdcf70778e59d0800000000000000
+      internalID: -2783638602418111253
+      vertices: []
+      indices:
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: EnemyArmored_Casual_22
+      rect:
+        serializedVersion: 2
+        x: 611
+        y: 23
+        width: 7
+        height: 9
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData:
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: c48addc45e7b53600800000000000000
+      internalID: 447465933458221132
+      vertices: []
+      indices:
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: EnemyArmored_Casual_23
+      rect:
+        serializedVersion: 2
+        x: 510
+        y: 0
+        width: 86
+        height: 18
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData:
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 86c5c9ad5c9fffcd0800000000000000
+      internalID: -2522022638132634520
+      vertices: []
+      indices:
+      edges: []
+      weights: []
+    outline: []
+    customData:
+    physicsShape: []
+    bones: []
+    spriteID: 5e97eb03825dee720800000000000000
+    internalID: 0
+    vertices: []
+    indices:
+    edges: []
+    weights: []
+    secondaryTextures: []
+    spriteCustomMetadata:
+      entries: []
+    nameFileIdTable:
+      EnemyArmored_Casual_0: 4868008181033227362
+      EnemyArmored_Casual_1: 8956610052932892234
+      EnemyArmored_Casual_10: -8702236078809480766
+      EnemyArmored_Casual_11: -8589364174053489796
+      EnemyArmored_Casual_12: -5197088925683428646
+      EnemyArmored_Casual_13: -3462191732817789709
+      EnemyArmored_Casual_14: -5978549739053161437
+      EnemyArmored_Casual_15: 2902160610744284841
+      EnemyArmored_Casual_16: 7400010574078414013
+      EnemyArmored_Casual_17: -7383965347200122264
+      EnemyArmored_Casual_18: 6295204078501720491
+      EnemyArmored_Casual_19: 8298581169374288562
+      EnemyArmored_Casual_2: 4060037815533493083
+      EnemyArmored_Casual_20: -1981399941450835132
+      EnemyArmored_Casual_21: -2783638602418111253
+      EnemyArmored_Casual_22: 447465933458221132
+      EnemyArmored_Casual_23: -2522022638132634520
+      EnemyArmored_Casual_3: 4560142313418236551
+      EnemyArmored_Casual_4: -5595176153814343271
+      EnemyArmored_Casual_5: -5642768282664278543
+      EnemyArmored_Casual_6: -917914839709994852
+      EnemyArmored_Casual_7: 690368445903435634
+      EnemyArmored_Casual_8: 5692858867818999836
+      EnemyArmored_Casual_9: 3183463532243046895
+  mipmapLimitGroupName:
+  pSDRemoveMatte: 0
+  userData:
+  assetBundleName:
+  assetBundleVariant:

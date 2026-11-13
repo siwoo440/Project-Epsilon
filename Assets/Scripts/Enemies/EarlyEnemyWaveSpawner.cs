@@ -16,7 +16,9 @@ namespace ProjectEpsilon.Enemies // 적 영역
         Elite, // 돌진 엘리트
         Charger, // 일반 예고 돌진 적
         Disruptor, // 감속 지대 생성 적
-        Flyer // 몸통 통과 비행 적
+        Flyer, // 몸통 통과 비행 적
+        Turret, // 부채꼴 사격 적
+        Armored // 넉백 저항 적
     }
     [Serializable] // 편집기 설정 허용
     public sealed class EarlyEnemySettings // 조정 가능한 적 설정
@@ -36,6 +38,7 @@ namespace ProjectEpsilon.Enemies // 적 영역
         public float slowZoneRadius = 1.3f; // 적 감속 지대 반경 시험값
         public float slowZoneMultiplier = 0.8f; // 적 감속 지대 이동 배율 시험값
         public float slowZoneDuration = 3f; // 적 감속 지대 지속 시간
+        [Range(0f, 1f)] public float knockbackDistanceMultiplier = 1f; // 넉백 거리 배율 시험값
         public int experience; // 경험치
         public float firstAppearance; // 최초 출현 시간
         public Color color = Color.white; // 구분 색상
@@ -397,7 +400,8 @@ namespace ProjectEpsilon.Enemies // 적 영역
             target.Configure(setting.health); // 적 체력 설정
             enemy.AddComponent<EnemyHitFlash>(); // 실제 피격 표시 연결
             enemy.AddComponent<WeaponTargetStatusController>(); // 기존 상태 효과 적용
-            enemy.AddComponent<WeaponTargetKnockbackController>(); // 기존 넉백 적용
+            WeaponTargetKnockbackController knockback = enemy.AddComponent<WeaponTargetKnockbackController>(); // 기존 넉백 적용
+            knockback.ConfigureDistanceMultiplier(setting.knockbackDistanceMultiplier); // 적별 넉백 저항 연결
             if (!bossSummon) // 일반 적 보상 여부
             {
                 EnemyDropController drop = enemy.AddComponent<EnemyDropController>(); // 기존 보상 적용
@@ -463,6 +467,7 @@ namespace ProjectEpsilon.Enemies // 적 영역
                 slowZoneRadius = source.slowZoneRadius, // 적 감속 지대 반경
                 slowZoneMultiplier = source.slowZoneMultiplier, // 적 감속 지대 배율
                 slowZoneDuration = source.slowZoneDuration, // 적 감속 지대 지속 시간
+                knockbackDistanceMultiplier = source.knockbackDistanceMultiplier, // 적별 넉백 거리 배율
                 experience = source.experience, // 기존 경험치
                 firstAppearance = source.firstAppearance, // 기존 최초 출현 시각
                 color = source.color, // 기존 표시 색상

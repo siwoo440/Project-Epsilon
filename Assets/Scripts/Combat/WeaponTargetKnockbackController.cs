@@ -5,6 +5,7 @@ namespace ProjectEpsilon.Combat // 전투 영역
     public sealed class WeaponTargetKnockbackController : MonoBehaviour // 대상 넉백 상태 관리자
     {
         [SerializeField] private bool knockbackImmune; // 넉백 면역 여부
+        [SerializeField, Range(0f, 1f)] private float distanceMultiplier = 1f; // 넉백 거리 배율
         [SerializeField] private Vector2 direction; // 현재 넉백 방향
         [SerializeField] private float remainingDistance; // 남은 넉백 거리
         [SerializeField] private float remainingDuration; // 남은 넉백 시간
@@ -13,6 +14,11 @@ namespace ProjectEpsilon.Combat // 전투 영역
         public bool IsActive => !knockbackImmune && remainingDistance > 0f && remainingDuration > 0f; // 넉백 활성 상태 반환
         public float RemainingDistance => remainingDistance; // 남은 거리 반환
         public float RemainingDuration => remainingDuration; // 남은 시간 반환
+
+        public void ConfigureDistanceMultiplier(float multiplier) // 부분 넉백 저항 설정
+        { // 함수 시작
+            distanceMultiplier = Mathf.Clamp01(multiplier); // 안전한 넉백 거리 배율
+        } // 함수 종료
 
         public void Configure(bool immune) // 넉백 설정 구성
         {
@@ -26,7 +32,7 @@ namespace ProjectEpsilon.Combat // 전투 영역
 
         public bool Apply(Vector2 knockbackDirection, float distance, float duration) // 넉백 적용
         {
-            float safeDistance = Mathf.Max(0f, distance); // 거리 정규화
+            float safeDistance = Mathf.Max(0f, distance) * Mathf.Clamp01(distanceMultiplier); // 적별 저항을 적용한 거리
             float safeDuration = Mathf.Max(0f, duration); // 시간 정규화
 
             if (knockbackImmune || safeDistance <= 0f || safeDuration <= 0f) // 적용 가능 여부 확인

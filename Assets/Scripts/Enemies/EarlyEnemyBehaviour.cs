@@ -32,7 +32,9 @@ namespace ProjectEpsilon.Enemies // 적 영역
         private bool reportedMissingResolver; // 충돌 처리기 누락 기록
         private Vector2 chargeDirection; // 예고된 돌진 방향
         private LineRenderer warning; // 돌진 예고선
+        private LineRenderer[] fanWarnings; // 부채꼴 양쪽 예고선
         private Material warningMaterial; // 예고선 전용 재질
+        private bool IsRanged => settings != null && (settings.kind == EarlyEnemyKind.Shooter || settings.kind == EarlyEnemyKind.Turret); // 기존 사수와 개미귀신 확인
         public void Configure(EarlyEnemySettings data, SnakeMovement target, SnakeBodyManager segments, SnakeHealth sharedHealth, Sprite sprite, float keepDistance, float shotSpeed, float shotLifetime, float warningDuration, float chargeDuration, float chargeMultiplier) // 행동 연결
         {
             settings = data; // 능력 설정 저장
@@ -60,7 +62,7 @@ namespace ProjectEpsilon.Enemies // 적 영역
             }
             if (knockback != null && knockback.TryConsumeMovement(Time.fixedDeltaTime, out Vector2 displacement)) // 넉백 우선 확인
             {
-                if (settings.kind == EarlyEnemyKind.Shooter) // 사격 행동 확인
+                if (IsRanged) // 사격 행동 확인
                 { // 조건 시작
                     HideWarning(); // 넉백 중 이전 사격 예고 제거
                 } // 조건 종료
@@ -75,7 +77,7 @@ namespace ProjectEpsilon.Enemies // 적 영역
             } // 조건 종료
             if (settings.enemySprite != null && (statuses == null || statuses.CurrentMovementMultiplier > 0f)) // 전용 이미지와 움직임 가능 상태 확인
             {
-                Vector2 facing = (settings.kind == EarlyEnemyKind.Elite || settings.kind == EarlyEnemyKind.Charger) && chargePhase != 0 ? chargeDirection : settings.kind == EarlyEnemyKind.Shooter ? ShooterTargetPosition() - movementBody.position : offset; // 고정 돌진 또는 실제 추적·발사 목표 방향
+                Vector2 facing = (settings.kind == EarlyEnemyKind.Elite || settings.kind == EarlyEnemyKind.Charger) && chargePhase != 0 ? chargeDirection : IsRanged ? ShooterTargetPosition() - movementBody.position : offset; // 고정 돌진 또는 실제 추적·발사 목표 방향
                 if (facing.sqrMagnitude > 0.0001f) // 유효한 목표 방향 확인
                 {
                     movementBody.MoveRotation(Mathf.Atan2(facing.y, facing.x) * Mathf.Rad2Deg - 90f); // 위쪽 기준 이미지의 실제 목표 회전
@@ -85,7 +87,7 @@ namespace ProjectEpsilon.Enemies // 적 영역
             {
                 return; // 추적 이동 생략
             }
-            if (settings.kind == EarlyEnemyKind.Shooter) // 사수 동작 확인
+            if (IsRanged) // 사수 동작 확인
             {
                 if (Time.time >= nextAttack) // 사격 주기 확인
                 {
@@ -244,6 +246,57 @@ namespace ProjectEpsilon.Enemies // 적 영역
             warning.SetPosition(0, transform.position); // 현재 적 위치
             warning.SetPosition(1, transform.position + (Vector3)(offset.normalized * distance)); // 현재 목표 방향
             warning.enabled = true; // 사격 예고 표시
+            ShowFanWarnings(offset.normalized, distance, color); // 실제 부채꼴 경계 예고
+        } // 함수 종료
+        private void ShowFanWarnings(Vector2 direction, float distance, Color color) // 부채꼴 사격 경계 표시
+        { // 함수 시작
+            if (settings == null || settings.projectileCount <= 1 || settings.projectileSpreadDegrees <= 0f || settings.opposedProjectileFan) // 단일 방향 부채꼴 확인
+            { // 조건 시작
+                HideFanWarnings(); // 불필요한 부채꼴 경계 제거
+                return; // 기존 단일 예고 유지
+            } // 조건 종료
+            if (fanWarnings == null) // 실제 부채꼴 경계 준비 확인
+            { // 조건 시작
+                fanWarnings = new LineRenderer[2]; // 양쪽 경계 목록
+                for (int index = 0; index < fanWarnings.Length; index++) // 실제 양쪽 경계 생성
+                { // 반복 시작
+                    GameObject edge = new GameObject("EnemyFanWarning"); // 실제 경계선 객체
+                    edge.transform.SetParent(transform, false); // 실제 적과 수명 연결
+                    LineRenderer line = edge.AddComponent<LineRenderer>(); // 실제 부채꼴 경계선
+                    line.sharedMaterial = warningMaterial; // 기존 예고 재질 재사용
+                    line.positionCount = 2; // 경계선 점 수
+                    line.startWidth = 0.08f; // 경계선 시작 두께
+                    line.endWidth = 0.08f; // 경계선 끝 두께
+                    line.sortingOrder = 40; // 적과 포탑 위 예고 순서
+                    fanWarnings[index] = line; // 실제 경계선 저장
+                } // 반복 종료
+            } // 조건 종료
+            float halfSpread = Mathf.Clamp(settings.projectileSpreadDegrees, 0f, 180f) * 0.5f; // 실제 사격 반쪽 각도
+            for (int index = 0; index < fanWarnings.Length; index++) // 실제 양쪽 경계 표시
+            { // 반복 시작
+                float radians = (index == 0 ? -halfSpread : halfSpread) * Mathf.Deg2Rad; // 실제 경계 회전 각도
+                Vector2 edgeDirection = new Vector2(direction.x * Mathf.Cos(radians) - direction.y * Mathf.Sin(radians), direction.x * Mathf.Sin(radians) + direction.y * Mathf.Cos(radians)); // 실제 투사체 경계 방향
+                LineRenderer line = fanWarnings[index]; // 실제 경계선
+                line.startColor = color; // 실제 예고 시작 색상
+                line.endColor = color; // 실제 예고 끝 색상
+                line.SetPosition(0, transform.position); // 실제 발사 위치
+                line.SetPosition(1, transform.position + (Vector3)(edgeDirection * distance)); // 실제 사격 경계 끝점
+                line.enabled = true; // 실제 경계 예고 표시
+            } // 반복 종료
+        } // 함수 종료
+        private void HideFanWarnings() // 부채꼴 경계 숨김
+        { // 함수 시작
+            if (fanWarnings == null) // 실제 경계선 부재 확인
+            { // 조건 시작
+                return; // 숨길 경계 부재
+            } // 조건 종료
+            foreach (LineRenderer line in fanWarnings) // 실제 경계선 순회
+            { // 반복 시작
+                if (line != null) // 실제 경계선 확인
+                { // 조건 시작
+                    line.enabled = false; // 이전 부채꼴 예고 제거
+                } // 조건 종료
+            } // 반복 종료
         } // 함수 종료
         private void HideWarning() // 예고선 숨김
         { // 함수 시작
@@ -251,6 +304,7 @@ namespace ProjectEpsilon.Enemies // 적 영역
             { // 조건 시작
                 warning.enabled = false; // 이전 예고 제거
             } // 조건 종료
+            HideFanWarnings(); // 이전 부채꼴 경계 제거
         } // 함수 종료
         private void OnDisable() // 적 행동 중지 처리
         { // 함수 시작
@@ -282,7 +336,7 @@ namespace ProjectEpsilon.Enemies // 적 영역
                     ReportMissingResolver(); // 구성 누락 알림
                 }
             }
-            if (settings.kind == EarlyEnemyKind.Shooter || Time.time < nextAttack) // 근접 공격 가능 여부
+            if (IsRanged || Time.time < nextAttack) // 근접 공격 가능 여부
             {
                 return; // 근접 피해 생략
             }
