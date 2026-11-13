@@ -14,6 +14,7 @@ namespace ProjectEpsilon.Enemies // 적 영역
         private int maximum; // 동시 소환 상한
         private float radius; // 보스 주변 출현 거리
         private float nextSummonAt; // 다음 소환 시각
+        private bool eliteSummoner; // 엘리트 전용 소환 구분
         public int ActiveCount => summons.Count; // 실제 소환 수 조회
 
         public void Configure(EarlyEnemyWaveSpawner enemySpawner, WeaponTarget owner, float spawnInterval, int activeMaximum, float spawnRadius) // 실제 소환 설정
@@ -29,6 +30,11 @@ namespace ProjectEpsilon.Enemies // 적 영역
                 boss.Died += HandleBossDied; // 실제 보스 사망 연결
             }
         }
+        public void ConfigureElite(EarlyEnemyWaveSpawner enemySpawner, WeaponTarget owner, float spawnInterval, int activeMaximum, float spawnRadius) // 엘리트 소환 설정
+        { // 함수 시작
+            Configure(enemySpawner, owner, spawnInterval, activeMaximum, spawnRadius); // 기존 소환 행동과 사망 정리 재사용
+            eliteSummoner = true; // 일반 적 상한을 따르는 엘리트 소환 설정
+        } // 함수 종료
         private void FixedUpdate() // 실제 보스 패턴 소환
         {
             summons.RemoveAll(target => target == null || !target.IsAlive); // 처치된 소환 적 정리
@@ -46,7 +52,8 @@ namespace ProjectEpsilon.Enemies // 적 영역
             {
                 direction = Vector2.right; // 대체 출현 방향
             }
-            WeaponTarget summon = spawner.SpawnBossSummon(transform.position + (Vector3)(direction * radius)); // 기존 추적자 소환
+            Vector3 position = transform.position + (Vector3)(direction * radius); // 실제 추적자 소환 위치
+            WeaponTarget summon = eliteSummoner ? spawner.SpawnEliteSummon(position) : spawner.SpawnBossSummon(position); // 엘리트 또는 보스의 기존 무보상 소환
             if (summon != null) // 실제 소환 성공 확인
             {
                 summons.Add(summon); // 생존 소환 적 등록

@@ -24,7 +24,9 @@ namespace ProjectEpsilon.Enemies // 적 출현 영역
     {
         [SerializeField] private EnemyWaveStage[] stages; // 시간별 출현 구간 목록
         [SerializeField] private EarlyEnemySettings[] additionalEnemies; // 추가 일반 적과 조정 가능한 시험값
+        [SerializeField] private EarlyEnemySettings[] additionalEliteRounds; // 후속 회차별 전용 엘리트 시험값
         public EarlyEnemySettings[] AdditionalEnemies => additionalEnemies; // 실제 추가 적 목록
+        public EarlyEnemySettings[] AdditionalEliteRounds => additionalEliteRounds; // 실제 후속 엘리트 목록
 
         public float ResolveMultiplier(float elapsed, bool health) // 분 단위 능력치 배율
         {

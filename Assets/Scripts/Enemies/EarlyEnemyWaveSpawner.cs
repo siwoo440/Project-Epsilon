@@ -20,6 +20,12 @@ namespace ProjectEpsilon.Enemies // 적 영역
         Turret, // 부채꼴 사격 적
         Armored // 넉백 저항 적
     }
+    public enum ElitePattern // 전용 엘리트 행동 종류
+    { // 열거형 시작
+        Charge, // 기존 돌진 절단형
+        Ranged, // 원거리 봉쇄형
+        Summoner // 일반 적 소환형
+    } // 열거형 종료
     [Serializable] // 편집기 설정 허용
     public sealed class EarlyEnemySettings // 조정 가능한 적 설정
     {
@@ -39,6 +45,10 @@ namespace ProjectEpsilon.Enemies // 적 영역
         public float slowZoneMultiplier = 0.8f; // 적 감속 지대 이동 배율 시험값
         public float slowZoneDuration = 3f; // 적 감속 지대 지속 시간
         [Range(0f, 1f)] public float knockbackDistanceMultiplier = 1f; // 넉백 거리 배율 시험값
+        public ElitePattern elitePattern; // 전용 엘리트 행동 종류
+        public float eliteSummonInterval = 6f; // 소환 간격 시험값
+        public int eliteSummonMaximum = 3; // 동시 소환 상한 시험값
+        public float eliteSummonRadius = 2f; // 소환 거리 시험값
         public int experience; // 경험치
         public float firstAppearance; // 최초 출현 시간
         public Color color = Color.white; // 구분 색상
@@ -130,6 +140,7 @@ namespace ProjectEpsilon.Enemies // 적 영역
         private readonly List<WeaponTarget> targets = new List<WeaponTarget>(); // 생존 적 추적
         private readonly HashSet<WeaponTarget> eliteTargets = new HashSet<WeaponTarget>(); // 생존 엘리트 집합
         private readonly HashSet<WeaponTarget> bossSummonTargets = new HashSet<WeaponTarget>(); // 무보상 보스 소환 적 집합
+        private readonly HashSet<WeaponTarget> eliteSummonTargets = new HashSet<WeaponTarget>(); // 일반 상한에 포함되는 엘리트 소환 적
         private readonly Queue<int> pendingEliteRounds = new Queue<int>(); // 출현 대기 회차
         private int nextEliteRound; // 다음 일정 회차
         private double previousClockTime; // 이전 게임 시간 표본
@@ -154,11 +165,15 @@ namespace ProjectEpsilon.Enemies // 적 영역
                 { // 조건 시작
                     result.AddRange(waveSettings.AdditionalEnemies); // 추가 적 설정 포함
                 } // 조건 종료
+                if (waveSettings != null && waveSettings.AdditionalEliteRounds != null) // 후속 엘리트 설정 확인
+                { // 조건 시작
+                    result.AddRange(waveSettings.AdditionalEliteRounds); // 후속 엘리트 설정 포함
+                } // 조건 종료
                 return result; // 실제 전체 기록 대상 반환
             } // 조회 종료
         } // 속성 종료
         public int ActiveEnemies => activeEnemies; // 생존 적 수 조회
-        public int CurrentNormalEnemyCount => Mathf.Max(0, activeEnemies - eliteTargets.Count - bossSummonTargets.Count); // 엘리트와 소환 적을 제외한 일반 적 수
+        public int CurrentNormalEnemyCount => Mathf.Max(0, activeEnemies - eliteTargets.Count - bossSummonTargets.Count + eliteSummonTargets.Count); // 엘리트 소환 적을 포함한 일반 적 수
         public float CurrentSpawnInterval => Mathf.Max(0.1f, CurrentStage == null ? spawnInterval : CurrentStage.spawnInterval); // 현재 일반 적 출현 간격
         public int CurrentNormalEnemyLimit => Mathf.Max(1, CurrentStage == null ? maximumEnemies : CurrentStage.normalEnemyLimit); // 현재 일반 적 상한
         public float CurrentNormalHealthMultiplier => waveSettings == null ? 1f : waveSettings.ResolveMultiplier(elapsed, true); // 현재 일반 적 체력 배율
@@ -317,6 +332,7 @@ namespace ProjectEpsilon.Enemies // 적 영역
             enemyScales.Clear(); // 기존 적 능력치 추적 해제
             eliteTargets.Clear(); // 생존 엘리트 목록 비우기
             bossSummonTargets.Clear(); // 이전 소환 적 목록 제거
+            eliteSummonTargets.Clear(); // 이전 엘리트 소환 적 목록 제거
             activeEnemies = 0; // 생존 적 수 초기화
             foreach (EnemyTestProjectile shot in FindObjectsByType<EnemyTestProjectile>(FindObjectsSortMode.None)) // 실제 적 투사체 순회
             {
@@ -366,6 +382,19 @@ namespace ProjectEpsilon.Enemies // 적 영역
             }
             return null; // 실제 추적자 설정 부재
         }
+        public WeaponTarget SpawnEliteSummon(Vector3 position) // 엘리트 패턴의 무보상 추적자 소환
+        { // 함수 시작
+            if (player == null || body == null || health == null || enemies == null || enemies.Length == 0 || enemies[0] == null || GameManager.Instance == null || !GameManager.Instance.IsPlaying || hasEnteredBossTransition || GameManager.Instance.IsFinalBossPhase || CurrentNormalEnemyCount >= CurrentNormalEnemyLimit) // 실제 전투와 일반 적 상한 확인
+            { // 조건 시작
+                return null; // 무효 소환과 상한 초과 방지
+            } // 조건 종료
+            WeaponTarget target = SpawnAt(enemies[0], position, true); // 기존 무보상 추적자 생성
+            if (target != null) // 실제 소환 성공 확인
+            { // 조건 시작
+                eliteSummonTargets.Add(target); // 일반 적 상한에 소환 적 포함
+            } // 조건 종료
+            return target; // 실제 소환 결과 반환
+        } // 함수 종료
         public void RemoveBossSummon(WeaponTarget target) // 생존 소환 적 무보상 제거
         {
             if (target == null || !targets.Remove(target)) // 관리 대상 확인
@@ -374,6 +403,7 @@ namespace ProjectEpsilon.Enemies // 적 영역
             }
             target.Died -= HandleEnemyDied; // 처치 수량 연결 해제
             bossSummonTargets.Remove(target); // 무보상 소환 목록 제거
+            eliteSummonTargets.Remove(target); // 엘리트 소환 적 상한 집계 해제
             enemyScales.Remove(target); // 소환 적 능력치 추적 해제
             activeEnemies = Mathf.Max(0, activeEnemies - 1); // 생존 적 수 감소
             target.gameObject.SetActive(false); // 지연 파괴 전 접촉 차단
@@ -411,6 +441,10 @@ namespace ProjectEpsilon.Enemies // 적 영역
             hazard.Configure(SnakeContactHazardType.EnemyDirect); // 적 직접 충돌 종류
             EarlyEnemyBehaviour behaviour = enemy.AddComponent<EarlyEnemyBehaviour>(); // 적 행동 생성
             behaviour.Configure(setting, player, body, health, visual, shooterDistance, projectileSpeed, projectileLifetime, eliteWarningDuration, eliteChargeDuration, eliteChargeMultiplier); // 적 행동 연결
+            if (setting.kind == EarlyEnemyKind.Elite && setting.elitePattern == ElitePattern.Summoner) // 실제 소환형 엘리트 확인
+            { // 조건 시작
+                enemy.AddComponent<PrototypeBossSummoner>().ConfigureElite(this, target, setting.eliteSummonInterval, setting.eliteSummonMaximum, setting.eliteSummonRadius); // 기존 무보상 소환 행동 연결
+            } // 조건 종료
             activeEnemies++; // 생존 적 증가
             targets.Add(target); // 생존 적 목록 추가
             enemyScales.Add(target, new EnemyScaleRecord { source = source, runtime = setting }); // 생존 적별 원본과 실행 설정 저장
@@ -468,6 +502,10 @@ namespace ProjectEpsilon.Enemies // 적 영역
                 slowZoneMultiplier = source.slowZoneMultiplier, // 적 감속 지대 배율
                 slowZoneDuration = source.slowZoneDuration, // 적 감속 지대 지속 시간
                 knockbackDistanceMultiplier = source.knockbackDistanceMultiplier, // 적별 넉백 거리 배율
+                elitePattern = source.elitePattern, // 전용 엘리트 행동 종류
+                eliteSummonInterval = source.eliteSummonInterval, // 엘리트 소환 간격
+                eliteSummonMaximum = source.eliteSummonMaximum, // 엘리트 소환 상한
+                eliteSummonRadius = source.eliteSummonRadius, // 엘리트 소환 거리
                 experience = source.experience, // 기존 경험치
                 firstAppearance = source.firstAppearance, // 기존 최초 출현 시각
                 color = source.color, // 기존 표시 색상
@@ -521,6 +559,7 @@ namespace ProjectEpsilon.Enemies // 적 영역
             enemyScales.Remove(target); // 처치 적 능력치 추적 해제
             bool elite = eliteTargets.Remove(target); // 실제 엘리트 처치 여부
             bool summon = bossSummonTargets.Remove(target); // 무보상 소환 처치 여부
+            eliteSummonTargets.Remove(target); // 처치된 엘리트 소환 적 집계 해제
             EnemyDied?.Invoke(elite, summon); // 실제 모든 적 처치 알림
             if (elite) // 엘리트 개별 처치 확인
             {
@@ -548,6 +587,7 @@ namespace ProjectEpsilon.Enemies // 적 영역
                     enemyScales.Remove(target); // 외부 제거 적 능력치 추적 해제
                     eliteTargets.Remove(target); // 외부 제거 엘리트 정리
                     bossSummonTargets.Remove(target); // 외부 제거 소환 적 정리
+                    eliteSummonTargets.Remove(target); // 외부 제거 엘리트 소환 적 정리
                     targets.RemoveAt(index); // 빈 대상 제거
                     activeEnemies = Mathf.Max(0, activeEnemies - 1); // 생존 수 보정
                     continue; // 다음 적 확인
@@ -559,6 +599,7 @@ namespace ProjectEpsilon.Enemies // 적 영역
                 target.Died -= HandleEnemyDied; // 처치 수량 연결 해제
                 enemyScales.Remove(target); // 거리 정리 적 능력치 추적 해제
                 bossSummonTargets.Remove(target); // 거리 정리 소환 적 제외
+                eliteSummonTargets.Remove(target); // 거리 정리 엘리트 소환 적 제외
                 targets.RemoveAt(index); // 생존 목록 제거
                 activeEnemies = Mathf.Max(0, activeEnemies - 1); // 생존 수 감소
                 target.gameObject.SetActive(false); // 지연 파괴 전 보상과 공격 대상 해제
@@ -603,8 +644,10 @@ namespace ProjectEpsilon.Enemies // 적 영역
             {
                 return; // 자리 확보 전 대기
             }
-            pendingEliteRounds.Dequeue(); // 가장 오래된 회차 소비
-            Spawn(enemies[3]); // 동일 시험용 엘리트 출현
+            int round = pendingEliteRounds.Dequeue(); // 가장 오래된 회차 소비
+            EarlyEnemySettings[] additionalRounds = waveSettings == null ? null : waveSettings.AdditionalEliteRounds; // 조정 가능한 후속 회차
+            EarlyEnemySettings selected = round > 0 && additionalRounds != null && round - 1 < additionalRounds.Length ? additionalRounds[round - 1] : null; // 해당 후속 회차 설정
+            Spawn(selected != null && selected.kind == EarlyEnemyKind.Elite ? selected : enemies[3]); // 유효한 전용 엘리트 또는 기존 기본 엘리트 출현
         }
     }
 }

@@ -120,6 +120,10 @@ MonoBehaviour:
     slowZoneMultiplier: 0.8
     slowZoneDuration: 3
     knockbackDistanceMultiplier: 1
+    elitePattern: 0
+    eliteSummonInterval: 6
+    eliteSummonMaximum: 3
+    eliteSummonRadius: 2
     experience: 2
     firstAppearance: 300
     color: {r: 1, g: 1, b: 1, a: 1}
@@ -140,6 +144,10 @@ MonoBehaviour:
     slowZoneMultiplier: 0.8
     slowZoneDuration: 3
     knockbackDistanceMultiplier: 1
+    elitePattern: 0
+    eliteSummonInterval: 6
+    eliteSummonMaximum: 3
+    eliteSummonRadius: 2
     experience: 2
     firstAppearance: 600
     color: {r: 1, g: 1, b: 1, a: 1}
@@ -160,6 +168,10 @@ MonoBehaviour:
     slowZoneMultiplier: 0.8
     slowZoneDuration: 3
     knockbackDistanceMultiplier: 1
+    elitePattern: 0
+    eliteSummonInterval: 6
+    eliteSummonMaximum: 3
+    eliteSummonRadius: 2
     experience: 2
     firstAppearance: 900
     color: {r: 1, g: 1, b: 1, a: 1}
@@ -180,6 +192,10 @@ MonoBehaviour:
     slowZoneMultiplier: 0.8
     slowZoneDuration: 3
     knockbackDistanceMultiplier: 1
+    elitePattern: 0
+    eliteSummonInterval: 6
+    eliteSummonMaximum: 3
+    eliteSummonRadius: 2
     experience: 3
     firstAppearance: 900
     color: {r: 1, g: 1, b: 1, a: 1}
@@ -200,7 +216,60 @@ MonoBehaviour:
     slowZoneMultiplier: 0.8
     slowZoneDuration: 3
     knockbackDistanceMultiplier: 0.5
+    elitePattern: 0
+    eliteSummonInterval: 6
+    eliteSummonMaximum: 3
+    eliteSummonRadius: 2
     experience: 4
     firstAppearance: 1080
     color: {r: 1, g: 1, b: 1, a: 1}
     enemySprite: {fileID: 21300000, guid: 737207e6c11aeee4792f2ea8723b1532, type: 3}
+  additionalEliteRounds:
+  - kind: 3
+    health: 160
+    damage: 15
+    speedRatio: 0.9
+    attackInterval: 3
+    projectileCount: 3
+    projectileWarningDuration: 0.6
+    projectileSpreadDegrees: 60
+    opposedProjectileFan: 0
+    chargeWarningDuration: 0
+    chargeDuration: 0
+    chargeSpeedMultiplier: 0
+    slowZoneRadius: 0
+    slowZoneMultiplier: 0
+    slowZoneDuration: 0
+    knockbackDistanceMultiplier: 1
+    elitePattern: 1
+    eliteSummonInterval: 6
+    eliteSummonMaximum: 3
+    eliteSummonRadius: 2
+    experience: 20
+    firstAppearance: 480
+    color: {r: 1, g: 1, b: 1, a: 1}
+    enemySprite: {fileID: 21300000, guid: f7b456300988ea448a7d00993f8b2d30, type: 3}
+  - kind: 3
+    health: 160
+    damage: 15
+    speedRatio: 0.9
+    attackInterval: 5
+    projectileCount: 1
+    projectileWarningDuration: 0.6
+    projectileSpreadDegrees: 0
+    opposedProjectileFan: 0
+    chargeWarningDuration: 0
+    chargeDuration: 0
+    chargeSpeedMultiplier: 0
+    slowZoneRadius: 0
+    slowZoneMultiplier: 0
+    slowZoneDuration: 0
+    knockbackDistanceMultiplier: 1
+    elitePattern: 2
+    eliteSummonInterval: 6
+    eliteSummonMaximum: 3
+    eliteSummonRadius: 2
+    experience: 20
+    firstAppearance: 720
+    color: {r: 1, g: 1, b: 1, a: 1}
+    enemySprite: {fileID: 21300000, guid: c961e3aae62c1674c8c134d0007d6be0, type: 3}

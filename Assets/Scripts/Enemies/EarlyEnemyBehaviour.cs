@@ -34,7 +34,8 @@ namespace ProjectEpsilon.Enemies // 적 영역
         private LineRenderer warning; // 돌진 예고선
         private LineRenderer[] fanWarnings; // 부채꼴 양쪽 예고선
         private Material warningMaterial; // 예고선 전용 재질
-        private bool IsRanged => settings != null && (settings.kind == EarlyEnemyKind.Shooter || settings.kind == EarlyEnemyKind.Turret); // 기존 사수와 개미귀신 확인
+        private bool IsRanged => settings != null && (settings.kind == EarlyEnemyKind.Shooter || settings.kind == EarlyEnemyKind.Turret || settings.kind == EarlyEnemyKind.Elite && settings.elitePattern == ElitePattern.Ranged); // 기존 사수와 원거리 엘리트 확인
+        private bool IsCharge => settings != null && (settings.kind == EarlyEnemyKind.Charger || settings.kind == EarlyEnemyKind.Elite && settings.elitePattern == ElitePattern.Charge); // 기존 돌진 적과 엘리트 확인
         public void Configure(EarlyEnemySettings data, SnakeMovement target, SnakeBodyManager segments, SnakeHealth sharedHealth, Sprite sprite, float keepDistance, float shotSpeed, float shotLifetime, float warningDuration, float chargeDuration, float chargeMultiplier) // 행동 연결
         {
             settings = data; // 능력 설정 저장
@@ -77,13 +78,13 @@ namespace ProjectEpsilon.Enemies // 적 영역
             } // 조건 종료
             if (settings.enemySprite != null && (statuses == null || statuses.CurrentMovementMultiplier > 0f)) // 전용 이미지와 움직임 가능 상태 확인
             {
-                Vector2 facing = (settings.kind == EarlyEnemyKind.Elite || settings.kind == EarlyEnemyKind.Charger) && chargePhase != 0 ? chargeDirection : IsRanged ? ShooterTargetPosition() - movementBody.position : offset; // 고정 돌진 또는 실제 추적·발사 목표 방향
+                Vector2 facing = IsCharge && chargePhase != 0 ? chargeDirection : IsRanged ? ShooterTargetPosition() - movementBody.position : offset; // 고정 돌진 또는 실제 추적·발사 목표 방향
                 if (facing.sqrMagnitude > 0.0001f) // 유효한 목표 방향 확인
                 {
                     movementBody.MoveRotation(Mathf.Atan2(facing.y, facing.x) * Mathf.Rad2Deg - 90f); // 위쪽 기준 이미지의 실제 목표 회전
                 }
             }
-            if ((settings.kind == EarlyEnemyKind.Elite || settings.kind == EarlyEnemyKind.Charger) && TickCharge(offset)) // 예고 돌진 처리
+            if (IsCharge && TickCharge(offset)) // 예고 돌진 처리
             {
                 return; // 추적 이동 생략
             }
