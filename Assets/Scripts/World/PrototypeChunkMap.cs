@@ -193,24 +193,9 @@ namespace ProjectEpsilon.World // 맵 영역
             { // 영역 시작
                 return; // 충분한 진입 여유가 없는 후보 제외
             } // 영역 종료
-            if (player != null && Vector2.Distance(player.transform.position, position) < profile.PlayerObstacleClearance) // 실제 머리 주변 보호
+            if (OverlapsPlayer(position)) // 실제 뱀 주변 보호
             { // 영역 시작
-                return; // 플레이어 주변의 장애물 생성 차단
-            } // 영역 종료
-            SnakeBodyManager body = FindFirstObjectByType<SnakeBodyManager>(); // 실제 몸통 관리자
-            if (body != null) // 실제 몸통 존재 확인
-            { // 영역 시작
-                foreach (SnakeSegment segment in body.BodySegments) // 실제 몸통 순회
-                { // 영역 시작
-                    if (segment != null && Vector2.Distance(segment.transform.position, position) < 1.5f) // 몸통과 장애물 간격 확인
-                    { // 영역 시작
-                        return; // 몸통에 겹친 장애물 생성 차단
-                    } // 영역 종료
-                } // 영역 종료
-                if (body.TailSegment != null && Vector2.Distance(body.TailSegment.transform.position, position) < 1.5f) // 실제 꼬리와 간격 확인
-                { // 영역 시작
-                    return; // 꼬리에 겹친 장애물 생성 차단
-                } // 영역 종료
+                return; // 머리와 몸통 주변 생성 차단
             } // 영역 종료
             foreach (SnakeContactHazard existing in chunk.GetComponentsInChildren<SnakeContactHazard>()) // 기존 청크 장애물 순회
             { // 영역 시작
@@ -304,10 +289,10 @@ namespace ProjectEpsilon.World // 맵 영역
                 y = ChunkSize - y; // 상하 대칭 위치
             }
             Vector3 position = chunk.position + new Vector3(x, y, 0f); // 실제 장애물 위치
-            if (player != null && Vector2.Distance(player.transform.position, position) < profile.PlayerObstacleClearance) // 플레이어 주변 안전 영역 확인
-            {
-                return; // 출현 지점과 현재 머리 주변 보호
-            }
+            if (OverlapsPlayer(position)) // 실제 뱀 주변 안전 영역 확인
+            { // 영역 시작
+                return; // 머리와 몸통 주변 생성 차단
+            } // 영역 종료
             string folder = profile.ObstaclePattern == 1 ? "Ruins" : profile.ObstaclePattern == 2 ? "Swamp" : "Plains"; // 현재 맵의 이미지 폴더
             string[] names = profile.ObstaclePattern == 1 // 폐허 장애물 목록 확인
                 ? new[] { "부서진_석주", "녹슨_배관", "무너진_벽체", "정지_톱니_잔해", "엄폐_잔해" } // 폐허 장애물 이미지
@@ -317,6 +302,27 @@ namespace ProjectEpsilon.World // 맵 영역
             string selectedName = names[Random.Range(0, names.Length)]; // 실제 장애물 종류 추첨
             CreateObstacleAt(chunk, position, folder, selectedName); // 기존 장애물 표시와 충돌 생성
         }
+
+        private bool OverlapsPlayer(Vector3 position) // 기존 뱀 위치와 장애물 간격 확인
+        { // 함수 시작
+            if (player != null && Vector2.Distance(player.transform.position, position) < profile.PlayerObstacleClearance) // 실제 머리 주변 확인
+            { // 조건 시작
+                return true; // 머리 보호 영역 겹침
+            } // 조건 종료
+            SnakeBodyManager body = FindFirstObjectByType<SnakeBodyManager>(); // 실제 몸통 관리자
+            if (body == null) // 몸통 관리자 부재 확인
+            { // 조건 시작
+                return false; // 검사할 몸통 없음
+            } // 조건 종료
+            foreach (SnakeSegment segment in body.BodySegments) // 실제 몸통 순회
+            { // 반복 시작
+                if (segment != null && Vector2.Distance(segment.transform.position, position) < 1.5f) // 기존 흙무더기 몸통 보호 거리
+                { // 조건 시작
+                    return true; // 몸통 주변 겹침
+                } // 조건 종료
+            } // 반복 종료
+            return body.TailSegment != null && Vector2.Distance(body.TailSegment.transform.position, position) < 1.5f; // 기존 꼬리 보호 거리
+        } // 함수 종료
 
         private void CreateObstacleAt(Transform chunk, Vector3 position, string folder, string selectedName) // 실제 위치의 공용 장애물 생성
         { // 영역 시작

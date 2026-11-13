@@ -14,7 +14,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::ProjectEpsilon.World.PrototypeMapProfile
   displayName: 폐허 회랑
   ground: {fileID: 21300000, guid: 98a52e6174704c58a4c3445d15aae880, type: 3}
-  bossTint: {r: 0.76, g: 0.82, b: 1, a: 1}
+  bossArtwork: {fileID: 21300000, guid: 976598747d864bc6a5e10f35df2748a9, type: 3}
+  bossTint: {r: 1, g: 1, b: 1, a: 1}
   bossPattern: 1
   bossHealth: 700
   bossSpeedRatio: 0.65

@@ -7,6 +7,7 @@ namespace ProjectEpsilon.World // 맵 영역
     {
         [SerializeField] private string displayName = "개방 평원"; // 시작 화면 맵 이름
         [SerializeField] private Sprite ground; // 맵 바닥 이미지
+        [SerializeField] private Sprite bossArtwork; // 맵별 보스 원본 이미지
         [SerializeField] private Color bossTint = Color.white; // 임시 보스 구분 색상
         [Range(0, 2)] [SerializeField] private int bossPattern; // 평원·폐허·습지 보스 패턴
         [Min(1f)] [SerializeField] private float bossHealth = 600f; // 보스 체력 임시값
@@ -76,6 +77,7 @@ namespace ProjectEpsilon.World // 맵 영역
         [Min(0)] [SerializeField] private int sporeDamage = 5; // 독성 포자 공용 체력 피해
         public string DisplayName => displayName; // 맵 표시 이름
         public Sprite Ground => ground; // 실제 바닥 이미지
+        public Sprite BossArtwork => bossArtwork; // 실제 맵별 보스 이미지
         public Color BossTint => bossTint; // 실제 임시 보스 색상
         public int BossPattern => Mathf.Clamp(bossPattern, 0, 2); // 안전한 맵별 보스 패턴
         public float BossHealth => Mathf.Max(1f, bossHealth); // 안전한 보스 체력

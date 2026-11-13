@@ -44,6 +44,8 @@ namespace ProjectEpsilon.Enemies // 적 영역
         [SerializeField] private Sprite projectileVisual; // 보스 투사체 전용 또는 임시 이미지
         [SerializeField] private Color bossTint = new Color(0.7f, 0.1f, 0.9f); // 기존 보스 구분 색상
         [SerializeField] private bool alignVisualWithTarget; // 보스 이미지의 목표 방향 회전
+        private Sprite fallbackBossVisual; // 씬의 기본 보스 이미지
+        private bool fallbackVisualAlignment; // 씬의 기본 회전 설정
         private EarlyEnemyWaveSpawner spawner; // 실제 20분 전환기
         private WeaponTarget boss; // 실제 공격 가능한 보스
         private EarlyEnemySettings settings; // 실제 보스 행동 설정
@@ -52,6 +54,12 @@ namespace ProjectEpsilon.Enemies // 적 영역
         private int mapBossPattern; // 선택된 맵의 보스 패턴
         public WeaponTarget Boss => boss; // 실제 생성 보스 조회
         public bool IsPhaseTwo => phase.IsPhaseTwo; // 현재 보스 단계 조회
+
+        private void Awake() // 씬의 기본 이미지 보존
+        { // 함수 시작
+            fallbackBossVisual = bossVisual; // 기본 보스 이미지 저장
+            fallbackVisualAlignment = alignVisualWithTarget; // 기본 이미지 방향 저장
+        } // 함수 종료
 
         public bool ApplyProfile(PrototypeMapProfile profile) // 시작 전 맵별 보스 설정
         {
@@ -82,7 +90,9 @@ namespace ProjectEpsilon.Enemies // 적 영역
             summonInterval = profile.BossSummonInterval; // 맵별 소환 간격
             summonMaximum = profile.BossSummonMaximum; // 맵별 소환 적 상한
             summonRadius = profile.BossSummonRadius; // 맵별 소환 거리
-            bossTint = profile.BossTint; // 임시 보스 구분 색상
+            bossVisual = profile.BossArtwork != null ? profile.BossArtwork : fallbackBossVisual; // 맵 이미지 또는 씬 기본 이미지
+            alignVisualWithTarget = profile.BossArtwork != null || fallbackVisualAlignment; // 맵 이미지의 이동 방향 정렬
+            bossTint = profile.BossTint; // 맵별 이미지 색상
             mapBossPattern = profile.BossPattern; // 선택된 맵의 보스 패턴
             return true; // 맵별 설정 적용 완료
         }
