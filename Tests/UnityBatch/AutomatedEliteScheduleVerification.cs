@@ -265,6 +265,7 @@ namespace ProjectEpsilon.Editor // 편집기 영역
             Require(deathEvents == 4 && rewards.PendingRewardCount == 4 && CountPickups() == 4 && CountExperience() == 80, "Actual elite deaths did not produce exactly four reward requests and four 20-XP gems."); // 실제 사망과 보상 총량 확인
             Debug.Log("[EliteScheduleVerification] four controlled elite defeats: four Died events, four pending rewards, four actual gems worth 80 XP."); // 실제 보상 생성 기록
             Time.timeScale = 1f; // 보상 경합 전 정상 시험 배율
+            GetComponent<SnakeInvulnerability>().ClearInvulnerability(); // 통제 시험의 임시 무적 해제
             Require(health.TakeDamage(health.MaximumHealth + 1), "Could not prepare usable repair and heal rewards."); // 보상 선택용 통제 피해
             Require(body.CurrentBodyCount == 2 && body.EarnedBodyCount == 3, "Controlled reward fixture body state is incorrect."); // 실제 몸통 통제 상태
             ExperiencePickup[] gems = UnityEngine.Object.FindObjectsByType<ExperiencePickup>(FindObjectsSortMode.None); // 실제 대형 보석 조회
@@ -323,8 +324,11 @@ namespace ProjectEpsilon.Editor // 편집기 영역
             }
             if (external != null) // 외부 충돌 존재 확인
             {
-                external.enabled = false; // 통제 중 외부 충돌 제외
+                external.enabled = true; // 실제 충돌 처리기 유지
             }
+            SnakeInvulnerability immunity = GetComponent<SnakeInvulnerability>(); // 실제 공용 무적 구성
+            Require(immunity != null, "Player invulnerability fixture missing."); // 통제용 무적 구성 확인
+            immunity.StartInvulnerability(2000f); // 가속 중 새 적의 초기 물리 접촉 차단
             foreach (SnakeWeaponSlot slot in weapons.Slots) // 실제 모든 무기 슬롯 순회
             {
                 slot.Clear(); // 시험 중 자연 자동 처치 방지
@@ -336,7 +340,7 @@ namespace ProjectEpsilon.Editor // 편집기 영역
             Require(experience.CurrentLevel == 1 && experience.CurrentExperience == 0 && experience.RequiredExperience == 10 && body.CurrentBodyCount == 3 && health.CurrentHealth == health.MaximumHealth, "Actual controlled start state is incorrect."); // 실제 시작 상태 확인
             UnityEngine.Random.InitState(3391); // 출현과 보상 재현 시드
             Time.timeScale = 32f; // 실제 출현 시계의 시험 가속
-            Debug.Log($"[EliteScheduleVerification] actual initial spawner time={Elapsed():F3}; scale=32, seed=3391, no clock injection; player/attacks and spawned enemy actions disabled; early cap=1, late cap=2, deferred FIFO is a provisional assumption; XP base=10 multiplier=1.0."); // 실제 통제와 기획 가정 기록
+            Debug.Log($"[EliteScheduleVerification] actual initial spawner time={Elapsed():F3}; scale=32, seed=3391, no clock injection; player/attacks and spawned enemy actions disabled, player temporarily invulnerable; early cap=1, late cap=2, deferred FIFO is a provisional assumption; XP base=10 multiplier=1.0."); // 실제 통제와 기획 가정 기록
         }
 
         private IEnumerator UntilElapsed(float required) // 실제 출현기 시각 대기
@@ -364,7 +368,7 @@ namespace ProjectEpsilon.Editor // 편집기 영역
 
         private void ObserveEnemies() // 실제 출현 적 관찰과 행동 통제
         {
-            Require(GameManager.Instance.IsPlaying, "Game stopped during the accelerated schedule observation."); // 실제 게임 진행 상태 확인
+            Require(GameManager.Instance.IsPlaying, $"Game stopped during the accelerated schedule observation: state={GameManager.Instance.CurrentState}, health={health.CurrentHealth}, bodies={body.CurrentBodyCount}, levelPending={experience.IsLevelUpPending}."); // 중단 상태와 실제 원인 기록
             foreach (EarlyEnemyBehaviour enemy in UnityEngine.Object.FindObjectsByType<EarlyEnemyBehaviour>(FindObjectsSortMode.None)) // 실제 활성 적 순회
             {
                 if (!seen.Add(enemy.GetInstanceID())) // 이미 관찰한 적 확인

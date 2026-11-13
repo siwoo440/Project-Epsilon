@@ -31,6 +31,7 @@ namespace ProjectEpsilon.Enemies // 적 영역
         private bool reportedMissingResolver; // 충돌 처리기 누락 기록
         private Vector2 chargeDirection; // 예고된 돌진 방향
         private LineRenderer warning; // 돌진 예고선
+        private Material warningMaterial; // 예고선 전용 재질
         public void Configure(EarlyEnemySettings data, SnakeMovement target, SnakeBodyManager segments, SnakeHealth sharedHealth, Sprite sprite, float keepDistance, float shotSpeed, float shotLifetime, float warningDuration, float chargeDuration, float chargeMultiplier) // 행동 연결
         {
             settings = data; // 능력 설정 저장
@@ -41,9 +42,9 @@ namespace ProjectEpsilon.Enemies // 적 영역
             shooterDistance = keepDistance; // 사수 유지 거리 저장
             projectileSpeed = shotSpeed; // 투사체 속도 저장
             projectileLifetime = shotLifetime; // 투사체 수명 저장
-            eliteWarningDuration = warningDuration; // 엘리트 예고 시간 저장
-            eliteChargeDuration = chargeDuration; // 엘리트 돌진 시간 저장
-            eliteChargeMultiplier = chargeMultiplier; // 엘리트 돌진 배율 저장
+            eliteWarningDuration = data.kind == EarlyEnemyKind.Charger ? data.chargeWarningDuration : warningDuration; // 일반 적 또는 엘리트 예고 시간
+            eliteChargeDuration = data.kind == EarlyEnemyKind.Charger ? data.chargeDuration : chargeDuration; // 일반 적 또는 엘리트 돌진 지속 시간
+            eliteChargeMultiplier = data.kind == EarlyEnemyKind.Charger ? data.chargeSpeedMultiplier : chargeMultiplier; // 일반 적 또는 엘리트 돌진 배율
             movementBody = GetComponent<Rigidbody2D>(); // 물리체 조회
             statuses = GetComponent<WeaponTargetStatusController>(); // 상태 효과 조회
             knockback = GetComponent<WeaponTargetKnockbackController>(); // 넉백 조회
@@ -63,13 +64,13 @@ namespace ProjectEpsilon.Enemies // 적 영역
             Vector2 offset = TargetPosition() - movementBody.position; // 목표 방향 계산
             if (settings.enemySprite != null && (statuses == null || statuses.CurrentMovementMultiplier > 0f)) // 전용 이미지와 움직임 가능 상태 확인
             {
-                Vector2 facing = settings.kind == EarlyEnemyKind.Elite && chargePhase != 0 ? chargeDirection : settings.kind == EarlyEnemyKind.Shooter ? ShooterTargetPosition() - movementBody.position : offset; // 고정 돌진 또는 실제 추적·발사 목표 방향
+                Vector2 facing = (settings.kind == EarlyEnemyKind.Elite || settings.kind == EarlyEnemyKind.Charger) && chargePhase != 0 ? chargeDirection : settings.kind == EarlyEnemyKind.Shooter ? ShooterTargetPosition() - movementBody.position : offset; // 고정 돌진 또는 실제 추적·발사 목표 방향
                 if (facing.sqrMagnitude > 0.0001f) // 유효한 목표 방향 확인
                 {
                     movementBody.MoveRotation(Mathf.Atan2(facing.y, facing.x) * Mathf.Rad2Deg - 90f); // 위쪽 기준 이미지의 실제 목표 회전
                 }
             }
-            if (settings.kind == EarlyEnemyKind.Elite && TickCharge(offset)) // 엘리트 돌진 처리
+            if ((settings.kind == EarlyEnemyKind.Elite || settings.kind == EarlyEnemyKind.Charger) && TickCharge(offset)) // 예고 돌진 처리
             {
                 return; // 추적 이동 생략
             }
@@ -188,7 +189,8 @@ namespace ProjectEpsilon.Enemies // 적 영역
             if (warning == null) // 예고선 부재 확인
             {
                 warning = gameObject.AddComponent<LineRenderer>(); // 예고선 생성
-                warning.material = new Material(Shader.Find("Sprites/Default")); // 기본 스프라이트 재질
+                warningMaterial = new Material(Shader.Find("Sprites/Default")); // 예고선 전용 재질 생성
+                warning.material = warningMaterial; // 생성한 재질 연결
                 warning.startColor = Color.red; // 시작 색상
                 warning.endColor = Color.red; // 끝 색상
                 warning.startWidth = 0.12f; // 시작 두께
@@ -198,15 +200,23 @@ namespace ProjectEpsilon.Enemies // 적 영역
             }
             warning.enabled = true; // 예고선 표시
             warning.SetPosition(0, transform.position); // 예고선 시작점
-            warning.SetPosition(1, transform.position + (Vector3)(chargeDirection * (6f * EnemyMovementRules.SpeedMultiplier))); // 속도에 맞춘 예고선 끝점
+            float warningDistance = settings.kind == EarlyEnemyKind.Charger ? player.BaseMoveSpeed * Mathf.Max(0f, settings.speedRatio) * Mathf.Max(1f, eliteChargeMultiplier) * Mathf.Max(0.1f, eliteChargeDuration) * EnemyMovementRules.SpeedMultiplier : 6f * EnemyMovementRules.SpeedMultiplier; // 일반 돌진 실제 거리 또는 기존 엘리트 거리
+            warning.SetPosition(1, transform.position + (Vector3)(chargeDirection * warningDistance)); // 맵에 표시할 예고선 끝점
         }
+        private void OnDestroy() // 적 제거 시 예고 자원 정리
+        { // 함수 시작
+            if (warningMaterial != null) // 생성한 재질 확인
+            { // 조건 시작
+                Destroy(warningMaterial); // 예고 재질 제거
+            } // 조건 종료
+        } // 함수 종료
         private void OnTriggerStay2D(Collider2D other) // 적 접촉 지속 처리
         {
             if (!isActiveAndEnabled || settings == null || player == null || health == null || GameManager.Instance == null || !GameManager.Instance.IsPlaying || !IsPlayerPart(other)) // 활성 상태와 유효 접촉 확인
             {
                 return; // 접촉 처리 생략
             }
-            if (chargePhase == 2 && !chargeCut && !chargeCutPending) // 예고 돌진 절단 확인
+            if (settings.kind == EarlyEnemyKind.Elite && chargePhase == 2 && !chargeCut && !chargeCutPending) // 엘리트 전용 돌진 절단 확인
             {
                 SnakeExternalCollision collision = player.GetComponent<SnakeExternalCollision>(); // 직접 충돌 판정 조회
                 if (collision != null && collision.isActiveAndEnabled) // 물리 스텝 처리기 확인

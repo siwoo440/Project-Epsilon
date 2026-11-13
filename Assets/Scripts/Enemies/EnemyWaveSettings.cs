@@ -11,12 +11,20 @@ namespace ProjectEpsilon.Enemies // 적 출현 영역
         public int normalEnemyLimit = 40; // 일반 적 최대 수
         public float healthMultiplier = 1f; // 일반 적 체력 배율
         public float damageMultiplier = 1f; // 일반 적 피해 배율
+        [Tooltip("순서: 병정개미, 사마귀, 말벌, 엘리트(0), 쇠똥구리")] public float[] spawnWeights; // 적 행동 종류별 출현 가중치
+        public float GetSpawnWeight(EarlyEnemyKind kind) // 현재 구간의 적별 가중치
+        { // 함수 시작
+            int index = (int)kind; // 적 행동 번호
+            return spawnWeights == null || index < 0 || index >= spawnWeights.Length ? 1f : Mathf.Max(0f, spawnWeights[index]); // 미설정 호환 또는 안전한 가중치
+        } // 함수 종료
     }
 
     [CreateAssetMenu(menuName = "Project Epsilon/Enemy Wave Settings")] // 출현 데이터 생성 메뉴
     public sealed class EnemyWaveSettings : ScriptableObject // 조정 가능한 출현 구간 데이터
     {
         [SerializeField] private EnemyWaveStage[] stages; // 시간별 출현 구간 목록
+        [SerializeField] private EarlyEnemySettings[] additionalEnemies; // 추가 일반 적과 조정 가능한 시험값
+        public EarlyEnemySettings[] AdditionalEnemies => additionalEnemies; // 실제 추가 적 목록
 
         public float ResolveMultiplier(float elapsed, bool health) // 분 단위 능력치 배율
         {

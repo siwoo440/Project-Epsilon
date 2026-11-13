@@ -13,7 +13,8 @@ namespace ProjectEpsilon.Enemies // 적 영역
         Chaser, // 추적자
         Predator, // 측면 포식자
         Shooter, // 원거리 사수
-        Elite // 돌진 엘리트
+        Elite, // 돌진 엘리트
+        Charger // 일반 예고 돌진 적
     }
     [Serializable] // 편집기 설정 허용
     public sealed class EarlyEnemySettings // 조정 가능한 적 설정
@@ -26,6 +27,9 @@ namespace ProjectEpsilon.Enemies // 적 영역
         public int projectileCount = 1; // 사격 투사체 수 임시값
         public float projectileSpreadDegrees; // 사격 전체 부채각 임시값
         public bool opposedProjectileFan; // 반대 방향 부채꼴 추가 여부
+        public float chargeWarningDuration = 0.6f; // 일반 돌진 예고 시간
+        public float chargeDuration = 0.6f; // 일반 돌진 지속 시험값
+        public float chargeSpeedMultiplier = 3f; // 일반 돌진 속도 시험 배율
         public int experience; // 경험치
         public float firstAppearance; // 최초 출현 시간
         public Color color = Color.white; // 구분 색상
@@ -127,7 +131,22 @@ namespace ProjectEpsilon.Enemies // 적 영역
         public float RecordingSpawnInterval => CurrentSpawnInterval; // 기록 시점 일반 적 출현 간격
         public int RecordingEnemyLimit => CurrentNormalEnemyLimit; // 기록 시점 일반 적 상한
         public float RecordingBossTime => Mathf.Max(0f, bossTransitionTime); // 실제 보스 전환 시각
-        public IReadOnlyList<EarlyEnemySettings> RecordingEnemies => enemies; // 실제 시험 적 설정 목록
+        public IReadOnlyList<EarlyEnemySettings> RecordingEnemies // 실제 런 기록용 적 설정 목록
+        { // 속성 시작
+            get // 전체 설정 조회
+            { // 조회 시작
+                List<EarlyEnemySettings> result = new List<EarlyEnemySettings>(); // 기존 적과 추가 적 목록
+                if (enemies != null) // 기존 적 설정 확인
+                { // 조건 시작
+                    result.AddRange(enemies); // 기존 적 설정 보존
+                } // 조건 종료
+                if (waveSettings != null && waveSettings.AdditionalEnemies != null) // 추가 적 설정 확인
+                { // 조건 시작
+                    result.AddRange(waveSettings.AdditionalEnemies); // 추가 적 설정 포함
+                } // 조건 종료
+                return result; // 실제 전체 기록 대상 반환
+            } // 조회 종료
+        } // 속성 종료
         public int ActiveEnemies => activeEnemies; // 생존 적 수 조회
         public int CurrentNormalEnemyCount => Mathf.Max(0, activeEnemies - eliteTargets.Count - bossSummonTargets.Count); // 엘리트와 소환 적을 제외한 일반 적 수
         public float CurrentSpawnInterval => Mathf.Max(0.1f, CurrentStage == null ? spawnInterval : CurrentStage.spawnInterval); // 현재 일반 적 출현 간격
@@ -189,32 +208,81 @@ namespace ProjectEpsilon.Enemies // 적 영역
                 return; // 일반 출현 중지
             }
             nextSpawn = elapsed + CurrentSpawnInterval; // 현재 구간의 다음 출현 시각 저장
-            int available = 0; // 출현 가능 종류 수
-            for (int index = 0; index < enemies.Length; index++) // 적 설정 순회
-            {
-                if (enemies[index] != null && enemies[index].kind != EarlyEnemyKind.Elite && elapsed >= enemies[index].firstAppearance) // 일반 적 해금 확인
-                {
-                    available++; // 출현 가능 종류 증가
-                }
-            }
-            if (available == 0) // 출현 가능 적 부재
-            {
-                return; // 출현 생략
-            }
-            int selected = UnityEngine.Random.Range(0, available); // 출현 종류 추첨
-            foreach (EarlyEnemySettings setting in enemies) // 해금 적 순회
-            {
-                if (setting == null || setting.kind == EarlyEnemyKind.Elite || elapsed < setting.firstAppearance) // 미해금 적 제외
-                {
-                    continue; // 다음 설정 이동
-                }
-                if (selected-- == 0) // 선택 순번 확인
-                {
-                    Spawn(setting); // 일반 적 출현
-                    break; // 선택 종료
-                }
-            }
+            EarlyEnemySettings selected = SelectNormalEnemy(); // 현재 구간의 일반 적 추첨
+            if (selected != null) // 실제 선택 결과 확인
+            { // 조건 시작
+                Spawn(selected); // 선택된 일반 적 한 마리 생성
+            } // 조건 종료
         }
+        private EarlyEnemySettings SelectNormalEnemy() // 해금된 일반 적의 가중 추첨
+        { // 함수 시작
+            EarlyEnemySettings[] additional = waveSettings == null ? null : waveSettings.AdditionalEnemies; // 추가 일반 적 목록
+            float total = 0f; // 전체 유효 가중치
+            if (enemies != null) // 기존 적 목록 확인
+            { // 조건 시작
+                foreach (EarlyEnemySettings setting in enemies) // 기존 적 순회
+                { // 반복 시작
+                    total += NormalSpawnWeight(setting); // 기존 적 가중치 합산
+                } // 반복 종료
+            } // 조건 종료
+            if (additional != null) // 추가 적 목록 확인
+            { // 조건 시작
+                foreach (EarlyEnemySettings setting in additional) // 추가 적 순회
+                { // 반복 시작
+                    total += NormalSpawnWeight(setting); // 추가 적 가중치 합산
+                } // 반복 종료
+            } // 조건 종료
+            if (total <= 0f) // 유효한 출현 후보 부재 확인
+            { // 조건 시작
+                return null; // 출현 생략
+            } // 조건 종료
+            float choice = UnityEngine.Random.value * total; // 전체 가중치에서 난수 선택
+            EarlyEnemySettings last = null; // 부동소수 경계의 마지막 후보
+            if (enemies != null) // 기존 적 목록 확인
+            { // 조건 시작
+                foreach (EarlyEnemySettings setting in enemies) // 기존 적 순회
+                { // 반복 시작
+                    float weight = NormalSpawnWeight(setting); // 현재 적의 유효 가중치
+                    if (weight <= 0f) // 출현 불가능한 적 확인
+                    { // 조건 시작
+                        continue; // 다음 후보 검사
+                    } // 조건 종료
+                    last = setting; // 마지막 유효 후보 보관
+                    if (choice <= weight) // 선택한 가중치 범위 확인
+                    { // 조건 시작
+                        return setting; // 실제 선택 적 반환
+                    } // 조건 종료
+                    choice -= weight; // 다음 후보의 난수 범위
+                } // 반복 종료
+            } // 조건 종료
+            if (additional != null) // 추가 적 목록 확인
+            { // 조건 시작
+                foreach (EarlyEnemySettings setting in additional) // 추가 적 순회
+                { // 반복 시작
+                    float weight = NormalSpawnWeight(setting); // 현재 적의 유효 가중치
+                    if (weight <= 0f) // 출현 불가능한 적 확인
+                    { // 조건 시작
+                        continue; // 다음 후보 검사
+                    } // 조건 종료
+                    last = setting; // 마지막 유효 후보 보관
+                    if (choice <= weight) // 선택한 가중치 범위 확인
+                    { // 조건 시작
+                        return setting; // 실제 선택 적 반환
+                    } // 조건 종료
+                    choice -= weight; // 다음 후보의 난수 범위
+                } // 반복 종료
+            } // 조건 종료
+            return last; // 난수 경계에서 마지막 후보 사용
+        } // 함수 종료
+        private float NormalSpawnWeight(EarlyEnemySettings setting) // 현재 시점의 유효 출현 가중치
+        { // 함수 시작
+            if (setting == null || setting.kind == EarlyEnemyKind.Elite || elapsed < setting.firstAppearance) // 미해금 적과 엘리트 확인
+            { // 조건 시작
+                return 0f; // 일반 적 추첨 제외
+            } // 조건 종료
+            EnemyWaveStage stage = CurrentStage; // 현재 웨이브 구간
+            return stage == null ? 1f : stage.GetSpawnWeight(setting.kind); // 구간 가중치 또는 기존 균등 추첨
+        } // 함수 종료
         private void EnterBossTransition() // 기존 전투 무보상 정리
         {
             hasEnteredBossTransition = true; // 중복 전환 방지
@@ -375,6 +443,10 @@ namespace ProjectEpsilon.Enemies // 적 영역
                 attackInterval = source.attackInterval, // 기존 공격 간격
                 projectileCount = source.projectileCount, // 기존 투사체 수
                 projectileSpreadDegrees = source.projectileSpreadDegrees, // 기존 투사체 각도
+                opposedProjectileFan = source.opposedProjectileFan, // 기존 양방향 사격 여부
+                chargeWarningDuration = source.chargeWarningDuration, // 일반 돌진 예고 시간
+                chargeDuration = source.chargeDuration, // 일반 돌진 지속 시간
+                chargeSpeedMultiplier = source.chargeSpeedMultiplier, // 일반 돌진 속도 배율
                 experience = source.experience, // 기존 경험치
                 firstAppearance = source.firstAppearance, // 기존 최초 출현 시각
                 color = source.color, // 기존 표시 색상

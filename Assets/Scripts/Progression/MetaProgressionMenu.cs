@@ -65,7 +65,7 @@ namespace ProjectEpsilon.Progression // 영구 성장 영역
             }
             if (!IsOpen) // 실제 메뉴 닫힘 확인
             {
-                if (GUI.Button(new Rect(16f, 16f, 180f, 36f), "영구 성장")) // 실제 성장 메뉴 열기
+                if (RunFrontendController.Instance == null && GUI.Button(new Rect(16f, 16f, 180f, 36f), "영구 성장")) // 별도 메뉴가 없는 기존 씬의 성장 버튼
                 {
                     IsOpen = true; // 실제 메뉴 표시
                 }
@@ -74,7 +74,7 @@ namespace ProjectEpsilon.Progression // 영구 성장 영역
             float width = Mathf.Min(760f, Mathf.Max(320f, Screen.width - 32f)); // 실제 화면 너비
             float height = Mathf.Min(620f, Mathf.Max(430f, Screen.height - 32f)); // 실제 화면 높이
             Rect frame = new Rect((Screen.width - width) * 0.5f, (Screen.height - height) * 0.5f, width, height); // 실제 메뉴 영역
-            GUI.Box(frame, "영구 성장  |  코어 " + controller.Service.Cores); // 실제 보유 재화 표시
+            GUI.Box(frame, "영구 성장  |  보유 " + controller.Service.Cores + "  |  전체 강화까지 " + controller.Service.RemainingUpgradeCost + " 코어"); // 보유 재화와 남은 성장 비용
             float rowHeight = (height - 95f) / Labels.Length; // 실제 노드 행 높이
             for (int index = 0; index < Labels.Length; index++) // 실제 열두 노드 순회
             {

@@ -230,9 +230,10 @@ namespace ProjectEpsilon.Recording // 전투 기록 영역
             {
                 recording.permanentLevels[index] = meta == null || meta.Service == null ? 0 : meta.Service.GetLevel((MetaNode)index); // 실제 시작 단계 기록
             }
-            if (wave != null && wave.RecordingEnemies != null) // 실제 시험 적 설정 확인
+            IReadOnlyList<EarlyEnemySettings> recordedEnemies = wave == null ? null : wave.RecordingEnemies; // 기존 적과 추가 적 설정
+            if (recordedEnemies != null) // 실제 기록 대상 확인
             {
-                foreach (EarlyEnemySettings enemy in wave.RecordingEnemies) // 실제 적 설정 순회
+                foreach (EarlyEnemySettings enemy in recordedEnemies) // 실제 적 설정 순회
                 {
                     if (enemy != null) // 실제 설정 존재 확인
                     {

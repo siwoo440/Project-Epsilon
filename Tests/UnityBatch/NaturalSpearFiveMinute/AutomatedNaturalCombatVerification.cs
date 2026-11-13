@@ -35,6 +35,7 @@ namespace ProjectEpsilon.Editor // 편집기 영역
         private static float nextInputReport; // 다음 입력 진단 시각
         private static int nextKeys; // 다음 가상 입력
         private static double startWallTime; // 실제 시작 시간
+        private static double setupWallTime; // 시작 화면 대기 시간
         private static bool leftObserved; // 왼쪽 입력 확인
         private static bool rightObserved; // 오른쪽 입력 확인
         private static bool boostObserved; // 가속 입력 확인
@@ -65,6 +66,8 @@ namespace ProjectEpsilon.Editor // 편집기 영역
         private static int naturalKills; // 자연 출현 적 처치 수
         private static bool experienceObserved; // 자연 경험치 획득 여부
         private static bool naturalProgressObserved; // 실제 성장과 보상 완료 여부
+        private static string gameplayError; // 전투 중 발견한 오류
+        private static bool observingLogs; // 오류 감시 연결 여부
         private static SnakeExperience trackedExperience; // 경험치 이벤트 대상
         private static SnakeBodyManager trackedBody; // 몸통 변경 이벤트 대상
         private static int trackedBodyCount; // 직전 몸통 수
@@ -97,13 +100,34 @@ namespace ProjectEpsilon.Editor // 편집기 영역
             }
             try // 검증 오류 처리
             {
+                if (!observingLogs) // 실제 플레이 오류 감시 확인
+                { // 조건 시작
+                    Application.logMessageReceived += ObserveRuntimeLog; // 실제 전투 오류 감시 연결
+                    observingLogs = true; // 중복 연결 방지
+                } // 조건 종료
+                if (gameplayError != null) // 실제 실행 오류 확인
+                { // 조건 시작
+                    Fail("runtime error: " + gameplayError); // 오류가 있는 플레이를 실패로 기록
+                    return; // 후속 시험 중단
+                } // 조건 종료
                 GameManager game = GameManager.Instance; // 현재 시작 상태 조회
                 if (game != null && game.CurrentState == GameState.Starting) // 시작 선택 상태 확인
                 {
+                    if (setupWallTime == 0d) setupWallTime = EditorApplication.timeSinceStartup; // 시작 화면 시간 기록
+                    if (EditorApplication.timeSinceStartup - setupWallTime > 45d) throw new InvalidOperationException("Starting screen navigation timed out."); // 시작 화면 무한 대기 방지
                     if (!Mathf.Approximately(Time.timeScale, 0f)) // 시작 전 정지 확인
                     {
                         throw new InvalidOperationException("Starting selection did not freeze game time."); // 시작 시간 오류
                     }
+                    RunFrontendController frontend = RunFrontendController.Instance; // 실제 분리 메뉴 상태
+                    if (frontend != null && frontend.Stage != FrontendStage.Weapons) // 시작 포탑 이전 화면 확인
+                    { // 조건 시작
+                        string nextName = frontend.Stage == FrontendStage.Main ? "FrontendStartButton" : frontend.Stage == FrontendStage.Characters ? "FrontendCharactersNextButton" : frontend.Stage == FrontendStage.Maps ? "FrontendMapsNextButton" : null; // 실제 다음 화면 버튼
+                        GameObject nextObject = string.IsNullOrEmpty(nextName) ? null : GameObject.Find(nextName); // 실제 탐색 버튼 조회
+                        Button nextButton = nextObject == null ? null : nextObject.GetComponent<Button>(); // 실제 버튼 구성
+                        if (nextButton != null && nextButton.IsActive() && nextButton.interactable) nextButton.onClick.Invoke(); // 실제 시작 화면 이동
+                        return; // 다음 화면 구성 대기
+                    } // 조건 종료
                     StartingWeaponSelection selection = UnityEngine.Object.FindFirstObjectByType<StartingWeaponSelection>(); // 실제 시작 선택기
                     StartingWeaponOptions options = selection == null ? null : (StartingWeaponOptions)typeof(StartingWeaponSelection).GetField("options", PrivateInstance).GetValue(selection); // 실제 후보 데이터
                     if (selection != null && selection.IsSelecting) // 실제 시작 후보 선택 상태 확인
@@ -200,7 +224,6 @@ namespace ProjectEpsilon.Editor // 편집기 영역
             experienceObserved |= experience.CurrentExperience > 0 || experience.CurrentLevel > 1; // 자연 경험치 확인
             SnakeLevelUpController level = UnityEngine.Object.FindFirstObjectByType<SnakeLevelUpController>(); // 레벨업 처리기
             EliteRewardController elite = UnityEngine.Object.FindFirstObjectByType<EliteRewardController>(); // 엘리트 보상 처리기
-            SnakeWeaponMergeController merge = UnityEngine.Object.FindFirstObjectByType<SnakeWeaponMergeController>(); // 합성 처리기
             if (level != null && level.IsPresentingLevelUp) // 레벨업 선택 상태
             {
                 SetKeys(0); // 이동 입력 해제
@@ -221,11 +244,6 @@ namespace ProjectEpsilon.Editor // 편집기 영역
                     ClickFirstAvailableLevelButton(); // 활성 보상 선택
                 }
                 eliteSelections++; // 선택 횟수 증가
-            }
-            else if (merge != null && merge.IsMergeOpen) // 보상 합성 화면 상태
-            {
-                SetKeys(0); // 이동 입력 해제
-                ClickFirstAvailableMergeButton(); // 첫 합성 또는 강화 선택
             }
             else if (game.IsPlaying) // 일반 플레이 상태
             {
@@ -304,7 +322,7 @@ namespace ProjectEpsilon.Editor // 편집기 영역
                 Fail($"defeated at {elapsed:F1} seconds; level={experience.CurrentLevel}; hp={health.CurrentHealth}; body={body.CurrentBodyCount}"); // 패배 결과 기록
                 return; // 추가 처리 중단
             }
-            if (game.IsPlaying && (merge == null || !merge.IsMergeOpen) && !Mathf.Approximately(Time.timeScale, 1f)) // 일반 게임 속도 확인
+            if (game.IsPlaying && !Mathf.Approximately(Time.timeScale, 1f)) // 일반 게임 속도 확인
             {
                 Fail($"unexpected time scale {Time.timeScale}"); // 속도 차이 기록
                 return; // 추가 처리 중단
@@ -314,13 +332,18 @@ namespace ProjectEpsilon.Editor // 편집기 영역
                 naturalProgressObserved = true; // 실제 성장 완료 기록
                 Debug.Log($"[NaturalCombatVerification] progression observed kills={naturalKills} level={experience.CurrentLevel} xp={experience.CurrentExperience} choices={levelSelections} body={body.CurrentBodyCount} hp={health.CurrentHealth} game={elapsed:F1}s wall={EditorApplication.timeSinceStartup - startWallTime:F1}s."); // 자연 전투 성장 확인
             }
-            if (elapsed >= 300f && game.IsPlaying && (merge == null || !merge.IsMergeOpen)) // 실제 전투 재개 및 생존 시간 확인
+            if (elapsed >= 300f && game.IsPlaying) // 실제 전투 재개 및 생존 시간 확인
             {
                 if (!naturalProgressObserved) // 실제 성장 누락 확인
                 {
                     Fail($"natural progression absent at 300s: kills={naturalKills} level={experience.CurrentLevel} xp={experience.CurrentExperience} choices={levelSelections}"); // 성장 미발생 기록
                     return; // 추가 처리 중단
                 }
+                if (!sawChaser || !sawPredator || !sawShooter || !sawElite) // 초반 적과 4분 엘리트 확인
+                { // 조건 시작
+                    Fail($"required enemy missing: chaser={sawChaser}, predator={sawPredator}, shooter={sawShooter}, elite={sawElite}"); // 출현 누락 기록
+                    return; // 성공 처리 중단
+                } // 조건 종료
                 Debug.Log($"[NaturalCombatVerification] PASS five-minute survival kills={naturalKills} level={experience.CurrentLevel} xp={experience.CurrentExperience} choices={levelSelections} body={body.CurrentBodyCount} hp={health.CurrentHealth} game={elapsed:F1}s wall={EditorApplication.timeSinceStartup - startWallTime:F1}s."); // 자연 성장 후 생존 확인
                 Finish(0); // 성공 종료
                 return; // 추가 처리 중단
@@ -863,36 +886,35 @@ namespace ProjectEpsilon.Editor // 편집기 영역
             }
         }
 
-        private static void ClickFirstAvailableMergeButton() // 사용 가능한 첫 합성 선택
-        {
-            WeaponMergePanelController panel = UnityEngine.Object.FindFirstObjectByType<WeaponMergePanelController>(FindObjectsInactive.Include); // 합성 화면 조회
-            if (panel == null) // 화면 부재 확인
-            {
-                return; // 선택 생략
-            }
-            SnakeWeaponMergeController merge = UnityEngine.Object.FindFirstObjectByType<SnakeWeaponMergeController>(); // 실제 합성 상태 조회
-            FieldInfo stageField = typeof(SnakeWeaponMergeController).GetField("selectionStage", PrivateInstance); // 실제 재료 선택 단계 조회
-            int stage = merge == null || stageField == null ? -1 : (int)stageField.GetValue(merge); // 현재 실제 선택 단계
-            string[] names = stage >= 0 && stage < 2 ? new[] { "candidateButton02" } : new[] { "candidateButton01", "candidateButton02", "candidateButton03" }; // 재료 확정 또는 강화 버튼 선택
-            foreach (string name in names) // 후보 버튼 순회
-            {
-                Button button = (Button)typeof(WeaponMergePanelController).GetField(name, PrivateInstance).GetValue(panel); // 버튼 조회
-                if (button != null && button.IsActive() && button.interactable) // 선택 가능 확인
-                {
-                    button.onClick.Invoke(); // 실제 버튼 이벤트 실행
-                    return; // 중복 선택 차단
-                }
-            }
-        }
-
         private static void Fail(string message) // 실패 결과 기록
         {
             Debug.LogError("[NaturalCombatVerification] " + message); // 실패 로그
             Finish(1); // 실패 종료
         }
 
+        private static void ObserveRuntimeLog(string message, string stack, LogType type) // 실제 전투 오류 감시
+        { // 함수 시작
+            if (type != LogType.Error && type != LogType.Exception && type != LogType.Assert) // 오류 유형 확인
+            { // 조건 시작
+                return; // 일반 로그 제외
+            } // 조건 종료
+            if (!string.IsNullOrEmpty(stack) && stack.Contains("UnityEditor.Search.SearchDatabase")) // 기존 에디터 인덱싱 오류 확인
+            { // 조건 시작
+                return; // 제품 실행 오류와 구분
+            } // 조건 종료
+            if (gameplayError == null) // 최초 실행 오류 확인
+            { // 조건 시작
+                gameplayError = message + "\n" + stack; // 실제 오류 기록
+            } // 조건 종료
+        } // 함수 종료
+
         private static void Finish(int code) // 검증 종료
         {
+            if (observingLogs) // 오류 감시 연결 확인
+            { // 조건 시작
+                Application.logMessageReceived -= ObserveRuntimeLog; // 실제 오류 감시 해제
+                observingLogs = false; // 감시 상태 초기화
+            } // 조건 종료
             if (trackedBody != null) // 실제 몸통 구독 확인
             {
                 trackedBody.BodyCountChanged -= HandleBodyCountChanged; // 몸통 이벤트 연결 해제

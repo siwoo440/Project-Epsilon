@@ -7,6 +7,7 @@ namespace ProjectEpsilon.Combat // 전투 영역
     public sealed class WeaponTarget : MonoBehaviour // 공격 가능 대상
     {
         private static readonly List<WeaponTarget> ActiveTargets = new List<WeaponTarget>(); // 활성 대상 목록
+        private static readonly Stack<List<WeaponTarget>> RangeSnapshots = new Stack<List<WeaponTarget>>(); // 중첩 범위 공격용 재사용 목록
 
         [SerializeField] private float maximumHealth = 30f; // 최대 체력
         [SerializeField] private float currentHealth = 30f; // 현재 체력
@@ -185,33 +186,29 @@ namespace ProjectEpsilon.Combat // 전투 영역
             float rangeSquared = safeRange * safeRange; // 범위 제곱 계산
             int hitCount = 0; // 명중 수 초기화
 
-            for (int index = ActiveTargets.Count - 1; index >= 0; index--) // 활성 대상 역순 순회
-            {
-                WeaponTarget target = ActiveTargets[index]; // 현재 대상 조회
-
-                if (target == null) // 사라진 대상 확인
-                {
-                    ActiveTargets.RemoveAt(index); // 빈 항목 제거
-                    continue; // 다음 대상 이동
-                }
-
-                if (!target.isActiveAndEnabled || !target.IsAlive) // 공격 가능 여부 확인
-                {
-                    continue; // 대상 제외
-                }
-
-                float distanceSquared = (target.transform.position - origin).sqrMagnitude; // 중심 거리 계산
-
-                if (distanceSquared > rangeSquared) // 범위 밖 확인
-                {
-                    continue; // 대상 제외
-                }
-
-                target.TakeDamage(safeDamage); // 대상 피해 적용
-                hitCount++; // 명중 수 증가
-            }
-
-            return hitCount; // 명중 수 반환
+            List<WeaponTarget> snapshot = RentRangeSnapshot(); // 공격 시작 시 대상 목록 복사
+            try // 연쇄 피해와 예외 중 목록 보호
+            { // 처리 시작
+                for (int index = snapshot.Count - 1; index >= 0; index--) // 기존 순서의 대상 역순 순회
+                { // 반복 시작
+                    WeaponTarget target = snapshot[index]; // 공격 시작 시의 대상
+                    if (target == null || !target.isActiveAndEnabled || !target.IsAlive) // 제거되거나 사망한 대상 확인
+                    { // 조건 시작
+                        continue; // 처리 대상 제외
+                    } // 조건 종료
+                    if ((target.transform.position - origin).sqrMagnitude > rangeSquared) // 현재 범위 밖 확인
+                    { // 조건 시작
+                        continue; // 처리 대상 제외
+                    } // 조건 종료
+                    target.TakeDamage(safeDamage); // 실제 대상 피해 적용
+                    hitCount++; // 실제 명중 수 증가
+                } // 반복 종료
+                return hitCount; // 실제 명중 수 반환
+            } // 처리 종료
+            finally // 중첩 공격과 예외 후 정리
+            { // 정리 시작
+                ReturnRangeSnapshot(snapshot); // 사용한 목록 반환
+            } // 정리 종료
         }
 
         public static int VisitAllInRange(Vector3 origin, float maximumRange, Action<WeaponTarget> visitor) // 범위 대상 방문
@@ -226,34 +223,50 @@ namespace ProjectEpsilon.Combat // 전투 영역
             float rangeSquared = safeRange * safeRange; // 거리 제곱 계산
             int visitedCount = 0; // 방문 수 초기화
 
-            for (int index = ActiveTargets.Count - 1; index >= 0; index--) // 활성 대상 역순 순회
-            {
-                WeaponTarget target = ActiveTargets[index]; // 현재 대상 조회
-
-                if (target == null) // 사라진 대상 확인
-                {
-                    ActiveTargets.RemoveAt(index); // 빈 항목 제거
-                    continue; // 다음 대상 이동
-                }
-
-                if (!target.isActiveAndEnabled || !target.IsAlive) // 공격 가능 여부 확인
-                {
-                    continue; // 대상 제외
-                }
-
-                float distanceSquared = (target.transform.position - origin).sqrMagnitude; // 중심 거리 계산
-
-                if (distanceSquared > rangeSquared) // 범위 밖 확인
-                {
-                    continue; // 대상 제외
-                }
-
-                visitor(target); // 대상 처리 실행
-                visitedCount++; // 방문 수 증가
-            }
-
-            return visitedCount; // 방문 수 반환
+            List<WeaponTarget> snapshot = RentRangeSnapshot(); // 공격 시작 시 대상 목록 복사
+            try // 연쇄 반응과 예외 중 목록 보호
+            { // 처리 시작
+                for (int index = snapshot.Count - 1; index >= 0; index--) // 기존 순서의 대상 역순 순회
+                { // 반복 시작
+                    WeaponTarget target = snapshot[index]; // 공격 시작 시의 대상
+                    if (target == null || !target.isActiveAndEnabled || !target.IsAlive) // 제거되거나 사망한 대상 확인
+                    { // 조건 시작
+                        continue; // 처리 대상 제외
+                    } // 조건 종료
+                    if ((target.transform.position - origin).sqrMagnitude > rangeSquared) // 현재 범위 밖 확인
+                    { // 조건 시작
+                        continue; // 처리 대상 제외
+                    } // 조건 종료
+                    visitor(target); // 실제 대상 처리 실행
+                    visitedCount++; // 실제 방문 수 증가
+                } // 반복 종료
+                return visitedCount; // 실제 방문 수 반환
+            } // 처리 종료
+            finally // 중첩 공격과 예외 후 정리
+            { // 정리 시작
+                ReturnRangeSnapshot(snapshot); // 사용한 목록 반환
+            } // 정리 종료
         }
+
+        private static List<WeaponTarget> RentRangeSnapshot() // 독립된 범위 공격 목록 준비
+        { // 함수 시작
+            for (int index = ActiveTargets.Count - 1; index >= 0; index--) // 활성 대상의 빈 항목 순회
+            { // 반복 시작
+                if (ActiveTargets[index] == null) // 이미 파괴된 대상 확인
+                { // 조건 시작
+                    ActiveTargets.RemoveAt(index); // 빈 항목 정리
+                } // 조건 종료
+            } // 반복 종료
+            List<WeaponTarget> snapshot = RangeSnapshots.Count > 0 ? RangeSnapshots.Pop() : new List<WeaponTarget>(); // 사용 중이 아닌 목록 확보
+            snapshot.AddRange(ActiveTargets); // 현재 대상 목록 복사
+            return snapshot; // 독립된 목록 반환
+        } // 함수 종료
+
+        private static void ReturnRangeSnapshot(List<WeaponTarget> snapshot) // 사용한 범위 공격 목록 회수
+        { // 함수 시작
+            snapshot.Clear(); // 이전 대상 참조 해제
+            RangeSnapshots.Push(snapshot); // 다음 공격의 목록 재사용
+        } // 함수 종료
 
         private float ResolveCorrosiveCurseIncomingMultiplier() // 부식 저주의 받는 피해 배율 조회
         {
