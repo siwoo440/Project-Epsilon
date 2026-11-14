@@ -41,7 +41,7 @@ MonoBehaviour:
   bossSummonInterval: 12
   bossSummonMaximum: 4
   bossSummonRadius: 2
-  obstacleChance: 0.22
+  obstacleChance: 0.44
   obstacleMinimumCount: 1
   obstacleMaximumCount: 3
   safeCorridorWidth: 4
