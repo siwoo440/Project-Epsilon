@@ -391,13 +391,13 @@ namespace ProjectEpsilon.Combat // 전투 영역
 
         private void ApplyElectricChain(WeaponAttributeAttackSnapshot attack, WeaponTarget firstTarget, Vector3 firstHitPosition) // 전기 연쇄 적용
         {
-            if (attack.Weapon == null || !WeaponAttributeControlRules.IsActiveSynergy(attack.SynergyStage)) // 전기 연쇄 가능 여부 확인
+            if (attack.Weapon == null) // 실제 전기 포탑 확인
             {
                 return; // 연쇄 공격 생략
             }
 
-            int remainingTargets = WeaponAttributeControlRules.GetElectricSecondaryTargetCount(attack.SynergyStage); // 추가 대상 수 계산
-            float rangeMultiplier = WeaponAttributeControlRules.GetElectricChainRangeMultiplier(attack.SynergyStage); // 연쇄 범위 배율 계산
+            int remainingTargets = WeaponAttributeControlRules.GetElectricSecondaryTargetCount(attack.SynergyStage) + attack.Weapon.GetExtraElectricTargets(attack.Grade); // 기존 시너지와 등급의 연쇄 대상 수
+            float rangeMultiplier = WeaponAttributeControlRules.GetElectricChainRangeMultiplier(attack.SynergyStage) * attack.Weapon.GetElectricRangeMultiplier(attack.Grade); // 기존 시너지와 등급의 연쇄 범위 배율
             float chainRange = Mathf.Max(0f, attack.Weapon.Range * rangeMultiplier); // 실제 연쇄 범위 계산
 
             if (remainingTargets <= 0 || chainRange <= 0f) // 연쇄 조건 확인

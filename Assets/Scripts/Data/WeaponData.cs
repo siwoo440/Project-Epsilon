@@ -59,6 +59,10 @@ namespace ProjectEpsilon.Data // 프로젝트 기능 영역
         [Min(1f)] [SerializeField] private float gradeFiveChilledDamageMultiplier = 1f; // 오 등급 냉기 대상 피해 배율 시험값
         [Min(1f)] [SerializeField] private float gradeThreeColdDurationMultiplier = 1f; // 삼 등급 냉기 시간 배율 시험값
         [Min(1f)] [SerializeField] private float gradeFiveColdDurationMultiplier = 1f; // 오 등급 냉기 시간 배율 시험값
+        [Min(0)] [SerializeField] private int gradeThreeExtraElectricTargets; // 삼 등급 추가 전기 연쇄 대상 시험값
+        [Min(0)] [SerializeField] private int gradeFiveExtraElectricTargets; // 오 등급 추가 전기 연쇄 대상 시험값
+        [Min(1f)] [SerializeField] private float gradeThreeElectricRangeMultiplier = 1f; // 삼 등급 전기 연쇄 범위 배율 시험값
+        [Min(1f)] [SerializeField] private float gradeFiveElectricRangeMultiplier = 1f; // 오 등급 전기 연쇄 범위 배율 시험값
 
         public string Id => id; // 식별자 값 반환
         public string DisplayName => displayName; // 이름 값 반환
@@ -104,6 +108,8 @@ namespace ProjectEpsilon.Data // 프로젝트 기능 영역
         public float GetBurnDamageMultiplier(int grade) => grade >= 5 ? Mathf.Max(Mathf.Max(1f, gradeThreeBurnDamageMultiplier), gradeFiveBurnDamageMultiplier) : grade >= 3 ? Mathf.Max(1f, gradeThreeBurnDamageMultiplier) : 1f; // 등급별 화상 지속 피해 배율
         public float GetChilledDamageMultiplier(int grade) => grade >= 5 ? Mathf.Max(Mathf.Max(1f, gradeThreeChilledDamageMultiplier), gradeFiveChilledDamageMultiplier) : grade >= 3 ? Mathf.Max(1f, gradeThreeChilledDamageMultiplier) : 1f; // 등급별 냉기 대상 직접 피해 배율
         public float GetColdDurationMultiplier(int grade) => grade >= 5 ? Mathf.Max(Mathf.Max(1f, gradeThreeColdDurationMultiplier), gradeFiveColdDurationMultiplier) : grade >= 3 ? Mathf.Max(1f, gradeThreeColdDurationMultiplier) : 1f; // 등급별 냉기 지속 시간 배율
+        public int GetExtraElectricTargets(int grade) => grade >= 5 ? Mathf.Clamp(Mathf.Max(gradeThreeExtraElectricTargets, gradeFiveExtraElectricTargets), 0, 3) : grade >= 3 ? Mathf.Clamp(gradeThreeExtraElectricTargets, 0, 3) : 0; // 등급별 추가 전기 연쇄 대상
+        public float GetElectricRangeMultiplier(int grade) => grade >= 5 ? Mathf.Max(Mathf.Max(1f, gradeThreeElectricRangeMultiplier), gradeFiveElectricRangeMultiplier) : grade >= 3 ? Mathf.Max(1f, gradeThreeElectricRangeMultiplier) : 1f; // 등급별 전기 연쇄 범위 배율
         public float GradeThreeTransferRange => Mathf.Max(0f, gradeThreeTransferRange); // 안전한 추가 전달 반경
         public float GradeThreeTransferDamageMultiplier => Mathf.Max(0f, gradeThreeTransferDamageMultiplier); // 안전한 추가 전달 피해 배율
         public float GetTransferDamageMultiplier(int grade) => GradeThreeTransferDamageMultiplier * (grade >= 5 ? Mathf.Max(1f, gradeFiveTransferDamageScale) : 1f); // 등급별 전달 피해 배율
