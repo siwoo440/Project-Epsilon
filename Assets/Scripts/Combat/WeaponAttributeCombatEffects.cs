@@ -244,7 +244,10 @@ namespace ProjectEpsilon.Combat // 전투 영역
                 case WeaponAttributeReaction.LightDarkCancel: // 신성과 암흑 반응
                     curse.Clear(); // 저주 재료 소비
                     target.TakeReactionDamage(lightDarkDamage); // 반응 전용 피해
-                    playerEffects?.SnakeHealth?.Heal(lightDarkHealing); // 공용 체력 회복
+                    if (CanContinueCombat()) // 반응 피해 뒤 실제 전투 확인
+                    { // 조건 시작
+                        playerEffects?.SnakeHealth?.Heal(lightDarkHealing); // 전투 중 공용 체력 회복
+                    } // 조건 종료
                     break; // 반응 처리 종료
             }
         }
