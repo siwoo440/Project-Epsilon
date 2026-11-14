@@ -237,6 +237,7 @@ namespace ProjectEpsilon.UI // 프로젝트 기능 영역
 
         private static void ConfigureUpgradeButton(Button button, Text label, string caption) // 강화 버튼 표시
         {
+            LevelUpPanelController.EnlargeChoiceText(label); // 합성 선택 문구 확대
             if (button != null) // 버튼 연결 확인
             {
                 button.gameObject.SetActive(true); // 후보 버튼 표시
@@ -361,6 +362,7 @@ namespace ProjectEpsilon.UI // 프로젝트 기능 영역
             IReadOnlyList<WeaponMergeCandidate> candidates // 목록·포탑 처리
         ) // 앞선 항목 종료
         {
+            LevelUpPanelController.EnlargeChoiceText(label); // 합성 후보 문구 확대
             bool available = // 대상 값 설정
                 candidates != null && // 후보 처리
                 index >= 0 && // 순서 처리

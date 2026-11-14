@@ -275,6 +275,7 @@ namespace ProjectEpsilon.UI // 프로젝트 기능 영역
             bool exists = labels != null && available != null && index < labels.Length && index < available.Length; // 후보 존재 확인
             Sprite icon = exists && kinds != null && index < kinds.Count ? ProjectUiSkin.EliteRewardIcon(kinds[index]) : null; // 실제 보상 종류 이미지
             WeaponCandidateArtwork.Set(button, label, icon); // 기존 후보 이미지 표시 경로 재사용
+            EnlargeChoiceText(label); // 보상 선택 문구 확대
             if (button != null) // 버튼 연결 확인
             {
                 button.gameObject.SetActive(exists); // 후보 표시 여부
@@ -341,6 +342,7 @@ namespace ProjectEpsilon.UI // 프로젝트 기능 영역
         private static void SetReplacementButton(Button button, Text label, string caption) // 슬롯 선택 버튼 설정
         {
             WeaponCandidateArtwork.Set(button, label, null); // 이전 무기 후보 이미지 제거
+            EnlargeChoiceText(label); // 장착과 합성 선택 문구 확대
             if (button != null) // 버튼 연결 확인
             {
                 button.gameObject.SetActive(true); // 버튼 표시
@@ -351,6 +353,18 @@ namespace ProjectEpsilon.UI // 프로젝트 기능 영역
                 label.text = caption; // 버튼 내용 표시
             }
         }
+
+        public static void EnlargeChoiceText(Text label) // 선택지 글자 크기와 영역 맞춤
+        { // 함수 시작
+            if (label == null) // 글자 연결 확인
+            { // 조건 시작
+                return; // 글자 없는 선택지 제외
+            } // 조건 종료
+            label.fontSize = Mathf.Max(label.fontSize, 34); // 선택지 기본 글자 확대
+            label.resizeTextForBestFit = true; // 카드 크기에 맞는 자동 축소
+            label.resizeTextMinSize = 16; // 긴 문구의 최소 크기
+            label.resizeTextMaxSize = Mathf.Max(label.fontSize, 34); // 카드에 맞는 최대 크기
+        } // 함수 종료
 
         public void Hide() // 숨김 기능 선언
         {
@@ -489,6 +503,7 @@ namespace ProjectEpsilon.UI // 프로젝트 기능 영역
                 candidates[candidateIndex].IsValid; // 후보·순서 처리
 
             WeaponCandidateArtwork.Set(button, label, hasCandidate ? candidates[candidateIndex].Weapon.Icon : null, hasCandidate ? candidates[candidateIndex].Weapon.ArtworkDisplayTint : Color.white); // 포탑 아이콘 후보 표시
+            EnlargeChoiceText(label); // 포탑 후보 문구 확대
 
             if (button != null) // 버튼 조건 확인
             {

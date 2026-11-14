@@ -100,6 +100,7 @@ namespace ProjectEpsilon.Editor // 배치 시험 영역
                 FieldInfo labelField = typeof(LevelUpPanelController).GetField("candidateLabel0" + (index + 1), BindingFlags.Instance | BindingFlags.NonPublic); // 실제 후보 문구 필드
                 Text label = labelField.GetValue(panel) as Text; // 실제 후보 문구
                 Require(label != null, "Reward label missing."); // 실제 후보 문구 확인
+                Require(label.fontSize >= 30 && label.resizeTextForBestFit, "Reward text is not enlarged with fitting."); // 큰 선택 글자와 자동 맞춤 확인
                 Vector3[] iconCorners = new Vector3[4]; // 실제 아이콘 모서리
                 Vector3[] labelCorners = new Vector3[4]; // 실제 문구 영역 모서리
                 image.GetWorldCorners(iconCorners); // 실제 아이콘 위치
@@ -157,6 +158,7 @@ namespace ProjectEpsilon.Editor // 배치 시험 영역
                 Require(icon != null && icon.gameObject.activeSelf && icon.sprite != null && icon.sprite.texture.name == "RewardActionIcons" && !icon.raycastTarget, "보상 처리 선택지 이미지 누락: " + index); // 실제 이미지와 버튼 입력 확인
                 Require(Mathf.Approximately(icon.sprite.rect.x, index * icon.sprite.texture.width / 3), "보상 처리 선택지 이미지 순서 오류: " + index); // 장착과 합성 및 뒤로 이미지 순서 확인
                 Text label = (Text)typeof(LevelUpPanelController).GetField("candidateLabel0" + (index + 1), BindingFlags.Instance | BindingFlags.NonPublic).GetValue(panel); // 실제 선택지 문구
+                Require(label.fontSize >= 30 && label.resizeTextForBestFit, "보상 처리 선택지 글자 확대 누락: " + index); // 장착과 합성 글자 크기 확인
                 Vector3[] iconCorners = new Vector3[4]; // 실제 이미지 모서리
                 Vector3[] labelCorners = new Vector3[4]; // 실제 문구 모서리
                 icon.rectTransform.GetWorldCorners(iconCorners); // 실제 이미지 위치
