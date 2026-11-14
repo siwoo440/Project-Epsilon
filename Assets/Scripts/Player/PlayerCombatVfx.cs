@@ -82,7 +82,7 @@ namespace ProjectEpsilon.Player // 플레이어 시각 영역
                 ring.sprite = CombatVfx.GetInvulnerabilitySprite(); // 실제 무적 이미지
                 ring.color = new Color(1f, 1f, 1f, 0.75f); // 실제 무적 이미지 투명도
                 ring.sortingOrder = 2; // 몸통과 경고 아래 표시
-                instance.SetActive(invulnerability != null && invulnerability.IsInvulnerable && ring.sprite != null); // 실제 무적 상태 표시
+                instance.SetActive(invulnerability != null && invulnerability.IsInvulnerable && invulnerability.ShowVisual && ring.sprite != null); // 실제 무적 상태 표시
                 GameObject marker = new GameObject("PlayerContactProtectionVfx"); // 실제 제한 보호 표시 객체
                 marker.transform.SetParent(player.transform, false); // 실제 머리 위치 추적
                 marker.transform.localScale = Vector3.one * 0.55f; // 실제 제한 보호 표시 크기
@@ -239,7 +239,7 @@ namespace ProjectEpsilon.Player // 플레이어 시각 영역
         { // 함수 시작
             if (ring != null) // 실제 표시기 확인
             { // 조건 시작
-                bool visible = ring.sprite != null && invulnerability != null && invulnerability.IsInvulnerable; // 실제 유효 무적 상태
+                bool visible = ring.sprite != null && invulnerability != null && invulnerability.IsInvulnerable && invulnerability.ShowVisual; // 실제 유효 무적 상태
                 if (ring.gameObject.activeSelf != visible) // 실제 표시 상태 변경 확인
                 { // 조건 시작
                     ring.gameObject.SetActive(visible); // 실제 무적 시작과 종료 반영

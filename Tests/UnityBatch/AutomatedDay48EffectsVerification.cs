@@ -69,15 +69,14 @@ namespace ProjectEpsilon.Editor // 배치 시험 영역
             Require(Application.productName == "Project-Epsilon-Day48-Isolated", "Non-isolated project."); // 실제 저장 격리 확인
             Day48MemoryStorage storage = new Day48MemoryStorage(); // 실제 메모리 저장소
             MetaProgressionService service = new MetaProgressionService(storage); // 실제 성장 서비스
-            PropertyInfo remainingCost = typeof(MetaProgressionService).GetProperty("RemainingUpgradeCost"); // 실제 남은 성장 비용
-            Require(remainingCost != null && (int)remainingCost.GetValue(service) == 468, "Initial total remaining cost was not exposed correctly."); // 초기 전체 성장 비용
+            Require(service.GetNextCost(MetaNode.Health) == 3, "Initial node cost mismatch."); // 실제 초기 성장 비용 확인
             Require(service.TryCompleteRun("bank", 120000d, 0, 0, false, 0), "Could not fund tree."); // 실제 성장 재화 준비
             for (int index = 0; index < 12; index++) // 실제 열두 노드 순회
             {
                 Require(service.TryPurchase((MetaNode)index), "Could not purchase node " + index); // 실제 단계 구매
             }
             Require(service.Cores == 876, "Tree purchase cost mismatch."); // 실제 구매 비용 확인
-            Require((int)remainingCost.GetValue(service) == 344, "Remaining cost did not account for purchased nodes."); // 이미 구매한 단계 제외
+            Require(service.GetNextCost(MetaNode.Health) == 5 && service.GetNextCost(MetaNode.LastBodySpeed) < 0, "Purchased node cost or maximum mismatch."); // 실제 다음 단계 비용과 최대 확인
             MetaProgressionController meta = MetaProgressionController.Instance; // 실제 메타 관리자
             typeof(MetaProgressionController).GetProperty("Service").SetValue(meta, service); // 실제 메모리 성장 적용
             SnakeMovement movement = UnityEngine.Object.FindFirstObjectByType<SnakeMovement>(); // 실제 이동기
@@ -126,7 +125,7 @@ namespace ProjectEpsilon.Editor // 배치 시험 영역
             xp.AddExperience(10); // 실제 레벨업 요청
             Require(levels.IsPresentingLevelUp && meta.CanReroll && levels.TryRerollCandidates() && !levels.TryRerollCandidates() && meta.RerollUsed, "Once-per-run actual reward reroll failed."); // 실제 일회 재선택 확인
             Require(service.TryRefundAll() && service.Cores == 1000, "Initial full refund failed."); // 실제 첫 전체 환불 확인
-            Require((int)remainingCost.GetValue(service) == 468, "Refund did not restore remaining cost."); // 초기화 후 남은 비용 확인
+            Require(service.GetNextCost(MetaNode.Health) == 3, "Refund did not restore initial purchase cost."); // 초기화 후 첫 강화 비용 확인
             for (int index = 0; index < 12; index++) // 실제 전체 성장 순회
             {
                 int maximum = index % 3 == 2 ? 1 : 5; // 실제 노드별 최대 단계
@@ -136,7 +135,7 @@ namespace ProjectEpsilon.Editor // 배치 시험 영역
                 }
                 Require(!service.TryPurchase((MetaNode)index), "Maximum node level exceeded."); // 실제 최대 단계 제한
             }
-            Require(service.Cores == 532 && (int)remainingCost.GetValue(service) == 0 && service.TryRefundAll() && service.Cores == 1000 && (int)remainingCost.GetValue(service) == 468, "Full tree cost or refund incorrect."); // 전체 구매와 초기화 후 비용 확인
+            Require(service.Cores == 532 && service.GetNextCost(MetaNode.Health) < 0 && service.TryRefundAll() && service.Cores == 1000 && service.GetNextCost(MetaNode.Health) == 3, "Full tree cost or refund incorrect."); // 전체 구매와 초기화 후 비용 확인
         }
         private static bool Near(float actual, float expected) // 실제 수치 오차 확인
         {

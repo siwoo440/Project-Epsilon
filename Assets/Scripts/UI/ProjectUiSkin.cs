@@ -28,6 +28,19 @@ namespace ProjectEpsilon.UI // 게임 UI 영역
             cached = Sprite.Create(texture, rect, new Vector2(0.5f, 0.5f), 100f, 0, SpriteMeshType.FullRect, pixels); // 크기 변경 가능한 이미지 생성
             return cached; // 실제 이미지 반환
         } // 함수 종료
+        public static void ApplySelectionTitle(Text title) // 선택 화면 제목 강조
+        { // 함수 시작
+            if (title == null) // 제목 연결 확인
+            { // 조건 시작
+                return; // 제목 없는 화면 유지
+            } // 조건 종료
+            int originalSize = title.fontSize; // 기존 제목 크기
+            title.fontSize = originalSize * 2; // 제목 크기 두 배
+            title.fontStyle = FontStyle.Bold; // 제목 굵게 표시
+            title.resizeTextForBestFit = true; // 화면 크기에 맞춰 글자 조정
+            title.resizeTextMinSize = originalSize; // 최소 글자 크기
+            title.resizeTextMaxSize = title.fontSize; // 최대 글자 크기
+        } // 함수 종료
         public static void ApplyButton(Button button, bool card = false) // 기존 버튼 또는 보상 카드 꾸미기
         { // 함수 시작
             if (button == null) // 버튼 누락 확인

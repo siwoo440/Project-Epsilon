@@ -77,6 +77,7 @@ namespace ProjectEpsilon.Editor // 배치 시험 영역
             open.onClick.Invoke(); // 실제 성장 버튼으로 메뉴 열기
             yield return null; // 실제 UI 배치 대기
             Require(meta.Menu.IsOpen && GameObject.Find("GrowthPanel") != null, "새 성장 패널 누락"); // 실제 개선된 성장 화면 확인
+            Require(GameObject.Find("GrowthRemainingLabel") == null, "전체 강화까지 비용 문구가 남음"); // 불필요한 전체 비용 표시 제거 확인
             Require(GameObject.Find("GrowthBackdrop") != null && GameObject.Find("GrowthPanel").GetComponent<Image>().sprite != null, "성장 배경 또는 공통 프레임 누락"); // 실제 배경과 기존 스킨 확인
             for (int group = 0; group < 4; group++) // 실제 성장 계열 순회
             { // 순회 시작

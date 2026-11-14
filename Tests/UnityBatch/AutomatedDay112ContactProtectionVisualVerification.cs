@@ -79,6 +79,18 @@ namespace ProjectEpsilon.Editor // 배치 시험 영역
             invulnerability.ClearInvulnerability(); // 실제 완전 무적 종료
             yield return null; // 실제 표시 갱신 대기
             Require(!limited.gameObject.activeSelf && !full.gameObject.activeSelf, "완전 무적 종료 표시 실패"); // 모든 보호 종료 확인
+            SnakeSelfCollision self = player.GetComponent<SnakeSelfCollision>(); // 실제 자기 충돌 처리기
+            SnakeHealth health = player.GetComponent<SnakeHealth>(); // 실제 공용 체력
+            SpriteRenderer head = player.GetComponent<SpriteRenderer>(); // 실제 머리 이미지
+            float initialHealth = health.CurrentHealth; // 충돌 전 체력
+            Require(self != null && self.TryApplySelfCollisionPenalty(), "자기 충돌 처리 실패"); // 실제 자기 충돌 발생
+            yield return null; // 자기 충돌 표시 갱신 대기
+            Require(health.CurrentHealth < initialHealth && invulnerability.IsInvulnerable && !full.gameObject.activeSelf, "자기 충돌 피해와 무적 또는 원형 표시 오류"); // 피해와 무적 유지 및 원형 숨김 확인
+            Require(head != null && head.color.a < 1f, "자기 충돌 점멸 누락"); // 실제 머리 점멸 확인
+            invulnerability.ClearInvulnerability(); // 자기 충돌 무적 정리
+            invulnerability.StartInvulnerability(1f); // 일반 무적 표시 재개
+            yield return null; // 일반 무적 표시 갱신 대기
+            Require(full.gameObject.activeSelf, "일반 무적 원형 표시 누락"); // 다른 무적 원형 표시 유지 확인
             AutomatedDay112ContactProtectionVisualVerification.Finish(true, "Actual direct-contact protection and full invulnerability displayed independently."); // 실제 시험 결과
         } // 함수 종료
         private static void Require(bool condition, string message) // 시험 조건 확인

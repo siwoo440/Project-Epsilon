@@ -128,16 +128,17 @@ namespace ProjectEpsilon.Editor // 배치 시험 영역
             Require(!reloaded.TryPurchase(MetaNode.Healing) && !reloaded.TryPurchase(MetaNode.LastBodySpeed), "Node prerequisites were bypassed."); // 실제 선행 조건 확인
             Require(reloaded.TryPurchase(MetaNode.Health) && reloaded.Cores == 20 && reloaded.GetLevel(MetaNode.Health) == 1, "First node purchase or cost failed."); // 실제 첫 단계 비용 확인
             Require(reloaded.TryPurchase(MetaNode.Health) && reloaded.Cores == 15 && reloaded.TryPurchase(MetaNode.Healing) && reloaded.Cores == 12, "Second cost or branch prerequisite failed."); // 실제 두 번째 비용과 선행 조건 확인
-            Require(reloaded.RemainingUpgradeCost == 457 && new MetaProgressionService(store).RemainingUpgradeCost == 457, "Remaining cost or saved levels mismatch."); // 구매와 저장 복원 후 비용 확인
+            MetaProgressionService restored = new MetaProgressionService(store); // 구매 후 실제 저장 재복원
+            Require(restored.Cores == 12 && restored.GetLevel(MetaNode.Health) == 2 && restored.GetLevel(MetaNode.Healing) == 1, "Saved levels mismatch."); // 구매와 저장 복원 확인
             store.FailWrite = true; // 실제 저장 실패 재현
-            Require(!reloaded.TryPurchase(MetaNode.Health) && reloaded.Cores == 12 && reloaded.GetLevel(MetaNode.Health) == 2 && reloaded.RemainingUpgradeCost == 457, "Failed save committed a purchase."); // 저장 실패 시 남은 비용 유지
+            Require(!reloaded.TryPurchase(MetaNode.Health) && reloaded.Cores == 12 && reloaded.GetLevel(MetaNode.Health) == 2 && reloaded.GetNextCost(MetaNode.Health) == 8, "Failed save committed a purchase."); // 저장 실패 시 단계와 비용 유지
             store.FailWrite = false; // 실제 시험 저장 복구
             Require(reloaded.TryRefundAll() && reloaded.Cores == 23 && reloaded.GetLevel(MetaNode.Health) == 0 && reloaded.GetLevel(MetaNode.Healing) == 0, "Free reset did not refund exact costs."); // 실제 무료 초기화 확인
             Require(reloaded.TryCompleteRun("ruins", 0d, 0, 0, true, 1) && reloaded.IsMapUnlocked(2) && reloaded.Cores == 28, "Ruins clear did not unlock swamp."); // 실제 두 번째 맵 해금 확인
             Require(reloaded.TryUnlockTurretAttribute(3) && new MetaProgressionService(store).IsTurretAttributeUnlocked(3), "Turret unlock did not persist."); // 실제 속성 포탑 저장 확인
             Day48MemoryStorage bad = new Day48MemoryStorage { Content = "not-json" }; // 실제 손상 저장 재현
             MetaProgressionService unavailable = new MetaProgressionService(bad); // 실제 손상 저장 복원
-            Require(!unavailable.IsAvailable && unavailable.RemainingUpgradeCost == -1 && !unavailable.TryCompleteRun("bad", 0d, 0, 0, false, 0) && bad.Content == "not-json", "Corrupt storage was overwritten."); // 손상 저장의 비용과 원본 보호 확인
+            Require(!unavailable.IsAvailable && !unavailable.TryCompleteRun("bad", 0d, 0, 0, false, 0) && bad.Content == "not-json", "Corrupt storage was overwritten."); // 손상 저장 원본 보호 확인
             Day48MemoryStorage incomplete = new Day48MemoryStorage { Content = "{}" }; // 실제 필드 누락 저장 재현
             MetaProgressionService incompleteService = new MetaProgressionService(incomplete); // 실제 누락 저장 복원
             Require(!incompleteService.IsAvailable && !incompleteService.TryCompleteRun("bad", 0d, 0, 0, false, 0) && incomplete.Content == "{}", "Incomplete storage was overwritten."); // 실제 누락 원본 보존 확인

@@ -85,12 +85,15 @@ namespace ProjectEpsilon.UI // 화면 영역
                 return; // 카드 배치 전 갱신 생략
             } // 조건 종료
             float height = card.rect.height; // 실제 카드 높이
-            float availableHalf = Mathf.Min(height * 0.38f - 8f, height * 0.62f - 96f); // 이미지와 문구의 최소 여백
+            float verticalOffset = Mathf.Min(30f, Mathf.Max(0f, height * 0.38f - 8f)); // 카드 밖을 피하는 최대 삼십 상향
+            image.rectTransform.anchoredPosition = new Vector2(0f, verticalOffset); // 실제 포탑 이미지 상향 위치
+            float imageCenter = height * 0.62f + verticalOffset; // 카드 아래 기준 이미지 중심
+            float availableHalf = Mathf.Min(height - imageCenter - 8f, imageCenter - 96f); // 이미지와 문구의 최소 여백
             float size = Mathf.Min(192f, Mathf.Max(0f, card.rect.width - 16f), Mathf.Max(0f, availableHalf * 2f)); // 카드 안쪽의 최대 이미지 크기
             image.rectTransform.sizeDelta = new Vector2(size, size); // 실제 비율별 이미지 크기
             if (currentLabel != null && hasOriginalOffset) // 실제 문구 영역 확인
             { // 조건 시작
-                float imageBottom = height * 0.62f - size * 0.5f; // 카드 아래 기준 이미지 경계
+                float imageBottom = imageCenter - size * 0.5f; // 카드 아래 기준 이미지 경계
                 float labelTop = Mathf.Min(originalOffsetMax.y, imageBottom - height - 12f); // 이미지 아래 문구 위쪽 경계
                 currentLabel.rectTransform.offsetMax = new Vector2(originalOffsetMax.x, labelTop); // 실제 문구와 이미지 분리
             } // 조건 종료

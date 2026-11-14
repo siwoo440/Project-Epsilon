@@ -192,7 +192,7 @@ namespace ProjectEpsilon.Player // 프로젝트 기능 영역
             { // 조건 시작
                 return false; // 무효 피해와 중복 무적 방지
             } // 조건 종료
-            invulnerability?.StartInvulnerability(invulnerabilityDuration); // 무적·시작 기능 실행
+            invulnerability?.StartInvulnerability(invulnerabilityDuration, false); // 자기 충돌 무적과 원형 표시 생략
             return true; // 성공 결과 반환
         }
     }

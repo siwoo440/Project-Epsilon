@@ -75,30 +75,6 @@ namespace ProjectEpsilon.Progression // 영구 성장 영역
         public bool IsAvailable { get; private set; } // 저장 사용 가능 여부
         public int Cores => data == null ? 0 : data.cores; // 실제 보유 코어
         public bool FinishedFirstRun => data != null && data.finishedFirstRun; // 첫 런 완료 여부
-        public int RemainingUpgradeCost // 모든 성장에 필요한 남은 코어
-        { // 속성 시작
-            get // 남은 비용 계산
-            { // 계산 시작
-                if (!IsAvailable || data == null) // 저장 상태 확인
-                { // 조건 시작
-                    return -1; // 계산 불가 표시
-                } // 조건 종료
-                int total = 0; // 남은 비용 합계
-                for (int index = 0; index < data.levels.Length; index++) // 전체 성장 노드 순회
-                { // 반복 시작
-                    if (index % 3 == 2) // 계열 최종 노드 확인
-                    { // 조건 시작
-                        total += data.levels[index] == 0 ? 25 : 0; // 미구매 최종 노드 비용
-                        continue; // 일반 단계 계산 생략
-                    } // 조건 종료
-                    for (int level = data.levels[index]; level < Costs.Length; level++) // 남은 일반 단계 순회
-                    { // 반복 시작
-                        total += Costs[level]; // 실제 단계별 비용 합산
-                    } // 반복 종료
-                } // 반복 종료
-                return total; // 전체 남은 비용 반환
-            } // 계산 종료
-        } // 속성 종료
         public MetaProgressionService(IMetaStorage source) // 실제 저장 서비스 구성
         {
             storage = source; // 독립 저장소 연결

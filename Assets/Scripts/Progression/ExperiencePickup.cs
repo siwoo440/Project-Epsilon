@@ -108,8 +108,8 @@ namespace ProjectEpsilon.Progression // 프로젝트 기능 영역
                 return; // 흡수와 중복 획득 방지
             } // 조건 종료
 
-            float attractionRangeSquared = // 범위 값 설정
-                MergeAttractionRange * MergeAttractionRange; // 영구 성장 흡수 범위 적용
+            float attractionRange = MergeAttractionRange; // 현재 보석의 실제 흡수 범위
+            float attractionRangeSquared = attractionRange * attractionRange; // 중복 조회 없이 범위 제곱 계산
 
             if (delta.sqrMagnitude > attractionRangeSquared) // 변화량·범위 조건 확인
             {

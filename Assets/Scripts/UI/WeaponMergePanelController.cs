@@ -23,6 +23,7 @@ namespace ProjectEpsilon.UI // 프로젝트 기능 영역
 
         [SerializeField] private Button closeButton; // 필드·버튼 설정
 
+        private Text styledTitle; // 크기를 조정한 제목
         private bool buttonsBound; // 대상 구성 선언
 
         public event Action<int> CandidateSelected; // 이벤트·동작 구성 선언
@@ -47,8 +48,26 @@ namespace ProjectEpsilon.UI // 프로젝트 기능 영역
 
         private void OnEnable() // 활성 기능 선언
         {
+            StyleTitle(); // 선택 제목 강조
             BindButtons(); // 연결 기능 실행
         }
+
+        private void StyleTitle() // 선택 화면 제목 스타일 적용
+        { // 함수 시작
+            if (titleText == null || styledTitle == titleText) // 제목 연결과 중복 적용 확인
+            { // 조건 시작
+                return; // 기존 스타일 유지
+            } // 조건 종료
+            ProjectUiSkin.ApplySelectionTitle(titleText); // 제목 크기와 굵기 설정
+            RectTransform titleRect = titleText.rectTransform; // 실제 합성 제목 영역
+            titleRect.sizeDelta = new Vector2(titleRect.sizeDelta.x, Mathf.Max(titleRect.sizeDelta.y, titleText.fontSize + 8f)); // 큰 제목 높이 확보
+            titleRect.anchoredPosition += new Vector2(0f, 10f); // 제목을 위로 이동
+            if (stateText != null) // 실제 합성 상태 문구 확인
+            { // 조건 시작
+                stateText.rectTransform.anchoredPosition += new Vector2(0f, -14f); // 제목과 상태 사이 여백 확보
+            } // 조건 종료
+            styledTitle = titleText; // 적용한 제목 기록
+        } // 함수 종료
 
         private void OnDisable() // 비활성 기능 선언
         {
@@ -76,6 +95,7 @@ namespace ProjectEpsilon.UI // 프로젝트 기능 영역
 
             titleText = title; // 문구 값 설정
             stateText = state; // 상태·문구 값 설정
+            StyleTitle(); // 새로 연결된 제목 강조
 
             candidateButton01 = button01; // 후보·버튼 값 설정
             candidateLabel01 = label01; // 후보·문구 값 설정

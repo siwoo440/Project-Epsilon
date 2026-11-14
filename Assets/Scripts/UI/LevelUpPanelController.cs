@@ -24,6 +24,7 @@ namespace ProjectEpsilon.UI // 프로젝트 기능 영역
         [SerializeField] private Text candidateLabel02; // 필드·문구 설정
         [SerializeField] private Text candidateLabel03; // 필드·문구 설정
 
+        private Text styledTitle; // 크기를 조정한 제목
         private bool buttonsBound; // 대상 구성 선언
         private Image startingBackground; // 실제 시작 선택 패널 배경
         private float originalBackgroundOpacity; // 실제 기존 보상 배경 불투명도
@@ -79,6 +80,7 @@ namespace ProjectEpsilon.UI // 프로젝트 기능 영역
 
         private void OnEnable() // 활성 기능 선언
         {
+            StyleTitle(); // 선택 제목 강조
             ApplyCardSkin(); // 실제 보상 카드 프레임 적용
             BindButtons(); // 연결 기능 실행
         }
@@ -88,6 +90,16 @@ namespace ProjectEpsilon.UI // 프로젝트 기능 영역
             ProjectUiSkin.ApplyButton(candidateButton01, true); // 첫 카드 프레임
             ProjectUiSkin.ApplyButton(candidateButton02, true); // 둘째 카드 프레임
             ProjectUiSkin.ApplyButton(candidateButton03, true); // 셋째 카드 프레임
+        } // 함수 종료
+
+        private void StyleTitle() // 선택 화면 제목 스타일 적용
+        { // 함수 시작
+            if (titleText == null || styledTitle == titleText) // 제목 연결과 중복 적용 확인
+            { // 조건 시작
+                return; // 기존 스타일 유지
+            } // 조건 종료
+            ProjectUiSkin.ApplySelectionTitle(titleText); // 제목 크기와 굵기 설정
+            styledTitle = titleText; // 적용한 제목 기록
         } // 함수 종료
 
         private void OnDisable() // 비활성 기능 선언
@@ -116,6 +128,7 @@ namespace ProjectEpsilon.UI // 프로젝트 기능 영역
             UnbindButtons(); // 대상 기능 실행
 
             titleText = title; // 문구 값 설정
+            StyleTitle(); // 새로 연결된 제목 강조
             levelText = level; // 레벨·문구 값 설정
             growthText = growth; // 문구 값 설정
 
@@ -212,11 +225,11 @@ namespace ProjectEpsilon.UI // 프로젝트 기능 영역
             }
             if (levelText != null) // 부제 연결 확인
             {
-                levelText.text = "전투 전에 하나를 선택하세요"; // 시작 전 선택 안내
+                levelText.text = SceneFrontendContext.UsesSeparateScenes ? "" : "전투 전에 하나를 선택하세요"; // 시작 전 선택 안내
             }
             if (growthText != null) // 조작 안내 연결 확인
             {
-                growthText.text = "1 / 2 / 3: 선택"; // 선택 키 안내
+                growthText.text = SceneFrontendContext.UsesSeparateScenes ? "" : "1 / 2 / 3: 선택"; // 선택 키 안내
             }
             ConfigureCandidate(0, candidateButton01, candidateLabel01, candidates); // 첫 후보 표시
             ConfigureCandidate(1, candidateButton02, candidateLabel02, candidates); // 둘째 후보 표시
@@ -226,7 +239,7 @@ namespace ProjectEpsilon.UI // 프로젝트 기능 영역
 
         public void SetStartingCharacter(CharacterData character) // 시작 화면 캐릭터 정보 표시
         {
-            if (character == null) // 캐릭터 데이터 확인
+            if (character == null || SceneFrontendContext.UsesSeparateScenes) // 캐릭터와 화면 방식 확인
             {
                 return; // 기존 시작 안내 유지
             }
@@ -242,7 +255,7 @@ namespace ProjectEpsilon.UI // 프로젝트 기능 영역
 
         public void SetStartingMap(ProjectEpsilon.World.PrototypeMapProfile map) // 시작 화면 맵 정보 표시
         {
-            if (growthText != null && map != null) // 실제 안내와 맵 확인
+            if (growthText != null && map != null && !SceneFrontendContext.UsesSeparateScenes) // 기존 화면의 안내와 맵 확인
             {
                 growthText.text = SceneFrontendContext.UsesSeparateScenes ? $"맵: {map.DisplayName}    1 / 2 / 3: 포탑 선택" : $"← / →: 캐릭터    ↑ / ↓: 맵 ({map.DisplayName})    1 / 2 / 3: 포탑"; // 실제 화면 방식별 시작 조작 안내
             }

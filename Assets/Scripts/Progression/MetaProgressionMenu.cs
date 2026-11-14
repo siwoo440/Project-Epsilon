@@ -28,7 +28,6 @@ namespace ProjectEpsilon.Progression // 영구 성장 영역
         private GameObject canvasRoot; // 실제 독립 성장 화면
         private Font displayFont; // 실제 한글 화면 글꼴
         private Text coreLabel; // 실제 보유 코어 글자
-        private Text remainingLabel; // 실제 남은 강화 비용 글자
         public bool IsOpen { get; private set; } // 실제 성장 화면 표시 상태
         public void Configure(MetaProgressionController source) // 실제 관리자 연결
         { // 함수 시작
@@ -67,16 +66,9 @@ namespace ProjectEpsilon.Progression // 영구 성장 영역
                 Close(); // 다른 화면에서 성장 메뉴 닫기
             } // 조건 종료
         } // 함수 종료
-        private void OnGUI() // 기존 단일 씬의 성장 메뉴 진입
+        private void OnDisable() // 성장 화면 제어기 비활성화
         { // 함수 시작
-            if (RunFrontendController.Instance != null || IsOpen || !CanShow()) // 독립 메뉴 또는 유효한 시작 상태 확인
-            { // 조건 시작
-                return; // 기존 단일 씬 외 버튼 생략
-            } // 조건 종료
-            if (GUI.Button(new Rect(16f, 16f, 180f, 36f), "영구 성장")) // 기존 단일 씬 진입 버튼
-            { // 조건 시작
-                Open(); // 실제 성장 화면 열기
-            } // 조건 종료
+            Close(); // 비활성화 시 남은 성장 화면 닫기
         } // 함수 종료
         private void BuildPanel() // 실제 영구 성장 UI 구성
         { // 함수 시작
@@ -101,7 +93,6 @@ namespace ProjectEpsilon.Progression // 영구 성장 영역
             ProjectUiSkin.ApplySidebar(frame, true); // 기존 공통 패널 스킨 적용
             CreateText(frame.transform, "GrowthTitle", "영구 성장", new Vector2(0f, 405f), new Vector2(1200f, 70f), 46, TextAnchor.MiddleCenter, Color.white); // 실제 화면 제목
             coreLabel = CreateText(frame.transform, "GrowthCoreLabel", string.Empty, new Vector2(-280f, 350f), new Vector2(500f, 42f), 26, TextAnchor.MiddleCenter, new Color(0.46f, 0.95f, 1f)); // 실제 보유 재화 표시
-            remainingLabel = CreateText(frame.transform, "GrowthRemainingLabel", string.Empty, new Vector2(290f, 350f), new Vector2(600f, 42f), 24, TextAnchor.MiddleCenter, new Color(0.76f, 0.84f, 0.93f)); // 실제 전체 강화 비용 표시
             for (int group = 0; group < Categories.Length; group++) // 실제 성장 계열 생성
             { // 순회 시작
                 int currentGroup = group; // 현재 계열 번호
@@ -132,7 +123,6 @@ namespace ProjectEpsilon.Progression // 영구 성장 영역
         { // 함수 시작
             MetaProgressionService service = controller.Service; // 실제 저장 서비스
             coreLabel.text = $"보유 코어  {service.Cores:N0}"; // 실제 보유 재화
-            remainingLabel.text = $"전체 강화까지  {service.RemainingUpgradeCost:N0} 코어"; // 실제 남은 강화 비용
             for (int index = 0; index < nodeButtons.Length; index++) // 실제 열두 노드 순회
             { // 순회 시작
                 MetaNode node = (MetaNode)index; // 실제 성장 노드

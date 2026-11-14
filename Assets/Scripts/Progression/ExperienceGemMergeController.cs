@@ -82,6 +82,11 @@ namespace ProjectEpsilon.Progression // 진행 영역
                 return 0; // 예산보다 많은 거리 검사 방지
             }
             ExperiencePickup[] found = FindObjectsByType<ExperiencePickup>(FindObjectsSortMode.None); // 현재 활성 보석 검색
+            if (found.Length < Mathf.Max(1, mergeThreshold)) // 활성 보석이 병합 기준 미만인지 확인
+            { // 조건 시작
+                scan.Reset(); // 기존 부분 병합 상태 해제
+                return 0; // 거리 계산과 후보 생성 생략
+            } // 조건 종료
             List<ExperiencePickup> pickups = new List<ExperiencePickup>(found.Length); // 소비되지 않은 보석 목록
             List<ExperienceMergePoint> points = new List<ExperienceMergePoint>(found.Length); // 검사 후보 스냅샷
             Camera camera = Camera.main; // 현재 게임 카메라

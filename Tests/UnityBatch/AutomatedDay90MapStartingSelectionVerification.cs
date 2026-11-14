@@ -98,6 +98,9 @@ namespace ProjectEpsilon.Editor // 배치 시험 영역
             Button next = Button("FrontendMapsNextButton"); // 실제 출격 버튼
             Require(next != null, "실제 맵 출격 버튼 누락"); // 실제 출격 구성 확인
             next.onClick.Invoke(); // 실제 선택 맵 진입
+            Require(SceneManager.GetActiveScene().path == SceneFrontendContext.PreparationPath && GameObject.Find("SceneLoadingOverlay") != null && GameObject.Find("SceneLoadingProgress") != null, "맵 출격 시 로딩 화면 또는 진행 표시 누락"); // 실제 비동기 전환과 로딩 표시 확인
+            next.onClick.Invoke(); // 같은 프레임의 중복 출격 시도
+            Require(FindObjectsByType<RunSceneReloader>(FindObjectsSortMode.None).Length == 1, "중복 출격으로 로딩 화면 중복 생성"); // 실제 중복 전환 차단 확인
             yield return WaitFor(() => SceneManager.GetActiveScene().path == SceneFrontendContext.GamePath && Ready(), "맵 선택 후 게임 씬의 시작 포탑 카드 누락"); // 실제 전투 씬 선택 확인
             yield return null; // 실제 청크 생성 대기
             yield return null; // 실제 HUD와 카드 갱신 대기
@@ -115,6 +118,10 @@ namespace ProjectEpsilon.Editor // 배치 시험 영역
             FieldInfo candidateField = typeof(LevelUpPanelController).GetField("candidateButton01", BindingFlags.Instance | BindingFlags.NonPublic); // 실제 첫 후보 버튼
             Button candidate = candidateField == null || panel == null ? null : candidateField.GetValue(panel) as Button; // 실제 공용 카드 버튼
             Require(panel != null && panel.gameObject.activeInHierarchy && candidate != null && candidate.interactable, "실제 공용 레벨업 포탑 카드 누락"); // 실제 카드 재사용 확인
+            Text title = (Text)typeof(LevelUpPanelController).GetField("titleText", BindingFlags.Instance | BindingFlags.NonPublic).GetValue(panel); // 실제 시작 선택 제목
+            Text level = (Text)typeof(LevelUpPanelController).GetField("levelText", BindingFlags.Instance | BindingFlags.NonPublic).GetValue(panel); // 실제 시작 캐릭터 안내
+            Text growth = (Text)typeof(LevelUpPanelController).GetField("growthText", BindingFlags.Instance | BindingFlags.NonPublic).GetValue(panel); // 실제 시작 맵 안내
+            Require(title != null && title.text == "시작 포탑 선택" && title.fontSize == 68 && title.fontStyle == FontStyle.Bold && string.IsNullOrEmpty(level.text) && string.IsNullOrEmpty(growth.text), "시작 포탑 제목 또는 불필요한 안내 오류"); // 실제 제목과 보조 문구 확인
             Image panelBackground = panel.GetComponent<Image>(); // 실제 시작 카드 배경
             Require(panelBackground != null && panelBackground.color.a <= 0.7f, "시작 카드의 불투명 배경이 선택 맵을 가림"); // 실제 선택 맵을 위한 배경 투명도 확인
             FieldInfo originalOpacityField = typeof(LevelUpPanelController).GetField("originalBackgroundOpacity", BindingFlags.Instance | BindingFlags.NonPublic); // 실제 기존 배경 불투명도 필드

@@ -1,3 +1,4 @@
+using ProjectEpsilon.Core; // 실제 씬 로딩 처리
 using ProjectEpsilon.Data; // 실제 캐릭터 데이터
 using ProjectEpsilon.Player; // 실제 다음 런 캐릭터
 using ProjectEpsilon.Progression; // 실제 해금 상태
@@ -126,15 +127,19 @@ namespace ProjectEpsilon.UI // 실제 화면 흐름 영역
         }
         public bool BeginRun() // 실제 선택 맵으로 출격
         {
+            if (pendingStart) // 중복 출격 요청 확인
+            { // 조건 시작
+                return true; // 기존 로딩 유지
+            } // 조건 종료
             WeaponData[] weapons = SelectedCharacter == null || SelectedCharacter.StartingWeapons == null ? null : SelectedCharacter.StartingWeapons.Weapons; // 실제 시작 포탑 후보
-            if (!IsCharacterAvailable(SelectedCharacter) || !IsMapAvailable(chosenMap) || weapons == null || weapons.Length != 3 || weapons[0] == null || weapons[1] == null || weapons[2] == null || weapons[0] == weapons[1] || weapons[0] == weapons[2] || weapons[1] == weapons[2]) // 실제 선택과 중복 없는 세 후보 확인
+            if (!Application.CanStreamedLevelBeLoaded(GamePath) || !IsCharacterAvailable(SelectedCharacter) || !IsMapAvailable(chosenMap) || weapons == null || weapons.Length != 3 || weapons[0] == null || weapons[1] == null || weapons[2] == null || weapons[0] == weapons[1] || weapons[0] == weapons[2] || weapons[1] == weapons[2]) // 실제 선택과 중복 없는 세 후보 확인
             {
                 return false; // 잘못된 출격 차단
             }
             CharacterRunInitializer.SelectForNextRun(SelectedCharacter); // 실제 선택 캐릭터 전달
             pendingStart = true; // 실제 게임 씬 적용 예약
             separateFlow = true; // 분리 씬 흐름 기록
-            SceneManager.LoadScene(GamePath); // 실제 전투 씬 이동
+            new GameObject("SceneLoadingRequest").AddComponent<RunSceneReloader>().Begin(null, GamePath, true, true); // 실제 로딩 화면과 비동기 씬 이동
             return true; // 실제 출격 요청 완료
         }
         public static bool TakeStart(out int map) // 전투 씬의 시작 맵 수신

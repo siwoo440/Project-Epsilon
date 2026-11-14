@@ -486,6 +486,18 @@ namespace ProjectEpsilon.UI // 실제 메뉴 영역
             } // 조건 종료
             Show(FrontendStage.Weapons); // 기존 단일 씬 시작 카드 표시
         } // 함수 종료
+        public void ShowSceneLoadError() // 실제 출격 로딩 실패 안내
+        { // 함수 시작
+            Text error = GameObject.Find("FrontendMapStartError")?.GetComponent<Text>(); // 기존 출격 오류 문구
+            if (error == null && panel != null) // 실제 안내와 화면 확인
+            { // 조건 시작
+                error = Label(panel, "FrontendMapStartError", "맵을 불러오지 못했습니다", new Vector2(0f, -390f), new Vector2(1000f, 45f), 22); // 실제 로딩 실패 안내
+            } // 조건 종료
+            if (error != null) // 실제 오류 문구 확인
+            { // 조건 시작
+                error.text = "맵을 불러오지 못했습니다"; // 실제 로딩 실패 안내 갱신
+            } // 조건 종료
+        } // 함수 종료
         private void SelectMap(int index) // 실제 맵 선택
         {
             if (sceneContext != null) // 실제 독립 준비 씬 확인

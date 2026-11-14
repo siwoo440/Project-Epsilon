@@ -115,6 +115,7 @@ namespace ProjectEpsilon.Editor // 편집기 영역
             controller.enabled = false; // 시험 준비 중 병합 중지
             ClearPickups(); // 기존 보석 정리
             yield return null; // 지연 파괴 완료 대기
+            yield return VerifyBelowThreshold(); // 병합 기준 미만의 불필요한 검사 확인
             yield return VerifyPriorityAndBudgets(); // 최초 검사 우선순위와 예산
             yield return VerifyConversion(1, 5, 5); // 소형 다섯 개 병합
             yield return VerifyConversion(5, 4, 20); // 중형 네 개 병합
@@ -124,6 +125,17 @@ namespace ProjectEpsilon.Editor // 편집기 영역
             AutomatedExperienceMergeVerification.Finish(0, "Actual automatic gem conversions, priority, budgets, pause, inactive/destroyed pickups and collection preserved experience under controlled conditions."); // 시험 결과 기록
         }
 
+        private IEnumerator VerifyBelowThreshold() // 병합 기준 미만의 실제 검사
+        { // 함수 시작
+            ConfigureController(100); // 실제 병합 기준 설정
+            SpawnGroup(playerPosition + Vector3.right * 30f, 1, 5); // 기준 미만의 실제 보석
+            controller.enabled = true; // 실제 병합 검사 허용
+            int result = (int)controllerType.GetMethod("ProcessMergePass").Invoke(controller, null); // 실제 수동 검사 실행
+            Require(result == 0 && TotalExperience() == 5 && ReadMetric("LastCandidateHeadDistanceChecks") == 0, "병합 기준 미만 보석의 불필요한 거리 검사"); // 경험치 보존과 조기 종료 확인
+            controller.enabled = false; // 다음 시험 전 검사 중지
+            ClearPickups(); // 실제 시험 보석 정리
+            yield return null; // 실제 지연 파괴 완료
+        } // 함수 종료
         private IEnumerator VerifyPriorityAndBudgets() // 실제 최초 검사 우선순위와 예산
         {
             controller.enabled = false; // 시험 준비 중 검사 정지

@@ -97,6 +97,7 @@ namespace ProjectEpsilon.Editor // 배치 시험 영역
                 Require(image != null && image.GetComponent<Image>().sprite == candidates[index].Weapon.Icon, "Reward image differs from its turret data."); // 각 보상 아이콘과 데이터 일치 확인
                 Require(image != null && image.gameObject.activeSelf && Mathf.Abs(image.sizeDelta.x - 192f) < 0.001f && Mathf.Abs(image.sizeDelta.y - 192f) < 0.001f, "Reward artwork is not double the previous size."); // 기존 구십육 대비 두 배 크기 확인
                 Require(image.anchorMin == new Vector2(0.5f, 0.62f) && image.anchorMax == image.anchorMin && image.pivot == new Vector2(0.5f, 0.5f), "Reward artwork is not centered within the card."); // 실제 카드 안쪽 중앙 배치 확인
+                Require(Mathf.Approximately(image.anchoredPosition.y, 30f), "포탑 이미지의 위쪽 이동값 오류"); // 실제 포탑 이미지 상향 위치 확인
                 FieldInfo labelField = typeof(LevelUpPanelController).GetField("candidateLabel0" + (index + 1), BindingFlags.Instance | BindingFlags.NonPublic); // 실제 후보 문구 필드
                 Text label = labelField.GetValue(panel) as Text; // 실제 후보 문구
                 Require(label != null, "Reward label missing."); // 실제 후보 문구 확인
@@ -168,7 +169,24 @@ namespace ProjectEpsilon.Editor // 배치 시험 영역
             Require(!buttons[1].interactable && buttons[0].interactable && buttons[2].interactable, "합성 불가 선택 상태 오류"); // 기존 합성 가능 상태 확인
             panel.ShowRewardAction(candidates[0], true); // 합성 재료가 있는 보상 처리 선택
             Require(buttons[1].interactable, "합성 가능 선택 상태 오류"); // 기존 합성 가능 상태 확인
+            WeaponMergePanelController merge = UnityEngine.Object.FindFirstObjectByType<WeaponMergePanelController>(FindObjectsInactive.Include); // 실제 합성 화면 조회
+            Require(merge != null, "합성 화면 누락"); // 실제 합성 화면 확인
+            merge.Show(new List<WeaponMergeCandidate>()); // 실제 합성 화면 표시
+            Text mergeTitle = (Text)typeof(WeaponMergePanelController).GetField("titleText", BindingFlags.Instance | BindingFlags.NonPublic).GetValue(merge); // 실제 합성 제목
+            Text mergeState = (Text)typeof(WeaponMergePanelController).GetField("stateText", BindingFlags.Instance | BindingFlags.NonPublic).GetValue(merge); // 실제 합성 안내
+            Require(mergeTitle.fontSize == 64 && mergeTitle.fontStyle == FontStyle.Bold && mergeTitle.rectTransform.rect.height >= 64f, "합성 제목 크기 또는 굵기 오류"); // 실제 제목 확대 확인
+            Vector3[] titleCorners = new Vector3[4]; // 실제 제목 경계
+            Vector3[] stateCorners = new Vector3[4]; // 실제 안내 경계
+            mergeTitle.rectTransform.GetWorldCorners(titleCorners); // 실제 제목 위치
+            mergeState.rectTransform.GetWorldCorners(stateCorners); // 실제 안내 위치
+            Require(stateCorners[1].y <= titleCorners[0].y, "합성 제목과 안내가 겹침"); // 실제 제목과 안내 분리 확인
+            merge.gameObject.SetActive(false); // 합성 화면 닫기
+            merge.Show(new List<WeaponMergeCandidate>()); // 실제 합성 화면 다시 열기
+            Require(mergeTitle.fontSize == 64, "합성 제목 크기 중복 확대"); // 반복 표시 시 크기 유지
+            merge.gameObject.SetActive(false); // 합성 화면 정리
             panel.ShowEliteRewards(new[] { "A", "B", "C" }, new[] { true, true, true }); // 실제 엘리트 보상 전환
+            Text rewardTitle = (Text)typeof(LevelUpPanelController).GetField("titleText", BindingFlags.Instance | BindingFlags.NonPublic).GetValue(panel); // 실제 정예 보상 제목
+            Require(rewardTitle.fontSize == 68 && rewardTitle.fontStyle == FontStyle.Bold, "정예 보상 제목 크기 또는 굵기 오류"); // 실제 정예 보상 제목 확인
             Require(!buttons[0].transform.Find("WeaponArtwork").gameObject.activeSelf, "Weapon artwork remained on elite reward."); // 엘리트 화면의 무기 그림 숨김 확인
             yield return null; // 실제 프레임 대기
             AutomatedRewardLayoutVerification.Finish(0, "Responsive reward card group, doubled images and elite transition."); // 전체 성공 기록
