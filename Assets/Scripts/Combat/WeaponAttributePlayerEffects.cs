@@ -1,3 +1,4 @@
+using ProjectEpsilon.Core; // 실제 게임 진행 상태
 using ProjectEpsilon.Data; // 무기 속성 사용
 using ProjectEpsilon.Player; // 플레이어 체력 사용
 using UnityEngine; // Unity 기능 사용
@@ -123,7 +124,7 @@ namespace ProjectEpsilon.Combat // 전투 영역
 
         private void HandleShieldEnded(SnakeShieldEndContext context) // 보호막 종료 효과 처리
         {
-            if (!WeaponAttributeHolyRules.CanBurstOnShieldEnd(context.SynergyStage)) // 8단계 종료 확인
+            if (!CanContinueCombat() || !WeaponAttributeHolyRules.CanBurstOnShieldEnd(context.SynergyStage)) // 실제 전투와 팔 단계 종료 확인
             {
                 return; // 종료 효과 생략
             }
@@ -142,7 +143,7 @@ namespace ProjectEpsilon.Combat // 전투 영역
 
         private void ApplyHolyBurstTarget(WeaponTarget target, Vector3 center, float burstDamage) // 단일 Holy 폭발 처리
         {
-            if (target == null || !target.IsAlive) // 대상 유효성 확인
+            if (!CanContinueCombat() || target == null || !target.IsAlive) // 실제 전투와 대상 유효성 확인
             {
                 return; // 폭발 생략
             }
@@ -151,6 +152,11 @@ namespace ProjectEpsilon.Combat // 전투 영역
             target.TakeDamage(burstDamage); // 폭발 피해 적용
             effectHooks?.NotifyHit(new WeaponAttributeHitContext(lastHolyAttack, target, hitPosition)); // Holy 명중 Hook 전달
         }
+
+        private static bool CanContinueCombat() // 실제 보호막 효과 진행 여부
+        { // 함수 시작
+            return GameManager.Instance == null || GameManager.Instance.IsPlaying; // 게임 관리자 부재 또는 전투 진행 확인
+        } // 함수 종료
 
         private void Subscribe() // 보호막 종료 구독
         {
