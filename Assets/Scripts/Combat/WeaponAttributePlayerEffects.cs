@@ -69,6 +69,10 @@ namespace ProjectEpsilon.Combat // 전투 영역
 
         public void HandleDarkDamage(int synergyStage, float dealtDamage) // Dark 피해 흡수 처리
         {
+            if (HasRunEnded()) // 실제 승패 확정 여부 확인
+            { // 조건 시작
+                return; // 승패 확정 뒤 흡수 회복 차단
+            } // 조건 종료
             darkAbsorptionRemainder += WeaponAttributeDarkRules.CalculateAbsorption(dealtDamage, synergyStage); // 소수 흡수 누적
             int wholeHealing = Mathf.FloorToInt(darkAbsorptionRemainder); // 정수 회복량 계산
 
@@ -83,6 +87,10 @@ namespace ProjectEpsilon.Combat // 전투 영역
 
         public void HandleDarkKill(int synergyStage, int curseStacks, Vector3 deathPosition) // Dark 처치 처리
         {
+            if (HasRunEnded()) // 실제 승패 확정 여부 확인
+            { // 조건 시작
+                return; // 승패 확정 뒤 처치 회복과 전파 차단
+            } // 조건 종료
             if (WeaponAttributeDarkRules.ShouldHealOnKill(synergyStage, curseStacks, Random.value)) // 저주 대상 처치 회복 확인
             {
                 snakeHealth?.Heal(Mathf.CeilToInt(WeaponAttributeDarkRules.KillHealAmount * CharacterRunInitializer.DarkKillHealMultiplier)); // 암흑형 저주 처치 회복 강화
@@ -98,7 +106,7 @@ namespace ProjectEpsilon.Combat // 전투 영역
 
         private static void ApplySpreadCurse(WeaponTarget target, int synergyStage) // 단일 대상 저주 전파
         {
-            if (target == null || !target.IsAlive) // 대상 유효성 확인
+            if (HasRunEnded() || target == null || !target.IsAlive) // 승패 확정과 대상 유효성 확인
             {
                 return; // 전파 생략
             }
@@ -156,6 +164,12 @@ namespace ProjectEpsilon.Combat // 전투 영역
         private static bool CanContinueCombat() // 실제 보호막 효과 진행 여부
         { // 함수 시작
             return GameManager.Instance == null || GameManager.Instance.IsPlaying; // 게임 관리자 부재 또는 전투 진행 확인
+        } // 함수 종료
+
+        private static bool HasRunEnded() // 실제 승패 확정 여부
+        { // 함수 시작
+            GameManager game = GameManager.Instance; // 실제 게임 관리자
+            return game != null && (game.CurrentState == GameState.Victory || game.CurrentState == GameState.Defeated); // 실제 승리 또는 패배 확인
         } // 함수 종료
 
         private void Subscribe() // 보호막 종료 구독
