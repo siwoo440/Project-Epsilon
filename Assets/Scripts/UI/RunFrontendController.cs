@@ -643,6 +643,7 @@ namespace ProjectEpsilon.UI // 실제 메뉴 영역
             string save = meta != null && meta.HasPendingSave ? "저장 실패 - 다시 시도하세요" : "저장됨"; // 실제 저장 상태
             double seconds = meta == null ? 0d : meta.LastRunSeconds; // 실제 생존 시간
             string details = $"생존 시간  {(int)(seconds / 60d):00}:{(int)(seconds % 60d):00}\n처치  {(meta == null ? 0 : meta.Kills)}    정예  {(meta == null ? 0 : meta.Elites)}\n코어  +{(meta == null ? 0 : meta.LastAward)}\n해금  {unlocks}\n{save}"; // 실제 런 성과
+            details += meta != null && meta.ScoreFinalized ? $"\n점수  {meta.CurrentScore:N0}" : "\n점수  미확정"; // 실제 승리 점수 또는 미확정 표시
             CharacterData resultCharacter = CharacterRunInitializer.ActiveCharacter != null ? CharacterRunInitializer.ActiveCharacter : CharacterRunInitializer.SelectedCharacter; // 실제 전투 캐릭터 또는 보존된 선택
             bool hasPortrait = resultCharacter != null && resultCharacter.Portrait != null; // 실제 캐릭터 초상화 확인
             if (hasPortrait) // 실제 초상화 표시 가능 확인

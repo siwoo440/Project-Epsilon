@@ -19,6 +19,15 @@ namespace ProjectEpsilon.Progression // 영구 성장 영역
         private string runId; // 현재 런의 고유 식별자
         private int kills; // 보상 가능한 적 처치 수
         private int elites; // 실제 엘리트 처치 수
+        private RunScoreSettings scoreSettings; // 조정 가능한 점수 기준
+        private SnakeExperience scoreExperience; // 실제 경험치 획득 대상
+        private long totalExperience; // 이번 전투의 실제 경험치
+        private int currentScore; // 현재 전투 점수
+        private bool scoreFinalized; // 승리 점수 확정 여부
+        public int CurrentScore => currentScore; // 현재 표시 점수
+        public long TotalExperience => totalExperience; // 누적 실제 경험치
+        public bool ScoreFinalized => scoreFinalized; // 승리 점수 확정 상태
+        public event Action<int, int> ScoreChanged; // 현재 점수와 증가량 알림
         private bool runActive; // 현재 런 보상 가능 여부
         private bool finished; // 현재 런 보상 확정 여부
         private bool pending; // 저장 실패 보상 대기
@@ -48,6 +57,7 @@ namespace ProjectEpsilon.Progression // 영구 성장 영역
                 return; // 추가 초기화 차단
             }
             Instance = this; // 실제 관리자 등록
+            scoreSettings = Resources.Load<RunScoreSettings>("RunScoreSettings"); // 점수 기준 데이터 로드
             Service = new MetaProgressionService(new PlayerPrefsMetaStorage(SaveKey)); // 입력과 분리된 메타 저장 로드
             Menu = gameObject.AddComponent<MetaProgressionMenu>(); // 실제 시작 성장 메뉴 생성
             Menu.Configure(this); // 실제 영구 성장 연결
@@ -67,6 +77,7 @@ namespace ProjectEpsilon.Progression // 영구 성장 영역
         }
         private void OnDestroy() // 실제 구독 정리
         {
+            UnbindScoreExperience(); // 경험치 점수 구독 정리
             if (spawner != null) // 실제 출현기 확인
             {
                 spawner.RewardableEnemyDied -= HandleEnemyDied; // 실제 처치 구독 해제
@@ -89,6 +100,16 @@ namespace ProjectEpsilon.Progression // 영구 성장 영역
             runId = Guid.NewGuid().ToString("N"); // 중복 지급 방지 식별자
             kills = 0; // 실제 처치 수 초기화
             elites = 0; // 실제 엘리트 수 초기화
+            totalExperience = 0; // 새 전투의 경험치 초기화
+            currentScore = 0; // 새 전투의 점수 초기화
+            scoreFinalized = false; // 이전 승리 확정 상태 제거
+            UnbindScoreExperience(); // 이전 플레이어 경험치 구독 해제
+            scoreExperience = SnakeExperience.Current; // 현재 플레이어 경험치 조회
+            if (scoreExperience != null) // 실제 경험치 대상 확인
+            { // 조건 시작
+                scoreExperience.ExperienceGained += HandleScoreExperience; // 실제 경험치 획득 구독
+            } // 조건 종료
+            ScoreChanged?.Invoke(0, 0); // 새 전투 점수 표시 초기화
             LastAward = 0; // 이전 보상 초기화
             RerollUsed = false; // 실제 런 재선택 초기화
             hadRuins = Service != null && Service.IsMapUnlocked(1); // 기존 폐허 해금 기록
@@ -103,7 +124,7 @@ namespace ProjectEpsilon.Progression // 영구 성장 영역
         }
         private void HandleEnemyDied(bool elite) // 실제 적 처치 집계
         {
-            if (!runActive || finished) // 실제 런 상태 확인
+            if (!runActive || finished || pending) // 실제 런 상태 확인
             {
                 return; // 종료된 런 집계 차단
             }
@@ -112,7 +133,62 @@ namespace ProjectEpsilon.Progression // 영구 성장 영역
             {
                 elites++; // 실제 엘리트 처치 누적
             }
+            RefreshLiveScore(); // 실제 처치 점수 갱신
         }
+        private void UnbindScoreExperience() // 경험치 이벤트 연결 해제
+        { // 함수 시작
+            if (scoreExperience != null) // 이전 경험치 대상 확인
+            { // 조건 시작
+                scoreExperience.ExperienceGained -= HandleScoreExperience; // 이전 획득 구독 해제
+                scoreExperience = null; // 이전 대상 참조 제거
+            } // 조건 종료
+        } // 함수 종료
+        private void HandleScoreExperience(int amount) // 실제 획득 경험치 집계
+        { // 함수 시작
+            if (!runActive || finished || pending || amount <= 0) // 유효한 전투 획득 확인
+            { // 조건 시작
+                return; // 종료 또는 무효 획득 제외
+            } // 조건 종료
+            totalExperience = totalExperience > long.MaxValue - amount ? long.MaxValue : totalExperience + amount; // 안전한 경험치 누적
+            RefreshLiveScore(); // 실제 획득 점수 갱신
+        } // 함수 종료
+        private static int FractionScore(long value, long target, int maximum) // 기준 대비 점수 계산
+        { // 함수 시작
+            if (target <= 0 || value <= 0) // 미정 기준 또는 무득점 확인
+            { // 조건 시작
+                return 0; // 미정 항목 점수 제외
+            } // 조건 종료
+            return (int)Math.Floor(Math.Min(1d, (double)value / target) * maximum); // 상한이 있는 비율 점수
+        } // 함수 종료
+        private void SetScore(int value) // 점수 표시와 증가량 알림
+        { // 함수 시작
+            int previous = currentScore; // 이전 점수 기록
+            currentScore = Mathf.Clamp(value, 0, 100000); // 전체 점수 상한 적용
+            if (currentScore != previous) // 점수 변동 확인
+            { // 조건 시작
+                ScoreChanged?.Invoke(currentScore, Math.Max(0, currentScore - previous)); // 실제 증가량 전달
+            } // 조건 종료
+        } // 함수 종료
+        private void RefreshLiveScore() // 전투 중 달성 점수 계산
+        { // 함수 시작
+            int experience = FractionScore(totalExperience, scoreSettings == null ? 0 : scoreSettings.ExperienceTarget, 20000); // 경험치 점수
+            int normal = FractionScore(Math.Max(0, kills - elites), scoreSettings == null ? 0 : scoreSettings.NormalKillTarget, 10000); // 일반 적 점수
+            int elite = FractionScore(elites, 4, 10000); // 엘리트 점수
+            SetScore(experience + normal + elite); // 현재 누적 점수 반영
+        } // 함수 종료
+        private void FinalizeScore(bool victory) // 실제 종료 시 점수 확정
+        { // 함수 시작
+            if (!victory) // 실제 보스 승리 여부 확인
+            { // 조건 시작
+                return; // 패배와 포기의 승리 보너스 제외
+            } // 조건 종료
+            SnakeHealth health = FindFirstObjectByType<SnakeHealth>(); // 실제 남은 공용 체력
+            SnakeBodyManager body = FindFirstObjectByType<SnakeBodyManager>(); // 실제 남은 몸통
+            int healthScore = health == null ? 0 : FractionScore(health.CurrentHealth, health.MaximumHealth, 10000); // 남은 체력 점수
+            int bodyScore = body == null ? 0 : FractionScore(body.CurrentBodyCount, body.EarnedBodyCount, 10000); // 남은 몸통 점수
+            scoreFinalized = true; // 승리 점수 확정 표시
+            SetScore(currentScore + 40000 + healthScore + bodyScore); // 보스와 생존 보너스 반영
+        } // 함수 종료
         private void HandleSynergyChanged() // 실제 속성 포탑 해금 갱신
         {
             if (!runActive || finished || synergy == null || unlockConfig == null || Service == null || !Service.IsAvailable) // 실제 런과 설정 확인
@@ -139,6 +215,8 @@ namespace ProjectEpsilon.Progression // 영구 성장 영역
                 pendingBoss = bossDefeated; // 실제 최종 보스 처치
                 PrototypeMapSelection map = GetComponent<PrototypeMapSelection>(); // 실제 선택 맵
                 pendingMap = map == null ? 0 : map.SelectedIndex; // 실제 맵 번호
+                FinalizeScore(bossDefeated); // 최초 종료 시 점수 한 번 확정
+                UnbindScoreExperience(); // 종료 후 경험치 집계 중지
                 pending = true; // 실패해도 같은 성과 보존
             }
             int before = Service.Cores; // 저장 전 실제 코어

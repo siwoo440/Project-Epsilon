@@ -55,6 +55,8 @@ namespace ProjectEpsilon.Editor // 배치 시험 영역
             HUDController hud = UnityEngine.Object.FindFirstObjectByType<HUDController>(); // 실제 HUD 제어기
             GameTimerUI timer = UnityEngine.Object.FindFirstObjectByType<GameTimerUI>(); // 실제 시간 표시기
             Require(hud != null && timer != null, "HUD 또는 타이머 누락"); // 실제 표시기 확인
+            Require(GameObject.Find("CurrentScoreText") != null, "현재 점수 표시 누락"); // 실제 점수 표시 확인
+            Require(typeof(ProjectEpsilon.Progression.MetaProgressionController).GetProperty("CurrentScore") != null, "점수 집계 누락"); // 실제 점수 속성 확인
             Canvas.ForceUpdateCanvases(); // 실제 UI 영역 계산
             Debug.Log("[Day74HUDLayout] Screen=" + Screen.width + "x" + Screen.height); // 실제 배치 화면 크기
             foreach (string name in new[] { "healthText", "bodyCountText", "experienceText", "levelText", "staminaText" }) // 실제 HUD 글자 순회
