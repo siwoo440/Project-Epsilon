@@ -13,6 +13,7 @@ namespace ProjectEpsilon.UI // 프로젝트 기능 영역
         [SerializeField] private Text titleText; // 필드·문구 설정
         [SerializeField] private Text levelText; // 필드·문구 설정
         [SerializeField] private Text growthText; // 필드·문구 설정
+        [Range(0f, 1f)] [SerializeField] private float startingBackgroundOpacity = 0.65f; // 시작 선택 맵 배경 불투명도 시험값
 
         [Header("Weapon Candidates")] // 포탑·후보 설정
         [SerializeField] private Button candidateButton01; // 필드·버튼 설정
@@ -24,6 +25,9 @@ namespace ProjectEpsilon.UI // 프로젝트 기능 영역
         [SerializeField] private Text candidateLabel03; // 필드·문구 설정
 
         private bool buttonsBound; // 대상 구성 선언
+        private Image startingBackground; // 실제 시작 선택 패널 배경
+        private float originalBackgroundOpacity; // 실제 기존 보상 배경 불투명도
+        private bool startingBackgroundChanged; // 시작 선택 배경 변경 상태
 
         public event Action<int> CandidateSelected; // 이벤트·동작 구성 선언
 
@@ -80,6 +84,7 @@ namespace ProjectEpsilon.UI // 프로젝트 기능 영역
 
         private void OnDisable() // 비활성 기능 선언
         {
+            RestoreStartingBackground(); // 기존 보상 배경 복구
             UnbindButtons(); // 대상 기능 실행
         }
 
@@ -130,6 +135,7 @@ namespace ProjectEpsilon.UI // 프로젝트 기능 영역
             IReadOnlyList<WeaponRewardCandidate> candidates // 목록·포탑 처리
         ) // 앞선 항목 종료
         {
+            RestoreStartingBackground(); // 일반 레벨업의 기존 배경 복구
             gameObject.SetActive(true); // 게임·객체 기능 실행
 
             if (titleText != null) // 문구 조건 확인
@@ -189,6 +195,7 @@ namespace ProjectEpsilon.UI // 프로젝트 기능 영역
         public void ShowStartingWeapons(IReadOnlyList<WeaponRewardCandidate> candidates) // 시작 무기 후보 표시
         {
             gameObject.SetActive(true); // 시작 후보 화면 표시
+            ApplyStartingBackground(); // 실제 맵이 보이는 시작 선택 배경
             if (titleText != null) // 제목 연결 확인
             {
                 titleText.text = "시작 포탑 선택"; // 시작 무기 선택 제목
@@ -233,6 +240,7 @@ namespace ProjectEpsilon.UI // 프로젝트 기능 영역
 
         public void ShowEliteRewards(string[] labels, bool[] available) // 엘리트 보상 후보 표시
         {
+            RestoreStartingBackground(); // 정예 보상의 기존 배경 복구
             gameObject.SetActive(true); // 선택 화면 표시
             if (titleText != null) // 제목 연결 확인
             {
@@ -269,6 +277,7 @@ namespace ProjectEpsilon.UI // 프로젝트 기능 영역
 
         public void ShowRewardAction(WeaponRewardCandidate candidate, bool canMerge) // 보상 처리 방식 선택
         {
+            RestoreStartingBackground(); // 보상 처리의 기존 배경 복구
             gameObject.SetActive(true); // 레벨업 화면 표시
             if (titleText != null) // 제목 연결 확인
             {
@@ -294,6 +303,7 @@ namespace ProjectEpsilon.UI // 프로젝트 기능 영역
 
         public void ShowReplacementSelection(IReadOnlyList<SnakeWeaponSlot> slots, WeaponRewardCandidate candidate, int index) // 교체 슬롯 화면 표시
         {
+            RestoreStartingBackground(); // 교체 선택의 기존 배경 복구
             gameObject.SetActive(true); // 교체 화면 표시
             if (titleText != null) // 제목 연결 확인
             {
@@ -330,11 +340,49 @@ namespace ProjectEpsilon.UI // 프로젝트 기능 영역
 
         public void Hide() // 숨김 기능 선언
         {
+            RestoreStartingBackground(); // 시작 선택의 기존 배경 복구
             if (gameObject.activeSelf) // 게임·객체 조건 확인
             {
                 gameObject.SetActive(false); // 게임·객체 기능 실행
             }
         }
+
+        private void ApplyStartingBackground() // 시작 선택의 맵 배경 표시
+        { // 함수 시작
+            if (!SceneFrontendContext.UsesSeparateScenes) // 실제 맵에 진입한 선택 화면 확인
+            { // 조건 시작
+                return; // 기존 단일 씬 배경 유지
+            } // 조건 종료
+            if (!startingBackgroundChanged) // 실제 기존 배경 저장 확인
+            { // 조건 시작
+                startingBackground = GetComponent<Image>(); // 실제 공용 보상 패널 배경
+                if (startingBackground == null) // 실제 배경 이미지 확인
+                { // 조건 시작
+                    return; // 이미지 없는 화면 생략
+                } // 조건 종료
+                originalBackgroundOpacity = startingBackground.color.a; // 실제 기존 보상 배경 저장
+                startingBackgroundChanged = true; // 실제 배경 변경 기록
+            } // 조건 종료
+            Color color = startingBackground.color; // 실제 배경 색상
+            color.a = Mathf.Min(originalBackgroundOpacity, Mathf.Clamp01(startingBackgroundOpacity)); // 기존 값보다 어둡지 않은 시험 불투명도
+            startingBackground.color = color; // 실제 선택 맵 배경 표시
+        } // 함수 종료
+
+        private void RestoreStartingBackground() // 시작 선택 전의 보상 배경 복원
+        { // 함수 시작
+            if (!startingBackgroundChanged) // 실제 변경 상태 확인
+            { // 조건 시작
+                return; // 복원할 배경 없음
+            } // 조건 종료
+            if (startingBackground != null) // 실제 배경 이미지 생존 확인
+            { // 조건 시작
+                Color color = startingBackground.color; // 실제 현재 배경 색상
+                color.a = originalBackgroundOpacity; // 실제 기존 보상 불투명도
+                startingBackground.color = color; // 실제 기존 보상 배경 복원
+            } // 조건 종료
+            startingBackground = null; // 이전 배경 참조 제거
+            startingBackgroundChanged = false; // 실제 변경 상태 해제
+        } // 함수 종료
 
         private void HandleCandidate01() // 후보 기능 선언
         {

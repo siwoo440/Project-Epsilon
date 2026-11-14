@@ -98,6 +98,20 @@ namespace ProjectEpsilon.Editor // 배치 시험 영역
             FieldInfo candidateField = typeof(LevelUpPanelController).GetField("candidateButton01", BindingFlags.Instance | BindingFlags.NonPublic); // 실제 첫 후보 버튼
             Button candidate = candidateField == null || panel == null ? null : candidateField.GetValue(panel) as Button; // 실제 공용 카드 버튼
             Require(panel != null && panel.gameObject.activeInHierarchy && candidate != null && candidate.interactable, "실제 공용 레벨업 포탑 카드 누락"); // 실제 카드 재사용 확인
+            Image panelBackground = panel.GetComponent<Image>(); // 실제 시작 카드 배경
+            Require(panelBackground != null && panelBackground.color.a <= 0.7f, "시작 카드의 불투명 배경이 선택 맵을 가림"); // 실제 선택 맵을 위한 배경 투명도 확인
+            FieldInfo originalOpacityField = typeof(LevelUpPanelController).GetField("originalBackgroundOpacity", BindingFlags.Instance | BindingFlags.NonPublic); // 실제 기존 배경 불투명도 필드
+            Require(originalOpacityField != null, "기존 보상 배경 기록 누락"); // 실제 복원값 확인
+            float originalOpacity = (float)originalOpacityField.GetValue(panel); // 실제 씬의 기존 보상 불투명도
+            panel.ShowEliteRewards(new[] { "회복", "복구", "포탑" }, new[] { true, true, true }); // 실제 정예 보상 화면 전환
+            Require(Mathf.Approximately(panelBackground.color.a, originalOpacity), "정예 보상 전환 시 기존 배경이 복원되지 않음"); // 실제 정예 보상 배경 복원 확인
+            selection.RefreshStartingDisplay(); // 실제 시작 포탑 후보 복원
+            Require(panelBackground.color.a <= 0.7f && selection.IsSelecting, "정예 보상 이후 시작 카드 배경 복원 실패"); // 실제 시작 배경 재적용 확인
+            WeaponRewardCandidate[] levelCandidates = { new WeaponRewardCandidate(character.StartingWeapons.Weapons[0], 1) }; // 실제 포탑 데이터의 레벨업 후보
+            panel.Show(2, false, 4, 4, false, levelCandidates); // 실제 일반 레벨업 카드 전환
+            Require(Mathf.Approximately(panelBackground.color.a, originalOpacity), "일반 레벨업 전환 시 기존 배경이 복원되지 않음"); // 실제 일반 레벨업 배경 복원 확인
+            selection.RefreshStartingDisplay(); // 실제 시작 포탑 후보 재복원
+            Require(panelBackground.color.a <= 0.7f && selection.IsSelecting, "레벨업 이후 시작 카드 배경 복원 실패"); // 실제 시작 배경 재적용 확인
             InputSettings originalSettings = InputSystem.settings; // 실제 이전 입력 설정
             InputSettings testSettings = UnityEngine.Object.Instantiate(originalSettings); // 실제 독립 입력 설정
             testSettings.hideFlags = HideFlags.HideAndDontSave; // 실제 프로젝트 설정 보호
@@ -116,6 +130,7 @@ namespace ProjectEpsilon.Editor // 배치 시험 영역
             yield return WaitFor(() => GameManager.Instance != null && GameManager.Instance.IsPlaying, "시작 포탑 선택 후 전투 시작 실패"); // 실제 포탑 선택과 전투 시작 확인
             SnakeWeaponManager weapons = FindFirstObjectByType<SnakeWeaponManager>(); // 실제 몸통 포탑 관리자
             Require(weapons != null && weapons.Slots[0].Weapon == expected && !selection.IsSelecting, "선택한 시작 포탑 장착 오류"); // 실제 첫 몸통 장착 확인
+            Require(Mathf.Approximately(panelBackground.color.a, originalOpacity), "시작 선택 후 일반 보상 배경이 복원되지 않음"); // 실제 기존 레벨업 배경 복원 확인
             InputSystem.RemoveDevice(keyboard); // 실제 가상 키보드 제거
             if (originalSettings != null) // 실제 이전 입력 설정 생존 확인
             { // 조건 시작
