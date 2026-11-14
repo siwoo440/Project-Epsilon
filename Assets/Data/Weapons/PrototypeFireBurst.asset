@@ -22,6 +22,8 @@ MonoBehaviour:
   attackInterval: 1.6
   range: 2.1
   maxGrade: 5
+  gradeThreeBurnDamageMultiplier: 1.15
+  gradeFiveBurnDamageMultiplier: 1.3
   gradeThreeAreaRangeMultiplier: 1.25
   gradeFiveAreaRangeMultiplier: 1.5
   projectileSpeed: 8

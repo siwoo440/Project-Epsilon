@@ -20,6 +20,10 @@ MonoBehaviour:
   attackType: 0
   baseDamage: 12
   attackInterval: 1.3
+  gradeThreePeriodicInterval: 3
+  gradeThreePeriodicDamageMultiplier: 1.2
+  gradeFivePeriodicInterval: 2
+  gradeFivePeriodicDamageMultiplier: 1.3
   range: 1.1
   maxGrade: 5
   gradeThreeMeleeTargetLimit: 2

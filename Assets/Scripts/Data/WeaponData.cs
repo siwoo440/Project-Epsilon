@@ -49,6 +49,12 @@ namespace ProjectEpsilon.Data // 프로젝트 기능 영역
         [Min(1f)] [SerializeField] private float gradeFivePeriodicDamageMultiplier = 1f; // 오 등급 주기 피해 배율 시험값
         [Min(0f)] [SerializeField] private float gradeFiveAreaKnockbackDistance; // 오 등급 범위 넉백 거리 시험값
         [Min(0f)] [SerializeField] private float gradeFiveAreaKnockbackDuration = 0.2f; // 오 등급 범위 넉백 시간 시험값
+        [Min(1f)] [SerializeField] private float gradeThreeBurnedDamageMultiplier = 1f; // 삼 등급 화상 대상 피해 배율 시험값
+        [Min(1f)] [SerializeField] private float gradeFiveBurnedDamageMultiplier = 1f; // 오 등급 화상 대상 피해 배율 시험값
+        [Min(1f)] [SerializeField] private float gradeThreeBurnDurationMultiplier = 1f; // 삼 등급 화상 시간 배율 시험값
+        [Min(1f)] [SerializeField] private float gradeFiveBurnDurationMultiplier = 1f; // 오 등급 화상 시간 배율 시험값
+        [Min(1f)] [SerializeField] private float gradeThreeBurnDamageMultiplier = 1f; // 삼 등급 화상 피해 배율 시험값
+        [Min(1f)] [SerializeField] private float gradeFiveBurnDamageMultiplier = 1f; // 오 등급 화상 피해 배율 시험값
 
         public string Id => id; // 식별자 값 반환
         public string DisplayName => displayName; // 이름 값 반환
@@ -89,6 +95,9 @@ namespace ProjectEpsilon.Data // 프로젝트 기능 영역
         public float GetPeriodicDamageMultiplier(int grade) => grade >= 5 && gradeFivePeriodicInterval > 0 ? Mathf.Max(1f, gradeFivePeriodicDamageMultiplier) : grade >= 3 ? Mathf.Max(1f, gradeThreePeriodicDamageMultiplier) : 1f; // 등급별 주기 피해 배율
         public float GetAreaKnockbackDistance(int grade) => grade >= 5 ? Mathf.Max(0f, gradeFiveAreaKnockbackDistance) : 0f; // 등급별 범위 넉백 거리
         public float GradeFiveAreaKnockbackDuration => Mathf.Max(0f, gradeFiveAreaKnockbackDuration); // 안전한 범위 넉백 시간
+        public float GetBurnedDamageMultiplier(int grade) => grade >= 5 ? Mathf.Max(Mathf.Max(1f, gradeThreeBurnedDamageMultiplier), gradeFiveBurnedDamageMultiplier) : grade >= 3 ? Mathf.Max(1f, gradeThreeBurnedDamageMultiplier) : 1f; // 등급별 화상 대상 직접 피해 배율
+        public float GetBurnDurationMultiplier(int grade) => grade >= 5 ? Mathf.Max(Mathf.Max(1f, gradeThreeBurnDurationMultiplier), gradeFiveBurnDurationMultiplier) : grade >= 3 ? Mathf.Max(1f, gradeThreeBurnDurationMultiplier) : 1f; // 등급별 화상 지속 시간 배율
+        public float GetBurnDamageMultiplier(int grade) => grade >= 5 ? Mathf.Max(Mathf.Max(1f, gradeThreeBurnDamageMultiplier), gradeFiveBurnDamageMultiplier) : grade >= 3 ? Mathf.Max(1f, gradeThreeBurnDamageMultiplier) : 1f; // 등급별 화상 지속 피해 배율
         public float GradeThreeTransferRange => Mathf.Max(0f, gradeThreeTransferRange); // 안전한 추가 전달 반경
         public float GradeThreeTransferDamageMultiplier => Mathf.Max(0f, gradeThreeTransferDamageMultiplier); // 안전한 추가 전달 피해 배율
         public float GetTransferDamageMultiplier(int grade) => GradeThreeTransferDamageMultiplier * (grade >= 5 ? Mathf.Max(1f, gradeFiveTransferDamageScale) : 1f); // 등급별 전달 피해 배율

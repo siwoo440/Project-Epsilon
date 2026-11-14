@@ -278,6 +278,15 @@ namespace ProjectEpsilon.Combat // 전투 영역
 
         private static WeaponAttributeAttackSnapshot ResolveTargetAttack(WeaponAttributeAttackSnapshot attack, WeaponTarget target) // 대상 상태 반영 공격 생성
         {
+            if (attack.Attribute == WeaponAttribute.Fire && attack.Weapon != null) // 실제 화염 포탑 확인
+            { // 조건 시작
+                WeaponTargetBurnStatus burn = target.GetComponent<WeaponTargetBurnStatus>(); // 실제 명중 전 화상 상태
+                if (burn != null && burn.RemainingDuration > 0f) // 실제 활성 화상 대상 확인
+                { // 조건 시작
+                    float fireDamage = attack.DirectDamage * attack.Weapon.GetBurnedDamageMultiplier(attack.Grade); // 실제 화상 대상 등급 피해
+                    return new WeaponAttributeAttackSnapshot(attack.Weapon, attack.Attribute, attack.AttributeCount, attack.SynergyStage, attack.Grade, attack.Origin, fireDamage, attack.AreaCenter); // 실제 범위 중심을 보존한 공격
+                } // 조건 종료
+            } // 조건 종료
             if (attack.Attribute != WeaponAttribute.Dark) // 암흑 속성 여부 확인
             {
                 return attack; // 원래 공격 반환
@@ -285,7 +294,7 @@ namespace ProjectEpsilon.Combat // 전투 영역
 
             int curseStacks = ResolveDarkCurseStacks(target); // 현재 저주 중첩 조회
             float directDamage = WeaponAttributeDarkRules.CalculateDirectDamage(attack.DirectDamage, attack.SynergyStage, curseStacks); // 저주 증폭 피해 계산
-            return new WeaponAttributeAttackSnapshot(attack.Weapon, attack.Attribute, attack.AttributeCount, attack.SynergyStage, attack.Grade, attack.Origin, directDamage); // 갱신 공격 반환
+            return new WeaponAttributeAttackSnapshot(attack.Weapon, attack.Attribute, attack.AttributeCount, attack.SynergyStage, attack.Grade, attack.Origin, directDamage, attack.AreaCenter); // 실제 범위 중심을 보존한 공격 반환
         }
 
         private static int ResolveDarkCurseStacks(WeaponTarget target) // 대상 저주 중첩 조회
@@ -321,8 +330,8 @@ namespace ProjectEpsilon.Combat // 전투 영역
 
         private static void ApplyFire(WeaponAttributeAttackSnapshot attack, WeaponTarget target) // 화상 적용
         {
-            float baseDuration = attack.Weapon == null ? 3f : attack.Weapon.BurnDuration; // 무기별 기본 지속 시간
-            float baseDamage = attack.Weapon == null ? 1f : attack.Weapon.BurnDamagePerSecond; // 무기별 기본 화상 피해
+            float baseDuration = attack.Weapon == null ? 3f : attack.Weapon.BurnDuration * attack.Weapon.GetBurnDurationMultiplier(attack.Grade); // 무기와 등급의 화상 지속 시간
+            float baseDamage = attack.Weapon == null ? 1f : attack.Weapon.BurnDamagePerSecond * attack.Weapon.GetBurnDamageMultiplier(attack.Grade); // 무기와 등급의 화상 초당 피해
             float duration = WeaponAttributeDamageRules.GetFireDuration(attack.SynergyStage, baseDuration); // 화상 지속 시간 계산
             float damagePerSecond = WeaponAttributeDamageRules.CalculateFireDamagePerSecond(baseDamage, attack.SynergyStage); // 화상 초당 피해 계산
 
