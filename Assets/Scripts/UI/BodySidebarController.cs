@@ -21,7 +21,6 @@ namespace ProjectEpsilon.UI // 실제 전투 화면 영역
         private readonly Image[] reactionIcons = new Image[12]; // 실제 조합 속성 아이콘
         private static readonly WeaponAttribute[] reactionLeft = { WeaponAttribute.Fire, WeaponAttribute.Cold, WeaponAttribute.Physical, WeaponAttribute.Holy, WeaponAttribute.Dark, WeaponAttribute.Holy }; // 실제 조합의 첫 속성
         private static readonly WeaponAttribute[] reactionRight = { WeaponAttribute.Poison, WeaponAttribute.Electric, WeaponAttribute.Explosion, WeaponAttribute.Fire, WeaponAttribute.Poison, WeaponAttribute.Dark }; // 실제 조합의 둘째 속성
-        private static readonly string[] reactionEffects = { "부식성 연소\n지속 피해", "냉각 방전\n추가 피해와 감속", "파쇄 충격\n범위 피해와 밀치기", "성화 폭발\n주변 범위 피해", "부식 저주\n적 공격 약화와 받는 피해 증가", "명암 상쇄\n추가 피해와 체력 회복" }; // 실제 조합별 효과 설명
         private static readonly Color inactiveColor = new Color(0.55f, 0.58f, 0.62f, 1f); // 미활성 정보 글자 색상
         private GameObject infoPanel; // 실제 상세 정보 영역
         private GameObject synergyDetail; // 실제 단일 속성 상세 영역
@@ -209,7 +208,7 @@ namespace ProjectEpsilon.UI // 실제 전투 화면 영역
                 reactionOperators[index * 2] = CreateText(row, "SidebarReactionPlus_" + index, "+", new Vector2(0.14f, 0f), new Vector2(0.20f, 1f), 22, TextAnchor.MiddleCenter); // 실제 두 속성 사이 더하기
                 reactionIcons[index * 2 + 1] = CreateReactionIcon(row, "SidebarReactionRight_" + index, reactionRight[index], 0.20f, 0.33f); // 실제 둘째 속성 아이콘
                 reactionOperators[index * 2 + 1] = CreateText(row, "SidebarReactionEquals_" + index, "=", new Vector2(0.33f, 0f), new Vector2(0.39f, 1f), 22, TextAnchor.MiddleCenter); // 실제 조합 결과 등호
-                reactionLabels[index] = CreateText(row, "SidebarReactionText_" + index, reactionEffects[index], new Vector2(0.40f, 0f), new Vector2(0.99f, 1f), 20, TextAnchor.MiddleLeft); // 실제 조합 이름과 효과
+                reactionLabels[index] = CreateText(row, "SidebarReactionText_" + index, "", new Vector2(0.40f, 0f), new Vector2(0.99f, 1f), 20, TextAnchor.MiddleLeft); // 실제 조합 수치 설명
             } // 반복 종료
             infoPanel.SetActive(false); // 실제 몸통 목록 초기 표시
         } // 함수 종료
@@ -326,12 +325,42 @@ namespace ProjectEpsilon.UI // 실제 전투 화면 영역
             { // 반복 시작
                 bool available = synergy.GetCount(reactionLeft[index]) > 0 && synergy.GetCount(reactionRight[index]) > 0 && WeaponAttributeReactionRules.ResolvePair(reactionLeft[index], reactionRight[index]) != WeaponAttributeReaction.None; // 실제 두 속성 보유와 구현된 조합 확인
                 Color color = available ? Color.white : inactiveColor; // 실제 보유 조합과 미보유 조합 색상
+                reactionLabels[index].text = ReactionEffect(index); // 실제 전투 설정의 조합 효과와 수치
                 reactionLabels[index].color = color; // 실제 효과 설명 색상
                 reactionOperators[index * 2].color = color; // 실제 더하기 색상
                 reactionOperators[index * 2 + 1].color = color; // 실제 등호 색상
                 reactionIcons[index * 2].color = color; // 실제 첫 속성 이미지 색상
                 reactionIcons[index * 2 + 1].color = color; // 실제 둘째 속성 이미지 색상
             } // 반복 종료
+        } // 함수 종료
+        private string ReactionEffect(int index) // 실제 설정에 따른 속성 조합 효과 설명
+        { // 함수 시작
+            WeaponAttributeCombatEffects effects = weapons.AttributeCombatEffects; // 실제 포탑 전투 효과 설정
+            if (effects == null) // 실제 전투 설정 확인
+            { // 조건 시작
+                return "효과 수치 확인 불가"; // 설정 누락 시 잘못된 수치 방지
+            } // 조건 종료
+            switch (index) // 실제 조합 순서 확인
+            { // 분기 시작
+                case 0: // 화염과 독 조합
+                    return Number(effects.ReactionBurnDuration) + "초 동안\n초당 피해 " + Number(effects.ReactionBurnDamagePerSecond); // 실제 지속 피해와 시간
+                case 1: // 냉기와 전기 조합
+                    return "피해 " + Number(effects.ReactionDischargeDamage) + "\n" + Number(effects.ReactionDischargeSlowDuration) + "초 이동속도 -" + Number((1f - effects.ReactionDischargeSlowMultiplier) * 100f) + "%"; // 실제 피해와 감속 수치
+                case 2: // 물리와 폭발 조합
+                    return "반경 " + Number(effects.ReactionImpactRadius) + " 피해 " + Number(effects.ReactionImpactDamage) + "\n" + Number(effects.ReactionImpactKnockbackDuration) + "초 동안 " + Number(effects.ReactionImpactKnockbackDistance) + " 밀침"; // 실제 반경과 피해 및 밀치기 수치
+                case 3: // 신성과 화염 조합
+                    return "반경 " + Number(effects.ReactionHolyFireRadius) + "\n피해 " + Number(effects.ReactionHolyFireDamage); // 실제 범위 피해 수치
+                case 4: // 암흑과 독 조합
+                    return Number(effects.ReactionDarkPoisonDuration) + "초 주는 피해 -" + Number((1f - effects.ReactionDarkPoisonOutgoingMultiplier) * 100f) + "%\n받는 피해 +" + Number((effects.ReactionDarkPoisonIncomingMultiplier - 1f) * 100f) + "%"; // 실제 피해 약화와 증폭 수치
+                case 5: // 신성과 암흑 조합
+                    return "피해 " + Number(effects.ReactionHolyDarkDamage) + "\n공용 체력 " + effects.ReactionHolyDarkHealing + " 회복"; // 실제 피해와 체력 회복 수치
+                default: // 잘못된 조합 순서
+                    return ""; // 유효하지 않은 설명 생략
+            } // 분기 종료
+        } // 함수 종료
+        private static string Number(float value) // 실제 설정 수치의 간결한 표시
+        { // 함수 시작
+            return value.ToString("0.##", System.Globalization.CultureInfo.InvariantCulture); // 소수 두 자리 이하 표시
         } // 함수 종료
         private static string StageEffect(WeaponAttribute attribute, int stage) // 실제 구현된 속성 시너지 설명
         { // 함수 시작

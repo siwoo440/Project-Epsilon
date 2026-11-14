@@ -157,6 +157,24 @@ namespace ProjectEpsilon.Editor // 실제 배치 시험 영역
             Require(rowLabel.alignment == TextAnchor.MiddleCenter && rowLabel.fontSize >= 22 && !rowLabel.text.Contains("\n") && !rowLabel.text.Contains("기본 공격"), "Turret name is not centered or still shows base attack details."); // 실제 가운데 정렬과 공격 상세 제거 확인
             Require(TextValue("SidebarLabel_1").Contains("★2") && Icon("SidebarWeapon_2") == null && !TextValue("SidebarAttribute_0").Contains("2단계"), "Merge grade or synergy did not update."); // 실제 합성 등급과 단계 갱신 확인
             Require(weapons.TryEquipAt(1, fire) && Icon("SidebarWeapon_2") == fire.Icon && TextValue("SidebarLabel_2").Contains("화염"), "Replacement turret image or attribute mismatch."); // 실제 교체 아이콘과 속성 확인
+            WeaponAttributeCombatEffects effects = weapons.AttributeCombatEffects; // 실제 전투 속성 효과 설정
+            Require(effects != null, "속성 조합 전투 설정 누락"); // 실제 반응 수치 구성 확인
+            SetReactionFloat(effects, "corrosiveBurnDuration", 4.5f); // 실제 지속 피해 시간 시험값
+            SetReactionFloat(effects, "corrosiveBurnDamagePerSecond", 2.25f); // 실제 초당 피해 시험값
+            SetReactionFloat(effects, "coolingDischargeDamage", 7f); // 실제 냉기 전기 피해 시험값
+            SetReactionFloat(effects, "coolingDischargeSlowDuration", 2f); // 실제 감속 시간 시험값
+            SetReactionFloat(effects, "coolingDischargeSlowMultiplier", 0.65f); // 실제 감속 배율 시험값
+            SetReactionFloat(effects, "shatteringImpactRadius", 3.5f); // 실제 파쇄 반경 시험값
+            SetReactionFloat(effects, "shatteringImpactDamage", 9f); // 실제 파쇄 피해 시험값
+            SetReactionFloat(effects, "shatteringImpactKnockbackDistance", 1.2f); // 실제 밀치기 거리 시험값
+            SetReactionFloat(effects, "shatteringImpactKnockbackDuration", 0.4f); // 실제 밀치기 시간 시험값
+            SetReactionFloat(effects, "sacredExplosionRadius", 4f); // 실제 성화 반경 시험값
+            SetReactionFloat(effects, "sacredExplosionDamage", 11f); // 실제 성화 피해 시험값
+            SetReactionFloat(effects, "lightDarkDamage", 12f); // 실제 명암 피해 시험값
+            SetReactionFloat(effects, "corrosiveCurseDuration", 6f); // 실제 공격 약화 시간 시험값
+            SetReactionFloat(effects, "corrosiveCurseOutgoingMultiplier", 0.7f); // 실제 주는 피해 배율 시험값
+            SetReactionFloat(effects, "corrosiveCurseIncomingMultiplier", 1.4f); // 실제 받는 피해 배율 시험값
+            typeof(WeaponAttributeCombatEffects).GetField("lightDarkHealing", BindingFlags.Instance | BindingFlags.NonPublic).SetValue(effects, 13); // 실제 공용 체력 회복 시험값
             Click("SidebarReactionsButton"); // 실제 속성 조합 패널 선택
             yield return null; // 실제 조합 화면의 렌더 등록 대기
             Require(Visible("SidebarReactionPanel") && !Visible("SidebarRow_1"), "속성 조합 패널 전환 실패"); // 실제 조합 화면 전환 확인
@@ -165,6 +183,26 @@ namespace ProjectEpsilon.Editor // 실제 배치 시험 영역
             for (int index = 0; index < 6; index++) // 실제 여섯 가지 조합 순회
             { // 반복 시작
                 Require(Icon("SidebarReactionLeft_" + index) == ProjectUiSkin.AttributeIcon((int)expectedLeft[index]) && Icon("SidebarReactionRight_" + index) == ProjectUiSkin.AttributeIcon((int)expectedRight[index]) && WeaponAttributeReactionRules.ResolvePair(expectedLeft[index], expectedRight[index]) != WeaponAttributeReaction.None && TextValue("SidebarReactionPlus_" + index) == "+" && TextValue("SidebarReactionEquals_" + index) == "=" && !string.IsNullOrEmpty(TextValue("SidebarReactionText_" + index)), "속성 조합 아이콘과 수식 누락: " + index); // 실제 조합 순서와 수식 확인
+            } // 반복 종료
+            Require(TextValue("SidebarReactionText_0").Contains("4.5초") && TextValue("SidebarReactionText_0").Contains("초당 피해 2.25"), "화염 독 지속 피해 수치 오류"); // 실제 지속 피해 설정 반영 확인
+            Require(TextValue("SidebarReactionText_1").Contains("피해 7") && TextValue("SidebarReactionText_1").Contains("2초") && TextValue("SidebarReactionText_1").Contains("35%"), "냉기 전기 감속 수치 오류"); // 실제 추가 피해와 감속 설정 반영 확인
+            Require(TextValue("SidebarReactionText_2").Contains("반경 3.5") && TextValue("SidebarReactionText_2").Contains("피해 9") && TextValue("SidebarReactionText_2").Contains("1.2") && TextValue("SidebarReactionText_2").Contains("0.4초"), "물리 폭발 밀치기 수치 오류"); // 실제 범위 피해와 밀치기 설정 반영 확인
+            Require(TextValue("SidebarReactionText_3").Contains("반경 4") && TextValue("SidebarReactionText_3").Contains("피해 11"), "신성 화염 범위 피해 수치 오류"); // 실제 범위 피해 설정 반영 확인
+            Require(TextValue("SidebarReactionText_4").Contains("6초") && TextValue("SidebarReactionText_4").Contains("-30%") && TextValue("SidebarReactionText_4").Contains("+40%"), "암흑 독 피해 약화 수치 오류"); // 실제 피해 배율 설정 반영 확인
+            Require(TextValue("SidebarReactionText_5").Contains("피해 12") && TextValue("SidebarReactionText_5").Contains("13 회복"), "신성 암흑 피해 회복 수치 오류"); // 실제 피해와 회복 설정 반영 확인
+            Canvas.ForceUpdateCanvases(); // 실제 설명 글자 배치 갱신
+            for (int index = 0; index < 6; index++) // 실제 여섯 설명 글자 순회
+            { // 반복 시작
+                Text description = TextComponent("SidebarReactionText_" + index); // 실제 조합 설명 글자
+                int expectedCharacters = description.text.Replace("\n", "").Length; // 줄바꿈을 제외한 전체 글자 수
+                Require(description.cachedTextGenerator.characterCountVisible >= expectedCharacters, "속성 조합 설명 잘림: " + index); // 실제 표시 가능한 글자 수 확인
+            } // 반복 종료
+            foreach (string name in new[] { "부식성 연소", "냉각 방전", "파쇄 충격", "성화 폭발", "부식 저주", "명암 상쇄" }) // 기존 반응 명칭 순회
+            { // 반복 시작
+                for (int index = 0; index < 6; index++) // 실제 여섯 조합 설명 순회
+                { // 반복 시작
+                    Require(!TextValue("SidebarReactionText_" + index).Contains(name), "삭제한 속성 조합 명칭 노출: " + name); // 실제 명칭 제거 확인
+                } // 반복 종료
             } // 반복 종료
             Require(TextComponent("SidebarReactionText_2").color != Color.white, "미보유 조합 글자 색상 오류"); // 실제 미보유 조합 색상 확인
             WeaponData explosion = AssetDatabase.LoadAssetAtPath<WeaponData>("Assets/Data/Weapons/Day14/DebugExplosion.asset"); // 실제 폭발 포탑 데이터
@@ -193,6 +231,12 @@ namespace ProjectEpsilon.Editor // 실제 배치 시험 영역
             Click("SidebarInfoCloseButton"); // 실제 몸통 목록 복귀
             AutomatedBodySidebarVerification.Finish(0, "Viewport, body order, images, replacement, merge, synergy, growth, loss and repair passed."); // 실제 전체 시험 성공
         }
+        private static void SetReactionFloat(WeaponAttributeCombatEffects effects, string name, float value) // 격리된 실제 반응 수치 설정
+        { // 함수 시작
+            FieldInfo field = typeof(WeaponAttributeCombatEffects).GetField(name, BindingFlags.Instance | BindingFlags.NonPublic); // 실제 반응 설정 필드
+            Require(field != null, "속성 반응 설정 누락: " + name); // 실제 설정 필드 확인
+            field.SetValue(effects, value); // 격리된 메모리 시험값 적용
+        } // 함수 종료
         private static Text TextComponent(string name) // 실제 패널 글자 조회
         { // 함수 시작
             GameObject item = GameObject.Find(name); // 실제 글자 객체 조회

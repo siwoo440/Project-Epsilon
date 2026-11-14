@@ -44,6 +44,22 @@ namespace ProjectEpsilon.Combat // 전투 영역
         public WeaponAttributeEffectHooks EffectHooks => effectHooks; // 속성 Hook 반환
         public WeaponAttributePlayerEffects PlayerEffects => playerEffects; // 플레이어 속성 효과 반환
         public Sprite PulseSprite => pulseSprite; // 명중 Pulse 이미지 반환
+        public float ReactionBurnDuration => Mathf.Max(0f, corrosiveBurnDuration); // 반응 지속 피해 시간
+        public float ReactionBurnDamagePerSecond => Mathf.Max(0f, corrosiveBurnDamagePerSecond); // 반응 초당 피해
+        public float ReactionDischargeDamage => Mathf.Max(0f, coolingDischargeDamage); // 반응 추가 피해
+        public float ReactionDischargeSlowDuration => Mathf.Max(0f, coolingDischargeSlowDuration); // 반응 감속 시간
+        public float ReactionDischargeSlowMultiplier => WeaponTargetStatusRules.NormalizeSlowMultiplier(coolingDischargeSlowMultiplier); // 반응 이동 속도 배율
+        public float ReactionImpactRadius => Mathf.Max(0f, shatteringImpactRadius); // 반응 범위 반경
+        public float ReactionImpactDamage => Mathf.Max(0f, shatteringImpactDamage); // 반응 범위 피해
+        public float ReactionImpactKnockbackDistance => Mathf.Max(0f, shatteringImpactKnockbackDistance); // 반응 밀치기 거리
+        public float ReactionImpactKnockbackDuration => Mathf.Max(0f, shatteringImpactKnockbackDuration); // 반응 밀치기 시간
+        public float ReactionHolyFireRadius => Mathf.Max(0f, sacredExplosionRadius); // 신성 화염 반응 반경
+        public float ReactionHolyFireDamage => Mathf.Max(0f, sacredExplosionDamage); // 신성 화염 반응 피해
+        public float ReactionDarkPoisonDuration => Mathf.Max(0f, corrosiveCurseDuration); // 암흑 독 약화 시간
+        public float ReactionDarkPoisonOutgoingMultiplier => Mathf.Clamp01(corrosiveCurseOutgoingMultiplier); // 암흑 독 공격 배율
+        public float ReactionDarkPoisonIncomingMultiplier => Mathf.Max(1f, corrosiveCurseIncomingMultiplier); // 암흑 독 받는 피해 배율
+        public float ReactionHolyDarkDamage => Mathf.Max(0f, lightDarkDamage); // 신성 암흑 반응 피해
+        public int ReactionHolyDarkHealing => Mathf.Max(0, lightDarkHealing); // 신성 암흑 반응 회복량
 
         public void Configure(WeaponAttributeSynergyManager manager, WeaponAttributeEffectHooks hooks, Sprite visual) // 참조 구성
         {
