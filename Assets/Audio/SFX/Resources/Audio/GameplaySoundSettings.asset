@@ -13,30 +13,30 @@ MonoBehaviour:
   m_Name: GameplaySoundSettings
   m_EditorClassIdentifier: Assembly-CSharp::ProjectEpsilon.Audio.GameplaySoundSettings
   attack:
-    clip: {fileID: 8300000, guid: c485fc6fd1c53244b9bd57530f410137, type: 3}
+    clip: {fileID: 8300000, guid: 8b19d04485924a49a083cbf522cbad0d, type: 3}
     volume: 0.16
     minimumInterval: 0.12
   hit:
-    clip: {fileID: 8300000, guid: 064ea3526b179fc4490783b66d2fb5c4, type: 3}
+    clip: {fileID: 8300000, guid: 8513ac923f724f47b603f171f061a053, type: 3}
     volume: 0.35
     minimumInterval: 0.18
   bodyLoss:
-    clip: {fileID: 8300000, guid: be1a63a18054f7649809ac5f978f1e09, type: 3}
+    clip: {fileID: 8300000, guid: 2433f3d3524b4b62860b0af1c40f8ef6, type: 3}
     volume: 0.4
     minimumInterval: 0.2
   levelUp:
-    clip: {fileID: 8300000, guid: 1365efacd96fe424aa600d7049b34dc0, type: 3}
+    clip: {fileID: 8300000, guid: 595de9e356a34cd091ea0552e969f477, type: 3}
     volume: 0.3
     minimumInterval: 0.18
   merge:
-    clip: {fileID: 8300000, guid: cd355d41f372d874db16e79d1fbe2fc8, type: 3}
+    clip: {fileID: 8300000, guid: 1de3321115fd4c73b7e1bb8b23bbfe70, type: 3}
     volume: 0.3
     minimumInterval: 0.15
   elite:
-    clip: {fileID: 8300000, guid: a81e81581c983804eb81b2722fa35107, type: 3}
+    clip: {fileID: 8300000, guid: ea0ecfaf9a6e44419440885c3e007eb1, type: 3}
     volume: 0.35
     minimumInterval: 0.5
   boss:
-    clip: {fileID: 8300000, guid: 007b39909762aea4ebf99696f3af7630, type: 3}
+    clip: {fileID: 8300000, guid: 20c133f1499640e985825f6e1c0da9a1, type: 3}
     volume: 0.4
     minimumInterval: 1
