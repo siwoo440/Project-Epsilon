@@ -95,7 +95,16 @@ namespace ProjectEpsilon.Editor // 배치 시험 영역
                 Require(buttons[index] != null && buttons[index].interactable, "Reward button missing or disabled."); // 실제 카드 입력 확인
                 RectTransform image = buttons[index].transform.Find("WeaponArtwork") as RectTransform; // 실제 무기 이미지 영역
                 Require(image != null && image.GetComponent<Image>().sprite == candidates[index].Weapon.Icon, "Reward image differs from its turret data."); // 각 보상 아이콘과 데이터 일치 확인
-                Require(image != null && image.gameObject.activeSelf && Mathf.Abs(image.sizeDelta.x - 96f) < 0.001f && Mathf.Abs(image.sizeDelta.y - 96f) < 0.001f, "Reward artwork is not double size."); // 기존 사십팔 대비 두 배 크기 확인
+                Require(image != null && image.gameObject.activeSelf && Mathf.Abs(image.sizeDelta.x - 192f) < 0.001f && Mathf.Abs(image.sizeDelta.y - 192f) < 0.001f, "Reward artwork is not double the previous size."); // 기존 구십육 대비 두 배 크기 확인
+                Require(image.anchorMin == new Vector2(0.5f, 0.62f) && image.anchorMax == image.anchorMin && image.pivot == new Vector2(0.5f, 0.5f), "Reward artwork is not centered within the card."); // 실제 카드 안쪽 중앙 배치 확인
+                FieldInfo labelField = typeof(LevelUpPanelController).GetField("candidateLabel0" + (index + 1), BindingFlags.Instance | BindingFlags.NonPublic); // 실제 후보 문구 필드
+                Text label = labelField.GetValue(panel) as Text; // 실제 후보 문구
+                Require(label != null, "Reward label missing."); // 실제 후보 문구 확인
+                Vector3[] iconCorners = new Vector3[4]; // 실제 아이콘 모서리
+                Vector3[] labelCorners = new Vector3[4]; // 실제 문구 영역 모서리
+                image.GetWorldCorners(iconCorners); // 실제 아이콘 위치
+                label.rectTransform.GetWorldCorners(labelCorners); // 실제 문구 영역 위치
+                Require(labelCorners[1].y <= iconCorners[0].y + 0.01f, "Reward artwork overlaps the label."); // 실제 아이콘과 문구 겹침 방지
                 Require(!image.GetComponent<Image>().raycastTarget, "Reward artwork blocks button input."); // 이미지 입력 차단 방지 확인
             }
             Require(buttons[1].transform.Find("WeaponArtwork").GetComponent<Image>().color == fire.ArtworkDisplayTint, "Reward icon did not preserve turret artwork colors."); // 포탑 그림의 원본 색상 확인
@@ -111,6 +120,34 @@ namespace ProjectEpsilon.Editor // 배치 시험 영역
             float width = (right - left) / Screen.width; // 실제 전체 화면 대비 카드 너비
             Require(Mathf.Abs(width - 0.7f) < 0.02f && right <= Camera.main.pixelRect.xMax, $"Reward cards exceed gameplay or are not about seventy percent of screen: width={width}."); // 실제 화면 너비와 패널 경계 확인
             Require(first.anchorMax.x < second.anchorMin.x && second.anchorMax.x < third.anchorMin.x && first.anchorMin.y < first.anchorMax.y, "Reward cards overlap or lack height."); // 실제 카드 간격과 높이 확인
+            GameObject smallCard = new GameObject("SmallRewardCard", typeof(RectTransform), typeof(Image), typeof(Button)); // 작은 화면의 실제 카드
+            RectTransform smallRect = (RectTransform)smallCard.transform; // 실제 작은 카드 영역
+            smallRect.SetParent(panel.transform, false); // 실제 보상 화면에 연결
+            smallRect.anchorMin = smallRect.anchorMax = new Vector2(0.5f, 0.5f); // 실제 중앙 고정 기준
+            smallRect.sizeDelta = new Vector2(180f, 240f); // 실제 작은 카드 크기
+            GameObject smallLabelObject = new GameObject("Label", typeof(RectTransform), typeof(Text)); // 실제 작은 카드 문구
+            RectTransform smallLabel = (RectTransform)smallLabelObject.transform; // 실제 문구 영역
+            smallLabel.SetParent(smallRect, false); // 실제 카드에 문구 연결
+            smallLabel.anchorMin = Vector2.zero; // 실제 문구 아래 기준
+            smallLabel.anchorMax = Vector2.one; // 실제 문구 위 기준
+            smallLabel.offsetMin = new Vector2(8f, 8f); // 실제 문구 아래 여백
+            smallLabel.offsetMax = new Vector2(-8f, -8f); // 실제 문구 위 여백
+            Vector2 originalOffset = smallLabel.offsetMax; // 실제 문구 원래 위치
+            WeaponCandidateArtwork.Set(smallCard.GetComponent<Button>(), smallLabelObject.GetComponent<Text>(), weapon.Icon); // 실제 작은 카드 이미지 적용
+            Canvas.ForceUpdateCanvases(); // 실제 작은 카드 배치 반영
+            RectTransform smallImage = smallRect.Find("WeaponArtwork") as RectTransform; // 실제 작은 카드 이미지
+            Require(smallImage != null && smallImage.sizeDelta.x > 0f && smallImage.sizeDelta.x < 192f, "Reward artwork did not fit a small card."); // 실제 작은 카드 크기 제한
+            Vector3[] smallIconCorners = new Vector3[4]; // 실제 작은 아이콘 모서리
+            Vector3[] smallLabelCorners = new Vector3[4]; // 실제 작은 문구 모서리
+            smallImage.GetWorldCorners(smallIconCorners); // 실제 작은 아이콘 위치
+            smallLabel.GetWorldCorners(smallLabelCorners); // 실제 작은 문구 위치
+            Require(smallLabelCorners[1].y <= smallIconCorners[0].y + 0.01f, "Small-card artwork overlaps the label."); // 실제 작은 카드 겹침 방지
+            smallRect.sizeDelta = new Vector2(400f, 600f); // 실제 큰 카드 크기로 변경
+            Canvas.ForceUpdateCanvases(); // 실제 카드 크기 변경 반영
+            Require(Mathf.Abs(smallImage.sizeDelta.x - 192f) < 0.001f, "Reward artwork did not resize with the card."); // 실제 카드 크기 변경 대응
+            WeaponCandidateArtwork.Set(smallCard.GetComponent<Button>(), smallLabelObject.GetComponent<Text>(), null); // 실제 이미지 없는 화면 전환
+            Require(!smallImage.gameObject.activeSelf && smallLabel.offsetMax == originalOffset, "Reward label did not restore after hiding the image."); // 실제 기존 문구 영역 복구
+            Destroy(smallCard); // 실제 작은 카드 정리
             panel.ShowEliteRewards(new[] { "A", "B", "C" }, new[] { true, true, true }); // 실제 엘리트 보상 전환
             Require(!buttons[0].transform.Find("WeaponArtwork").gameObject.activeSelf, "Weapon artwork remained on elite reward."); // 엘리트 화면의 무기 그림 숨김 확인
             yield return null; // 실제 프레임 대기

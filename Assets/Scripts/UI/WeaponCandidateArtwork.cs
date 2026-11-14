@@ -45,11 +45,11 @@ namespace ProjectEpsilon.UI // 화면 영역
                 GameObject item = new GameObject("WeaponArtwork", typeof(RectTransform), typeof(CanvasRenderer), typeof(Image)); // 실제 UI 이미지 생성
                 item.transform.SetParent(transform, false); // 실제 후보 버튼 아래 연결
                 RectTransform area = item.GetComponent<RectTransform>(); // 실제 이미지 영역
-                area.anchorMin = new Vector2(0.5f, 1f); // 버튼 위 중앙 기준점
-                area.anchorMax = new Vector2(0.5f, 1f); // 버튼 위 중앙 끝점
-                area.pivot = new Vector2(0.5f, 1f); // 이미지 위 중앙 기준
-                area.anchoredPosition = new Vector2(0f, -4f); // 버튼 위쪽 안쪽 위치
-                area.sizeDelta = new Vector2(96f, 96f); // 기존 두 배 후보 이미지 크기
+                area.anchorMin = new Vector2(0.5f, 0.62f); // 카드 중앙 쪽 기준점
+                area.anchorMax = new Vector2(0.5f, 0.62f); // 카드 중앙 쪽 끝점
+                area.pivot = new Vector2(0.5f, 0.5f); // 이미지 가운데 기준
+                area.anchoredPosition = Vector2.zero; // 실제 카드 기준 위치
+                area.sizeDelta = new Vector2(192f, 192f); // 기존 이미지의 두 배 크기
                 image = item.GetComponent<Image>(); // 실제 UI 이미지 조회
                 image.raycastTarget = false; // 버튼 입력 가림 방지
                 image.preserveAspect = true; // 원본 이미지 비율 유지
@@ -60,11 +60,41 @@ namespace ProjectEpsilon.UI // 화면 영역
                 image.color = tint; // 무기 속성별 포탑 색상 설정
                 image.gameObject.SetActive(sprite != null); // 이미지 존재 시 표시
             }
-            if (currentLabel != null && hasOriginalOffset) // 실제 문구 영역 확인
-            {
-                currentLabel.rectTransform.offsetMax = sprite != null ? originalOffsetMax - new Vector2(0f, 100f) : originalOffsetMax; // 두 배 이미지 공간 확보 또는 원래 영역 복구
-            }
+            if (sprite != null) // 실제 이미지 표시 확인
+            { // 조건 시작
+                UpdateLayout(); // 카드 크기와 문구 영역 갱신
+            } // 조건 종료
+            else // 이미지 없는 화면 확인
+            { // 대체 시작
+                RestoreLabel(); // 기존 문구 영역 복구
+            } // 대체 종료
         }
+        private void OnRectTransformDimensionsChange() // 실제 카드 크기 변경
+        { // 함수 시작
+            UpdateLayout(); // 크기별 이미지와 문구 갱신
+        } // 함수 종료
+        private void UpdateLayout() // 카드 안쪽 이미지와 문구 배치
+        { // 함수 시작
+            if (image == null || image.sprite == null || !image.gameObject.activeSelf) // 실제 표시 이미지 확인
+            { // 조건 시작
+                return; // 이미지 없는 화면 유지
+            } // 조건 종료
+            RectTransform card = transform as RectTransform; // 실제 카드 영역
+            if (card == null || card.rect.width <= 0f || card.rect.height <= 0f) // 유효한 카드 크기 확인
+            { // 조건 시작
+                return; // 카드 배치 전 갱신 생략
+            } // 조건 종료
+            float height = card.rect.height; // 실제 카드 높이
+            float availableHalf = Mathf.Min(height * 0.38f - 8f, height * 0.62f - 96f); // 이미지와 문구의 최소 여백
+            float size = Mathf.Min(192f, Mathf.Max(0f, card.rect.width - 16f), Mathf.Max(0f, availableHalf * 2f)); // 카드 안쪽의 최대 이미지 크기
+            image.rectTransform.sizeDelta = new Vector2(size, size); // 실제 비율별 이미지 크기
+            if (currentLabel != null && hasOriginalOffset) // 실제 문구 영역 확인
+            { // 조건 시작
+                float imageBottom = height * 0.62f - size * 0.5f; // 카드 아래 기준 이미지 경계
+                float labelTop = Mathf.Min(originalOffsetMax.y, imageBottom - height - 12f); // 이미지 아래 문구 위쪽 경계
+                currentLabel.rectTransform.offsetMax = new Vector2(originalOffsetMax.x, labelTop); // 실제 문구와 이미지 분리
+            } // 조건 종료
+        } // 함수 종료
         private void RestoreLabel() // 이전 문구 영역 복구
         {
             if (currentLabel != null && hasOriginalOffset) // 실제 저장 문구 확인
