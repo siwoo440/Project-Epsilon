@@ -42,6 +42,10 @@ namespace ProjectEpsilon.Combat // 전투 시각 영역
         { // 함수 시작
             return GetSprite(15); // 실제 무적 원형 이미지
         } // 함수 종료
+        public static Sprite GetBodyBreakSprite() // 실제 몸통 손실 이미지 조회
+        { // 함수 시작
+            return GetSprite(14); // 기존 몸통 손실 이미지 반환
+        } // 함수 종료
         public static GameObject SpawnAttribute(WeaponAttribute attribute, int stage, Vector3 position) // 실제 속성 명중 표시
         { // 함수 시작
             Sprite sprite = GetAttributeSprite(attribute); // 실제 속성 이미지

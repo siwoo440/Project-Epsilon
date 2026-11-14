@@ -10,7 +10,9 @@ namespace ProjectEpsilon.Player // 플레이어 시각 영역
         private SnakeHealth health; // 실제 공용 체력
         private SnakeBodyManager body; // 실제 몸통 관리자
         private SnakeInvulnerability invulnerability; // 실제 무적 상태
+        private SnakeExternalCollision collision; // 실제 직접 충돌 보호 상태
         private SpriteRenderer ring; // 실제 무적 표시 이미지
+        private SpriteRenderer contactProtection; // 실제 직접 충돌 보호 표시
         private bool initialized; // 최초 연결 여부
         private bool subscribed; // 실제 이벤트 구독 여부
         private void Start() // 실제 플레이어 구성 연결
@@ -50,6 +52,7 @@ namespace ProjectEpsilon.Player // 플레이어 시각 영역
             body = FindFirstObjectByType<SnakeBodyManager>(); // 실제 몸통 관리자
             health = player == null ? null : player.GetComponent<SnakeHealth>(); // 실제 공용 체력
             invulnerability = player == null ? null : player.GetComponent<SnakeInvulnerability>(); // 실제 무적 상태
+            collision = player == null ? null : player.GetComponent<SnakeExternalCollision>(); // 실제 직접 충돌 보호 상태
             if (health != null) // 실제 체력 확인
             { // 조건 시작
                 health.DamageApplied += OnDamage; // 실제 공용 피해 구독
@@ -72,6 +75,15 @@ namespace ProjectEpsilon.Player // 플레이어 시각 영역
                 ring.color = new Color(1f, 1f, 1f, 0.75f); // 실제 무적 이미지 투명도
                 ring.sortingOrder = 2; // 몸통과 경고 아래 표시
                 instance.SetActive(invulnerability != null && invulnerability.IsInvulnerable && ring.sprite != null); // 실제 무적 상태 표시
+                GameObject marker = new GameObject("PlayerContactProtectionVfx"); // 실제 제한 보호 표시 객체
+                marker.transform.SetParent(player.transform, false); // 실제 머리 위치 추적
+                marker.transform.localScale = Vector3.one * 0.55f; // 실제 제한 보호 표시 크기
+                contactProtection = marker.AddComponent<SpriteRenderer>(); // 실제 제한 보호 이미지 표시기
+                contactProtection.sprite = CombatVfx.GetBodyBreakSprite(); // 기존 몸통 손실 이미지 재사용
+                contactProtection.color = new Color(1f, 0.7f, 0.2f, 0.95f); // 완전 무적과 구분되는 주황색
+                contactProtection.sortingOrder = 9; // 플레이어 위와 경고 아래 표시
+                marker.SetActive(false); // 첫 실제 상태 갱신 전 숨김
+                RefreshContactProtection(); // 실제 제한 보호 상태 반영
             } // 조건 종료
             subscribed = true; // 실제 이벤트 구독 상태
         } // 함수 종료
@@ -99,6 +111,13 @@ namespace ProjectEpsilon.Player // 플레이어 시각 영역
                 Destroy(ring.gameObject); // 이전 씬의 무적 표시 제거
             } // 조건 종료
             ring = null; // 이전 표시 참조 해제
+            if (contactProtection != null) // 실제 제한 보호 표시 확인
+            { // 조건 시작
+                contactProtection.gameObject.SetActive(false); // 지연 파괴 전 표시 중단
+                Destroy(contactProtection.gameObject); // 이전 씬의 보호 표시 제거
+            } // 조건 종료
+            contactProtection = null; // 이전 제한 보호 참조 해제
+            collision = null; // 이전 충돌 처리기 참조 해제
             subscribed = false; // 실제 구독 상태 초기화
         } // 함수 종료
         private void OnDamage() // 실제 공용 체력 피해
@@ -119,6 +138,24 @@ namespace ProjectEpsilon.Player // 플레이어 시각 영역
         private void Update() // 실제 무적 종료 감시
         { // 함수 시작
             RefreshInvulnerability(); // 실제 무적 상태 표시
+            RefreshContactProtection(); // 실제 제한 보호 상태 표시
+        } // 함수 종료
+        private void RefreshContactProtection() // 실제 적 직접 충돌 보호 표시
+        { // 함수 시작
+            if (contactProtection == null) // 실제 표시기 확인
+            { // 조건 시작
+                return; // 표시기 부재 시 갱신 생략
+            } // 조건 종료
+            bool visible = contactProtection.sprite != null && collision != null && collision.EnemyContactProtected; // 실제 제한 보호 상태
+            if (contactProtection.gameObject.activeSelf != visible) // 실제 표시 상태 변경 확인
+            { // 조건 시작
+                contactProtection.gameObject.SetActive(visible); // 실제 제한 보호 시작과 종료 반영
+            } // 조건 종료
+            if (visible && player != null) // 실제 표시 위치 확인
+            { // 조건 시작
+                contactProtection.transform.position = player.transform.position + Vector3.up * 0.85f; // 화면 위쪽의 독립 표시 위치
+                contactProtection.transform.rotation = Quaternion.identity; // 머리 회전과 독립된 표시 방향
+            } // 조건 종료
         } // 함수 종료
         private void RefreshInvulnerability() // 실제 무적 상태 반영
         { // 함수 시작
