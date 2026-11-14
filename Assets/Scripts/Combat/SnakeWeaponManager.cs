@@ -475,6 +475,10 @@ namespace ProjectEpsilon.Combat // 프로젝트 기능 영역
 
         private void TickAutoAttack() // 공격 기능 선언
         {
+            if (!CanContinueAttack()) // 실제 전투 진행 여부 확인
+            { // 조건 시작
+                return; // 정지 또는 종료 중 공격 차단
+            } // 조건 종료
             float currentTime = // 현재·시간 값 설정
                 Time.time; // 시간 처리
 
@@ -482,6 +486,10 @@ namespace ProjectEpsilon.Combat // 프로젝트 기능 영역
                 index < slots.Count; // 순서·슬롯 처리
                 index++) // 순서 처리
             {
+                if (!CanContinueAttack()) // 앞선 포탑 효과의 승리 또는 정지 확인
+                { // 조건 시작
+                    return; // 이후 슬롯 공격 중단
+                } // 조건 종료
                 SnakeWeaponSlot slot = // 포탑·슬롯 값 설정
                     slots[index]; // 슬롯·순서 처리
 
@@ -502,6 +510,11 @@ namespace ProjectEpsilon.Combat // 프로젝트 기능 영역
                 {
                     continue; // 다음 반복 진행
                 }
+
+                if (!CanContinueAttack()) // 현재 공격 중 승리 또는 정지 확인
+                { // 조건 시작
+                    return; // 후속 강화 효과와 슬롯 공격 중단
+                } // 조건 종료
 
                 NotifyGradeEffect( // 알림·등급 호출 시작
                     slot, // 슬롯 항목 전달
@@ -745,6 +758,10 @@ namespace ProjectEpsilon.Combat // 프로젝트 기능 영역
 
         private void ApplyWeaponHit(WeaponAttributeAttackSnapshot attack, WeaponTarget target, Vector3 hitPosition) // 대상 명중 적용
         {
+            if (!CanContinueAttack()) // 앞선 대상의 승리 또는 정지 확인
+            { // 조건 시작
+                return; // 같은 공격의 이후 대상 피해 차단
+            } // 조건 종료
             if (attributeCombatEffects != null) // 속성 효과 연결 확인
             {
                 attributeCombatEffects.ApplyHit(attack, target, hitPosition); // 통합 속성 명중 적용
@@ -753,6 +770,11 @@ namespace ProjectEpsilon.Combat // 프로젝트 기능 영역
 
             target?.TakeDamage(attack.DirectDamage); // 기본 직접 피해 적용
         }
+
+        private static bool CanContinueAttack() // 실제 전투 중 포탑 공격 가능 여부
+        { // 함수 시작
+            return GameManager.Instance == null || GameManager.Instance.IsPlaying; // 게임 관리자 부재 또는 전투 진행 확인
+        } // 함수 종료
 
         private float CalculateSlotDamage( // 계산·슬롯 호출 시작
             SnakeWeaponSlot slot // 포탑·슬롯 처리

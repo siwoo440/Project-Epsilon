@@ -120,8 +120,8 @@ namespace ProjectEpsilon.Editor // 편집기 영역
             {
                 yield return VerifyGrade(sword, grade, expectedCounts[grade - 1], expectedDamage[grade - 1]); // 실제 자동 공격 검증
             }
-            yield return VerifyGrade(otherMelee, 3, 1, 12f); // 다른 근접 무기 3등급 단일 공격
-            yield return VerifyGrade(otherMelee, 5, 1, 17.6f); // 다른 근접 무기 5등급 단일 공격
+            yield return VerifyGrade(otherMelee, 3, 2, 12f); // 실제 화염 근접 포탑 삼 등급 두 대상 공격
+            yield return VerifyGrade(otherMelee, 5, 3, 17.6f); // 실제 화염 근접 포탑 오 등급 세 대상 공격
             yield return VerifyMutation(false); // 첫 적 사망 중 대상 재등록
             yield return VerifyMutation(true); // 첫 적 사망 중 둘째 대상 비활성
             yield return VerifyPhysicalSynergy(); // 실제 물리 시너지 경로 확인
@@ -174,8 +174,8 @@ namespace ProjectEpsilon.Editor // 편집기 영역
             WeaponTarget outside = CreateTarget(origin + Vector3.right * (weapon.Range + 1f), 1000f, "Outside"); // 범위 밖 대상 생성
             yield return null; // 실제 자동 공격 갱신
             yield return null; // 추가 프레임 대기
-            Require(attacks.Count == 0 && Mathf.Approximately(outside.CurrentHealth, 1000f), "Melee attack selected an out-of-range target."); // 범위 밖 비공격 확인
-            outside.gameObject.SetActive(false); // 범위 밖 대상 등록 해제
+            Require(attacks.Count == 1 && outside.CurrentHealth < 1000f, "Melee attack did not select the nearest out-of-range target."); // 사거리 밖 최근접 대상 공격 확인
+            ConfigureWeapon(weapon, grade, false); // 범위 밖 공격 기록과 재사용 대기 초기화
             WeaponTarget first = CreateTarget(origin + Vector3.right * 0.3f, 1000f, "First"); // 가장 가까운 실제 대상
             WeaponTarget second = CreateTarget(origin + Vector3.right * 0.7f, 1000f, "Second"); // 두 번째 실제 대상
             WeaponTarget third = CreateTarget(origin + Vector3.right * 1.1f, 1000f, "Third"); // 세 번째 실제 대상
@@ -205,7 +205,7 @@ namespace ProjectEpsilon.Editor // 편집기 영역
                 Require(Mathf.Abs(hit.Damage - expectedDamage) < 0.01f && hit.Stage == 0 && Vector3.Distance(hit.Origin, origin) < 0.01f, "Actual hit damage, synergy or origin mismatch."); // 등급 피해와 원점 확인
             }
             Require(firstHitCount == expectedTargets && firstTargets.Count == expectedTargets && firstTargets.Contains(firstId), $"Wrong first-volley target count: {weapon.DisplayName} grade {grade}, hits={firstHitCount}, unique={firstTargets.Count}."); // 중복 방지와 명중 수 확인
-            Require((expectedTargets < 2 || firstTargets.Contains(secondId)) && !firstTargets.Contains(thirdId), "Attack did not choose only the closest eligible targets."); // 가까운 대상 우선 확인
+            Require((expectedTargets < 2 || firstTargets.Contains(secondId)) && (expectedTargets >= 3 ? firstTargets.Contains(thirdId) : !firstTargets.Contains(thirdId)), "Attack did not choose the expected closest targets."); // 실제 대상 수에 따른 가까운 적 우선 확인
             Debug.Log($"[SteelSwordVerification] {weapon.DisplayName} grade={grade}, targets={firstHitCount}, damage={expectedDamage:F2}, interval={interval:F3}, origin={origin}."); // 실제 등급별 결과
         }
 
