@@ -60,7 +60,7 @@ namespace ProjectEpsilon.Editor // 배치 시험 영역
                 {
                     return; // 실제 씬 재시작 대기
                 }
-                if (!meta.Service.FinishedFirstRun || meta.Service.Cores != 7 || !meta.IsMapUnlocked(1) || meta.IsMapUnlocked(2) || !meta.IsCharacterUnlocked("mobile") || !meta.Service.IsTurretAttributeUnlocked(0) || InputBindingManager.Instance == null) // 실제 재시작 저장과 입력 확인
+                if (!meta.Service.FinishedFirstRun || meta.Service.Cores != 7 || !meta.Service.IsMapUnlocked(1) || meta.Service.IsMapUnlocked(2) || !meta.Service.IsCharacterUnlocked(0) || !meta.IsMapUnlocked(2) || !meta.IsCharacterUnlocked("mobile") || !meta.Service.IsTurretAttributeUnlocked(0) || InputBindingManager.Instance == null) // 실제 재시작 저장과 입력 확인
                 {
                     Finish(1, $"Restart persistence failed: finished={meta.Service.FinishedFirstRun}, cores={meta.Service.Cores}, ruins={meta.IsMapUnlocked(1)}, mobile={meta.IsCharacterUnlocked("mobile")}, input={InputBindingManager.Instance != null}."); // 실제 재시작 실패
                     return; // 추가 처리 중단
@@ -151,7 +151,7 @@ namespace ProjectEpsilon.Editor // 배치 시험 영역
             PlayerPrefs.DeleteKey("ProjectEpsilon.MetaProgress.v1"); // 격리된 시험 프로젝트의 메타 키 초기화
             PlayerPrefs.Save(); // 실제 격리 저장 반영
             typeof(MetaProgressionController).GetProperty("Service").SetValue(meta, new MetaProgressionService(new PlayerPrefsMetaStorage("ProjectEpsilon.MetaProgress.v1"))); // 실제 격리 저장소 재연결
-            Require(!meta.IsMapUnlocked(1) && !meta.IsCharacterUnlocked("mobile"), "Initial map or character lock failed."); // 실제 시작 해금 제한 확인
+            Require(meta.IsMapUnlocked(1) && meta.IsMapUnlocked(2) && meta.IsCharacterUnlocked("mobile") && !meta.Service.IsMapUnlocked(1) && !meta.Service.IsCharacterUnlocked(0), "Initial map or character availability failed."); // 선택 가능 상태와 기존 저장 기록 확인
             WeaponData gated = AssetDatabase.LoadAssetAtPath<WeaponData>("Assets/Data/Weapons/PrototypePhysicalJavelin.asset"); // 실제 시험 잠금 포탑
             Require(gated != null && !meta.IsTurretUnlocked(gated), "Initial test turret lock failed."); // 실제 시작 포탑 제한 확인
             GetComponent<SnakeMovement>().enabled = false; // 실제 플레이어 이동 중지
@@ -185,6 +185,7 @@ namespace ProjectEpsilon.Editor // 배치 시험 영역
             Require(bossEncounter.Boss != null, "Actual final boss missing."); // 실제 보스 등록 확인
             bossEncounter.Boss.TakeDamage(10000f); // 실제 최종 보스 처치
             Require(game.CurrentState == GameState.Victory && meta.Service.Cores == 7 && meta.Service.FinishedFirstRun && meta.IsMapUnlocked(1) && meta.IsCharacterUnlocked("mobile"), $"Actual run reward failed: state={game.CurrentState}, cores={meta.Service.Cores}."); // 실제 종료와 보상 확인
+            Require(!meta.LastUnlockNotice.Contains("폐허") && !meta.LastUnlockNotice.Contains("기동형"), "이미 선택 가능한 맵 또는 캐릭터의 잘못된 해금 안내"); // 허위 해금 안내 방지 확인
             game.SetState(GameState.Victory); // 실제 중복 종료 호출
             Require(meta.Service.Cores == 7, "Actual scene awarded a run twice."); // 실제 중복 지급 방지 확인
             AutomatedDay48MetaVerification.ExpectRestart(game); // 실제 재시작 감시 등록

@@ -89,6 +89,8 @@ namespace ProjectEpsilon.Editor // 실제 배치 시험 영역
         }
         private IEnumerator RunSteps() // 실제 화면과 저장 검증
         {
+            bool swampScenario = Array.IndexOf(Environment.GetCommandLineArgs(), "-epsilonSwampScenario") >= 0; // 실제 습지와 기동형 시험 여부
+            int targetMap = swampScenario ? 2 : 1; // 실제 시험할 맵 번호
             Require(Application.productName == "Project-Epsilon-SceneFlow-Isolated", "User save profile is not isolated."); // 실제 사용자 저장 격리 확인
             yield return null; // 실제 메뉴 초기화 대기
             PlayerPrefs.DeleteKey("ProjectEpsilon.MetaProgress.v1"); // 실제 격리 프로필의 이전 시험 저장 제거
@@ -114,26 +116,42 @@ namespace ProjectEpsilon.Editor // 실제 배치 시험 영역
             RectTransform mapIcon = GameObject.Find("FrontendMapSelectIcon")?.GetComponent<RectTransform>(); // 실제 지도 아이콘 위치
             RectTransform mapLabel = Button("FrontendCharactersNextButton").GetComponentInChildren<Text>().rectTransform; // 실제 맵 선택 글자 위치
             Require(mapIcon != null && mapIcon.anchoredPosition.x < 0f && mapLabel.anchoredPosition.x > 0f && mapIcon.anchoredPosition.x + mapIcon.rect.width / 2f <= mapLabel.anchoredPosition.x - mapLabel.rect.width / 2f, "Map icon and label layout invalid."); // 아이콘과 글자의 순서 및 겹침 확인
-            Require(!Button("FrontendCharacterButton1").interactable, "Locked character became selectable."); // 실제 캐릭터 해금 차단 확인
-            Button("FrontendCharacterButton2").onClick.Invoke(); // 실제 중장형 캐릭터 선택
+            for (int index = 0; index < 6; index++) // 실제 전체 캐릭터 확인
+            { // 반복 시작
+                Button characterButton = Button("FrontendCharacterButton" + index); // 실제 캐릭터 버튼
+                Require(characterButton.interactable && !characterButton.GetComponentInChildren<Text>().text.Contains("잠김"), "캐릭터 선택 또는 잠금 문구 오류: " + index); // 모든 캐릭터 사용 확인
+                CharacterData expectedCharacter = FindFirstObjectByType<SceneFrontendContext>().GetCharacter(index); // 실제 캐릭터 데이터
+                characterButton.onClick.Invoke(); // 실제 캐릭터 선택
+                yield return null; // 실제 선택 화면 갱신 대기
+                Require(CharacterRunInitializer.SelectedCharacter == expectedCharacter, "캐릭터 선택 적용 실패: " + index); // 실제 선택 결과 확인
+            } // 반복 종료
+            Button("FrontendCharacterButton1").onClick.Invoke(); // 실제 기동형 선택
+            yield return null; // 실제 기동형 정보 갱신 대기
+            Require(CharacterRunInitializer.SelectedCharacter != null && CharacterRunInitializer.SelectedCharacter.Id == "mobile", "새 저장의 기동형 선택 실패"); // 보스 처치 전 기동형 선택 확인
+            Button(swampScenario ? "FrontendCharacterButton1" : "FrontendCharacterButton2").onClick.Invoke(); // 실제 기동형 또는 중장형 선택
             yield return null; // 실제 캐릭터 정보 갱신 대기
             CharacterData selected = CharacterRunInitializer.SelectedCharacter; // 실제 선택된 캐릭터
-            Require(selected != null && selected.Id == "heavy", "Character selection was not retained."); // 실제 선택 데이터 확인
+            Require(selected != null && selected.Id == (swampScenario ? "mobile" : "heavy"), "Character selection was not retained."); // 실제 선택 데이터 확인
             WeaponData turret = selected.StartingWeapons.Weapons[1]; // 실제 두 번째 시작 포탑
             Button("FrontendCharactersNextButton").onClick.Invoke(); // 실제 맵 선택 이동
             yield return null; // 실제 맵 화면 갱신 대기
             Require(Button("FrontendMapButton0").GetComponentInChildren<Text>().text.StartsWith("평원") && Button("FrontendMapButton1").GetComponentInChildren<Text>().text.StartsWith("폐허") && Button("FrontendMapButton2").GetComponentInChildren<Text>().text.StartsWith("습지"), "Map display names invalid."); // 실제 세 맵 표시 이름 확인
-            Require(Button("FrontendMapButton1").GetComponentInChildren<Text>().text.Contains("평원 보스 처치") && Button("FrontendMapButton2").GetComponentInChildren<Text>().text.Contains("폐허 보스 처치"), "Map unlock guidance invalid."); // 실제 해금 안내 확인
-            Require(!Button("FrontendMapButton1").interactable, "Locked map became selectable."); // 실제 맵 해금 차단 확인
+            for (int index = 0; index < 3; index++) // 실제 전체 맵 확인
+            { // 반복 시작
+                Button mapButton = Button("FrontendMapButton" + index); // 실제 맵 버튼
+                Require(mapButton.interactable && !mapButton.GetComponentInChildren<Text>().text.Contains("잠김"), "맵 선택 또는 잠금 문구 오류: " + index); // 모든 맵 사용 확인
+            } // 반복 종료
             MetaProgressionController preparationMeta = MetaProgressionController.Instance; // 실제 준비 화면 저장 관리자
-            Require(preparationMeta.Service.TryCompleteRun("scene-unlock", 0d, 0, 0, true, 0), "Could not unlock the test map."); // 실제 격리 저장의 맵 해금
-            Button("FrontendMapButton0").onClick.Invoke(); // 실제 맵 화면의 해금 상태 갱신
-            yield return null; // 실제 해금 버튼 갱신 대기
-            Require(Button("FrontendMapButton1").interactable, "Unlocked map is still disabled."); // 실제 새 맵 해금 확인
-            Button("FrontendMapButton1").onClick.Invoke(); // 실제 해금된 두 번째 맵 선택
+            Require(!preparationMeta.Service.FinishedFirstRun && !preparationMeta.Service.IsMapUnlocked(1) && !preparationMeta.Service.IsMapUnlocked(2) && !preparationMeta.Service.IsCharacterUnlocked(0) && !preparationMeta.Service.TryPurchase(MetaNode.Health), "새 저장 또는 영구 성장 제한 변경"); // 기록과 성장 조건 보존 확인
+            Require(!preparationMeta.IsTurretUnlocked(AssetDatabase.LoadAssetAtPath<WeaponData>("Assets/Data/Weapons/PrototypeColdWave.asset")), "포탑 해금 조건 변경"); // 별도 포탑 해금 유지 확인
+            Button("FrontendMapButton2").onClick.Invoke(); // 실제 습지 선택
+            yield return null; // 실제 습지 선택 갱신 대기
+            Require(FindFirstObjectByType<SceneFrontendContext>().SelectedMap == 2, "새 저장의 습지 선택 실패"); // 보스 처치 전 습지 선택 확인
+            Button("FrontendMapButton" + targetMap).onClick.Invoke(); // 실제 시험 맵 선택
             yield return null; // 실제 선택 맵 갱신 대기
             Button("FrontendMapsNextButton").onClick.Invoke(); // 실제 포탑 선택 이동
-            for (int frame = 0; frame < 120 && (SceneManager.GetActiveScene().path != SceneFrontendContext.GamePath || FindFirstObjectByType<StartingWeaponSelection>() == null || !FindFirstObjectByType<StartingWeaponSelection>().IsSelecting); frame++) // 실제 맵의 포탑 선택 대기
+            float loadDeadline = Time.realtimeSinceStartup + 30f; // 실제 씬 로딩 제한 시각
+            while (Time.realtimeSinceStartup < loadDeadline && (SceneManager.GetActiveScene().path != SceneFrontendContext.GamePath || FindFirstObjectByType<StartingWeaponSelection>() == null || !FindFirstObjectByType<StartingWeaponSelection>().IsSelecting)) // 실제 맵의 포탑 선택 대기
             { // 반복 시작
                 yield return null; // 실제 게임 씬 초기화 대기
             } // 반복 종료
@@ -148,7 +166,7 @@ namespace ProjectEpsilon.Editor // 실제 배치 시험 영역
             SnakeHealth health = FindFirstObjectByType<SnakeHealth>(); // 실제 공용 체력
             SnakeWeaponManager weapons = FindFirstObjectByType<SnakeWeaponManager>(); // 실제 장착 관리자
             PrototypeMapSelection maps = FindFirstObjectByType<PrototypeMapSelection>(); // 실제 적용 맵
-            Require(CharacterRunInitializer.ActiveCharacter == selected && body != null && body.CurrentBodyCount == 4 && health != null && health.MaximumHealth == 125 && weapons != null && weapons.Slots[0].Weapon == turret && maps != null && maps.SelectedIndex == 1, $"Prepared data mismatch: selected={selected?.Id}, active={CharacterRunInitializer.ActiveCharacter?.Id}, body={body?.CurrentBodyCount}, hp={health?.MaximumHealth}, weapon={weapons?.Slots[0].Weapon?.Id}, expected={turret?.Id}, map={maps?.SelectedIndex}."); // 실제 선택과 능력치 전달 확인
+            Require(CharacterRunInitializer.ActiveCharacter == selected && body != null && body.CurrentBodyCount == selected.StartingBodyCount && health != null && health.MaximumHealth == Mathf.RoundToInt(selected.BodyMaxHealth) && weapons != null && weapons.Slots[0].Weapon == turret && maps != null && maps.SelectedIndex == targetMap, $"Prepared data mismatch: selected={selected?.Id}, active={CharacterRunInitializer.ActiveCharacter?.Id}, body={body?.CurrentBodyCount}, hp={health?.MaximumHealth}, weapon={weapons?.Slots[0].Weapon?.Id}, expected={turret?.Id}, map={maps?.SelectedIndex}."); // 실제 선택과 능력치 전달 확인
             MetaProgressionController meta = MetaProgressionController.Instance; // 실제 전투 성과 관리자
             SceneFlowMemoryStorage storage = new SceneFlowMemoryStorage(); // 실제 저장 실패 시험 저장소
             MetaProgressionService service = new MetaProgressionService(storage); // 실제 임시 저장 서비스
@@ -163,7 +181,8 @@ namespace ProjectEpsilon.Editor // 실제 배치 시험 영역
             Require(SceneManager.GetActiveScene().path == SceneFrontendContext.ResultsPath && meta.HasPendingSave, "Failed save did not block retry."); // 실제 저장 실패의 이동 차단 확인
             storage.FailWrite = false; // 실제 저장 성공 복원
             Button("FrontendRetryButton").onClick.Invoke(); // 실제 재도전 재시도
-            for (int frame = 0; frame < 120 && (SceneManager.GetActiveScene().path != SceneFrontendContext.GamePath || FindFirstObjectByType<StartingWeaponSelection>() == null || !FindFirstObjectByType<StartingWeaponSelection>().IsSelecting); frame++) // 실제 맵의 재도전 선택 대기
+            loadDeadline = Time.realtimeSinceStartup + 30f; // 실제 재도전 로딩 제한 시각
+            while (Time.realtimeSinceStartup < loadDeadline && (SceneManager.GetActiveScene().path != SceneFrontendContext.GamePath || FindFirstObjectByType<StartingWeaponSelection>() == null || !FindFirstObjectByType<StartingWeaponSelection>().IsSelecting)) // 실제 맵의 재도전 선택 대기
             { // 반복 시작
                 yield return null; // 실제 새 전투 씬 초기화 대기
             } // 반복 종료
@@ -173,7 +192,7 @@ namespace ProjectEpsilon.Editor // 실제 배치 시험 영역
             {
                 yield return null; // 실제 재도전 초기화 프레임 대기
             }
-            Require(SceneManager.GetActiveScene().path == SceneFrontendContext.GamePath && GameManager.Instance != null && GameManager.Instance.IsPlaying && CharacterRunInitializer.ActiveCharacter.Id == "heavy" && FindFirstObjectByType<PrototypeMapSelection>().SelectedIndex == 1, "Retry lost selected character or map."); // 실제 재도전 캐릭터와 맵 확인
+            Require(SceneManager.GetActiveScene().path == SceneFrontendContext.GamePath && GameManager.Instance != null && GameManager.Instance.IsPlaying && CharacterRunInitializer.ActiveCharacter.Id == selected.Id && FindFirstObjectByType<PrototypeMapSelection>().SelectedIndex == targetMap, "Retry lost selected character or map."); // 실제 재도전 캐릭터와 맵 확인
             GameObject bossObject = new GameObject("SceneFlowTestBoss"); // 실제 등록할 시험 보스
             WeaponTarget boss = bossObject.AddComponent<WeaponTarget>(); // 실제 공격 대상
             Require(GameManager.Instance.RegisterFinalBoss(boss), "Could not register final boss."); // 실제 보스 등록 확인
@@ -182,7 +201,7 @@ namespace ProjectEpsilon.Editor // 실제 배치 시험 영역
             yield return null; // 실제 결과 버튼 생성 대기
             GameObject titleObject = GameObject.Find("FrontendTitle"); // 실제 결과 제목 객체
             Text title = titleObject == null ? null : titleObject.GetComponent<Text>(); // 실제 결과 제목
-            Require(title != null && title.text == "승리" && MetaProgressionController.Instance.Service.IsMapUnlocked(2), "Victory result or boss unlock was lost."); // 실제 승리 표시와 다음 맵 해금 확인
+            Require(title != null && title.text == "승리" && MetaProgressionController.Instance.Service.IsMapUnlocked(2) == !swampScenario, "Victory result or boss unlock was lost."); // 실제 승리 표시와 다음 맵 해금 확인
             Text scoreDetails = GameObject.Find("FrontendScoreDetails")?.GetComponent<Text>(); // 실제 분리 결과 씬의 점수 상세
             Text scoreTotal = GameObject.Find("FrontendTotalScore")?.GetComponent<Text>(); // 실제 분리 결과 씬의 총점
             Require(scoreDetails != null && scoreDetails.text.Contains("보스 처치") && !scoreDetails.text.Contains("총점") && scoreTotal != null && scoreTotal.text.Contains("총점"), "Victory score details or total missing in results scene."); // 실제 씬 전환 후 점수 항목과 독립 총점 확인

@@ -3,7 +3,7 @@ using ProjectEpsilon.Combat; // 실제 속성 집계
 using ProjectEpsilon.Core; // 실제 게임 상태
 using ProjectEpsilon.Data; // 실제 포탑 속성
 using ProjectEpsilon.Enemies; // 실제 적 출현기
-using ProjectEpsilon.Player; // 실제 해금 캐릭터 이름
+using ProjectEpsilon.Player; // 실제 플레이어 체력과 몸통
 using ProjectEpsilon.World; // 실제 맵 선택
 using UnityEngine; // Unity 기능
 
@@ -50,9 +50,6 @@ namespace ProjectEpsilon.Progression // 영구 성장 영역
         public MetaProgressionService Service { get; private set; } // 실제 메타 진행 서비스
         public MetaProgressionMenu Menu { get; private set; } // 실제 시작 성장 메뉴
         public bool HasPendingSave => pending; // 저장 실패 재시도 상태
-        private bool hadRuins; // 런 시작 폐허 해금
-        private bool hadSwamp; // 런 시작 습지 해금
-        private bool hadCharacter; // 런 시작 캐릭터 해금
         private int hadTurretAttributes; // 런 시작 포탑 속성 해금
         public double LastRunSeconds => pendingSeconds; // 실제 종료 생존 시간
         public string LastUnlockNotice { get; private set; } // 실제 새 해금 요약
@@ -128,9 +125,6 @@ namespace ProjectEpsilon.Progression // 영구 성장 영역
             ScoreChanged?.Invoke(0, 0); // 새 전투 점수 표시 초기화
             LastAward = 0; // 이전 보상 초기화
             RerollUsed = false; // 실제 런 재선택 초기화
-            hadRuins = Service != null && Service.IsMapUnlocked(1); // 기존 폐허 해금 기록
-            hadSwamp = Service != null && Service.IsMapUnlocked(2); // 기존 습지 해금 기록
-            hadCharacter = Service != null && Service.IsCharacterUnlocked(0); // 기존 캐릭터 해금 기록
             hadTurretAttributes = AttributeMask(); // 기존 포탑 속성 기록
             pendingSeconds = 0d; // 이전 런 시간 초기화
             LastUnlockNotice = string.Empty; // 이전 해금 표시 초기화
@@ -261,18 +255,6 @@ namespace ProjectEpsilon.Progression // 영구 성장 영역
             }
             LastAward = Math.Max(0, Service.Cores - before); // 실제 지급된 코어
             LastUnlockNotice = string.Empty; // 실제 새 해금 초기화
-            if (!hadRuins && Service.IsMapUnlocked(1)) // 새 폐허 해금 확인
-            {
-                LastUnlockNotice += "폐허  "; // 실제 폐허 해금 표시
-            }
-            if (!hadSwamp && Service.IsMapUnlocked(2)) // 새 습지 해금 확인
-            {
-                LastUnlockNotice += "습지  "; // 실제 습지 해금 표시
-            }
-            if (!hadCharacter && Service.IsCharacterUnlocked(0)) // 새 캐릭터 해금 확인
-            {
-                LastUnlockNotice += UnlockedCharacterName() + "  "; // 실제 설정된 캐릭터 이름
-            }
             int newAttributes = AttributeMask() & ~hadTurretAttributes; // 실제 새 포탑 속성
             for (int index = 0; index < 8; index++) // 실제 속성별 해금 순회
             {
@@ -285,20 +267,6 @@ namespace ProjectEpsilon.Progression // 영구 성장 영역
             finished = true; // 실제 보상 확정
             runActive = false; // 종료 후 처치 집계 중지
             return true; // 실제 보상 완료
-        }
-        private string UnlockedCharacterName() // 실제 해금 캐릭터 표시 이름
-        {
-            CharacterRunInitializer initializer = FindFirstObjectByType<CharacterRunInitializer>(); // 실제 캐릭터 목록
-            string id = unlockConfig == null ? null : unlockConfig.FirstBossCharacterId; // 실제 설정된 캐릭터 식별자
-            for (int index = 0; initializer != null && index < initializer.CharacterCount; index++) // 실제 캐릭터 순회
-            {
-                CharacterData candidate = initializer.GetCharacter(index); // 실제 캐릭터 데이터
-                if (candidate != null && candidate.Id == id) // 실제 설정 대상 확인
-                {
-                    return candidate.DisplayName; // 실제 표시 이름 반환
-                }
-            }
-            return "캐릭터"; // 실제 이름 부재 시 기본 안내
         }
         private int AttributeMask() // 실제 속성 해금 집계
         {
@@ -327,11 +295,11 @@ namespace ProjectEpsilon.Progression // 영구 성장 영역
         }
         public bool IsMapUnlocked(int index) // 실제 시작 맵 해금
         {
-            return index == 0 || Service != null && Service.IsAvailable && Service.IsMapUnlocked(index); // 기본 맵과 저장 기준 해금
+            return index >= 0 && index < 3; // 유효한 세 맵 사용 허용
         }
         public bool IsCharacterUnlocked(string id) // 실제 시작 캐릭터 해금
         {
-            return unlockConfig == null || id != unlockConfig.FirstBossCharacterId || Service != null && Service.IsAvailable && Service.IsCharacterUnlocked(0); // 미정 대상 외 기존 캐릭터 유지
+            return !string.IsNullOrEmpty(id); // 식별자가 있는 캐릭터 사용 허용
         }
         public bool IsTurretUnlocked(WeaponData weapon) // 실제 보상 포탑 해금
         {

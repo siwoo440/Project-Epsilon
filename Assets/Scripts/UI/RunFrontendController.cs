@@ -309,13 +309,12 @@ namespace ProjectEpsilon.UI // 실제 메뉴 영역
         }
         private void BuildCharacters() // 실제 캐릭터 선택 구성
         {
-            Title("캐릭터 선택", "해금된 캐릭터를 선택하세요"); // 실제 캐릭터 제목
+            Title("캐릭터 선택", "캐릭터를 선택하세요"); // 실제 캐릭터 제목
             if (characters == null && sceneContext == null) // 실제 선택 데이터 확인
             {
                 Label(panel, "FrontendCharacterError", "캐릭터 데이터를 찾을 수 없습니다", Vector2.zero, new Vector2(900f, 70f), 28); // 실제 구성 오류 표시
                 return; // 잘못된 선택 차단
             }
-            MetaProgressionController meta = MetaProgressionController.Instance; // 실제 해금 관리자
             int characterCount = sceneContext == null ? characters.CharacterCount : sceneContext.CharacterCount; // 실제 캐릭터 후보 수
             for (int index = 0; index < characterCount; index++) // 실제 여섯 캐릭터 순회
             {
@@ -325,18 +324,16 @@ namespace ProjectEpsilon.UI // 실제 메뉴 영역
                 {
                     continue; // 잘못된 후보 생략
                 }
-                bool unlocked = meta == null || meta.IsCharacterUnlocked(character.Id); // 실제 해금 상태
-                string label = character.DisplayName + (unlocked ? "" : "  |  잠김: 평원 보스 처치"); // 실제 이름과 해금 조건
+                string label = character.DisplayName; // 실제 캐릭터 이름
                 Button button = CreateButton(panel, "FrontendCharacterButton" + index, label, new Vector2(-520f + index % 2 * 450f, 225f - index / 2 * 185f), new Vector2(420f, 160f), () => SelectCharacter(selected)); // 넓어진 캐릭터 선택 버튼
-                Text buttonLabel = button.GetComponentInChildren<Text>(); // 실제 캐릭터 이름과 잠금 안내
+                Text buttonLabel = button.GetComponentInChildren<Text>(); // 실제 캐릭터 이름
                 RectTransform buttonLabelRect = (RectTransform)buttonLabel.transform; // 실제 이름 영역
                 buttonLabelRect.anchoredPosition = new Vector2(-55f, 0f); // 이름을 이미지 왼쪽에 배치
-                buttonLabelRect.sizeDelta = new Vector2(275f, 135f); // 잠금 안내를 포함한 글자 영역
-                buttonLabel.resizeTextForBestFit = true; // 긴 잠금 안내 크기 조절
-                buttonLabel.resizeTextMinSize = 18; // 잠금 안내 최소 글자 크기
+                buttonLabelRect.sizeDelta = new Vector2(275f, 135f); // 실제 캐릭터 이름 영역
+                buttonLabel.resizeTextForBestFit = true; // 긴 캐릭터 이름 크기 조절
+                buttonLabel.resizeTextMinSize = 18; // 캐릭터 이름 최소 글자 크기
                 buttonLabel.resizeTextMaxSize = 27; // 캐릭터 이름 최대 글자 크기
                 Preview(button.transform, "FrontendCharacterButtonPortrait" + index, character.Portrait, new Vector2(145f, 0f), new Vector2(125f, 125f)); // 버튼 오른쪽의 캐릭터 머리
-                button.interactable = unlocked; // 잠긴 캐릭터 선택 차단
             }
             CharacterData active = sceneContext == null ? CharacterRunInitializer.ActiveCharacter : sceneContext.SelectedCharacter; // 실제 선택 캐릭터
             if (active != null) // 실제 캐릭터 확인
@@ -426,13 +423,12 @@ namespace ProjectEpsilon.UI // 실제 메뉴 영역
         }
         private void BuildMaps() // 실제 맵 선택 구성
         {
-            Title("맵 선택", "잠긴 맵의 해금 조건을 확인하세요"); // 실제 맵 제목
+            Title("맵 선택", "플레이할 맵을 선택하세요"); // 실제 맵 제목
             if (maps == null && sceneContext == null) // 실제 맵 선택 데이터 확인
             {
                 Label(panel, "FrontendMapError", "맵 데이터를 찾을 수 없습니다", Vector2.zero, new Vector2(900f, 70f), 28); // 실제 구성 오류 표시
                 return; // 잘못된 선택 차단
             }
-            MetaProgressionController meta = MetaProgressionController.Instance; // 실제 해금 관리자
             int mapCount = sceneContext == null ? maps.ProfileCount : sceneContext.MapCount; // 실제 맵 후보 수
             int selectedMap = sceneContext == null ? maps.SelectedIndex : sceneContext.SelectedMap; // 실제 선택 맵 번호
             for (int index = 0; index < mapCount; index++) // 실제 세 맵 순회
@@ -443,9 +439,7 @@ namespace ProjectEpsilon.UI // 실제 메뉴 영역
                 {
                     continue; // 잘못된 맵 생략
                 }
-                bool unlocked = meta == null || meta.IsMapUnlocked(index); // 실제 맵 해금 상태
-                string locked = index == 1 ? "평원 보스 처치" : "폐허 보스 처치"; // 실제 맵 해금 조건
-                string label = profile.DisplayName + (unlocked ? index == selectedMap ? "  [선택됨]" : "" : "\n잠김: " + locked); // 실제 맵과 잠금 안내
+                string label = profile.DisplayName + (index == selectedMap ? "  [선택됨]" : ""); // 실제 맵과 선택 상태
                 GameObject card = new GameObject("FrontendMapCard" + index, typeof(RectTransform), typeof(Image), typeof(Outline)); // 맵 카드 배경 생성
                 card.transform.SetParent(panel, false); // 선택 화면에 카드 연결
                 RectTransform cardRect = card.GetComponent<RectTransform>(); // 카드 위치 영역
@@ -459,8 +453,7 @@ namespace ProjectEpsilon.UI // 실제 메뉴 영역
                 outline.effectColor = index == selectedMap ? new Color(0.2f, 0.8f, 0.9f, 1f) : new Color(0.25f, 0.4f, 0.48f, 0.8f); // 선택 상태 구분
                 outline.effectDistance = new Vector2(2f, -2f); // 테두리 두께
                 Preview(card.transform, "FrontendMapPreview" + index, profile.SelectionPreview, new Vector2(0f, 90f), new Vector2(420f, 320f)); // 카드 위쪽 넓은 맵 이미지
-                Button button = CreateButton(card.transform, "FrontendMapButton" + index, label, new Vector2(0f, -150f), new Vector2(400f, 90f), () => SelectMap(selected)); // 카드 아래쪽 맵 선택 버튼
-                button.interactable = unlocked; // 실제 잠긴 맵 선택 차단
+                CreateButton(card.transform, "FrontendMapButton" + index, label, new Vector2(0f, -150f), new Vector2(400f, 90f), () => SelectMap(selected)); // 카드 아래쪽 맵 선택 버튼
             }
             PrototypeMapProfile current = sceneContext == null ? maps.SelectedProfile : sceneContext.GetMap(selectedMap); // 실제 선택된 맵
             if (current != null) // 실제 맵 정보 확인

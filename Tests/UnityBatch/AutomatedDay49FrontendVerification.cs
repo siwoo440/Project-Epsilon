@@ -112,7 +112,7 @@ namespace ProjectEpsilon.Editor // 배치 시험 영역
             Click("FrontendSettingsBackButton"); // 실제 주 메뉴 복귀
             Click("FrontendStartButton"); // 실제 캐릭터 선택 진입
             Require(frontend.Stage == FrontendStage.Characters, "Character stage missing."); // 실제 단계 전환 확인
-            Require(GameObject.Find("FrontendCharacterHead") != null && GameObject.Find("FrontendCharacterBody1") != null, "Actual character preview missing."); // 실제 머리와 몸통 미리보기 확인
+            Require(GameObject.Find("FrontendCharacterPortrait") != null || GameObject.Find("FrontendCharacterHead") != null && GameObject.Find("FrontendCharacterBody1") != null, "Actual character preview missing."); // 실제 캐릭터 초상화 또는 대체 미리보기 확인
             int mobile = -1; // 실제 기동형 번호
             int heavy = -1; // 실제 중장형 번호
             for (int index = 0; index < characters.CharacterCount; index++) // 실제 여섯 캐릭터 순회
@@ -129,13 +129,13 @@ namespace ProjectEpsilon.Editor // 배치 시험 영역
                 }
                 Require(FindButton("FrontendCharacterButton" + index) != null, "Character button missing."); // 실제 캐릭터 버튼 확인
             }
-            Require(mobile >= 0 && heavy >= 0 && !FindButton("FrontendCharacterButton" + mobile).interactable && !characters.TryApply(characters.GetCharacter(mobile)), "Locked character was selectable."); // 실제 캐릭터 잠금 확인
+            Require(mobile >= 0 && heavy >= 0 && FindButton("FrontendCharacterButton" + mobile).interactable && characters.TryApply(characters.GetCharacter(mobile)), "Available character was not selectable."); // 실제 캐릭터 잠금 확인
             Click("FrontendCharacterButton" + heavy); // 실제 중장형 선택
             Require(CharacterRunInitializer.ActiveCharacter == characters.GetCharacter(heavy) && FindFirstObjectByType<SnakeHealth>().MaximumHealth == Mathf.RoundToInt(characters.GetCharacter(heavy).BodyMaxHealth), "Selected character stats not applied."); // 실제 선택 능력 적용
             Text details = GameObject.Find("FrontendCharacterDetails").GetComponent<Text>(); // 실제 캐릭터 상세 문구
             Require(details.text.Contains("받는 피해") && details.text.Contains(characters.GetCharacter(heavy).StartingWeapons.Weapons[0].DisplayName), "Character passive or starting candidates not displayed."); // 실제 패시브와 후보 표시 확인
             Click("FrontendCharactersNextButton"); // 실제 맵 선택 진입
-            Require(frontend.Stage == FrontendStage.Maps && FindButton("FrontendMapButton0").interactable && !FindButton("FrontendMapButton1").interactable && !FindButton("FrontendMapButton2").interactable && !maps.SelectMap(1), "Locked map selection failed."); // 실제 맵 잠금 확인
+            Require(frontend.Stage == FrontendStage.Maps && FindButton("FrontendMapButton0").interactable && FindButton("FrontendMapButton1").interactable && FindButton("FrontendMapButton2").interactable && maps.SelectMap(1), "Map selection failed."); // 실제 맵 잠금 확인
             Require(GameObject.Find("FrontendMapPreview0") != null && GameObject.Find("FrontendMapPreview1") != null && GameObject.Find("FrontendMapPreview2") != null, "Actual map previews missing."); // 실제 세 맵 미리보기 확인
             Require(meta.Service.TryCompleteRun("unlock-ui-test", 0d, 0, 0, true, 0), "Could not prepare boss unlock."); // 실제 평원 보스 해금 준비
             Click("FrontendMapsBackButton"); // 실제 캐릭터 화면 복귀
@@ -143,7 +143,7 @@ namespace ProjectEpsilon.Editor // 배치 시험 영역
             Click("FrontendCharacterButton" + mobile); // 실제 해금 캐릭터 선택
             Require(CharacterRunInitializer.ActiveCharacter.Id == "mobile", "Unlocked character could not be selected."); // 실제 해금 캐릭터 적용
             Click("FrontendCharactersNextButton"); // 실제 해금 맵 화면 진입
-            Require(FindButton("FrontendMapButton1").interactable && !FindButton("FrontendMapButton2").interactable, "Map unlock was not reflected in UI."); // 실제 맵 해금 표시 확인
+            Require(FindButton("FrontendMapButton1").interactable && FindButton("FrontendMapButton2").interactable, "Map availability was not reflected in UI."); // 실제 맵 해금 표시 확인
             Click("FrontendMapButton1"); // 실제 해금된 폐허 선택
             Require(maps.SelectedIndex == 1, "Unlocked map could not be selected."); // 실제 맵 적용 확인
             Click("FrontendMapsBackButton"); // 실제 캐릭터 선택 복귀
