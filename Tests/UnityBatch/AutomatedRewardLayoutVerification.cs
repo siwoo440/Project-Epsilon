@@ -148,6 +148,24 @@ namespace ProjectEpsilon.Editor // 배치 시험 영역
             WeaponCandidateArtwork.Set(smallCard.GetComponent<Button>(), smallLabelObject.GetComponent<Text>(), null); // 실제 이미지 없는 화면 전환
             Require(!smallImage.gameObject.activeSelf && smallLabel.offsetMax == originalOffset, "Reward label did not restore after hiding the image."); // 실제 기존 문구 영역 복구
             Destroy(smallCard); // 실제 작은 카드 정리
+            panel.ShowRewardAction(candidates[0], false); // 합성 재료 없는 보상 처리 선택
+            Canvas.ForceUpdateCanvases(); // 실제 선택 카드 배치 갱신
+            for (int index = 0; index < buttons.Length; index++) // 실제 세 가지 처리 선택지 순회
+            { // 반복 시작
+                Transform iconObject = buttons[index].transform.Find("WeaponArtwork"); // 실제 선택지 이미지 객체
+                Image icon = iconObject == null ? null : iconObject.GetComponent<Image>(); // 실제 선택지 이미지
+                Require(icon != null && icon.gameObject.activeSelf && icon.sprite != null && icon.sprite.texture.name == "RewardActionIcons" && !icon.raycastTarget, "보상 처리 선택지 이미지 누락: " + index); // 실제 이미지와 버튼 입력 확인
+                Require(Mathf.Approximately(icon.sprite.rect.x, index * icon.sprite.texture.width / 3), "보상 처리 선택지 이미지 순서 오류: " + index); // 장착과 합성 및 뒤로 이미지 순서 확인
+                Text label = (Text)typeof(LevelUpPanelController).GetField("candidateLabel0" + (index + 1), BindingFlags.Instance | BindingFlags.NonPublic).GetValue(panel); // 실제 선택지 문구
+                Vector3[] iconCorners = new Vector3[4]; // 실제 이미지 모서리
+                Vector3[] labelCorners = new Vector3[4]; // 실제 문구 모서리
+                icon.rectTransform.GetWorldCorners(iconCorners); // 실제 이미지 위치
+                label.rectTransform.GetWorldCorners(labelCorners); // 실제 문구 위치
+                Require(labelCorners[1].y <= iconCorners[0].y + 0.01f, "보상 처리 이미지와 문구 겹침: " + index); // 실제 문구 겹침 방지 확인
+            } // 반복 종료
+            Require(!buttons[1].interactable && buttons[0].interactable && buttons[2].interactable, "합성 불가 선택 상태 오류"); // 기존 합성 가능 상태 확인
+            panel.ShowRewardAction(candidates[0], true); // 합성 재료가 있는 보상 처리 선택
+            Require(buttons[1].interactable, "합성 가능 선택 상태 오류"); // 기존 합성 가능 상태 확인
             panel.ShowEliteRewards(new[] { "A", "B", "C" }, new[] { true, true, true }); // 실제 엘리트 보상 전환
             Require(!buttons[0].transform.Find("WeaponArtwork").gameObject.activeSelf, "Weapon artwork remained on elite reward."); // 엘리트 화면의 무기 그림 숨김 확인
             yield return null; // 실제 프레임 대기

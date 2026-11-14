@@ -303,12 +303,15 @@ namespace ProjectEpsilon.UI // 프로젝트 기능 영역
                 growthText.text = "1 / 2 / 3: 선택"; // 선택 키 안내
             }
             SetReplacementButton(candidateButton01, candidateLabel01, "장착 / 교체"); // 장착 및 교체 선택
+            WeaponCandidateArtwork.Set(candidateButton01, candidateLabel01, ProjectUiSkin.RewardActionIcon(0)); // 장착 선택지 그림
             SetReplacementButton(candidateButton02, candidateLabel02, canMerge ? "보상 합성" : "합성 (재료 없음)"); // 합성 가능 상태 안내
+            WeaponCandidateArtwork.Set(candidateButton02, candidateLabel02, ProjectUiSkin.RewardActionIcon(1)); // 합성 선택지 그림
             if (candidateButton02 != null) // 합성 버튼 연결 확인
             {
                 candidateButton02.interactable = canMerge; // 재료가 있을 때만 합성 허용
             }
             SetReplacementButton(candidateButton03, candidateLabel03, "뒤로"); // 기존 후보 재선택
+            WeaponCandidateArtwork.Set(candidateButton03, candidateLabel03, ProjectUiSkin.RewardActionIcon(2)); // 이전 화면 선택지 그림
             BindButtons(); // 버튼 이벤트 연결
         }
 

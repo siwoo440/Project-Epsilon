@@ -10,6 +10,7 @@ namespace ProjectEpsilon.UI // 게임 UI 영역
         private static Sprite barSprite; // 막대 이미지 저장
         private static readonly Sprite[] attributeSprites = new Sprite[8]; // 실제 여덟 속성 이미지 저장
         private static readonly Sprite[] eliteRewardSprites = new Sprite[4]; // 실제 네 가지 정예 보상 이미지
+        private static readonly Sprite[] rewardActionSprites = new Sprite[3]; // 실제 세 가지 포탑 처리 이미지
         private static readonly Sprite[] tutorialSprites = new Sprite[8]; // 실제 여덟 안내 단계 이미지
         private static Sprite Load(ref Sprite cached, string path, Rect normalized, Vector4 border) // 이미지 불러오기와 테두리 구성
         { // 함수 시작
@@ -106,6 +107,27 @@ namespace ProjectEpsilon.UI // 게임 UI 영역
             Rect rect = new Rect(left, 0, right - left, atlas.height); // 실제 보상 이미지 영역
             eliteRewardSprites[kind] = Sprite.Create(atlas, rect, new Vector2(0.5f, 0.5f), 100f, 0, SpriteMeshType.FullRect); // 실제 보상 아이콘 생성
             return eliteRewardSprites[kind]; // 실제 보상 아이콘 반환
+        } // 함수 종료
+        public static Sprite RewardActionIcon(int index) // 실제 포탑 처리 선택지 그림
+        { // 함수 시작
+            if (index < 0 || index >= rewardActionSprites.Length) // 유효한 선택지 번호 확인
+            { // 조건 시작
+                return null; // 잘못된 선택지 그림 생략
+            } // 조건 종료
+            if (rewardActionSprites[index] != null) // 기존 선택지 그림 확인
+            { // 조건 시작
+                return rewardActionSprites[index]; // 실제 이미지 재사용
+            } // 조건 종료
+            Texture2D atlas = Resources.Load<Texture2D>("UI/RewardActionIcons"); // 실제 세 가지 선택지 그림
+            if (atlas == null) // 실제 그림 누락 확인
+            { // 조건 시작
+                return null; // 기존 글자 안내 유지
+            } // 조건 종료
+            int left = index * atlas.width / 3; // 선택지별 왼쪽 정수 경계
+            int right = (index + 1) * atlas.width / 3; // 선택지별 오른쪽 정수 경계
+            Rect rect = new Rect(left, 0, right - left, atlas.height); // 실제 선택지 그림 영역
+            rewardActionSprites[index] = Sprite.Create(atlas, rect, new Vector2(0.5f, 0.5f), 100f, 0, SpriteMeshType.FullRect); // 실제 선택지 그림 생성
+            return rewardActionSprites[index]; // 실제 선택지 그림 반환
         } // 함수 종료
         public static Sprite TutorialIcon(int page) // 실제 안내 단계별 그림
         { // 함수 시작
