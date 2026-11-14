@@ -46,6 +46,11 @@ namespace ProjectEpsilon.Combat // 전투 영역
 
         public void HandleHolyHit(WeaponAttributeAttackSnapshot attack) // Holy 명중 처리
         {
+            if (HasRunEnded()) // 승패 확정 확인
+            { // 조건 시작
+                return; // 종료 후 회복과 보호막 차단
+            } // 조건 종료
+
             lastHolyAttack = attack; // 마지막 공격 저장
 
             if (lastHolyStage != attack.SynergyStage) // 단계 변경 확인
