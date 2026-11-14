@@ -103,6 +103,7 @@ namespace ProjectEpsilon.Combat // 전투 영역
             {
                 additionalColdHits = 0; // 이전 추가 명중 초기화
             }
+            WeaponTargetStatusIndicators.Ensure(target); // 실제 냉기 지속 표시 연결
             return true; // 적용 성공
         }
 

@@ -60,6 +60,7 @@ namespace ProjectEpsilon.Combat // 전투 영역
             synergyStage = WeaponAttributeSynergyRules.ResolveStage(incomingStage); // 독 단계 저장
             stackCount = Mathf.Clamp(stackCount, 0, 4) + 1; // 독 다섯 중첩 상한
             remainingDuration = WeaponAttributePoisonRules.NormalizeDuration(WeaponAttributePoisonRules.TemporaryDuration); // 임시 지속 시간 갱신
+            WeaponTargetStatusIndicators.Ensure(target); // 실제 독 지속 표시 연결
             return true; // 적용 성공
         }
 
