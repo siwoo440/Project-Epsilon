@@ -377,6 +377,10 @@ namespace ProjectEpsilon.World // 맵 영역
                                 safe = false; // 겹친 소환 후보 제외
                             }
                         }
+                        if (body.TailSegment != null && body.TailSegment.isActiveAndEnabled && Vector2.Distance(spawn, body.TailSegment.transform.position) < 1.5f) // 실제 활성 꼬리와 즉시 겹침 확인
+                        { // 조건 시작
+                            safe = false; // 꼬리와 겹친 소환 후보 제외
+                        } // 조건 종료
                     }
                     foreach (Collider2D contact in Physics2D.OverlapCircleAll(spawn, 0.7f)) // 실제 출현 지점의 충돌체 순회
                     {
