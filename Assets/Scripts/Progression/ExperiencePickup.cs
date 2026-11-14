@@ -70,12 +70,6 @@ namespace ProjectEpsilon.Progression // 프로젝트 기능 영역
                 return; // 현재 기능 종료
             }
 
-            if (GameManager.Instance != null && // 게임·관리자 조건 확인
-                !GameManager.Instance.IsPlaying) // 게임·관리자 처리
-            {
-                return; // 현재 기능 종료
-            }
-
             if (receiver == null) // 대상 조건 확인
             {
                 receiver = SnakeExperience.Current; // 경험치·현재 값 설정
@@ -86,6 +80,16 @@ namespace ProjectEpsilon.Progression // 프로젝트 기능 영역
                 }
                 receiverMovement = receiver.GetComponent<SnakeMovement>(); // 새 수신자의 이동 효과 조회
             }
+
+            GameManager game = GameManager.Instance; // 실제 게임 상태 조회
+            if (game != null && !game.IsPlaying) // 실제 정지 또는 종료 확인
+            { // 조건 시작
+                if (game.IsPaused && receiver.IsLevelUpPending && receiverMovement != null && receiverMovement.CrossedPositionThisFrame(transform.position, collectDistance)) // 레벨업을 연 같은 자동 전진의 보석 확인
+                { // 조건 시작
+                    Collect(); // 이미 지나간 보석의 경험치 지급
+                } // 조건 종료
+                return; // 다른 정지 프레임과 종료 중 획득 차단
+            } // 조건 종료
 
             Vector3 targetPosition = receiver.transform.position; // 벡터·대상 값 설정
             Vector3 delta = targetPosition - transform.position; // 벡터·변화량 값 설정

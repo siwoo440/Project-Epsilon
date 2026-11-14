@@ -117,12 +117,6 @@ namespace ProjectEpsilon.Progression // 프로젝트 기능 영역
                 return; // 현재 기능 종료
             }
 
-            if (GameManager.Instance != null && // 게임·관리자 조건 확인
-                !GameManager.Instance.IsPlaying) // 게임·관리자 처리
-            {
-                return; // 현재 기능 종료
-            }
-
             ResolveReceiver(); // 대상 기능 실행
 
             if (receiver == null) // 대상 조건 확인
@@ -133,6 +127,17 @@ namespace ProjectEpsilon.Progression // 프로젝트 기능 영역
             if (receiverMovement == null || receiverMovement.transform != receiver) // 실제 수신자 변경 여부 확인
             { // 조건 시작
                 receiverMovement = receiver.GetComponent<SnakeMovement>(); // 현재 수신자의 이동 경로 조회
+            } // 조건 종료
+
+            GameManager game = GameManager.Instance; // 실제 게임 상태 조회
+            if (game != null && !game.IsPlaying) // 실제 정지 또는 종료 확인
+            { // 조건 시작
+                SnakeExperience experience = receiver.GetComponent<SnakeExperience>(); // 실제 수신자의 레벨업 상태
+                if (game.IsPaused && experience != null && experience.IsLevelUpPending && receiverMovement != null && receiverMovement.CrossedPositionThisFrame(transform.position, collectDistance)) // 레벨업을 연 같은 자동 전진의 아이템 확인
+                { // 조건 시작
+                    Collect(); // 이미 지나간 아이템의 기존 회복 처리
+                } // 조건 종료
+                return; // 다른 정지 프레임과 종료 중 획득 차단
             } // 조건 종료
 
             Vector3 targetPosition = // 벡터·대상 값 설정
