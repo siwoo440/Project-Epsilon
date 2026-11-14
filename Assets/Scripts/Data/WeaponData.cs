@@ -67,6 +67,10 @@ namespace ProjectEpsilon.Data // 프로젝트 기능 영역
         [Min(1f)] [SerializeField] private float gradeFivePoisonedDamageMultiplier = 1f; // 오 등급 독 대상 피해 배율 시험값
         [Min(1f)] [SerializeField] private float gradeThreePoisonDurationMultiplier = 1f; // 삼 등급 독 시간 배율 시험값
         [Min(1f)] [SerializeField] private float gradeFivePoisonDurationMultiplier = 1f; // 오 등급 독 시간 배율 시험값
+        [Min(1f)] [SerializeField] private float gradeThreeExplosionRangeMultiplier = 1f; // 삼 등급 폭발 범위 배율 시험값
+        [Min(1f)] [SerializeField] private float gradeFiveExplosionRangeMultiplier = 1f; // 오 등급 폭발 범위 배율 시험값
+        [Min(1f)] [SerializeField] private float gradeThreeExplosionCenterMultiplier = 1f; // 삼 등급 폭발 중심 피해 배율 시험값
+        [Min(1f)] [SerializeField] private float gradeFiveExplosionCenterMultiplier = 1f; // 오 등급 폭발 중심 피해 배율 시험값
 
         public string Id => id; // 식별자 값 반환
         public string DisplayName => displayName; // 이름 값 반환
@@ -116,6 +120,8 @@ namespace ProjectEpsilon.Data // 프로젝트 기능 영역
         public float GetElectricRangeMultiplier(int grade) => grade >= 5 ? Mathf.Max(Mathf.Max(1f, gradeThreeElectricRangeMultiplier), gradeFiveElectricRangeMultiplier) : grade >= 3 ? Mathf.Max(1f, gradeThreeElectricRangeMultiplier) : 1f; // 등급별 전기 연쇄 범위 배율
         public float GetPoisonedDamageMultiplier(int grade) => grade >= 5 ? Mathf.Max(Mathf.Max(1f, gradeThreePoisonedDamageMultiplier), gradeFivePoisonedDamageMultiplier) : grade >= 3 ? Mathf.Max(1f, gradeThreePoisonedDamageMultiplier) : 1f; // 등급별 독 대상 직접 피해 배율
         public float GetPoisonDurationMultiplier(int grade) => grade >= 5 ? Mathf.Max(Mathf.Max(1f, gradeThreePoisonDurationMultiplier), gradeFivePoisonDurationMultiplier) : grade >= 3 ? Mathf.Max(1f, gradeThreePoisonDurationMultiplier) : 1f; // 등급별 독 지속 시간 배율
+        public float GetExplosionRangeMultiplier(int grade) => grade >= 5 ? Mathf.Max(Mathf.Max(1f, gradeThreeExplosionRangeMultiplier), gradeFiveExplosionRangeMultiplier) : grade >= 3 ? Mathf.Max(1f, gradeThreeExplosionRangeMultiplier) : 1f; // 등급별 폭발 범위 배율
+        public float GetExplosionCenterMultiplier(int grade) => grade >= 5 ? Mathf.Max(Mathf.Max(1f, gradeThreeExplosionCenterMultiplier), gradeFiveExplosionCenterMultiplier) : grade >= 3 ? Mathf.Max(1f, gradeThreeExplosionCenterMultiplier) : 1f; // 등급별 폭발 중심 피해 배율
         public float GradeThreeTransferRange => Mathf.Max(0f, gradeThreeTransferRange); // 안전한 추가 전달 반경
         public float GradeThreeTransferDamageMultiplier => Mathf.Max(0f, gradeThreeTransferDamageMultiplier); // 안전한 추가 전달 피해 배율
         public float GetTransferDamageMultiplier(int grade) => GradeThreeTransferDamageMultiplier * (grade >= 5 ? Mathf.Max(1f, gradeFiveTransferDamageScale) : 1f); // 등급별 전달 피해 배율

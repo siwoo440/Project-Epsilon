@@ -458,7 +458,7 @@ namespace ProjectEpsilon.Combat // 전투 영역
             lastExplosionFrame = Time.frameCount; // 처리 프레임 저장
             lastExplosionWeapon = attack.Weapon; // 처리 무기 저장
             lastExplosionCenter = explosionCenter; // 처리 중심 저장
-            float radius = WeaponAttributeExplosionRules.ResolveRange(attack.Weapon.Range, attack.SynergyStage); // 실제 폭발 범위 계산
+            float radius = WeaponAttributeExplosionRules.ResolveRange(attack.Weapon.Range, attack.SynergyStage) * attack.Weapon.GetExplosionRangeMultiplier(attack.Grade); // 등급과 시너지를 반영한 폭발 범위
 
             if (radius <= 0f) // 폭발 범위 확인
             {
@@ -477,6 +477,10 @@ namespace ProjectEpsilon.Combat // 전투 영역
 
             float distance = Vector2.Distance(center, target.transform.position); // 폭발 중심 거리 계산
             float damage = WeaponAttributeExplosionRules.CalculateCenterDamage(attack.DirectDamage, distance, radius); // 중심 피해 계산
+            if (distance <= radius * 0.5f) // 폭발 중심 절반 범위 확인
+            { // 조건 시작
+                damage *= attack.Weapon.GetExplosionCenterMultiplier(attack.Grade); // 등급별 중심 피해 적용
+            } // 조건 종료
             target.TakeDamage(damage); // 폭발 피해 적용
 
             if (target.IsAlive) // 생존 대상 확인
