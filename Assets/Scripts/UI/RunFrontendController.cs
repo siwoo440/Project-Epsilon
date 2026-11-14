@@ -1,5 +1,4 @@
 using System; // 실제 시간과 동작
-using System.Collections; // 실제 출격 초기화 대기
 using ProjectEpsilon.Core; // 실제 게임 상태
 using ProjectEpsilon.Data; // 실제 캐릭터 데이터
 using ProjectEpsilon.Player; // 실제 캐릭터 선택
@@ -24,7 +23,6 @@ namespace ProjectEpsilon.UI // 실제 메뉴 영역
         private Canvas canvas; // 실제 화면 캔버스
         private CanvasGroup group; // 실제 입력 우선권
         private RectTransform panel; // 실제 메뉴 배경
-        private GameObject backButton; // 실제 포탑 선택 뒤로 버튼
         private Font font; // 실제 기본 화면 글꼴
         private bool ownsFont; // 실제 생성 글꼴 소유 여부
         private SettingsMenuController inputSettings; // 기존 입력 설정 화면
@@ -90,7 +88,6 @@ namespace ProjectEpsilon.UI // 실제 메뉴 영역
             panel.offsetMin = Vector2.zero; // 실제 화면 여백 제거
             panel.offsetMax = Vector2.zero; // 실제 화면 여백 제거
             panelObject.GetComponent<Image>().color = new Color(0.025f, 0.05f, 0.085f, 0.97f); // 실제 어두운 배경
-            backButton = CreateButton(canvasObject.transform, "FrontendWeaponBackButton", "맵 선택으로", new Vector2(-790f, 460f), new Vector2(250f, 60f), () => Show(FrontendStage.Maps)).gameObject; // 실제 포탑 선택 뒤로
             if (sceneContext != null) // 실제 분리 화면 확인
             {
                 if (sceneContext.Kind == SceneFrontendKind.MainMenu) // 실제 메인 메뉴 씬 확인
@@ -101,7 +98,7 @@ namespace ProjectEpsilon.UI // 실제 메뉴 영역
                 }
                 else if (sceneContext.Kind == SceneFrontendKind.Preparation) // 실제 출격 준비 씬 확인
                 {
-                    Show(SceneFrontendContext.TakeRetry() ? FrontendStage.Weapons : FrontendStage.Characters); // 실제 새 출격 또는 재도전 화면
+                    Show(FrontendStage.Characters); // 실제 새 출격 캐릭터 화면
                 }
                 else // 실제 결과 씬 확인
                 {
@@ -109,10 +106,15 @@ namespace ProjectEpsilon.UI // 실제 메뉴 영역
                 }
                 return; // 기존 단일 씬 시작 처리 생략
             }
-            if (SceneFrontendContext.TakeStart(out int selectedMap, out int selectedWeapon)) // 분리 준비 씬의 출격 확인
+            if (SceneFrontendContext.TakeStart(out int selectedMap)) // 분리 준비 씬의 출격 확인
             {
                 Show(FrontendStage.Weapons); // 실제 시작 포탑 선택 허용
-                StartCoroutine(ApplyPreparedStart(selectedMap, selectedWeapon)); // 캐릭터와 후보 초기화 이후 출격
+                bool mapApplied = maps != null && maps.SelectMap(selectedMap); // 청크 생성 전 실제 선택 맵 적용
+                startingWeapons?.RefreshStartingDisplay(); // 실제 캐릭터의 시작 후보 갱신
+                if (!mapApplied || startingWeapons == null || !startingWeapons.IsSelecting) // 실제 맵과 시작 카드 확인
+                { // 조건 시작
+                    Debug.LogError("[Project Epsilon] 선택한 맵 또는 시작 포탑 카드를 준비하지 못했습니다."); // 실제 출격 오류 표시
+                } // 조건 종료
                 return; // 실제 분리 씬 출격 처리 완료
             }
             if (retryNext) // 실제 재도전 예약 확인
@@ -125,16 +127,6 @@ namespace ProjectEpsilon.UI // 실제 메뉴 영역
             else // 일반 시작 확인
             {
                 Show(GameManager.Instance != null && GameManager.Instance.IsPlaying ? FrontendStage.Playing : FrontendStage.Main); // 실제 게임 상태에 맞는 화면
-            }
-        }
-        private IEnumerator ApplyPreparedStart(int selectedMap, int selectedWeapon) // 실제 준비 선택 적용
-        {
-            yield return null; // 실제 캐릭터와 시작 후보 초기화 대기
-            bool mapApplied = maps != null && maps.SelectMap(selectedMap); // 실제 선택 맵 적용
-            startingWeapons?.RefreshStartingDisplay(); // 실제 캐릭터의 시작 후보 갱신
-            if (!mapApplied || startingWeapons == null || !startingWeapons.TrySelectForStart(selectedWeapon)) // 실제 맵과 포탑 적용 확인
-            {
-                Debug.LogError("[Project Epsilon] 선택한 맵 또는 시작 포탑을 적용하지 못했습니다."); // 실제 출격 오류 표시
             }
         }
         private void Update() // 실제 화면 상태 동기화
@@ -214,7 +206,6 @@ namespace ProjectEpsilon.UI // 실제 메뉴 영역
             bool opaque = next == FrontendStage.Main || next == FrontendStage.Characters || next == FrontendStage.Maps || next == FrontendStage.Results || next == FrontendStage.Weapons && sceneContext != null; // 실제 전투와 분리할 전체 화면 확인
             panel.GetComponent<Image>().color = new Color(0.025f, 0.05f, 0.085f, opaque ? 1f : 0.97f); // 실제 선택·결과 화면 불투명 배경
             panel.gameObject.SetActive(showPanel); // 실제 메뉴 배경 표시
-            backButton.SetActive(next == FrontendStage.Weapons && sceneContext == null); // 기존 포탑 화면 뒤로 버튼 표시
             if (!showPanel) // 실제 전투나 포탑 화면 확인
             {
                 return; // 전체 메뉴 생성 생략
@@ -233,7 +224,6 @@ namespace ProjectEpsilon.UI // 실제 메뉴 영역
                 case FrontendStage.Main: BuildMain(); break; // 실제 주 메뉴 구성
                 case FrontendStage.Characters: BuildCharacters(); break; // 실제 캐릭터 구성
                 case FrontendStage.Maps: BuildMaps(); break; // 실제 맵 구성
-                case FrontendStage.Weapons: BuildStartingWeapons(); break; // 실제 분리 출격 포탑 구성
                 case FrontendStage.Paused: BuildPause(); break; // 실제 일시정지 구성
                 case FrontendStage.Settings: BuildSettings(); break; // 실제 설정 구성
                 case FrontendStage.Results: BuildResults(); break; // 실제 결과 구성
@@ -429,8 +419,24 @@ namespace ProjectEpsilon.UI // 실제 메뉴 영역
                 Label(panel, "FrontendMapDetails", $"{current.DisplayName}\n보스 체력 {current.BossHealth:0}   장애물 {current.ObstacleChance:P0}\n특수 지역 {current.SpecialZoneChance:P0}", new Vector2(0f, -330f), new Vector2(1100f, 75f), 22); // 카드 아래 맵과 위험 정보
             }
             CreateButton(panel, "FrontendMapsBackButton", "뒤로", new Vector2(-520f, -445f), new Vector2(260f, 75f), () => Show(FrontendStage.Characters)); // 실제 캐릭터 선택 복귀
-            CreateButton(panel, "FrontendMapsNextButton", "다음: 포탑", new Vector2(520f, -445f), new Vector2(360f, 75f), () => Show(FrontendStage.Weapons)); // 실제 포탑 선택 진입
+            CreateButton(panel, "FrontendMapsNextButton", "출격", new Vector2(520f, -445f), new Vector2(360f, 75f), BeginSelectedMap); // 선택 맵에 출격
         }
+        private void BeginSelectedMap() // 실제 선택 맵에 출격
+        { // 함수 시작
+            if (sceneContext != null) // 실제 분리 준비 씬 확인
+            { // 조건 시작
+                if (!sceneContext.BeginRun()) // 실제 선택 맵 게임 씬 이동 확인
+                { // 조건 시작
+                    Text error = GameObject.Find("FrontendMapStartError")?.GetComponent<Text>(); // 기존 출격 오류 안내
+                    if (error == null) // 실제 안내 부재 확인
+                    { // 조건 시작
+                        Label(panel, "FrontendMapStartError", "캐릭터와 시작 포탑 설정을 확인하세요", new Vector2(0f, -390f), new Vector2(1000f, 45f), 22); // 실제 출격 오류 안내
+                    } // 조건 종료
+                } // 조건 종료
+                return; // 기존 단일 씬 처리 생략
+            } // 조건 종료
+            Show(FrontendStage.Weapons); // 기존 단일 씬 시작 카드 표시
+        } // 함수 종료
         private void SelectMap(int index) // 실제 맵 선택
         {
             if (sceneContext != null) // 실제 독립 준비 씬 확인
@@ -446,30 +452,6 @@ namespace ProjectEpsilon.UI // 실제 메뉴 영역
                 startingWeapons?.RefreshStartingDisplay(); // 실제 기존 포탑 화면 갱신
                 Show(FrontendStage.Maps); // 실제 맵 표시 갱신
             }
-        }
-        private void BuildStartingWeapons() // 독립 준비 씬의 실제 시작 포탑
-        {
-            Title("시작 포탑 선택", "시작할 포탑 하나를 선택하세요"); // 실제 시작 포탑 안내
-            CharacterData character = sceneContext == null ? null : sceneContext.SelectedCharacter; // 실제 선택 캐릭터
-            WeaponData[] candidates = character == null || character.StartingWeapons == null ? null : character.StartingWeapons.Weapons; // 실제 캐릭터 포탑 후보
-            if (candidates == null || candidates.Length != 3) // 실제 세 후보 확인
-            {
-                Label(panel, "FrontendWeaponError", "시작 포탑 데이터를 확인하세요.", Vector2.zero, new Vector2(900f, 70f), 28); // 실제 후보 오류 표시
-                return; // 잘못된 포탑 선택 차단
-            }
-            for (int index = 0; index < candidates.Length; index++) // 실제 세 포탑 순회
-            {
-                int selected = index; // 실제 버튼별 후보 번호
-                WeaponData weapon = candidates[index]; // 실제 포탑 데이터
-                if (weapon == null) // 실제 후보 누락 확인
-                {
-                    continue; // 잘못된 후보 생략
-                }
-                float x = -520f + index * 520f; // 실제 후보 가로 위치
-                CreateButton(panel, "FrontendStartingWeaponButton" + index, weapon.DisplayName + "  ★1", new Vector2(x, -115f), new Vector2(460f, 110f), () => sceneContext.StartRun(selected)); // 실제 포탑 선택과 출격
-                Preview(panel, "FrontendStartingWeaponImage" + index, weapon.Icon, new Vector2(x, 145f), new Vector2(210f, 210f)); // 실제 포탑 아이콘
-            }
-            CreateButton(panel, "FrontendStartingWeaponBackButton", "뒤로", new Vector2(-520f, -350f), new Vector2(260f, 75f), () => Show(FrontendStage.Maps)); // 실제 맵 선택 복귀
         }
         private void CreateStandaloneInputSettings() // 독립 메뉴의 기존 키 설정 화면
         {
@@ -649,8 +631,9 @@ namespace ProjectEpsilon.UI // 실제 메뉴 영역
             if (sceneContext != null && sceneContext.Kind == SceneFrontendKind.Results) // 실제 분리 결과 씬 확인
             {
                 SceneFrontendContext.PrepareRetry(); // 실제 포탑 재선택 예약
-                if (GameManager.Instance == null || !GameManager.Instance.RestartToScene(SceneFrontendContext.PreparationPath)) // 실제 저장과 준비 씬 복귀 확인
+                if (GameManager.Instance == null || !GameManager.Instance.RestartToScene(SceneFrontendContext.GamePath)) // 실제 저장과 같은 맵 재도전 확인
                 {
+                    SceneFrontendContext.CancelPendingStart(); // 실패한 재도전 예약 취소
                     Show(FrontendStage.Results); // 실제 저장 실패 상태 유지
                 }
                 return; // 기존 단일 씬 재시작 생략

@@ -26,9 +26,7 @@ namespace ProjectEpsilon.UI // 실제 화면 흐름 영역
         [SerializeField] private Sprite bodySprite; // 실제 몸통 미리보기
         private static bool pendingStart; // 실제 전투 시작 예약
         private static bool separateFlow; // 분리 씬 출격 여부
-        private static bool retryWeapons; // 재도전 포탑 선택 여부
         private static int chosenMap; // 실제 선택한 맵 번호
-        private static int chosenWeapon; // 실제 선택한 시작 포탑 번호
         private CharacterData selectedCharacter; // 실제 선택한 캐릭터
         public SceneFrontendKind Kind => kind; // 실제 현재 씬 역할
         public int CharacterCount => characters == null ? 0 : characters.Length; // 실제 캐릭터 후보 수
@@ -126,25 +124,22 @@ namespace ProjectEpsilon.UI // 실제 화면 흐름 영역
             chosenMap = index; // 실제 맵 선택 보관
             return true; // 실제 선택 완료
         }
-        public bool StartRun(int index) // 실제 포탑 선택과 출격
+        public bool BeginRun() // 실제 선택 맵으로 출격
         {
             WeaponData[] weapons = SelectedCharacter == null || SelectedCharacter.StartingWeapons == null ? null : SelectedCharacter.StartingWeapons.Weapons; // 실제 시작 포탑 후보
-            if (!IsCharacterAvailable(SelectedCharacter) || !IsMapAvailable(chosenMap) || weapons == null || index < 0 || index >= weapons.Length || weapons[index] == null) // 실제 선택과 해금 확인
+            if (!IsCharacterAvailable(SelectedCharacter) || !IsMapAvailable(chosenMap) || weapons == null || weapons.Length != 3 || weapons[0] == null || weapons[1] == null || weapons[2] == null || weapons[0] == weapons[1] || weapons[0] == weapons[2] || weapons[1] == weapons[2]) // 실제 선택과 중복 없는 세 후보 확인
             {
                 return false; // 잘못된 출격 차단
             }
             CharacterRunInitializer.SelectForNextRun(SelectedCharacter); // 실제 선택 캐릭터 전달
-            chosenWeapon = index; // 실제 시작 포탑 보관
             pendingStart = true; // 실제 게임 씬 적용 예약
             separateFlow = true; // 분리 씬 흐름 기록
-            retryWeapons = false; // 이전 재도전 예약 해제
             SceneManager.LoadScene(GamePath); // 실제 전투 씬 이동
             return true; // 실제 출격 요청 완료
         }
-        public static bool TakeStart(out int map, out int weapon) // 전투 씬의 시작 선택 수신
+        public static bool TakeStart(out int map) // 전투 씬의 시작 맵 수신
         {
             map = chosenMap; // 실제 선택한 맵 전달
-            weapon = chosenWeapon; // 실제 선택한 포탑 전달
             if (!pendingStart) // 실제 출격 예약 확인
             {
                 return false; // 직접 게임 씬 실행 유지
@@ -154,19 +149,17 @@ namespace ProjectEpsilon.UI // 실제 화면 흐름 영역
         }
         public static void PrepareRetry() // 실제 재도전 준비
         {
-            retryWeapons = true; // 이전 포탑 선택 화면 예약
+            pendingStart = true; // 이전 맵의 게임 씬 시작 예약
+            separateFlow = true; // 실제 분리 씬 흐름 유지
         }
-        public static bool TakeRetry() // 재도전 화면 예약 소비
+        public static void CancelPendingStart() // 저장 실패 시 출격 예약 취소
         {
-            bool requested = retryWeapons; // 실제 재도전 예약 조회
-            retryWeapons = false; // 중복 재도전 화면 방지
-            return requested; // 실제 예약 반환
+            pendingStart = false; // 실제 출격 예약 제거
         }
         public static void ResetFlow() // 실제 메인 메뉴 복귀
         {
             pendingStart = false; // 이전 출격 예약 제거
             separateFlow = false; // 이전 분리 흐름 종료
-            retryWeapons = false; // 이전 재도전 예약 제거
             chosenMap = 0; // 기본 맵 선택 복원
         }
     }

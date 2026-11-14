@@ -1,5 +1,7 @@
 using System; // 예외 처리
+using System.Reflection; // 실제 시작 카드 버튼 조회
 using ProjectEpsilon.Core; // 전투 상태
+using ProjectEpsilon.Progression; // 실제 시작 포탑 선택
 using ProjectEpsilon.UI; // 실제 화면 흐름
 using UnityEditor; // 배치 실행
 using UnityEditor.SceneManagement; // 실제 씬 열기
@@ -88,7 +90,7 @@ namespace ProjectEpsilon.Editor // 배치 시험 영역
                 { // 조건 시작
                     phase = 3; // 포탑 선택 대기
                 } // 조건 종료
-                else if (phase == 3 && Click("FrontendStartingWeaponButton0")) // 실제 시작 포탑 선택
+                else if (phase == 3 && SelectStartingCard()) // 게임 씬의 실제 시작 포탑 카드 선택
                 { // 조건 시작
                     phase = 4; // 첫 전투 안내 대기
                 } // 조건 종료
@@ -113,6 +115,19 @@ namespace ProjectEpsilon.Editor // 배치 시험 영역
             { // 실패 시작
                 AutomatedDay75SeparateSceneTutorialVerification.Finish(1, error.ToString()); // 실패 원인 기록
             } // 실패 종료
+        } // 함수 종료
+        private static bool SelectStartingCard() // 실제 게임 씬의 시작 포탑 선택
+        { // 함수 시작
+            StartingWeaponSelection selection = UnityEngine.Object.FindFirstObjectByType<StartingWeaponSelection>(); // 실제 시작 포탑 선택기
+            LevelUpPanelController panel = UnityEngine.Object.FindFirstObjectByType<LevelUpPanelController>(FindObjectsInactive.Include); // 실제 공용 레벨업 카드
+            FieldInfo field = typeof(LevelUpPanelController).GetField("candidateButton01", BindingFlags.Instance | BindingFlags.NonPublic); // 실제 첫 후보 버튼 필드
+            Button button = panel == null || field == null ? null : field.GetValue(panel) as Button; // 실제 첫 포탑 카드
+            if (SceneManager.GetActiveScene().path != SceneFrontendContext.GamePath || selection == null || !selection.IsSelecting || RunFrontendController.Instance == null || RunFrontendController.Instance.Stage != FrontendStage.Weapons || button == null || !button.interactable) // 실제 게임 씬 선택 준비 확인
+            { // 조건 시작
+                return false; // 실제 카드 준비 대기
+            } // 조건 종료
+            button.onClick.Invoke(); // 실제 시작 포탑 카드 선택
+            return true; // 실제 선택 완료
         } // 함수 종료
         private static bool Click(string name) // 활성 버튼 선택
         { // 함수 시작

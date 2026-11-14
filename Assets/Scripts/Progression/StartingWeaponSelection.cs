@@ -101,13 +101,13 @@ namespace ProjectEpsilon.Progression // 게임 진행 영역
             {
                 return; // 키 입력 생략
             }
-            if (keyboard.leftArrowKey.wasPressedThisFrame || keyboard.rightArrowKey.wasPressedThisFrame) // 이전 또는 다음 캐릭터 입력
+            if (!SceneFrontendContext.UsesSeparateScenes && (keyboard.leftArrowKey.wasPressedThisFrame || keyboard.rightArrowKey.wasPressedThisFrame)) // 기존 단일 씬 캐릭터 입력
             {
                 CharacterRunInitializer initializer = GetComponent<CharacterRunInitializer>(); // 실제 시작 캐릭터 처리기
                 initializer?.CycleCharacter(keyboard.rightArrowKey.wasPressedThisFrame ? 1 : -1); // 실제 캐릭터와 후보 변경
                 return; // 같은 프레임 무기 선택 차단
             }
-            if (keyboard.upArrowKey.wasPressedThisFrame || keyboard.downArrowKey.wasPressedThisFrame) // 이전 또는 다음 맵 입력
+            if (!SceneFrontendContext.UsesSeparateScenes && (keyboard.upArrowKey.wasPressedThisFrame || keyboard.downArrowKey.wasPressedThisFrame)) // 기존 단일 씬 맵 입력
             {
                 PrototypeMapSelection maps = FindFirstObjectByType<PrototypeMapSelection>(); // 실제 맵 선택기
                 if (maps != null && maps.CycleMap(keyboard.downArrowKey.wasPressedThisFrame ? 1 : -1)) // 실제 맵 순환

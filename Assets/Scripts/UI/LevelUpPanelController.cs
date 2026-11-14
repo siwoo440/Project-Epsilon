@@ -227,7 +227,7 @@ namespace ProjectEpsilon.UI // 프로젝트 기능 영역
         {
             if (growthText != null && map != null) // 실제 안내와 맵 확인
             {
-                growthText.text = $"← / →: 캐릭터    ↑ / ↓: 맵 ({map.DisplayName})    1 / 2 / 3: 포탑"; // 시작 맵과 조작 표시
+                growthText.text = SceneFrontendContext.UsesSeparateScenes ? $"맵: {map.DisplayName}    1 / 2 / 3: 포탑 선택" : $"← / →: 캐릭터    ↑ / ↓: 맵 ({map.DisplayName})    1 / 2 / 3: 포탑"; // 실제 화면 방식별 시작 조작 안내
             }
         }
 

@@ -1,6 +1,7 @@
 using System.Collections.Generic; // 활성 청크 저장소
 using ProjectEpsilon.Core; // 게임 진행 상태
 using ProjectEpsilon.Player; // 플레이어 위치
+using ProjectEpsilon.UI; // 실제 분리 씬 출격 상태
 using UnityEngine; // 유니티 기능
 
 namespace ProjectEpsilon.World // 맵 영역
@@ -90,7 +91,9 @@ namespace ProjectEpsilon.World // 맵 영역
         }
         private void Update() // 실제 플레이어 주변 청크 갱신
         {
-            if (player == null || GameManager.Instance == null || !GameManager.Instance.IsPlaying) // 실제 플레이 상태 확인
+            GameManager game = GameManager.Instance; // 실제 게임 상태
+            bool preparing = game != null && game.CurrentState == GameState.Starting && SceneFrontendContext.UsesSeparateScenes && !SceneFrontendContext.HasPendingStart && profile != null; // 선택 맵 적용 후 시작 카드 상태
+            if (player == null || game == null || !game.IsPlaying && !preparing) // 실제 플레이 또는 시작 카드 상태 확인
             {
                 return; // 정지 중 청크 갱신 방지
             }

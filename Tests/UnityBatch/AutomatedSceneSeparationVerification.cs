@@ -1,7 +1,9 @@
 using System; // 실제 예외와 대기 조건
 using System.Collections; // 실제 프레임 대기
+using System.Reflection; // 실제 시작 후보 버튼 조회
 using ProjectEpsilon.Core; // 실제 전투 관리자
 using ProjectEpsilon.Player; // 실제 플레이어
+using ProjectEpsilon.Progression; // 실제 시작 포탑과 맵 해금
 using ProjectEpsilon.UI; // 실제 화면과 씬 구성
 using UnityEditor; // 실제 Unity 배치 제어
 using UnityEditor.SceneManagement; // 실제 게임 씬 열기
@@ -82,11 +84,14 @@ namespace ProjectEpsilon.Editor // 실제 배치 시험 영역
             RequireDisplayCamera("map"); // 실제 맵 선택 렌더 카메라 확인
             RequireMapCards(); // 실제 맵 카드와 이미지 배치 확인
             RequireOpaqueBackground("map"); // 실제 맵 선택 배경 확인
-            Button("FrontendMapsNextButton").onClick.Invoke(); // 실제 포탑 선택 이동
-            yield return null; // 실제 포탑 화면 구성 대기
-            Require(Button("FrontendStartingWeaponButton1") != null, "Separate starting turret selection did not appear."); // 실제 시작 포탑 선택 확인
-            RequireOpaqueBackground("weapon"); // 실제 시작 포탑 선택 배경 확인
-            Button("FrontendStartingWeaponButton1").onClick.Invoke(); // 실제 두 번째 포탑 선택과 출격
+            Button("FrontendMapsNextButton").onClick.Invoke(); // 실제 선택 맵 출격
+            yield return WaitFor(() => SceneManager.GetActiveScene().path == SceneFrontendContext.GamePath && UnityEngine.Object.FindFirstObjectByType<StartingWeaponSelection>() != null && UnityEngine.Object.FindFirstObjectByType<StartingWeaponSelection>().IsSelecting, "Game scene starting turret selection did not appear."); // 실제 게임 씬 시작 포탑 선택 확인
+            yield return null; // 실제 맵과 카드 초기화 대기
+            LevelUpPanelController startingPanel = UnityEngine.Object.FindFirstObjectByType<LevelUpPanelController>(FindObjectsInactive.Include); // 실제 공용 레벨업 카드
+            FieldInfo secondField = typeof(LevelUpPanelController).GetField("candidateButton02", BindingFlags.Instance | BindingFlags.NonPublic); // 실제 두 번째 후보 필드
+            Button second = startingPanel == null || secondField == null ? null : secondField.GetValue(startingPanel) as Button; // 실제 두 번째 포탑 카드
+            Require(second != null && second.interactable && Button("FrontendWeaponBackButton") == null, "Game scene starting turret card or back lock missing."); // 실제 포탑 카드와 복귀 차단 확인
+            second.onClick.Invoke(); // 실제 두 번째 포탑 선택과 전투 시작
             yield return WaitFor(() => SceneManager.GetActiveScene().path == SceneFrontendContext.GamePath && GameManager.Instance != null && GameManager.Instance.IsPlaying, "Prepared game scene did not start."); // 실제 전투 씬 진입 확인
             yield return WaitFor(() => RunFrontendController.Instance != null && RunFrontendController.Instance.Stage == FrontendStage.Playing, "Gameplay frontend did not finish switching to play."); // 실제 전투 화면 상태 갱신 대기
             yield return null; // HUD 시작 처리 완료 대기
@@ -143,7 +148,11 @@ namespace ProjectEpsilon.Editor // 실제 배치 시험 영역
                 RectTransform detailsRect = details.GetComponent<RectTransform>(); // 실제 맵 정보 영역
                 Require(cardRect.anchoredPosition.y - cardRect.sizeDelta.y * 0.5f > detailsRect.anchoredPosition.y + detailsRect.sizeDelta.y * 0.5f, "Map card overlaps selected map details."); // 실제 카드와 정보 중첩 방지 확인
             } // 영역 종료
-            Require(Button("FrontendMapButton0").interactable && !Button("FrontendMapButton1").interactable && !Button("FrontendMapButton2").interactable, "Map card changed the unlock rules."); // 기존 맵 잠금 규칙 확인
+            MetaProgressionController meta = MetaProgressionController.Instance; // 실제 맵 해금 관리자
+            for (int index = 0; index < 3; index++) // 실제 세 맵 해금 상태 순회
+            { // 반복 시작
+                Require(Button("FrontendMapButton" + index).interactable == (meta == null || meta.IsMapUnlocked(index)), "Map card changed the unlock rules."); // 실제 저장 상태와 버튼 일치 확인
+            } // 반복 종료
         } // 영역 종료
 
         private static void RequireMainLayout() // 실제 메인 메뉴 좌우 배치 확인
