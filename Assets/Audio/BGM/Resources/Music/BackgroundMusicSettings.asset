@@ -12,9 +12,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 810d9e6ce362dd344a4c751da4bc3192, type: 3}
   m_Name: BackgroundMusicSettings
   m_EditorClassIdentifier: Assembly-CSharp::ProjectEpsilon.Audio.BackgroundMusicSettings
-  menu: {fileID: 8300000, guid: 61f2de1b9a31475488471e293ad07acc, type: 3}
-  plain: {fileID: 8300000, guid: 23569808d80da9740a93f9c076290543, type: 3}
-  ruins: {fileID: 8300000, guid: 137777dee8f34b04e8bac58c4f7403b8, type: 3}
-  swamp: {fileID: 8300000, guid: 98356dd9250f7ac498d5dfc00a99441b, type: 3}
-  boss: {fileID: 8300000, guid: f2d3748889f95224a94a1fc9f918bac5, type: 3}
+  menu: {fileID: 8300000, guid: eb6c32ed3d5b4db2970c40dc3909fb57, type: 3}
+  plain: {fileID: 8300000, guid: 50229a8c79df48e79acf4d1016d781ba, type: 3}
+  ruins: {fileID: 8300000, guid: 4121f637783546139ea903704cd6d8d2, type: 3}
+  swamp: {fileID: 8300000, guid: fc36bd6d608b4a8d859778333997c66b, type: 3}
+  boss: {fileID: 8300000, guid: 7f80fa16d6fb4fc884d0f02ae14f5b4e, type: 3}
   volume: 0.3
