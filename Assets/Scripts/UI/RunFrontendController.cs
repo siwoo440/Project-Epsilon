@@ -641,7 +641,13 @@ namespace ProjectEpsilon.UI // 실제 메뉴 영역
             string save = meta != null && meta.HasPendingSave ? "저장 실패 - 다시 시도하세요" : "저장됨"; // 실제 저장 상태
             double seconds = meta == null ? 0d : meta.LastRunSeconds; // 실제 생존 시간
             string details = $"생존 시간  {(int)(seconds / 60d):00}:{(int)(seconds % 60d):00}\n처치  {(meta == null ? 0 : meta.Kills)}    정예  {(meta == null ? 0 : meta.Elites)}\n코어  +{(meta == null ? 0 : meta.LastAward)}\n해금  {unlocks}\n{save}"; // 실제 런 성과
-            Label(panel, "FrontendResultDetails", details, new Vector2(0f, 100f), new Vector2(1100f, 380f), 34); // 실제 성과 표시
+            CharacterData resultCharacter = CharacterRunInitializer.ActiveCharacter != null ? CharacterRunInitializer.ActiveCharacter : CharacterRunInitializer.SelectedCharacter; // 실제 전투 캐릭터 또는 보존된 선택
+            bool hasPortrait = resultCharacter != null && resultCharacter.Portrait != null; // 실제 캐릭터 초상화 확인
+            if (hasPortrait) // 실제 초상화 표시 가능 확인
+            { // 조건 시작
+                Preview(panel, "FrontendResultPortrait", resultCharacter.Portrait, new Vector2(-430f, 100f), new Vector2(360f, 360f)); // 실제 선택 캐릭터의 결과 이미지
+            } // 조건 종료
+            Label(panel, "FrontendResultDetails", details, hasPortrait ? new Vector2(250f, 100f) : new Vector2(0f, 100f), hasPortrait ? new Vector2(850f, 380f) : new Vector2(1100f, 380f), 34); // 실제 초상화 옆 또는 기존 성과 표시
             CreateButton(panel, "FrontendRetryButton", "재도전", new Vector2(-260f, -300f), new Vector2(430f, 90f), Retry); // 실제 재도전
             CreateButton(panel, "FrontendResultMainButton", "메인 메뉴", new Vector2(260f, -300f), new Vector2(430f, 90f), ReturnToMain); // 실제 주 메뉴 복귀
         }

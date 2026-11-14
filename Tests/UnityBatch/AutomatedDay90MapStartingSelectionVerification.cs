@@ -160,6 +160,9 @@ namespace ProjectEpsilon.Editor // 배치 시험 영역
             } // 조건 종료
             GameManager.Instance.AbandonRun(); // 실제 전투 포기와 결과 전환
             yield return WaitFor(() => SceneManager.GetActiveScene().path == SceneFrontendContext.ResultsPath && Button("FrontendRetryButton") != null, "실제 결과 화면 누락"); // 실제 결과 화면 확인
+            GameObject portraitObject = GameObject.Find("FrontendResultPortrait"); // 실제 결과 캐릭터 이미지
+            Image portrait = portraitObject == null ? null : portraitObject.GetComponent<Image>(); // 실제 결과 초상화
+            Require(portrait != null && portrait.sprite == character.Portrait && portrait.preserveAspect && !portrait.raycastTarget, "실제 선택 캐릭터의 결과 초상화 누락"); // 실제 캐릭터와 입력 보존 확인
             Button("FrontendRetryButton").onClick.Invoke(); // 실제 동일 조건 재도전
             yield return WaitFor(() => SceneManager.GetActiveScene().path == SceneFrontendContext.GamePath && Ready(), "재도전이 게임 씬의 포탑 선택으로 돌아가지 않음"); // 실제 재도전 선택 확인
             yield return null; // 실제 재도전 맵 생성 대기
