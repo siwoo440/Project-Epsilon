@@ -312,6 +312,10 @@ namespace ProjectEpsilon.Combat // 전투 영역
 
             int curseStacks = ResolveDarkCurseStacks(target); // 현재 저주 중첩 조회
             float directDamage = WeaponAttributeDarkRules.CalculateDirectDamage(attack.DirectDamage, attack.SynergyStage, curseStacks); // 저주 증폭 피해 계산
+            if (curseStacks > 0 && attack.Weapon != null) // 실제 저주 대상과 포탑 확인
+            { // 조건 시작
+                directDamage *= attack.Weapon.GetCursedDamageMultiplier(attack.Grade); // 등급별 저주 대상 피해 적용
+            } // 조건 종료
             return new WeaponAttributeAttackSnapshot(attack.Weapon, attack.Attribute, attack.AttributeCount, attack.SynergyStage, attack.Grade, attack.Origin, directDamage, attack.AreaCenter); // 실제 범위 중심을 보존한 공격 반환
         }
 
@@ -343,7 +347,8 @@ namespace ProjectEpsilon.Combat // 전투 영역
                 curse = target.gameObject.AddComponent<WeaponTargetDarkCurseStatus>(); // 저주 컴포넌트 추가
             }
 
-            curse.Apply(attack.SynergyStage, 1); // 저주 한 중첩 적용
+            float durationMultiplier = attack.Weapon == null ? 1f : attack.Weapon.GetCurseDurationMultiplier(attack.Grade); // 실제 포탑 등급의 저주 시간 배율
+            curse.Apply(attack.SynergyStage, 1, durationMultiplier); // 저주 한 중첩 적용
         }
 
         private static void ApplyFire(WeaponAttributeAttackSnapshot attack, WeaponTarget target) // 화상 적용

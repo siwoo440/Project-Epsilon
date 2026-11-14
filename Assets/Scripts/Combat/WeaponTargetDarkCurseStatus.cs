@@ -27,7 +27,7 @@ namespace ProjectEpsilon.Combat // 전투 영역
             }
         }
 
-        public int Apply(int synergyStage, int amount) // 저주 중첩 적용
+        public int Apply(int synergyStage, int amount, float durationMultiplier = 1f) // 저주 중첩 적용
         {
             int safeAmount = Mathf.Max(0, amount); // 적용 수 보정
 
@@ -38,7 +38,7 @@ namespace ProjectEpsilon.Combat // 전투 영역
 
             if (stacks > 0) // 활성 저주 확인
             {
-                remainingDuration = WeaponAttributeDarkRules.CurseDuration; // 지속 시간 갱신
+                remainingDuration = WeaponAttributeDarkRules.CurseDuration * Mathf.Max(1f, durationMultiplier); // 등급별 지속 시간 갱신
                 WeaponTargetStatusIndicators.Ensure(GetComponent<WeaponTarget>()); // 실제 암흑 저주 표시 연결
             }
 

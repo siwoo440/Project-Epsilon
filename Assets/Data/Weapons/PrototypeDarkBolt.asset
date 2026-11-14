@@ -18,6 +18,10 @@ MonoBehaviour:
   icon: {fileID: 21300000, guid: 4484eef7b8bcf7446bff2b9238f45f5e, type: 3}
   attribute: 7
   attackType: 1
+  gradeThreePeriodicInterval: 4
+  gradeThreePeriodicDamageMultiplier: 1.2
+  gradeFivePeriodicInterval: 3
+  gradeFivePeriodicDamageMultiplier: 1.35
   baseDamage: 8
   attackInterval: 0.85
   range: 6
