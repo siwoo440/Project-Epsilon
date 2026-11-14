@@ -123,7 +123,8 @@ namespace ProjectEpsilon.UI // 프로젝트 기능 영역
 
         public void SetHealth(int current, int maximum) // 설정·체력 기능 선언
         {
-            SetBar(healthText, ref healthFill, "HealthBar", current, maximum, new Color(0.85f, 0.16f, 0.16f, 1f)); // 실제 체력 막대 갱신
+            SetBar(healthText, ref healthFill, "HealthBar", current, maximum, new Color(0.85f, 0.16f, 0.16f, 1f), -5f); // 실제 체력 글자 아래 막대 갱신
+            PlaceBodyBelowHealth(); // 실제 체력 막대와 몸통 글자 간격
             if (healthText != null) // 체력·문구 조건 확인
             {
                 healthText.text = HUDTextFormatter.FormatHealth(current, maximum); // 체력·문구 값 설정
@@ -132,7 +133,8 @@ namespace ProjectEpsilon.UI // 프로젝트 기능 영역
 
         public void SetHealth(int current, int maximum, int shield) // 보호막 포함 체력 표시
         {
-            SetBar(healthText, ref healthFill, "HealthBar", current, maximum, new Color(0.85f, 0.16f, 0.16f, 1f)); // 실제 체력 막대 갱신
+            SetBar(healthText, ref healthFill, "HealthBar", current, maximum, new Color(0.85f, 0.16f, 0.16f, 1f), -5f); // 실제 체력 글자 아래 막대 갱신
+            PlaceBodyBelowHealth(); // 실제 체력 막대와 몸통 글자 간격
             if (healthText != null) // 체력 Text 확인
             {
                 healthText.text = HUDTextFormatter.FormatHealth(current, maximum, shield); // 체력과 보호막 갱신
@@ -144,6 +146,7 @@ namespace ProjectEpsilon.UI // 프로젝트 기능 영역
             if (bodyCountText != null) // 몸통·개수 조건 확인
             {
                 bodyCountText.text = HUDTextFormatter.FormatBodyCount(current, maximum); // 몸통·개수 값 설정
+                PlaceBodyBelowHealth(); // 실제 체력 막대 아래 글자 배치
             }
         }
 
@@ -152,6 +155,7 @@ namespace ProjectEpsilon.UI // 프로젝트 기능 영역
             if (bodyCountText != null) // 몸통 텍스트 연결 확인
             {
                 bodyCountText.text = HUDTextFormatter.FormatBodyCount(current, earned, maximum); // 몸통 상태 표시
+                PlaceBodyBelowHealth(); // 실제 체력 막대 아래 글자 배치
             }
         }
 
@@ -176,12 +180,32 @@ namespace ProjectEpsilon.UI // 프로젝트 기능 영역
 
         public void SetStamina(int current, int maximum) // 설정·스태미나 기능 선언
         {
-            SetBar(staminaText, ref staminaFill, "StaminaBar", current, maximum, new Color(0.25f, 0.85f, 0.35f, 1f)); // 실제 스태미나 막대 갱신
+            SetBar(staminaText, ref staminaFill, "StaminaBar", current, maximum, new Color(0.25f, 0.85f, 0.35f, 1f), -5f); // 실제 스태미나 글자 아래 막대 갱신
             if (staminaText != null) // 스태미나·문구 조건 확인
             {
+                staminaText.alignment = TextAnchor.UpperLeft; // 실제 막대 위쪽 글자 정렬
                 staminaText.text = HUDTextFormatter.FormatStamina(current, maximum); // 스태미나·문구 값 설정
             }
         }
+
+        private void PlaceBodyBelowHealth() // 실제 체력과 몸통 표시 간격
+        { // 함수 시작
+            if (healthText == null || bodyCountText == null || healthFill == null) // 실제 표시 구성 확인
+            { // 조건 시작
+                return; // 초기화 전 배치 생략
+            } // 조건 종료
+            RectTransform health = healthText.rectTransform; // 실제 체력 글자 영역
+            RectTransform body = bodyCountText.rectTransform; // 실제 몸통 글자 영역
+            RectTransform bar = healthFill.parent as RectTransform; // 실제 체력 막대 영역
+            if (bar == null || health.parent != body.parent || health.anchorMin != body.anchorMin || health.anchorMax != body.anchorMax || body.anchoredPosition.y > health.anchoredPosition.y) // 같은 기준의 아래쪽 몸통 표시 확인
+            { // 조건 시작
+                return; // 다른 화면 구성 유지
+            } // 조건 종료
+            float barBottom = health.anchoredPosition.y - health.rect.height * health.pivot.y + bar.anchoredPosition.y; // 실제 체력 막대 아래 경계
+            float bodyTop = body.anchoredPosition.y + body.rect.height * (1f - body.pivot.y); // 실제 몸통 글자 위 경계
+            float shift = Mathf.Min(0f, barBottom - 6f - bodyTop); // 기존 간격을 보존한 최소 이동
+            body.anchoredPosition += new Vector2(0f, shift); // 실제 몸통 글자 아래 이동
+        } // 함수 종료
 
         private void FitLevelExperienceLabels() // 공통 영역의 글자 겹침 방지
         { // 함수 시작
@@ -236,7 +260,7 @@ namespace ProjectEpsilon.UI // 프로젝트 기능 영역
             } // 반복 종료
         } // 함수 종료
 
-        private static void SetBar(Text label, ref RectTransform fill, string name, int current, int maximum, Color color) // 실제 HUD 막대 구성과 비율 갱신
+        private static void SetBar(Text label, ref RectTransform fill, string name, int current, int maximum, Color color, float verticalOffset = 0f) // 실제 HUD 막대 구성과 비율 갱신
         {
             if (!Application.isPlaying || label == null) // 실제 실행과 글자 연결 확인
             {
@@ -258,7 +282,7 @@ namespace ProjectEpsilon.UI // 프로젝트 기능 영역
                 frame.anchorMin = Vector2.zero; // 배경 왼쪽 아래 기준
                 frame.anchorMax = new Vector2(1f, 0f); // 배경 가로 늘림 기준
                 frame.pivot = Vector2.zero; // 배경 왼쪽 아래 정렬
-                frame.anchoredPosition = Vector2.zero; // 글자 아래쪽 위치
+                frame.anchoredPosition = new Vector2(0f, verticalOffset); // 글자 아래쪽 위치
                 frame.sizeDelta = new Vector2(0f, 10f); // 실제 막대 높이
                 Image backgroundImage = background.GetComponent<Image>(); // 실제 배경 이미지
                 backgroundImage.color = new Color(0.05f, 0.06f, 0.09f, 0.85f); // 어두운 막대 배경
@@ -275,6 +299,11 @@ namespace ProjectEpsilon.UI // 프로젝트 기능 영역
                 fillImage.color = color; // 체력 또는 경험치 색상
                 fillImage.raycastTarget = false; // UI 입력 차단 방지
             }
+            RectTransform existingFrame = fill.parent as RectTransform; // 실제 생성된 막대 배경
+            if (existingFrame != null) // 실제 막대 배경 확인
+            { // 조건 시작
+                existingFrame.anchoredPosition = new Vector2(0f, verticalOffset); // 실제 글자 아래 간격 유지
+            } // 조건 종료
             float ratio = maximum > 0 ? Mathf.Clamp01((float)current / maximum) : 0f; // 안전한 현재 비율
             fill.anchorMax = new Vector2(ratio, 1f); // 실제 채움 너비 갱신
             fill.gameObject.SetActive(ratio > 0f); // 빈 막대 채움 숨김

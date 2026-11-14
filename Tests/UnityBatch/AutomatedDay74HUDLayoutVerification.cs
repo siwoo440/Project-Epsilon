@@ -75,6 +75,20 @@ namespace ProjectEpsilon.Editor // 배치 시험 영역
                 GameObject bar = GameObject.Find(name); // 실제 게이지 배경
                 Require(bar != null && bar.transform.Find("Fill") != null, "HUD 게이지 누락: " + name); // 게이지 구성 확인
             } // 순회 종료
+            hud.SetHealth(100, 100, 0); // 실제 체력과 보호막 표시
+            hud.SetBodyCount(3, 3, 20); // 실제 몸통 수 표시
+            hud.SetStamina(67, 100); // 실제 스태미나 표시
+            Canvas.ForceUpdateCanvases(); // 실제 글자와 막대 배치 갱신
+            Text health = (Text)typeof(HUDController).GetField("healthText", Private).GetValue(hud); // 실제 체력 글자
+            Text body = (Text)typeof(HUDController).GetField("bodyCountText", Private).GetValue(hud); // 실제 몸통 글자
+            Text stamina = (Text)typeof(HUDController).GetField("staminaText", Private).GetValue(hud); // 실제 스태미나 글자
+            Vector2 healthGlyphs = GlyphHeight(health); // 실제 체력 글자의 높이 범위
+            Vector2 bodyGlyphs = GlyphHeight(body); // 실제 몸통 글자의 높이 범위
+            Vector2 staminaGlyphs = GlyphHeight(stamina); // 실제 스태미나 글자의 높이 범위
+            Vector2 healthBar = RectHeight((RectTransform)GameObject.Find("HealthBar").transform); // 실제 체력 막대 높이 범위
+            Vector2 staminaBar = RectHeight((RectTransform)GameObject.Find("StaminaBar").transform); // 실제 스태미나 막대 높이 범위
+            Require(healthGlyphs.x >= healthBar.y && bodyGlyphs.y <= healthBar.x, "체력 글자·막대·몸통 글자가 겹침: " + healthGlyphs + " / " + healthBar + " / " + bodyGlyphs); // 실제 글자와 체력 막대 간격 확인
+            Require(staminaGlyphs.x >= staminaBar.y && bodyGlyphs.x >= staminaGlyphs.y, "몸통·스태미나 글자와 막대가 겹침: " + bodyGlyphs + " / " + staminaGlyphs + " / " + staminaBar); // 실제 글자와 스태미나 막대 간격 확인
             hud.SetLevel(200); // 높은 레벨 표시
             hud.SetExperience(10000000, 20000000); // 큰 경험치 표시
             Text level = (Text)typeof(HUDController).GetField("levelText", Private).GetValue(hud); // 실제 레벨 글자
@@ -90,6 +104,37 @@ namespace ProjectEpsilon.Editor // 배치 시험 영역
             hud.SetLevel(1); // 일반 레벨 복귀
             hud.SetExperience(0, 10); // 일반 경험치 복귀
             Require(level.fontSize == 26 && experience.fontSize == 26, "일반 글자 크기 복원 실패"); // 기본 글자 크기 복원 확인
+        } // 함수 종료
+        private static Vector2 GlyphHeight(Text label) // 실제 보이는 글자 높이 범위
+        { // 함수 시작
+            var vertices = label.cachedTextGenerator.verts; // 실제 생성 글자 꼭짓점
+            float minimum = float.PositiveInfinity; // 실제 글자 아래쪽 초기값
+            float maximum = float.NegativeInfinity; // 실제 글자 위쪽 초기값
+            for (int index = 0; index + 3 < vertices.Count - 4; index += 4) // 실제 글자별 꼭짓점 순회
+            { // 반복 시작
+                float bottom = float.PositiveInfinity; // 실제 글자 아래쪽
+                float top = float.NegativeInfinity; // 실제 글자 위쪽
+                for (int corner = 0; corner < 4; corner++) // 실제 글자 꼭짓점 순회
+                { // 반복 시작
+                    Vector3 local = vertices[index + corner].position / label.pixelsPerUnit; // 실제 글자 로컬 위치
+                    float y = label.rectTransform.TransformPoint(local).y; // 실제 화면의 글자 높이
+                    bottom = Mathf.Min(bottom, y); // 실제 글자 아래쪽 갱신
+                    top = Mathf.Max(top, y); // 실제 글자 위쪽 갱신
+                } // 반복 종료
+                if (top > bottom) // 공백이 아닌 실제 글자 확인
+                { // 조건 시작
+                    minimum = Mathf.Min(minimum, bottom); // 전체 글자 아래쪽 갱신
+                    maximum = Mathf.Max(maximum, top); // 전체 글자 위쪽 갱신
+                } // 조건 종료
+            } // 반복 종료
+            Require(!float.IsInfinity(minimum) && !float.IsInfinity(maximum), "실제 HUD 글자 꼭짓점 누락: " + label.name); // 실제 보이는 글자 확인
+            return new Vector2(minimum, maximum); // 실제 글자 높이 범위 반환
+        } // 함수 종료
+        private static Vector2 RectHeight(RectTransform rect) // 실제 UI 영역 높이 범위
+        { // 함수 시작
+            Vector3[] corners = new Vector3[4]; // 실제 UI 영역 모서리
+            rect.GetWorldCorners(corners); // 실제 화면 좌표 계산
+            return new Vector2(corners[0].y, corners[1].y); // 실제 아래와 위 높이 반환
         } // 함수 종료
         private static void Require(bool condition, string message) // 시험 조건 확인
         { // 함수 시작
