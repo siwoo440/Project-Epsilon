@@ -643,17 +643,41 @@ namespace ProjectEpsilon.UI // 실제 메뉴 영역
             string save = meta != null && meta.HasPendingSave ? "저장 실패 - 다시 시도하세요" : "저장됨"; // 실제 저장 상태
             double seconds = meta == null ? 0d : meta.LastRunSeconds; // 실제 생존 시간
             string details = $"생존 시간  {(int)(seconds / 60d):00}:{(int)(seconds % 60d):00}\n처치  {(meta == null ? 0 : meta.Kills)}    정예  {(meta == null ? 0 : meta.Elites)}\n코어  +{(meta == null ? 0 : meta.LastAward)}\n해금  {unlocks}\n{save}"; // 실제 런 성과
-            details += meta != null && meta.ScoreFinalized ? $"\n점수  {meta.CurrentScore:N0}" : "\n점수  미확정"; // 실제 승리 점수 또는 미확정 표시
             CharacterData resultCharacter = CharacterRunInitializer.ActiveCharacter != null ? CharacterRunInitializer.ActiveCharacter : CharacterRunInitializer.SelectedCharacter; // 실제 전투 캐릭터 또는 보존된 선택
             bool hasPortrait = resultCharacter != null && resultCharacter.Portrait != null; // 실제 캐릭터 초상화 확인
             if (hasPortrait) // 실제 초상화 표시 가능 확인
             { // 조건 시작
-                Preview(panel, "FrontendResultPortrait", resultCharacter.Portrait, new Vector2(-430f, 100f), new Vector2(360f, 360f)); // 실제 선택 캐릭터의 결과 이미지
+                Preview(panel, "FrontendResultPortrait", resultCharacter.Portrait, new Vector2(-570f, 100f), new Vector2(260f, 260f)); // 실제 선택 캐릭터의 결과 이미지
             } // 조건 종료
-            Label(panel, "FrontendResultDetails", details, hasPortrait ? new Vector2(250f, 100f) : new Vector2(0f, 100f), hasPortrait ? new Vector2(850f, 380f) : new Vector2(1100f, 380f), 34); // 실제 초상화 옆 또는 기존 성과 표시
+            Text resultDetails = Label(panel, "FrontendResultDetails", details, new Vector2(-230f, 100f), new Vector2(380f, 380f), 30); // 실제 전투 성과 표시
+            resultDetails.resizeTextForBestFit = true; // 긴 해금 문구 자동 맞춤
+            resultDetails.resizeTextMinSize = 20; // 전투 성과 최소 글자 크기
+            resultDetails.resizeTextMaxSize = 30; // 전투 성과 최대 글자 크기
+            string scoreDetails = FormatScoreDetails(meta); // 실제 항목별 점수 문구
+            Text scoreLabel = Label(panel, "FrontendScoreDetails", scoreDetails, new Vector2(370f, 60f), new Vector2(760f, 460f), 29); // 실제 항목별 점수 표시
+            scoreLabel.alignment = TextAnchor.MiddleLeft; // 항목별 점수 왼쪽 정렬
+            scoreLabel.resizeTextForBestFit = true; // 화면 크기에 맞는 글자 조정
+            scoreLabel.resizeTextMinSize = 19; // 상세 점수 최소 글자 크기
+            scoreLabel.resizeTextMaxSize = 29; // 상세 점수 최대 글자 크기
             CreateButton(panel, "FrontendRetryButton", "재도전", new Vector2(-260f, -300f), new Vector2(430f, 90f), Retry); // 실제 재도전
             CreateButton(panel, "FrontendResultMainButton", "메인 메뉴", new Vector2(260f, -300f), new Vector2(430f, 90f), ReturnToMain); // 실제 주 메뉴 복귀
         }
+        private static string FormatScoreDetails(MetaProgressionController meta) // 실제 종료 점수 상세 구성
+        { // 함수 시작
+            if (meta == null || !meta.ScoreFinalized) // 승리 점수 미확정 확인
+            { // 조건 시작
+                return "점수 미확정\n최종 보스 처치 후 점수 확정"; // 패배와 포기의 점수 안내
+            } // 조건 종료
+            string experience = meta.ExperienceScoreTarget > 0 ? $"{meta.TotalExperience:N0} / {meta.ExperienceScoreTarget:N0}" : $"{meta.TotalExperience:N0} · 기준 미정"; // 실제 경험치와 점수 기준
+            string normal = meta.NormalKillScoreTarget > 0 ? $"{meta.NormalKills:N0} / {meta.NormalKillScoreTarget:N0}" : $"{meta.NormalKills:N0} · 기준 미정"; // 실제 일반 적과 점수 기준
+            return $"총점  {meta.CurrentScore:N0} / 100,000\n" + // 실제 승리 총점
+                $"보스 처치  {meta.BossScore:N0} / 40,000\n" + // 실제 보스 처치 점수
+                $"경험치  {meta.ExperienceScore:N0} / 20,000  ({experience})\n" + // 실제 경험치 점수와 기준
+                $"일반 적  {meta.NormalKillScore:N0} / 10,000  ({normal})\n" + // 실제 일반 적 점수와 기준
+                $"엘리트  {meta.EliteScore:N0} / 10,000  ({meta.Elites:N0}마리)\n" + // 실제 엘리트 점수와 처치 수
+                $"남은 체력  {meta.HealthScore:N0} / 10,000\n" + // 실제 종료 시 체력 점수
+                $"남은 몸통  {meta.BodyScore:N0} / 10,000"; // 실제 종료 시 몸통 점수
+        } // 함수 종료
         private void Retry() // 실제 동일 캐릭터와 맵 재도전
         {
             if (sceneContext != null && sceneContext.Kind == SceneFrontendKind.Results) // 실제 분리 결과 씬 확인

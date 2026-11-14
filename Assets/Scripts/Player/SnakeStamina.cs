@@ -28,7 +28,7 @@ namespace ProjectEpsilon.Player // 프로젝트 기능 영역
 
         public float CurrentStamina => currentStamina; // 현재·스태미나 값 반환
         public float MaximumStamina => maximumStamina * ProjectEpsilon.Progression.MetaModifiers.StaminaMultiplier; // 영구 성장 최대 스태미나
-        public float EffectiveRecoveryPerSecond => recoveryPerSecond * CharacterRunInitializer.StaminaRecoveryMultiplier; // 캐릭터별 실제 회복률
+        public float EffectiveRecoveryPerSecond => recoveryPerSecond * CharacterRunInitializer.StaminaRecoveryMultiplier * 0.5f; // 캐릭터 배율을 유지한 절반 회복률
         public bool IsBoosting => isBoosting; // 대상 값 반환
         public bool IsBoostBlocked => boostBlocked; // 대상 값 반환
 

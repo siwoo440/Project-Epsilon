@@ -32,6 +32,8 @@ namespace ProjectEpsilon.Progression // 프로젝트 기능 영역
         [Min(0.01f)] // 최소 설정
         [SerializeField] private float collectDistance = 0.22f; // 필드·거리 설정
 
+        private static Sprite healArtwork; // 체력 회복 전용 이미지
+        private static Sprite bodyArtwork; // 몸통 복구 전용 이미지
         private SpriteRenderer spriteRenderer; // 이미지·렌더러 구성 선언
         private SnakeMovement receiverMovement; // 실제 수신자의 자동 전진 경로
         private bool collected; // 대상 구성 선언
@@ -66,47 +68,23 @@ namespace ProjectEpsilon.Progression // 프로젝트 기능 영역
                     GetComponent<SpriteRenderer>(); // 조회·구성 요소 기능 실행
             }
 
-            spriteRenderer.sprite = // 이미지·렌더러 값 설정
-                visual; // 시각 효과 처리
-
-            spriteRenderer.sortingOrder = // 이미지·렌더러 값 설정
-                17; // 대상 처리
-
-            if (pickupType == // 형식 조건 확인
-                RecoveryPickupType.Heal) // 회복·형식 처리
-            {
-                spriteRenderer.color = // 이미지·렌더러 값 설정
-                    new Color( // 색상 객체 생성
-                        0.35f, // 대상 항목 전달
-                        1f, // 대상 항목 전달
-                        0.45f, // 대상 항목 전달
-                        1f // 대상 처리
-                    ); // 앞선 항목 종료
-
-                transform.localScale = // 위치·크기 값 설정
-                    new Vector3( // 벡터 객체 생성
-                        0.27f, // 대상 항목 전달
-                        0.27f, // 대상 항목 전달
-                        1f // 대상 처리
-                    ); // 앞선 항목 종료
-            }
-            else // 다른 조건 처리
-            {
-                spriteRenderer.color = // 이미지·렌더러 값 설정
-                    new Color( // 색상 객체 생성
-                        0.35f, // 대상 항목 전달
-                        0.85f, // 대상 항목 전달
-                        1f, // 대상 항목 전달
-                        1f // 대상 처리
-                    ); // 앞선 항목 종료
-
-                transform.localScale = // 위치·크기 값 설정
-                    new Vector3( // 벡터 객체 생성
-                        0.31f, // 대상 항목 전달
-                        0.31f, // 대상 항목 전달
-                        1f // 대상 처리
-                    ); // 앞선 항목 종료
-            }
+            if (pickupType == RecoveryPickupType.Heal && healArtwork == null) // 체력 이미지 로드 여부 확인
+            { // 조건 시작
+                healArtwork = Resources.Load<Sprite>("Pickups/HealthPickup"); // 체력 회복 이미지 로드
+            } // 조건 종료
+            if (pickupType == RecoveryPickupType.BodyRepair && bodyArtwork == null) // 몸통 이미지 로드 여부 확인
+            { // 조건 시작
+                bodyArtwork = Resources.Load<Sprite>("Pickups/BodyRepairPickup"); // 몸통 복구 이미지 로드
+            } // 조건 종료
+            Sprite artwork = pickupType == RecoveryPickupType.Heal ? healArtwork : bodyArtwork; // 종류에 맞는 이미지 선택
+            spriteRenderer.sprite = artwork != null ? artwork : visual; // 이미지 누락 시 기존 스프라이트 유지
+            spriteRenderer.sortingOrder = 17; // 기존 아이템 표시 순서 유지
+            spriteRenderer.color = artwork != null ? Color.white : pickupType == RecoveryPickupType.Heal ? new Color(0.35f, 1f, 0.45f, 1f) : new Color(0.35f, 0.85f, 1f, 1f); // 원본 색상과 대체 색상
+            float originalScale = pickupType == RecoveryPickupType.Heal ? 0.27f : 0.31f; // 기존 종류별 표시 크기
+            float referenceWidth = visual == null ? 26f / 32f : visual.bounds.size.x; // 기존 아이템 이미지 너비
+            float artworkWidth = spriteRenderer.sprite == null ? referenceWidth : spriteRenderer.sprite.bounds.size.x; // 실제 표시 이미지 너비
+            float scale = artworkWidth > 0f ? referenceWidth * originalScale * 4f / artworkWidth : originalScale * 4f; // 기존 표시 너비의 네 배
+            transform.localScale = new Vector3(scale, scale, 1f); // 비율을 유지한 아이템 표시 크기
         }
 
         private void Update() // 갱신 기능 선언

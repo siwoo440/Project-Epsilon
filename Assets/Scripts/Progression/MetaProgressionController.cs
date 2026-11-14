@@ -25,6 +25,15 @@ namespace ProjectEpsilon.Progression // 영구 성장 영역
         private int currentScore; // 현재 전투 점수
         private bool scoreFinalized; // 승리 점수 확정 여부
         public int CurrentScore => currentScore; // 현재 표시 점수
+        public int BossScore { get; private set; } // 보스 처치 점수
+        public int ExperienceScore { get; private set; } // 경험치 점수
+        public int NormalKillScore { get; private set; } // 일반 적 처치 점수
+        public int EliteScore { get; private set; } // 엘리트 처치 점수
+        public int HealthScore { get; private set; } // 남은 체력 점수
+        public int BodyScore { get; private set; } // 남은 몸통 점수
+        public int ExperienceScoreTarget { get; private set; } // 점수 계산에 사용한 경험치 기준
+        public int NormalKillScoreTarget { get; private set; } // 점수 계산에 사용한 처치 기준
+        public int NormalKills => Math.Max(0, kills - elites); // 일반 적 처치 수
         public long TotalExperience => totalExperience; // 누적 실제 경험치
         public bool ScoreFinalized => scoreFinalized; // 승리 점수 확정 상태
         public event Action<int, int> ScoreChanged; // 현재 점수와 증가량 알림
@@ -102,6 +111,9 @@ namespace ProjectEpsilon.Progression // 영구 성장 영역
             elites = 0; // 실제 엘리트 수 초기화
             totalExperience = 0; // 새 전투의 경험치 초기화
             currentScore = 0; // 새 전투의 점수 초기화
+            BossScore = ExperienceScore = NormalKillScore = EliteScore = HealthScore = BodyScore = 0; // 점수 항목 초기화
+            ExperienceScoreTarget = scoreSettings == null ? 0 : scoreSettings.ExperienceTarget; // 새 전투의 경험치 기준
+            NormalKillScoreTarget = scoreSettings == null ? 0 : scoreSettings.NormalKillTarget; // 새 전투의 일반 적 기준
             scoreFinalized = false; // 이전 승리 확정 상태 제거
             UnbindScoreExperience(); // 이전 플레이어 경험치 구독 해제
             scoreExperience = SnakeExperience.Current; // 현재 플레이어 경험치 조회
@@ -171,10 +183,12 @@ namespace ProjectEpsilon.Progression // 영구 성장 영역
         } // 함수 종료
         private void RefreshLiveScore() // 전투 중 달성 점수 계산
         { // 함수 시작
-            int experience = FractionScore(totalExperience, scoreSettings == null ? 0 : scoreSettings.ExperienceTarget, 20000); // 경험치 점수
-            int normal = FractionScore(Math.Max(0, kills - elites), scoreSettings == null ? 0 : scoreSettings.NormalKillTarget, 10000); // 일반 적 점수
-            int elite = FractionScore(elites, 4, 10000); // 엘리트 점수
-            SetScore(experience + normal + elite); // 현재 누적 점수 반영
+            ExperienceScoreTarget = scoreSettings == null ? 0 : scoreSettings.ExperienceTarget; // 실제 사용한 경험치 기준
+            NormalKillScoreTarget = scoreSettings == null ? 0 : scoreSettings.NormalKillTarget; // 실제 사용한 일반 적 기준
+            ExperienceScore = FractionScore(totalExperience, ExperienceScoreTarget, 20000); // 경험치 점수
+            NormalKillScore = FractionScore(NormalKills, NormalKillScoreTarget, 10000); // 일반 적 점수
+            EliteScore = FractionScore(elites, 4, 10000); // 엘리트 점수
+            SetScore(ExperienceScore + NormalKillScore + EliteScore); // 현재 누적 점수 반영
         } // 함수 종료
         private void FinalizeScore(bool victory) // 실제 종료 시 점수 확정
         { // 함수 시작
@@ -184,10 +198,11 @@ namespace ProjectEpsilon.Progression // 영구 성장 영역
             } // 조건 종료
             SnakeHealth health = FindFirstObjectByType<SnakeHealth>(); // 실제 남은 공용 체력
             SnakeBodyManager body = FindFirstObjectByType<SnakeBodyManager>(); // 실제 남은 몸통
-            int healthScore = health == null ? 0 : FractionScore(health.CurrentHealth, health.MaximumHealth, 10000); // 남은 체력 점수
-            int bodyScore = body == null ? 0 : FractionScore(body.CurrentBodyCount, body.EarnedBodyCount, 10000); // 남은 몸통 점수
+            HealthScore = health == null ? 0 : FractionScore(health.CurrentHealth, health.MaximumHealth, 10000); // 남은 체력 점수
+            BodyScore = body == null ? 0 : FractionScore(body.CurrentBodyCount, body.EarnedBodyCount, 10000); // 남은 몸통 점수
+            BossScore = 40000; // 실제 보스 처치 점수
             scoreFinalized = true; // 승리 점수 확정 표시
-            SetScore(currentScore + 40000 + healthScore + bodyScore); // 보스와 생존 보너스 반영
+            SetScore(currentScore + BossScore + HealthScore + BodyScore); // 보스와 생존 보너스 반영
         } // 함수 종료
         private void HandleSynergyChanged() // 실제 속성 포탑 해금 갱신
         {

@@ -106,7 +106,7 @@ namespace ProjectEpsilon.Editor // 배치 시험 영역
             string[] names = { "Balanced", "Mobile", "Heavy", "Fusion", "Holy", "Dark" }; // 실제 캐릭터 에셋 이름
             float[] speed = { 3f, 3.3f, 2.7f, 3f, 3f, 3f }; // 실제 기본 이동 속도
             float[] turns = { 145f, 166.75f, 123.25f, 145f, 145f, 145f }; // 실제 기본 회전 속도
-            float[] recoveries = { 21f, 25f, 20f, 20f, 20f, 20f }; // 실제 초당 스태미나 회복률
+            float[] recoveries = { 10.5f, 12.5f, 10f, 10f, 10f, 10f }; // 절반으로 줄인 캐릭터별 초당 회복률
             CharacterData[] profiles = new CharacterData[names.Length]; // 실제 캐릭터 데이터 목록
             for (int index = 0; index < names.Length; index++) // 실제 여섯 캐릭터 순회
             {

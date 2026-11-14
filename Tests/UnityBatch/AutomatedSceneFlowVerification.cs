@@ -128,8 +128,12 @@ namespace ProjectEpsilon.Editor // 실제 배치 시험 영역
             Button("FrontendMapButton1").onClick.Invoke(); // 실제 해금된 두 번째 맵 선택
             yield return null; // 실제 선택 맵 갱신 대기
             Button("FrontendMapsNextButton").onClick.Invoke(); // 실제 포탑 선택 이동
-            yield return null; // 실제 포탑 화면 갱신 대기
-            Button("FrontendStartingWeaponButton1").onClick.Invoke(); // 실제 두 번째 포탑 선택과 출격
+            for (int frame = 0; frame < 120 && (SceneManager.GetActiveScene().path != SceneFrontendContext.GamePath || FindFirstObjectByType<StartingWeaponSelection>() == null || !FindFirstObjectByType<StartingWeaponSelection>().IsSelecting); frame++) // 실제 맵의 포탑 선택 대기
+            { // 반복 시작
+                yield return null; // 실제 게임 씬 초기화 대기
+            } // 반복 종료
+            Require(SceneManager.GetActiveScene().path == SceneFrontendContext.GamePath && FindFirstObjectByType<StartingWeaponSelection>() != null && FindFirstObjectByType<StartingWeaponSelection>().IsSelecting, "Game scene starting selection missing."); // 실제 맵 안 시작 선택 확인
+            StartingWeaponBatchHelper.HandleStartingSelection(1); // 실제 두 번째 포탑 선택
             for (int frame = 0; frame < 120 && (GameManager.Instance == null || !GameManager.Instance.IsPlaying); frame++) // 실제 전투 시작 대기
             {
                 yield return null; // 실제 씬 초기화 프레임 대기
@@ -154,11 +158,12 @@ namespace ProjectEpsilon.Editor // 실제 배치 시험 영역
             Require(SceneManager.GetActiveScene().path == SceneFrontendContext.ResultsPath && meta.HasPendingSave, "Failed save did not block retry."); // 실제 저장 실패의 이동 차단 확인
             storage.FailWrite = false; // 실제 저장 성공 복원
             Button("FrontendRetryButton").onClick.Invoke(); // 실제 재도전 재시도
-            yield return null; // 실제 이전 관리자 제거 대기
-            yield return null; // 실제 준비 씬 로드 대기
-            yield return null; // 실제 포탑 재선택 화면 대기
-            Require(SceneManager.GetActiveScene().path == SceneFrontendContext.PreparationPath && Button("FrontendStartingWeaponButton1") != null && storage.Content != null, "Retry did not save and return to turret selection."); // 실제 저장 후 포탑 재선택 확인
-            Button("FrontendStartingWeaponButton1").onClick.Invoke(); // 실제 같은 포탑 재도전
+            for (int frame = 0; frame < 120 && (SceneManager.GetActiveScene().path != SceneFrontendContext.GamePath || FindFirstObjectByType<StartingWeaponSelection>() == null || !FindFirstObjectByType<StartingWeaponSelection>().IsSelecting); frame++) // 실제 맵의 재도전 선택 대기
+            { // 반복 시작
+                yield return null; // 실제 새 전투 씬 초기화 대기
+            } // 반복 종료
+            Require(SceneManager.GetActiveScene().path == SceneFrontendContext.GamePath && FindFirstObjectByType<StartingWeaponSelection>() != null && FindFirstObjectByType<StartingWeaponSelection>().IsSelecting && storage.Content != null, "Retry did not save and return to turret selection."); // 실제 저장 후 맵의 포탑 재선택 확인
+            StartingWeaponBatchHelper.HandleStartingSelection(1); // 실제 같은 포탑 재도전
             for (int frame = 0; frame < 120 && (GameManager.Instance == null || !GameManager.Instance.IsPlaying); frame++) // 실제 재도전 시작 대기
             {
                 yield return null; // 실제 재도전 초기화 프레임 대기
@@ -173,6 +178,8 @@ namespace ProjectEpsilon.Editor // 실제 배치 시험 영역
             GameObject titleObject = GameObject.Find("FrontendTitle"); // 실제 결과 제목 객체
             Text title = titleObject == null ? null : titleObject.GetComponent<Text>(); // 실제 결과 제목
             Require(title != null && title.text == "승리" && MetaProgressionController.Instance.Service.IsMapUnlocked(2), "Victory result or boss unlock was lost."); // 실제 승리 표시와 다음 맵 해금 확인
+            Text scoreDetails = GameObject.Find("FrontendScoreDetails")?.GetComponent<Text>(); // 실제 분리 결과 씬의 점수 상세
+            Require(scoreDetails != null && scoreDetails.text.Contains("총점") && scoreDetails.text.Contains("보스 처치"), "Victory score details missing in results scene."); // 실제 씬 전환 후 상세 점수 확인
             Button("FrontendResultMainButton").onClick.Invoke(); // 실제 메인 메뉴 복귀
             yield return null; // 실제 종료 관리자 제거 대기
             yield return null; // 실제 메뉴 씬 로드 대기
