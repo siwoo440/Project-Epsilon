@@ -145,7 +145,7 @@ namespace ProjectEpsilon.Editor // 배치 시험 영역
             Debug.Log($"[BossTransitionVerification] merge fixture: elapsed={Elapsed():F3}, weapon={(startingWeapon == null ? "missing" : startingWeapon.name)}, bodies={body.CurrentBodyCount}, slots={weapons.Slots.Count}, remaining={deadline - Time.realtimeSinceStartup:F2}."); // 실제 합성 준비 상태 기록
             Require(Elapsed() < 1200f && startingWeapon != null && weapons.TryEquipAt(0, startingWeapon, 1) && weapons.TryEquipAt(1, startingWeapon, 1), "Could not prepare actual merge materials before transition."); // 실제 미확정 합성 재료 준비
             SnakeWeaponMergeController merge = UnityEngine.Object.FindFirstObjectByType<SnakeWeaponMergeController>(); // 실제 합성 화면 조회
-            Require(merge != null && merge.OpenMergePanel() && merge.IsMergeOpen && Mathf.Approximately(Time.timeScale, 0.7f), "Actual merge did not open at 70 percent speed."); // 실제 합성과 속도 확인
+            Require(merge != null && merge.OpenMergePanel() && !merge.IsMergeOpen && Mathf.Approximately(Time.timeScale, 32f), "Immediate merge changed the game speed or opened a selection panel."); // 현재 즉시 합성과 기존 게임 속도 확인
             while (!(bool)transitioned.GetValue(spawner) && Time.realtimeSinceStartup < deadline) // 실제 20분 전환 대기
             {
                 DisableEnemyActions(); // 자연 적 행동 통제
@@ -155,9 +155,8 @@ namespace ProjectEpsilon.Editor // 배치 시험 영역
             Require(Elapsed() >= 1200f && transitions == 1 && spawner.ActiveEnemies == 0, "Transition did not occur once or managed enemies remain."); // 실제 전환과 무보상 제거 확인
             Require(gem != null && heal != null && repair == null && shot == null, "Transition cleanup or pickup preservation failed."); // 실제 제거와 보존 확인
             Require((rewards == null || rewards.PendingRewardCount == pendingRewards) && UnityEngine.Object.FindObjectsByType<ExperiencePickup>(FindObjectsSortMode.None).Length == gemCount, "Cleanup incorrectly created experience or elite rewards."); // 정리 무보상 확인
-            Require(!merge.IsMergeOpen && weapons.OccupiedSlotCount == 2 && weapons.Slots[0].Weapon == startingWeapon && weapons.Slots[1].Weapon == startingWeapon && weapons.Slots[0].Grade == 1 && weapons.Slots[1].Grade == 1, "Pending merge or its materials were not preserved at transition."); // 미확정 합성과 실제 재료 보존 확인
-            Require(merge.OpenMergePanel() && merge.IsMergeOpen, "Pending merge could not be opened again after transition."); // 보스 전환 후 합성 재진입 확인
-            merge.CloseMergePanel(); // 검증 후 합성 화면 닫기
+            Require(!merge.IsMergeOpen && weapons.OccupiedSlotCount == 1 && weapons.Slots[0].Weapon == startingWeapon && weapons.Slots[0].Grade == 2 && weapons.Slots[1].Weapon == null, "Immediate merge result was not preserved at transition."); // 즉시 합성 결과의 보스 전환 보존 확인
+            Require(!merge.OpenMergePanel() && !merge.IsMergeOpen, "Merge succeeded again without a matching pair."); // 같은 재료가 없을 때 추가 합성 차단 확인
             yield return null; // 중복 전환 확인 프레임
             Require(transitions == 1 && spawner.ActiveEnemies == 0 && GameManager.Instance.IsPlaying, "Transition repeated, waves resumed, or play stopped."); // 실제 전환 후 진행 확인
             Type encounterType = typeof(EarlyEnemyWaveSpawner).Assembly.GetType("ProjectEpsilon.Enemies.PrototypeBossEncounter"); // 실제 시험 보스 형식 조회
