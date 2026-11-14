@@ -26,8 +26,9 @@ public static class Program // 충돌 순서 검증기
             collision.Bind(body, health, immunity, 1, 1f, 25, 1.5f); // 실제 충돌 설정
             typeof(SnakeExternalCollision).GetMethod("OnEnable", BindingFlags.NonPublic | BindingFlags.Instance)?.Invoke(collision, null); // 물리 스텝 등록
             SnakeSelfCollision self = new SnakeSelfCollision(); // 실제 자기 충돌 처리기
-            self.Bind(body, immunity, 2, 2f); // 자기 충돌 설정
+            self.Bind(body, immunity, 25, 2f); // 자기 충돌 체력 피해 설정
             self.Component = collision; // 같은 플레이어의 충돌 관리자
+            self.AdditionalComponent = health; // 같은 플레이어의 공용 체력
             Collider2D enemy = NewHazard(SnakeContactHazardType.EnemyDirect); // 적 충돌체
             Collider2D obstacle = NewHazard(SnakeContactHazardType.Obstacle); // 장애물 충돌체
             MethodInfo enter = typeof(SnakeExternalCollision).GetMethod("OnTriggerEnter2D", BindingFlags.NonPublic | BindingFlags.Instance); // 물리 콜백 조회
@@ -45,7 +46,7 @@ public static class Program // 충돌 순서 검증기
                 protectedBody.IsBossPushGraceActive = false; // 실제 유예 종료 대체
                 typeof(SnakeSelfCollision).GetMethod("OnTriggerStay2D", BindingFlags.NonPublic | BindingFlags.Instance).Invoke(self, new object[] { ownBody }); // 실제 지속 접촉 재판정
                 typeof(SnakeExternalCollision).GetMethod("ResolvePendingContacts", BindingFlags.NonPublic | BindingFlags.Instance).Invoke(collision, null); // 재판정 스텝 해결
-                Require(body.CurrentBodyCount == 3, "유예 종료 후 지속 자기 충돌 미처리"); // 실제 지속 접촉 손실 확인
+                Require(body.CurrentBodyCount == 5 && health.CurrentHealth == 75, "유예 종료 후 지속 자기 충돌 피해 미처리"); // 실제 지속 접촉 체력 피해 확인
                 Console.WriteLine("Collision priority passed: " + mode); // 실제 시험 성공 기록
                 return 0; // 독립 시험 종료
             }
@@ -57,7 +58,7 @@ public static class Program // 충돌 순서 검증기
                 otherBody.Component = new SnakeSegment(); // 별도 몸통 대체
                 selfEnter.Invoke(self, new object[] { otherBody }); // 비보호 몸통 실제 진입
                 typeof(SnakeExternalCollision).GetMethod("ResolvePendingContacts", BindingFlags.NonPublic | BindingFlags.Instance).Invoke(collision, null); // 실제 같은 스텝 처리
-                Require(body.CurrentBodyCount == 3, "비보호 몸통까지 보스 유예 적용"); // 다른 몸통 자기 충돌 확인
+                Require(body.CurrentBodyCount == 5 && health.CurrentHealth == 75, "비보호 몸통까지 보스 유예 적용"); // 다른 몸통 자기 충돌 체력 피해 확인
                 Console.WriteLine("Collision priority passed: " + mode); // 실제 시험 성공 기록
                 return 0; // 독립 시험 종료
             }
@@ -158,7 +159,7 @@ public static class Program // 충돌 순서 검증기
             }
             else if (mode == "self-first" || mode == "self-callback-first" || mode == "self-callback-last") // 자기 충돌 결과 확인
             {
-                Require(body.CurrentBodyCount == 3 && health.CurrentHealth == 100, "자기 충돌 무적 중 피해 적용"); // 신규 전체 무적 확인
+                Require(body.CurrentBodyCount == 5 && health.CurrentHealth == 75, "자기 충돌 무적 중 피해 적용"); // 자기 충돌 피해와 신규 전체 무적 확인
             }
             else if (mode == "damage-first") // 일반 피해 선행 결과 확인
             {

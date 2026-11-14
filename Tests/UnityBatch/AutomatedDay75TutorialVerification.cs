@@ -125,6 +125,10 @@ namespace ProjectEpsilon.Editor // 배치 시험 영역
                     string left = InputBindingManager.Instance.GetBindingDisplayName(RebindableInput.TurnLeft); // 현재 왼쪽 키 이름
                     Require(page.text.Contains(left) && page.text.Contains("방향키"), "실제 회전 키 안내 불일치"); // 실제 키와 방향키 안내 확인
                 } // 조건 종료
+                if (index == 1) // 실제 자기 충돌 안내 확인
+                { // 조건 시작
+                    Require(page.text.Contains("체력") && page.text.Contains("무적") && !page.text.Contains("몸통을 잃"), "자기 충돌 안내가 현재 피해 규칙과 불일치"); // 실제 자기 충돌 체력과 무적 안내 확인
+                } // 조건 종료
                 if (index == 5) // 실제 합성 안내 확인
                 { // 조건 시작
                     Require(page.text.Contains("같은 등급") && page.text.Contains("E 키") && page.text.Contains("즉시"), "즉시 합성 규칙 안내 불일치"); // 현재 합성 규칙 확인

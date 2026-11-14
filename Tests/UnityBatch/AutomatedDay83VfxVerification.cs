@@ -4,6 +4,7 @@ using ProjectEpsilon.Combat; // 실제 속성 공격과 반응
 using ProjectEpsilon.Core; // 실제 전투 상태
 using ProjectEpsilon.Data; // 실제 포탑 속성
 using ProjectEpsilon.Player; // 실제 체력과 몸통
+using ProjectEpsilon.Recording; // 실제 적 공격 피해 원인
 using UnityEditor; // 배치 실행
 using UnityEditor.SceneManagement; // 실제 전투 씬 열기
 using UnityEngine; // Unity 기능
@@ -86,9 +87,17 @@ namespace ProjectEpsilon.Editor // 배치 시험 영역
             SnakeHealth health = player == null ? null : player.GetComponent<SnakeHealth>(); // 실제 공용 체력
             SnakeInvulnerability invulnerability = player == null ? null : player.GetComponent<SnakeInvulnerability>(); // 실제 무적 처리
             Require(playerVfx != null && body != null && health != null && invulnerability != null, "실제 플레이어 시각 구성 누락"); // 실제 플레이어 구성 확인
-            Require(health.TakeDamage(1) && GameObject.Find("PlayerDamageVfx") != null, "실제 공용 피해 표시 누락"); // 실제 피격 표시 확인
+            SpriteRenderer headVisual = player.GetComponent<SpriteRenderer>(); // 실제 머리 이미지
+            SpriteRenderer bodyVisual = body.BodySegments[0].GetComponent<SpriteRenderer>(); // 실제 첫 몸통 이미지
+            Color originalHead = headVisual.color; // 실제 머리 원래 색상
+            Color originalBody = bodyVisual.color; // 실제 몸통 원래 색상
+            Require(health.TakeDamage(1, DamageOrigin.EnemyProjectile) && GameObject.Find("PlayerDamageVfx") == null && headVisual.color.a < originalHead.a && bodyVisual.color.a < originalBody.a, "적 공격 피격 이미지 제거 또는 뱀 점멸 실패"); // 실제 적 투사체 피해의 몸통 점멸 확인
+            playerVisuals.GetMethod("RestoreBlink", Private).Invoke(playerVfx, null); // 실제 투사체 점멸 종료 후 색상 복구
             Vector3 lastPosition = body.BodySegments[body.BodySegments.Count - 1].transform.position; // 실제 마지막 몸통 위치
+            GameObject removedBody = body.BodySegments[body.BodySegments.Count - 1].gameObject; // 실제 제거 대상 몸통
             Require(body.TryRemoveBody(), "실제 몸통 제거 실패"); // 실제 몸통 손실 적용
+            Require(headVisual.color.a < originalHead.a, "적 직접 충돌의 몸통 손실 점멸 누락"); // 실제 몸통 손실의 별도 점멸 확인
+            Require(!removedBody.activeInHierarchy, "제거된 몸통의 이미지 또는 충돌 판정 잔류"); // 실제 몸통 제거 즉시 비활성 확인
             GameObject bodyEffect = GameObject.Find("PlayerBodyBreakVfx"); // 실제 몸통 손실 표시
             Require(bodyEffect != null && bodyEffect.GetComponent<SpriteRenderer>().sprite.name == "VFX_BodyBreak" && Vector3.Distance(bodyEffect.transform.position, lastPosition) < 0.01f, "실제 몸통 손실 위치 표시 오류"); // 실제 손실 위치와 이미지 확인
             invulnerability.StartInvulnerability(2f); // 실제 무적 시작
@@ -113,7 +122,8 @@ namespace ProjectEpsilon.Editor // 배치 시험 영역
             Require((int)visuals.GetProperty("ActiveHitCount").GetValue(null) == 48, "반환된 명중 표시 슬롯 재사용 실패"); // 실제 상한 슬롯 재사용 확인
             int previousDamage = Count("PlayerDamageVfx"); // 기존 피격 표시 수
             ((Behaviour)playerVfx).enabled = false; // 실제 플레이어 표시 비활성화
-            Require(health.TakeDamage(1) && Count("PlayerDamageVfx") == previousDamage, "비활성화된 플레이어 표시의 이벤트 구독 잔류"); // 실제 구독 해제 확인
+            Require(headVisual.color == originalHead && bodyVisual.color == originalBody, "표시 비활성 시 원래 뱀 색상 복구 실패"); // 실제 점멸 색상 복구 확인
+            Require(health.TakeDamage(1) && Count("PlayerDamageVfx") == previousDamage && headVisual.color == originalHead && bodyVisual.color == originalBody, "비활성화된 플레이어 표시의 이벤트 구독 잔류"); // 실제 구독 해제 확인
         } // 함수 종료
         private static int Count(string name) // 실제 이름별 시각 효과 수
         { // 함수 시작

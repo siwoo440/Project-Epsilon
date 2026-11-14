@@ -11,7 +11,7 @@ namespace ProjectEpsilon.Player // 프로젝트 기능 영역
     {
         [SerializeField] private SnakeBodyManager bodyManager; // 필드·몸통 설정
         [SerializeField] private SnakeInvulnerability invulnerability; // 필드·무적 설정
-        [SerializeField] private int bodyLoss = 2; // 필드·몸통 설정
+        [Min(1)] [SerializeField] private int selfCollisionDamage = 25; // 자기 충돌 공용 체력 피해 시험값
         [SerializeField] private float invulnerabilityDuration = 2f; // 필드·무적 설정
         private bool reportedMissingResolver; // 충돌 처리기 누락 기록
         private readonly HashSet<SnakeSegment> deferredBossPushContacts = new HashSet<SnakeSegment>(); // 보스 밀림으로 미룬 몸통 접촉
@@ -21,13 +21,13 @@ namespace ProjectEpsilon.Player // 프로젝트 기능 영역
         public void Bind( // 연결 호출 시작
             SnakeBodyManager manager, // 몸통·관리자 항목 전달
             SnakeInvulnerability invulnerabilityController, // 무적·제어기 항목 전달
-            int lossCount, // 개수 항목 전달
+            int damage, // 자기 충돌 피해 전달
             float duration // 지속 시간 처리
         ) // 앞선 항목 종료
         {
             bodyManager = manager; // 몸통·관리자 값 설정
             invulnerability = invulnerabilityController; // 무적·제어기 값 설정
-            bodyLoss = Mathf.Max(1, lossCount); // 몸통·최대 값 설정
+            selfCollisionDamage = Mathf.Max(1, damage); // 안전한 자기 충돌 피해 설정
             invulnerabilityDuration = Mathf.Max(0f, duration); // 무적·지속 시간 값 설정
         }
 
@@ -187,18 +187,11 @@ namespace ProjectEpsilon.Player // 프로젝트 기능 영역
                 return false; // 실패 결과 반환
             }
 
-            int loss = Mathf.Min(bodyLoss, bodyManager.CurrentBodyCount); // 실제 손실 가능한 몸통 수
-            if (loss > 0) // 실제 손실 여부 확인
-            {
-                RunTelemetry.RecordDamage(DamageOrigin.SelfCollision, 0, loss); // 실제 자기 충돌 원인 기록
-            }
-            int removed = bodyManager.RemoveBodies(bodyLoss); // 몸통·관리자 값 설정
-
-            if (removed <= 0) // 대상 조건 확인
-            {
-                return false; // 실패 결과 반환
-            }
-
+            SnakeHealth health = GetComponent<SnakeHealth>(); // 실제 공용 체력 조회
+            if (health == null || !health.TakeDamage(Mathf.Max(1, selfCollisionDamage), DamageOrigin.SelfCollision)) // 실제 체력 또는 보호막 피해 확인
+            { // 조건 시작
+                return false; // 무효 피해와 중복 무적 방지
+            } // 조건 종료
             invulnerability?.StartInvulnerability(invulnerabilityDuration); // 무적·시작 기능 실행
             return true; // 성공 결과 반환
         }

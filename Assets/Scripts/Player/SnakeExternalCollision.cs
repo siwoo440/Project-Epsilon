@@ -444,7 +444,7 @@ namespace ProjectEpsilon.Player // 프로젝트 기능 영역
                 }
                 if (applySelf) // 적용 가능한 자기 충돌 확인
                 {
-                    self.TryApplySelfCollisionPenalty(); // 자기 몸통 손실과 무적
+                    self.TryApplySelfCollisionPenalty(); // 자기 충돌 체력 피해와 무적
                 }
             }
             if (enemy && !IsUnavailable()) // 적 충돌과 활성·생존 상태 확인

@@ -29,6 +29,12 @@ namespace ProjectEpsilon.Editor // 시험 기능 영역
         }
         public static void Run() // 비대화형 시험 진입
         {
+            if (Application.productName != "Project-Epsilon-Day48-Isolated") // 실제 격리된 시험 저장 확인
+            { // 조건 시작
+                throw new InvalidOperationException("전투 기록 시험 저장 공간이 격리되지 않음"); // 사용자 저장 보호
+            } // 조건 종료
+            PlayerPrefs.SetInt("ProjectEpsilon.TutorialCompleted.v1", 1); // 격리된 시험의 첫 안내 완료
+            PlayerPrefs.Save(); // 격리된 안내 상태 저장
             EditorSceneManager.OpenScene("Assets/Scenes/Game.unity"); // 실제 게임 씬 열기
             SessionState.SetBool(Key, true); // 실제 시험 진행 기록
             EditorApplication.update -= Tick; // 중복 감시 제거
@@ -83,10 +89,19 @@ namespace ProjectEpsilon.Editor // 시험 기능 영역
             float expectedProbe = UnityEngine.Random.value; // 실제 첫 난수 표본
             UnityEngine.Random.state = savedRandom; // 실제 게임 난수 상태 복원
             Require(Mathf.Approximately(recording.randomProbe, expectedProbe) && Mathf.Approximately(recording.fixedDeltaTime, Time.fixedDeltaTime), "Seed or physics configuration mismatch."); // 실제 재현 조건 확인
-            Require(recording.mapIndex == 0 && recording.characterId == "balanced" && recording.enemies.Count == 4 && recording.bossTransitionTime == 1200f, "Actual initial configuration mismatch."); // 실제 기존 게임 설정 확인
+            EarlyEnemyWaveSpawner wave = FindFirstObjectByType<EarlyEnemyWaveSpawner>(); // 실제 적 출현기
+            Require(wave != null, "실제 출현 설정 누락"); // 실제 적 출현기 확인
+            int configuredEnemies = 0; // 실제 기록할 적 설정 수
+            foreach (EarlyEnemySettings configured in wave.RecordingEnemies) // 실제 기록 대상 적 설정 순회
+            { // 반복 시작
+                if (configured != null) // 실제 유효 적 설정 확인
+                { // 조건 시작
+                    configuredEnemies++; // 실제 기록 대상 수 증가
+                } // 조건 종료
+            } // 반복 종료
+            Require(recording.mapIndex == 0 && recording.characterId == "balanced" && recording.enemies.Count == configuredEnemies && recording.bossTransitionTime == 1200f, $"Actual initial configuration mismatch: map={recording.mapIndex}, character={recording.characterId}, enemies={recording.enemies.Count}/{configuredEnemies}, boss={recording.bossTransitionTime}."); // 실제 기존 게임 설정 확인
             RunSnapshot initial = recording.snapshots[0]; // 실제 첫 상태 표본
             Require(initial.reason == "start" && initial.currentBodies == 3 && initial.earnedBodies == 3 && initial.bodyLimit == 20 && initial.health == 100 && initial.weapons.Count == 3 && !string.IsNullOrEmpty(initial.weapons[0].weaponId), "Initial body, health or turret snapshot incorrect."); // 실제 시작 상태 확인
-            EarlyEnemyWaveSpawner wave = FindFirstObjectByType<EarlyEnemyWaveSpawner>(); // 실제 적 출현기
             MetaProgressionController meta = MetaProgressionController.Instance; // 실제 보상 처치 집계
             SnakeExperience experience = GetComponent<SnakeExperience>(); // 실제 경험치
             SnakeWeaponManager weapons = FindFirstObjectByType<SnakeWeaponManager>(); // 실제 포탑 관리자
@@ -129,8 +144,9 @@ namespace ProjectEpsilon.Editor // 시험 기능 영역
             collision.QueueHealthDamage(health, 20, DamageOrigin.BossHazard); // 실제 물리 우선순위 피해 예약
             typeof(SnakeExternalCollision).GetMethod("ResolvePendingContacts", BindingFlags.Instance | BindingFlags.NonPublic).Invoke(collision, null); // 실제 예약 피해 처리
             Require(recording.damages.Count == 3 && recording.damages[2].origin == "BossHazard" && recording.damages[2].healthDamage == 20, "Deferred damage origin was lost."); // 실제 예약 피해 원인 확인
-            Require(self.TryApplySelfCollisionPenalty() && body.CurrentBodyCount == 1 && recording.damages.Count == 4 && recording.damages[3].origin == "SelfCollision" && recording.damages[3].bodyLoss == 2, "Actual self collision recording failed."); // 실제 자기 충돌 손실 확인
+            Require(self.TryApplySelfCollisionPenalty() && body.CurrentBodyCount == 3 && recording.damages.Count == 4 && recording.damages[3].origin == "SelfCollision" && recording.damages[3].healthDamage == 25 && recording.damages[3].bodyLoss == 0, "Actual self collision recording failed."); // 실제 자기 충돌 체력 피해 기록 확인
             invulnerability.ClearInvulnerability(); // 실제 마지막 절단 무적 해제
+            Require(body.RemoveBodies(2) == 2, "마지막 절단 시험의 몸통 준비 실패"); // 실제 마지막 몸통 시험 준비
             bool cutApplied = false; // 실제 절단 결과
             collision.QueueEliteCut(applied => cutApplied = applied, DamageOrigin.BossCut); // 실제 보스 절단 예약
             typeof(SnakeExternalCollision).GetMethod("ResolvePendingContacts", BindingFlags.Instance | BindingFlags.NonPublic).Invoke(collision, null); // 실제 절단 우선순위 처리

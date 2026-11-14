@@ -271,6 +271,9 @@ namespace ProjectEpsilon.Editor // 배치 시험 영역
             follower.enabled = true; // 실제 몸통 추적기 유지
             self.enabled = true; // 실제 자기 충돌 처리 허용
             GetComponent<SnakeInvulnerability>().ClearInvulnerability(); // 실제 전체 무적 해제
+            SnakeHealth health = GetComponent<SnakeHealth>(); // 실제 공용 체력
+            health.ResetHealth(); // 실제 시험 전 체력 복구
+            int initialHealth = health.CurrentHealth; // 실제 유예 전 체력
             SnakeSegment protectedBody = body.BodySegments[0]; // 실제 보호 대상 몸통
             pin.First = protectedBody; // 실제 유예 몸통 위치 고정
             pin.Second = null; // 추가 접촉 몸통 초기화
@@ -285,10 +288,10 @@ namespace ProjectEpsilon.Editor // 배치 시험 영역
             yield return new WaitForFixedUpdate(); // 실제 같은 스텝 접촉
             yield return null; // 실제 물리 우선순위 처리 대기
             Require(probe.HeadFixedTime >= 0f && Mathf.Approximately(probe.HeadFixedTime, probe.BossFixedTime), "Actual boss and head contacts were not in the same physics step."); // 실제 동시 접촉 확인
-            Require((bool)grace.GetValue(protectedBody) && body.CurrentBodyCount == 3, "Boss-pushed body caused immediate same-step self collision."); // 실제 몸통별 동시 유예 확인
+            Require((bool)grace.GetValue(protectedBody) && body.CurrentBodyCount == 3 && health.CurrentHealth == initialHealth, "Boss-pushed body caused immediate same-step self collision."); // 실제 몸통별 동시 유예 확인
             GameManager.Instance.PauseGame(); // 실제 게임 일시정지
             yield return new WaitForSecondsRealtime(0.3f); // 실제 정지 시간 대기
-            Require((bool)grace.GetValue(protectedBody) && body.CurrentBodyCount == 3, "Boss push grace expired or damaged the player during pause."); // 실제 정지 중 유예 유지 확인
+            Require((bool)grace.GetValue(protectedBody) && body.CurrentBodyCount == 3 && health.CurrentHealth == initialHealth, "Boss push grace expired or damaged the player during pause."); // 실제 정지 중 유예 유지 확인
             GameManager.Instance.ResumeGame(); // 실제 게임 재개
             boss.transform.position = player.transform.position + Vector3.right * 50f; // 실제 보스 접촉 해제
             SnakeSegment otherBody = body.BodySegments[1]; // 실제 비보호 몸통
@@ -297,9 +300,9 @@ namespace ProjectEpsilon.Editor // 배치 시험 영역
             Physics2D.SyncTransforms(); // 실제 물리 위치 반영
             yield return new WaitForFixedUpdate(); // 실제 비보호 몸통 접촉
             yield return null; // 실제 자기 충돌 처리 대기
-            Require(body.CurrentBodyCount == 1, "An unrelated unprotected body was incorrectly covered by boss grace."); // 다른 몸통 자기 충돌 유지 확인
+            Require(body.CurrentBodyCount == 3 && health.CurrentHealth == initialHealth - 25, "An unrelated unprotected body did not cause self-collision damage."); // 다른 몸통의 체력 피해 확인
             pin.enabled = false; // 다음 시험의 이전 위치 고정 해제
-            Debug.Log($"[BossPushVerification] actual same physics step={probe.HeadFixedTime:F3}; protected body caused no immediate loss; another body caused the normal two-body loss."); // 실제 동시 접촉 결과 기록
+            Debug.Log($"[BossPushVerification] actual same physics step={probe.HeadFixedTime:F3}; protected body caused no damage; another body caused self-collision health damage."); // 실제 동시 접촉 결과 기록
         }
 
         private IEnumerator VerifyPersistentOverlapAfterGrace() // 실제 유예 후 지속 겹침 처리
@@ -309,6 +312,9 @@ namespace ProjectEpsilon.Editor // 배치 시험 영역
             body.ResetBody(); // 실제 시작 몸통 복구
             follower.enabled = true; // 실제 몸통 추적기 유지
             GetComponent<SnakeInvulnerability>().ClearInvulnerability(); // 실제 전체 무적 해제
+            SnakeHealth health = GetComponent<SnakeHealth>(); // 실제 공용 체력
+            health.ResetHealth(); // 실제 지속 접촉 시험 전 체력 복구
+            int initialHealth = health.CurrentHealth; // 실제 유예 전 체력
             yield return null; // 이전 몸통 파괴 완료 대기
             SnakeSegment protectedBody = body.BodySegments[0]; // 실제 보호 대상 몸통
             pin.First = protectedBody; // 실제 유예 몸통 위치 고정
@@ -329,7 +335,7 @@ namespace ProjectEpsilon.Editor // 배치 시험 영역
             Physics2D.SyncTransforms(); // 실제 물리 위치 반영
             yield return new WaitForSeconds(0.8f); // 실제 유예 종료 대기
             float deadline = Time.realtimeSinceStartup + 3f; // 실제 물리 재판정 제한 시각
-            while (body.CurrentBodyCount == 3 && Time.realtimeSinceStartup < deadline) // 유예 종료 후 물리 스텝 대기
+            while (health.CurrentHealth == initialHealth && Time.realtimeSinceStartup < deadline) // 유예 종료 후 실제 체력 피해 대기
             {
                 yield return new WaitForFixedUpdate(); // 실제 지속 접촉 물리 스텝 진행
                 yield return null; // 실제 물리 우선순위 처리 대기
@@ -337,9 +343,9 @@ namespace ProjectEpsilon.Editor // 배치 시험 영역
             FieldInfo deferredField = typeof(SnakeSelfCollision).GetField("deferredBossPushContacts", BindingFlags.Instance | BindingFlags.NonPublic); // 실제 지연 접촉 목록 조회
             HashSet<SnakeSegment> deferred = deferredField == null ? null : deferredField.GetValue(self) as HashSet<SnakeSegment>; // 실제 지연 접촉 목록
             Debug.Log($"[BossPushVerification] persistent diagnostic: bodies={body.CurrentBodyCount}, activeGrace={grace.GetValue(protectedBody)}, deferred={deferred != null && deferred.Contains(protectedBody)}, headStays={probe.HeadStays}, headExits={probe.HeadExits}, bossStays={probe.BossStays}, sleeping={GetComponent<Rigidbody2D>().IsSleeping()}, state={GameManager.Instance.CurrentState}, scale={Time.timeScale}, time={Time.time:F3}, fixed={Time.fixedTime:F3}, realtime={Time.realtimeSinceStartup:F3}, immune={GetComponent<SnakeInvulnerability>().IsInvulnerable}, head={player.transform.position}, body={protectedBody.transform.position}."); // 실제 지속 접촉과 유예 상태 기록
-            Require(body.CurrentBodyCount == 1, "Persistent self overlap did not resolve after grace expired."); // 실제 유예 후 자기 충돌 확인
+            Require(body.CurrentBodyCount == 3 && health.CurrentHealth == initialHealth - 25, "Persistent self overlap did not cause health damage after grace expired."); // 실제 유예 후 체력 피해 확인
             pin.enabled = false; // 다음 시험의 이전 위치 고정 해제
-            Debug.Log("[BossPushVerification] actual persistent body overlap caused normal two-body loss after grace expired."); // 실제 유예 종료 결과 기록
+            Debug.Log("[BossPushVerification] actual persistent body overlap caused health damage after grace expired."); // 실제 유예 종료 결과 기록
         }
 
         private void MoveOtherBodiesAway(SnakeSegment kept) // 실제 비시험 몸통 접촉 차단
@@ -360,6 +366,9 @@ namespace ProjectEpsilon.Editor // 배치 시험 영역
             body.ResetBody(); // 실제 시작 몸통 복구
             follower.enabled = true; // 실제 몸통 추적기 유지
             GetComponent<SnakeInvulnerability>().ClearInvulnerability(); // 실제 전체 무적 해제
+            SnakeHealth health = GetComponent<SnakeHealth>(); // 실제 공용 체력
+            health.ResetHealth(); // 실제 분리 시험 전 체력 복구
+            int initialHealth = health.CurrentHealth; // 실제 분리 전 체력
             yield return null; // 이전 몸통 파괴 완료 대기
             SnakeSegment protectedBody = body.BodySegments[0]; // 실제 유예 대상 몸통
             pin.First = protectedBody; // 실제 유예 몸통 위치 고정
@@ -390,7 +399,7 @@ namespace ProjectEpsilon.Editor // 배치 시험 영역
             Require(probe.Moved, "Actual deferred collision was not queued before the separation probe."); // 실제 같은 스텝 분리 확인
             yield return new WaitForFixedUpdate(); // 실제 물리 분리 처리
             yield return null; // 실제 물리 후 충돌 처리 대기
-            Require(body.CurrentBodyCount == 3, "Separated body caused a stale deferred self collision."); // 분리된 몸통의 잘못된 피해 방지
+            Require(body.CurrentBodyCount == 3 && health.CurrentHealth == initialHealth, "Separated body caused a stale deferred self collision."); // 분리된 몸통의 잘못된 피해 방지
             Debug.Log("[BossPushVerification] actual deferred overlap was separated after queue and before physics; no stale self-collision damage."); // 실제 같은 스텝 분리 결과 기록
             Destroy(probe); // 실제 분리 관찰기 제거
         }

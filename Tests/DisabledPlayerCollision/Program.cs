@@ -44,8 +44,9 @@ internal static class Program // 비활성 충돌 시험
         collision.Bind(body, health, immunity, 1, 1f, 25, 1.5f); // 충돌 설정
         Call(collision, "OnEnable"); // 물리 처리 등록
         SnakeSelfCollision self = new SnakeSelfCollision(); // 실제 자기 충돌
-        self.Bind(body, immunity, 2, 2f); // 자기 충돌 설정
+        self.Bind(body, immunity, 25, 2f); // 자기 충돌 체력 피해 설정
         self.Component = collision; // 외부 처리기 연결
+        self.AdditionalComponent = health; // 같은 플레이어의 공용 체력 연결
         return (collision, self, body, health); // 시험 객체 반환
     }
 
@@ -100,7 +101,7 @@ internal static class Program // 비활성 충돌 시험
         Require(fixture.collision.TryApplyEnemyDirectContact() && fixture.body.CurrentBodyCount == 4, "공개 즉시 충돌 API 변경"); // 기존 직접 호출 유지
         var selfFixture = Create(); // 자기 충돌 시험 구성
         selfFixture.self.isActiveAndEnabled = false; // 자기 충돌 처리 비활성
-        Require(selfFixture.self.TryApplySelfCollisionPenalty() && selfFixture.body.CurrentBodyCount == 3, "공개 자기 충돌 API 변경" ); // 기존 자기 충돌 직접 호출 유지
+        Require(selfFixture.self.TryApplySelfCollisionPenalty() && selfFixture.body.CurrentBodyCount == 5 && selfFixture.health.CurrentHealth == 75, "공개 자기 충돌 체력 피해 실패"); // 실제 자기 충돌 직접 호출 확인
     }
 
     private static void Require(bool condition, string message) // 조건 확인

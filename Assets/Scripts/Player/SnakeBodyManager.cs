@@ -704,6 +704,7 @@ namespace ProjectEpsilon.Player // 프로젝트 기능 영역
 
             if (Application.isPlaying) // 대상 조건 확인
             {
+                target.SetActive(false); // 제거 예정 몸통의 표시와 충돌 즉시 차단
                 Destroy(target); // 제거·대상 기능 실행
             }
             else // 다른 조건 처리

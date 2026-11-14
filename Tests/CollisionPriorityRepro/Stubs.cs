@@ -6,9 +6,10 @@ namespace UnityEngine // 유니티 대체 형식
     public class MonoBehaviour // 컴포넌트 기본형
     {
         public object Component; // 같은 오브젝트 컴포넌트
+        public object AdditionalComponent; // 같은 오브젝트의 추가 컴포넌트
         public bool isActiveAndEnabled = true; // 활성 상태
         public Transform transform = new Transform(); // 위치 접근 대체
-        public T GetComponent<T>() where T : class => Component as T; // 연결 컴포넌트 조회
+        public T GetComponent<T>() where T : class => Component as T ?? AdditionalComponent as T; // 연결 컴포넌트 조회
     }
     public sealed class Transform // 위치 대체
     {
@@ -70,6 +71,12 @@ namespace UnityEngine // 유니티 대체 형식
     public sealed class SerializeField : Attribute // 직렬화 표시
     {
     }
+    public sealed class MinAttribute : Attribute // 최소 수치 표시 대체
+    { // 형식 시작
+        public MinAttribute(float value) // 최소 수치 지정 대체
+        { // 생성자 시작
+        } // 생성자 종료
+    } // 형식 종료
     [AttributeUsage(AttributeTargets.Class, AllowMultiple = true)] // 중복 의존성 허용
     public sealed class RequireComponent : Attribute // 컴포넌트 의존성 표시
     {

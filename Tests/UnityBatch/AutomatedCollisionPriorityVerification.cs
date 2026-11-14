@@ -412,12 +412,50 @@ namespace ProjectEpsilon.Editor // 편집기 영역
 
         private IEnumerator BodyAndObstacle() // 자기충돌과 장애물 시험
         {
+            PlayerCombatVfx visuals = GameManager.Instance.GetComponent<PlayerCombatVfx>(); // 실제 피격 점멸 표시기
+            visuals.enabled = false; // 이전 시험 점멸의 색상 복원
+            visuals.enabled = true; // 실제 피격 표시 다시 연결
+            SpriteRenderer headVisual = player.GetComponent<SpriteRenderer>(); // 실제 머리 이미지
+            SpriteRenderer bodyVisual = body.BodySegments[0].GetComponent<SpriteRenderer>(); // 실제 첫 몸통 이미지
+            SpriteRenderer tailVisual = body.TailSegment.GetComponent<SpriteRenderer>(); // 실제 꼬리 이미지
+            float headAlpha = headVisual.color.a; // 실제 머리 원래 투명도
+            float bodyAlpha = bodyVisual.color.a; // 실제 몸통 원래 투명도
+            float tailAlpha = tailVisual.color.a; // 실제 꼬리 원래 투명도
+            bool blinkObserved = false; // 실제 피해 순간 점멸 확인
+            string blinkSample = ""; // 실제 피해 전후 투명도 기록
+            Action captureBlink = () => // 실제 피해 순간 점멸 기록
+            { // 기록 시작
+                blinkObserved = headVisual.color.a < headAlpha && bodyVisual.color.a < bodyAlpha && tailVisual.color.a < tailAlpha; // 실제 머리와 몸통 및 꼬리 점멸 확인
+                blinkSample = $"head={headVisual.color.a}/{headAlpha}, body={bodyVisual.color.a}/{bodyAlpha}, tail={tailVisual.color.a}/{tailAlpha}"; // 실제 피해 순간 투명도 기록
+            }; // 기록 종료
+            health.DamageApplied += captureBlink; // 실제 피해 표시 순서 구독
             body.BodySegments[2].transform.position = player.transform.position; // 꼬리 몸통 머리 위치 이동
             SpawnHazard(SnakeContactHazardType.Obstacle, true); // 같은 위치 장애물 생성
             Physics2D.SyncTransforms(); // 움직인 몸통 물리 동기화
             yield return new WaitForFixedUpdate(); // 실제 접촉 대기
             yield return null; // 물리 후 해결 대기
-            Check(body.CurrentBodyCount == 1 && health.CurrentHealth == 100 && invulnerability.IsInvulnerable, $"Self collision priority mismatch: body={body.CurrentBodyCount}, hp={health.CurrentHealth}, full={invulnerability.IsInvulnerable}."); // 몸통 손실 및 신규 무적 확인
+            health.DamageApplied -= captureBlink; // 실제 피해 순간 점멸 구독 해제
+            if (!Check(body.CurrentBodyCount == 3 && health.CurrentHealth == 75 && invulnerability.IsInvulnerable && blinkObserved && GameObject.Find("PlayerDamageVfx") == null, $"Self collision damage or blink mismatch: body={body.CurrentBodyCount}, hp={health.CurrentHealth}, full={invulnerability.IsInvulnerable}, blink={blinkObserved}, {blinkSample}.")) // 실제 체력 피해와 점멸 확인
+            { // 조건 시작
+                yield break; // 실패 후 중단
+            } // 조건 종료
+            yield return new WaitForSeconds(0.3f); // 지속 접촉과 무적 유지 대기
+            if (!Check(body.CurrentBodyCount == 3 && health.CurrentHealth == 75 && invulnerability.IsInvulnerable, "지속 자기 충돌로 무적 중 중복 피해 발생")) // 실제 무적 중 중복 피해 방지 확인
+            { // 조건 시작
+                yield break; // 실패 후 중단
+            } // 조건 종료
+            yield return new WaitForSeconds(0.5f); // 실제 점멸 종료 대기
+            if (!Check(Mathf.Approximately(headVisual.color.a, headAlpha) && Mathf.Approximately(bodyVisual.color.a, bodyAlpha) && Mathf.Approximately(tailVisual.color.a, tailAlpha) && invulnerability.IsInvulnerable && health.CurrentHealth == 75, "점멸 종료 뒤 이미지 복구 또는 무적 유지 실패")) // 실제 원래 투명도와 무적 유지 확인
+            { // 조건 시작
+                yield break; // 실패 후 중단
+            } // 조건 종료
+            invulnerability.ClearInvulnerability(); // 다음 자기 충돌의 기존 무적 종료
+            if (!Check(shield.Apply(10, 5f, 2, 1f), "자기 충돌 보호막 시험 준비 실패")) // 실제 공용 보호막 준비
+            { // 조건 시작
+                yield break; // 실패 후 중단
+            } // 조건 종료
+            SnakeSelfCollision self = player.GetComponent<SnakeSelfCollision>(); // 실제 자기 충돌 처리기
+            Check(self.TryApplySelfCollisionPenalty() && shield.CurrentShield == 0 && health.CurrentHealth == 60 && body.CurrentBodyCount == 3 && invulnerability.IsInvulnerable, "자기 충돌 보호막 흡수 또는 체력 피해 오류"); // 실제 보호막 우선과 잔여 체력 피해 확인
         }
 
         private IEnumerator PrepareLongBody() // 실제 스무 칸 몸통 준비
@@ -452,7 +490,7 @@ namespace ProjectEpsilon.Editor // 편집기 영역
             Physics2D.SyncTransforms(); // 실제 충돌체 위치 반영
             yield return new WaitForFixedUpdate(); // 실제 물리 접촉 대기
             yield return null; // 실제 충돌 결과 대기
-            Check(body.CurrentBodyCount == 18 && health.CurrentHealth == 100 && invulnerability.IsInvulnerable, $"Long body self collision mismatch: body={body.CurrentBodyCount}, hp={health.CurrentHealth}."); // 두 칸 손실과 무적 우선 확인
+            Check(body.CurrentBodyCount == 20 && health.CurrentHealth == 75 && invulnerability.IsInvulnerable, $"Long body self collision mismatch: body={body.CurrentBodyCount}, hp={health.CurrentHealth}."); // 긴 몸통 보존과 단일 체력 피해 확인
         }
 
         private IEnumerator LongBodySurrounded() // 여러 적의 동시 접촉
@@ -528,7 +566,7 @@ namespace ProjectEpsilon.Editor // 편집기 영역
             Physics2D.SyncTransforms(); // 실제 재접촉 위치 반영
             yield return new WaitForFixedUpdate(); // 실제 재접촉 물리 대기
             yield return null; // 실제 피해 처리 대기
-            if (!Check(body.CurrentBodyCount == 19 && health.CurrentHealth == 75 && external.EnemyContactProtected, "Obstacle recovery grace did not block the wall or incorrectly blocked enemy contact.")) // 벽 유예와 적 직접 충돌 독립 확인
+            if (!Check(body.CurrentBodyCount == 19 && health.CurrentHealth == 75 && external.EnemyContactProtected, $"Obstacle recovery grace mismatch: body={body.CurrentBodyCount}, hp={health.CurrentHealth}, enemy={external.EnemyContactProtected}, full={invulnerability.IsInvulnerable}.")) // 벽 유예와 적 직접 충돌 독립 확인
             {
                 yield break; // 유예 시험 실패 시 중단
             }

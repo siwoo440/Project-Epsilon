@@ -1,3 +1,4 @@
+using System.Collections.Generic; // 실제 뱀 이미지 색상 보관
 using ProjectEpsilon.Combat; // 실제 전투 시각 효과
 using UnityEngine; // Unity 이미지와 객체
 using UnityEngine.SceneManagement; // 실제 씬 전환
@@ -13,6 +14,13 @@ namespace ProjectEpsilon.Player // 플레이어 시각 영역
         private SnakeExternalCollision collision; // 실제 직접 충돌 보호 상태
         private SpriteRenderer ring; // 실제 무적 표시 이미지
         private SpriteRenderer contactProtection; // 실제 직접 충돌 보호 표시
+        [SerializeField, Min(0.01f)] private float damageBlinkDuration = 0.6f; // 실제 피격 점멸 지속 시간
+        [SerializeField, Min(0.01f)] private float damageBlinkInterval = 0.12f; // 실제 밝기 전환 간격
+        [SerializeField, Range(0f, 1f)] private float damageBlinkAlpha = 0.55f; // 실제 점멸 중 투명도 배율
+        private readonly Dictionary<SpriteRenderer, float> blinkAlphas = new Dictionary<SpriteRenderer, float>(); // 실제 뱀 이미지의 원래 투명도
+        private float damageBlinkStarted; // 실제 피격 점멸 시작 시각
+        private float damageBlinkUntil; // 실제 피격 점멸 종료 시각
+        private bool damageBlinking; // 실제 피격 점멸 진행 여부
         private bool initialized; // 최초 연결 여부
         private bool subscribed; // 실제 이벤트 구독 여부
         private void Start() // 실제 플레이어 구성 연결
@@ -89,6 +97,7 @@ namespace ProjectEpsilon.Player // 플레이어 시각 영역
         } // 함수 종료
         private void Unbind() // 실제 전투 이벤트 해제
         { // 함수 시작
+            RestoreBlink(); // 기존 뱀 이미지의 투명도 복구
             if (!subscribed) // 기존 구독 확인
             { // 조건 시작
                 return; // 중복 해제 방지
@@ -122,14 +131,12 @@ namespace ProjectEpsilon.Player // 플레이어 시각 영역
         } // 함수 종료
         private void OnDamage() // 실제 공용 체력 피해
         { // 함수 시작
-            if (player != null) // 실제 머리 확인
-            { // 조건 시작
-                CombatVfx.SpawnPlayerDamage(player.transform.position); // 실제 피격 위치 표시
-            } // 조건 종료
+            BeginBlink(); // 실제 체력 또는 보호막 피격 점멸
         } // 함수 종료
         private void OnBodyRemoved(Vector3 position) // 실제 몸통 손실 위치
         { // 함수 시작
             CombatVfx.SpawnBodyBreak(position); // 실제 몸통 손실 표시
+            BeginBlink(); // 실제 직접 충돌과 몸통 손실 점멸
         } // 함수 종료
         private void OnInvulnerability(float duration) // 실제 무적 시작
         { // 함수 시작
@@ -139,6 +146,77 @@ namespace ProjectEpsilon.Player // 플레이어 시각 영역
         { // 함수 시작
             RefreshInvulnerability(); // 실제 무적 상태 표시
             RefreshContactProtection(); // 실제 제한 보호 상태 표시
+            RefreshBlink(); // 실제 피격 점멸과 색상 복구
+        } // 함수 종료
+        private void BeginBlink() // 실제 피격 점멸 시작
+        { // 함수 시작
+            damageBlinkStarted = Time.time; // 실제 점멸 시작 시각
+            damageBlinkUntil = Time.time + Mathf.Max(0.01f, damageBlinkDuration); // 실제 점멸 종료 시각
+            damageBlinking = true; // 실제 점멸 진행 상태
+            RefreshBlink(); // 첫 피격 프레임의 점멸 표시
+        } // 함수 종료
+        private void RefreshBlink() // 실제 뱀 이미지의 점멸 갱신
+        { // 함수 시작
+            if (!damageBlinking) // 실제 점멸 진행 확인
+            { // 조건 시작
+                return; // 불필요한 색상 갱신 생략
+            } // 조건 종료
+            if (Time.time >= damageBlinkUntil) // 실제 점멸 종료 확인
+            { // 조건 시작
+                RestoreBlink(); // 실제 원래 투명도 복구
+                return; // 완료된 점멸 갱신 종료
+            } // 조건 종료
+            bool dim = Mathf.FloorToInt((Time.time - damageBlinkStarted) / Mathf.Max(0.01f, damageBlinkInterval)) % 2 == 0; // 실제 점멸 밝기 단계
+            float factor = dim ? Mathf.Clamp01(damageBlinkAlpha) : 1f; // 실제 점멸 투명도 배율
+            if (player != null) // 실제 머리 확인
+            { // 조건 시작
+                ApplyBlink(player.GetComponent<SpriteRenderer>(), factor); // 실제 머리 이미지 점멸
+            } // 조건 종료
+            if (body == null) // 실제 몸통 관리자 확인
+            { // 조건 시작
+                return; // 몸통 없는 화면 갱신 종료
+            } // 조건 종료
+            foreach (SnakeSegment segment in body.BodySegments) // 실제 현재 몸통 순회
+            { // 반복 시작
+                if (segment != null) // 실제 몸통 이미지 확인
+                { // 조건 시작
+                    ApplyBlink(segment.GetComponent<SpriteRenderer>(), factor); // 실제 몸통 이미지 점멸
+                } // 조건 종료
+            } // 반복 종료
+            if (body.TailSegment != null) // 실제 꼬리 확인
+            { // 조건 시작
+                ApplyBlink(body.TailSegment.GetComponent<SpriteRenderer>(), factor); // 실제 꼬리 이미지 점멸
+            } // 조건 종료
+        } // 함수 종료
+        private void ApplyBlink(SpriteRenderer renderer, float factor) // 실제 뱀 이미지의 투명도 조정
+        { // 함수 시작
+            if (renderer == null) // 실제 이미지 확인
+            { // 조건 시작
+                return; // 누락 이미지 생략
+            } // 조건 종료
+            if (!blinkAlphas.TryGetValue(renderer, out float original)) // 실제 원래 투명도 확인
+            { // 조건 시작
+                original = renderer.color.a; // 실제 원래 투명도 보관
+                blinkAlphas.Add(renderer, original); // 실제 이미지별 투명도 저장
+            } // 조건 종료
+            Color color = renderer.color; // 실제 현재 이미지 색상
+            color.a = original * factor; // 실제 원래 투명도 기준 점멸
+            renderer.color = color; // 실제 점멸 색상 적용
+        } // 함수 종료
+        private void RestoreBlink() // 실제 뱀 이미지의 원래 투명도 복구
+        { // 함수 시작
+            foreach (KeyValuePair<SpriteRenderer, float> entry in blinkAlphas) // 실제 점멸 이미지 순회
+            { // 반복 시작
+                if (entry.Key == null) // 이미 제거된 몸통 확인
+                { // 조건 시작
+                    continue; // 제거된 이미지 생략
+                } // 조건 종료
+                Color color = entry.Key.color; // 실제 현재 이미지 색상
+                color.a = entry.Value; // 실제 원래 투명도 복구
+                entry.Key.color = color; // 실제 복구 색상 적용
+            } // 반복 종료
+            blinkAlphas.Clear(); // 실제 이전 이미지 기록 제거
+            damageBlinking = false; // 실제 점멸 종료 상태
         } // 함수 종료
         private void RefreshContactProtection() // 실제 적 직접 충돌 보호 표시
         { // 함수 시작
