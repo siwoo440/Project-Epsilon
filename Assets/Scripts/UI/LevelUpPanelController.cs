@@ -248,7 +248,7 @@ namespace ProjectEpsilon.UI // 프로젝트 기능 영역
             }
         }
 
-        public void ShowEliteRewards(string[] labels, bool[] available) // 엘리트 보상 후보 표시
+        public void ShowEliteRewards(string[] labels, bool[] available, IReadOnlyList<int> kinds = null) // 엘리트 보상 후보 표시
         {
             RestoreStartingBackground(); // 정예 보상의 기존 배경 복구
             gameObject.SetActive(true); // 선택 화면 표시
@@ -264,16 +264,17 @@ namespace ProjectEpsilon.UI // 프로젝트 기능 영역
             {
                 growthText.text = "1 / 2 / 3: 선택"; // 입력 안내
             }
-            ConfigureEliteButton(candidateButton01, candidateLabel01, labels, available, 0); // 첫 후보 표시
-            ConfigureEliteButton(candidateButton02, candidateLabel02, labels, available, 1); // 둘째 후보 표시
-            ConfigureEliteButton(candidateButton03, candidateLabel03, labels, available, 2); // 셋째 후보 표시
+            ConfigureEliteButton(candidateButton01, candidateLabel01, labels, available, kinds, 0); // 첫 후보 표시
+            ConfigureEliteButton(candidateButton02, candidateLabel02, labels, available, kinds, 1); // 둘째 후보 표시
+            ConfigureEliteButton(candidateButton03, candidateLabel03, labels, available, kinds, 2); // 셋째 후보 표시
             BindButtons(); // 버튼 입력 연결
         }
 
-        private static void ConfigureEliteButton(Button button, Text label, string[] labels, bool[] available, int index) // 보상 버튼 구성
+        private static void ConfigureEliteButton(Button button, Text label, string[] labels, bool[] available, IReadOnlyList<int> kinds, int index) // 보상 버튼 구성
         {
-            WeaponCandidateArtwork.Set(button, label, null); // 이전 무기 후보 이미지 제거
             bool exists = labels != null && available != null && index < labels.Length && index < available.Length; // 후보 존재 확인
+            Sprite icon = exists && kinds != null && index < kinds.Count ? ProjectUiSkin.EliteRewardIcon(kinds[index]) : null; // 실제 보상 종류 이미지
+            WeaponCandidateArtwork.Set(button, label, icon); // 기존 후보 이미지 표시 경로 재사용
             if (button != null) // 버튼 연결 확인
             {
                 button.gameObject.SetActive(exists); // 후보 표시 여부

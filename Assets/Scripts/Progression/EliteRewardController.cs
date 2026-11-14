@@ -289,7 +289,7 @@ namespace ProjectEpsilon.Progression // 진행 영역
                 enabled[index] = availability[kind]; // 선택 가능 상태 저장
                 labels[index] = BuildLabel(kind, enabled[index]); // 보상 안내 생성
             }
-            panel.ShowEliteRewards(labels, enabled); // 후보 화면 표시
+            panel.ShowEliteRewards(labels, enabled, candidates); // 실제 보상 종류와 후보 화면 표시
         }
 
         private string BuildLabel(int kind, bool enabled) // 후보별 안내 문구

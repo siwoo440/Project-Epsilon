@@ -121,6 +121,20 @@ namespace ProjectEpsilon.Editor // 편집기 영역
                     LevelUpPanelController panel = UnityEngine.Object.FindFirstObjectByType<LevelUpPanelController>(FindObjectsInactive.Include); // 실제 선택 화면 조회
                     Require(panel != null && panel.gameObject.activeInHierarchy, "Elite reward panel is not visible."); // 화면 활성 확인
                     string[] buttonNames = { "candidateButton01", "candidateButton02", "candidateButton03" }; // 후보 버튼 필드
+                    for (int kind = 0; kind < 4; kind++) // 실제 네 가지 보상 종류 순회
+                    { // 반복 시작
+                        Sprite sprite = ProjectUiSkin.EliteRewardIcon(kind); // 실제 보상 종류 이미지
+                        Require(sprite != null && sprite.texture.name == "EliteRewardIcons" && Mathf.Approximately(sprite.rect.x, kind * sprite.texture.width / 4), "정예 보상 종류별 이미지 오류: " + kind); // 실제 네 가지 이미지 순서 확인
+                    } // 반복 종료
+                    Require(ProjectUiSkin.EliteRewardIcon(-1) == null && ProjectUiSkin.EliteRewardIcon(4) == null, "정예 보상 범위 밖 이미지 오류"); // 잘못된 보상 종류 확인
+                    for (int index = 0; index < reward.Candidates.Count; index++) // 실제 정예 보상 후보 순회
+                    { // 반복 시작
+                        UnityEngine.UI.Button candidate = (UnityEngine.UI.Button)typeof(LevelUpPanelController).GetField(buttonNames[index], flags).GetValue(panel); // 실제 후보 버튼
+                        Transform artwork = candidate == null ? null : candidate.transform.Find("WeaponArtwork"); // 기존 후보 이미지 객체
+                        UnityEngine.UI.Image icon = artwork == null ? null : artwork.GetComponent<UnityEngine.UI.Image>(); // 실제 보상 이미지
+                        Require(icon != null && icon.gameObject.activeSelf && icon.sprite != null && icon.sprite.texture.name == "EliteRewardIcons" && !icon.raycastTarget, "실제 정예 보상 이미지 누락: " + index); // 실제 보상 이미지와 입력 확인
+                        Require(Mathf.Approximately(icon.sprite.rect.x, reward.Candidates[index] * icon.sprite.texture.width / 4), "실제 정예 보상 종류와 이미지 불일치: " + index); // 실제 후보 종류별 이미지 확인
+                    } // 반복 종료
                     UnityEngine.UI.Button button = (UnityEngine.UI.Button)typeof(LevelUpPanelController).GetField(buttonNames[weaponIndex], flags).GetValue(panel); // 실제 무기 버튼 조회
                     Require(button != null && button.interactable, "Weapon reward button is not selectable."); // 버튼 선택 가능 확인
                     button.onClick.Invoke(); // 실제 버튼 이벤트 실행
