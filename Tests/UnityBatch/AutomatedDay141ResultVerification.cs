@@ -123,6 +123,9 @@ namespace ProjectEpsilon.Editor // 배치 시험 영역
             Text detail = GameObject.Find("FrontendScoreDetails")?.GetComponent<Text>(); // 실제 상세 점수 글자
             Require(detail != null && detail.text.Contains("기준 미정") && detail.text.Contains("2,500") && detail.text.Contains("40,000"), "결과 화면 점수 상세 누락"); // 점수 항목과 미정 기준 표시 확인
             Require(detail.text.Contains(meta.TotalExperience.ToString("N0")), "실제 경험치 집계 표시 누락"); // 경험치 획득량 표시 확인
+            Text total = GameObject.Find("FrontendTotalScore")?.GetComponent<Text>(); // 독립된 실제 총점 글자
+            Require(total != null && total.text.Contains(meta.CurrentScore.ToString("N0")) && !detail.text.Contains("총점"), "총점의 별도 표시 누락"); // 총점 분리와 실제 점수 확인
+            Require(total.fontSize == detail.fontSize * 2, "총점 글자 크기가 항목의 두 배가 아님"); // 총점과 점수 항목의 크기 비교
             Canvas.ForceUpdateCanvases(); // 실제 결과 화면 배치 계산
             Text results = GameObject.Find("FrontendResultDetails").GetComponent<Text>(); // 실제 전투 결과 글자
             Vector3[] scoreCorners = new Vector3[4]; // 실제 점수 영역 경계
@@ -130,6 +133,19 @@ namespace ProjectEpsilon.Editor // 배치 시험 영역
             detail.rectTransform.GetWorldCorners(scoreCorners); // 실제 점수 영역 위치
             results.rectTransform.GetWorldCorners(resultCorners); // 실제 전투 성과 영역 위치
             Require(resultCorners[2].x <= scoreCorners[0].x + 0.01f, "결과 정보와 점수 영역 겹침"); // 두 정보 영역 겹침 방지
+            Vector3[] totalCorners = new Vector3[4]; // 실제 총점 영역 경계
+            Vector3[] buttonCorners = new Vector3[4]; // 실제 하단 버튼 경계
+            total.rectTransform.GetWorldCorners(totalCorners); // 실제 총점 영역 위치
+            GameObject.Find("FrontendResultMainButton").GetComponent<RectTransform>().GetWorldCorners(buttonCorners); // 실제 버튼 영역 위치
+            Require(totalCorners[1].y <= scoreCorners[0].y + 0.01f && totalCorners[0].y >= buttonCorners[1].y - 0.01f, "총점이 항목이나 하단 버튼과 겹침"); // 총점 위아래 독립 공간 확인
+            Require(total.preferredWidth <= total.rectTransform.rect.width + 0.5f, "총점 글자가 표시 영역을 벗어남"); // 총점 문구 잘림 방지
+            Require(total.cachedTextGenerator.fontSizeUsedForBestFit == detail.cachedTextGenerator.fontSizeUsedForBestFit * 2, "실제 표시된 총점 크기가 항목의 두 배가 아님"); // 실제 출력 글자 크기 비교
+            string originalTotal = total.text; // 실제 총점 문구 보존
+            total.text = "총점  100,000 / 100,000"; // 최대 가능한 점수 문구
+            Canvas.ForceUpdateCanvases(); // 최대 점수의 실제 글자 계산
+            Require(total.preferredWidth <= total.rectTransform.rect.width + 0.5f, "최대 점수 글자가 표시 영역을 벗어남"); // 최대 점수 잘림 방지
+            total.text = originalTotal; // 실제 시험 점수 문구 복구
+            Canvas.ForceUpdateCanvases(); // 실제 총점 화면 갱신
             if (SystemInfo.graphicsDeviceType != UnityEngine.Rendering.GraphicsDeviceType.Null) // 실제 그래픽 장치 확인
             { // 조건 시작
                 HUDController hud = UnityEngine.Object.FindFirstObjectByType<HUDController>(); // 전투 전용 HUD
@@ -137,7 +153,7 @@ namespace ProjectEpsilon.Editor // 배치 시험 영역
                 { // 조건 시작
                     hud.gameObject.SetActive(false); // 결과 씬처럼 전투 HUD 숨김
                 } // 조건 종료
-                typeof(AutomatedDay139ScreenCapture).GetMethod("Capture", BindingFlags.Static | BindingFlags.NonPublic).Invoke(null, new object[] { "day141-results.png" }); // 실제 결과 화면 캡처
+                typeof(AutomatedDay139ScreenCapture).GetMethod("Capture", BindingFlags.Static | BindingFlags.NonPublic).Invoke(null, new object[] { "day142-results.png" }); // 실제 결과 화면 캡처
                 if (hud != null) // 숨긴 전투 HUD 확인
                 { // 조건 시작
                     hud.gameObject.SetActive(true); // 시험용 HUD 상태 복구
@@ -148,6 +164,7 @@ namespace ProjectEpsilon.Editor // 배치 시험 영역
             typeof(RunFrontendController).GetMethod("Show", Private).Invoke(frontend, new object[] { FrontendStage.Results }); // 패배 점수 정보 다시 표시
             Text defeat = GameObject.Find("FrontendScoreDetails")?.GetComponent<Text>(); // 실제 패배 점수 글자
             Require(defeat != null && defeat.text.Contains("미확정") && !defeat.text.Contains("40,000"), "패배 승리 점수 표시 오류"); // 패배 화면 허위 점수 방지
+            Require(GameObject.Find("FrontendTotalScore") == null, "패배 화면에 승리 총점이 남음"); // 패배 화면의 이전 총점 제거 확인
             meta.BeginRun(); // 변경된 기준으로 새 전투 시작
             Require(meta.ExperienceScoreTarget == 1 && meta.NormalKillScoreTarget == 1, "새 전투의 점수 기준 초기화 오류"); // 획득 전 실제 기준 확인
             Require(meta.CompleteRun(true) && meta.ScoreFinalized, "변경된 기준의 점수 확정 실패"); // 실제 변경 기준의 승리 결과

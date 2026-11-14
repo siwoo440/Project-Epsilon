@@ -654,11 +654,19 @@ namespace ProjectEpsilon.UI // 실제 메뉴 영역
             resultDetails.resizeTextMinSize = 20; // 전투 성과 최소 글자 크기
             resultDetails.resizeTextMaxSize = 30; // 전투 성과 최대 글자 크기
             string scoreDetails = FormatScoreDetails(meta); // 실제 항목별 점수 문구
-            Text scoreLabel = Label(panel, "FrontendScoreDetails", scoreDetails, new Vector2(370f, 60f), new Vector2(760f, 460f), 29); // 실제 항목별 점수 표시
+            Text scoreLabel = Label(panel, "FrontendScoreDetails", scoreDetails, new Vector2(370f, 120f), new Vector2(760f, 240f), 29); // 실제 항목별 점수 표시
             scoreLabel.alignment = TextAnchor.MiddleLeft; // 항목별 점수 왼쪽 정렬
             scoreLabel.resizeTextForBestFit = true; // 화면 크기에 맞는 글자 조정
             scoreLabel.resizeTextMinSize = 19; // 상세 점수 최소 글자 크기
             scoreLabel.resizeTextMaxSize = 29; // 상세 점수 최대 글자 크기
+            if (meta != null && meta.ScoreFinalized) // 실제 승리 총점 확인
+            { // 조건 시작
+                Text totalLabel = Label(panel, "FrontendTotalScore", $"총점  {meta.CurrentScore:N0} / 100,000", new Vector2(370f, -85f), new Vector2(760f, 90f), scoreLabel.fontSize * 2); // 항목 아래 독립 총점 표시
+                totalLabel.alignment = TextAnchor.MiddleLeft; // 점수 항목과 왼쪽 정렬
+                totalLabel.resizeTextForBestFit = true; // 좁은 영역의 총점 잘림 방지
+                totalLabel.resizeTextMinSize = 38; // 총점 최소 글자 크기
+                totalLabel.resizeTextMaxSize = scoreLabel.fontSize * 2; // 항목의 두 배 글자 크기
+            } // 조건 종료
             CreateButton(panel, "FrontendRetryButton", "재도전", new Vector2(-260f, -300f), new Vector2(430f, 90f), Retry); // 실제 재도전
             CreateButton(panel, "FrontendResultMainButton", "메인 메뉴", new Vector2(260f, -300f), new Vector2(430f, 90f), ReturnToMain); // 실제 주 메뉴 복귀
         }
@@ -670,8 +678,7 @@ namespace ProjectEpsilon.UI // 실제 메뉴 영역
             } // 조건 종료
             string experience = meta.ExperienceScoreTarget > 0 ? $"{meta.TotalExperience:N0} / {meta.ExperienceScoreTarget:N0}" : $"{meta.TotalExperience:N0} · 기준 미정"; // 실제 경험치와 점수 기준
             string normal = meta.NormalKillScoreTarget > 0 ? $"{meta.NormalKills:N0} / {meta.NormalKillScoreTarget:N0}" : $"{meta.NormalKills:N0} · 기준 미정"; // 실제 일반 적과 점수 기준
-            return $"총점  {meta.CurrentScore:N0} / 100,000\n" + // 실제 승리 총점
-                $"보스 처치  {meta.BossScore:N0} / 40,000\n" + // 실제 보스 처치 점수
+            return $"보스 처치  {meta.BossScore:N0} / 40,000\n" + // 실제 보스 처치 점수
                 $"경험치  {meta.ExperienceScore:N0} / 20,000  ({experience})\n" + // 실제 경험치 점수와 기준
                 $"일반 적  {meta.NormalKillScore:N0} / 10,000  ({normal})\n" + // 실제 일반 적 점수와 기준
                 $"엘리트  {meta.EliteScore:N0} / 10,000  ({meta.Elites:N0}마리)\n" + // 실제 엘리트 점수와 처치 수

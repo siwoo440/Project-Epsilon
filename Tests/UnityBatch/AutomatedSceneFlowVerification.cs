@@ -179,7 +179,8 @@ namespace ProjectEpsilon.Editor // 실제 배치 시험 영역
             Text title = titleObject == null ? null : titleObject.GetComponent<Text>(); // 실제 결과 제목
             Require(title != null && title.text == "승리" && MetaProgressionController.Instance.Service.IsMapUnlocked(2), "Victory result or boss unlock was lost."); // 실제 승리 표시와 다음 맵 해금 확인
             Text scoreDetails = GameObject.Find("FrontendScoreDetails")?.GetComponent<Text>(); // 실제 분리 결과 씬의 점수 상세
-            Require(scoreDetails != null && scoreDetails.text.Contains("총점") && scoreDetails.text.Contains("보스 처치"), "Victory score details missing in results scene."); // 실제 씬 전환 후 상세 점수 확인
+            Text scoreTotal = GameObject.Find("FrontendTotalScore")?.GetComponent<Text>(); // 실제 분리 결과 씬의 총점
+            Require(scoreDetails != null && scoreDetails.text.Contains("보스 처치") && !scoreDetails.text.Contains("총점") && scoreTotal != null && scoreTotal.text.Contains("총점"), "Victory score details or total missing in results scene."); // 실제 씬 전환 후 점수 항목과 독립 총점 확인
             Button("FrontendResultMainButton").onClick.Invoke(); // 실제 메인 메뉴 복귀
             yield return null; // 실제 종료 관리자 제거 대기
             yield return null; // 실제 메뉴 씬 로드 대기
