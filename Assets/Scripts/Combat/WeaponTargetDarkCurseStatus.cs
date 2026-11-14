@@ -39,6 +39,7 @@ namespace ProjectEpsilon.Combat // 전투 영역
             if (stacks > 0) // 활성 저주 확인
             {
                 remainingDuration = WeaponAttributeDarkRules.CurseDuration; // 지속 시간 갱신
+                WeaponTargetStatusIndicators.Ensure(GetComponent<WeaponTarget>()); // 실제 암흑 저주 표시 연결
             }
 
             return Stacks; // 최종 중첩 반환
