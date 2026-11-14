@@ -133,6 +133,11 @@ namespace ProjectEpsilon.Editor // 배치 시험 영역
             invulnerability.ClearInvulnerability(); // 기존 무적 제거
             int originalHealth = health.CurrentHealth; // 실제 시작 체력
             Require(events.TryBeginLocust() && events.IsWarning && !events.IsActive, "황충떼 예고 시작 실패"); // 실제 황충 예고 확인
+            Transform warningArea = events.transform.Find("WorldHazardVisual/LocustWarningArea"); // 실제 황충 경고 영역
+            SpriteRenderer warningFill = warningArea == null ? null : warningArea.GetComponent<SpriteRenderer>(); // 실제 경고 영역 표시기
+            Require(warningFill != null && warningFill.color.r > 0.9f && warningFill.color.g > 0.8f && warningFill.color.b > 0.2f && warningFill.color.a > 0f && warningFill.color.a < 0.4f && warningFill.sortingOrder < 25 && warningArea.GetComponent<Collider2D>() == null, "연한 노란색 비충돌 황충 경고 영역 누락"); // 색상과 전투 요소 가림 방지 확인
+            LineRenderer warningOutline = warningArea.parent.GetComponent<LineRenderer>(); // 실제 황충 경고 경계선
+            Require(warningOutline != null && Mathf.Abs(warningArea.localScale.x - (36.2f + 2f * map.Profile.LocustTrailLength)) < 0.01f && Mathf.Abs(warningArea.localScale.y - map.Profile.LocustWidth) < 0.01f && Mathf.Abs(Vector3.Distance(warningOutline.GetPosition(0), warningOutline.GetPosition(1)) - warningArea.localScale.x) < 0.01f, "황충 경고 채움과 전체 피해 경계 불일치"); // 실제 대열 범위와 경고 표시 일치 확인
             yield return new WaitForSeconds(0.25f); // 실제 게이지 진행 대기
             GameObject warning = GameObject.Find("WorldHazardWarning"); // 실제 예고판
             Image gauge = warning == null ? null : warning.transform.Find("WarningGauge").GetComponent<Image>(); // 실제 예고 게이지
@@ -144,19 +149,52 @@ namespace ProjectEpsilon.Editor // 배치 시험 영역
             GameManager.Instance.ResumeGame(); // 실제 게임 재개
             yield return new WaitForSeconds(0.45f); // 실제 예고 완료 대기
             Transform swarm = events.transform.Find("WorldHazardVisual/LocustSwarm"); // 실제 황충 무리
-            Require(events.IsActive && swarm != null && swarm.childCount == 10, "열 마리 황충 이동 누락"); // 실제 여러 황충 표시 확인
+            Require(events.IsActive && swarm != null && swarm.childCount == 6, "긴 황충 무리 이동 누락"); // 실제 여러 황충 무리 표시 확인
+            Vector3 firstPosition = swarm.GetChild(0).position; // 첫 황충 무리 위치
+            Vector3 lastPosition = swarm.GetChild(swarm.childCount - 1).position; // 마지막 황충 무리 위치
+            Require(Vector2.Distance(firstPosition, lastPosition) >= 7f, "황충 무리의 긴 대열 누락"); // 실제 긴 대열 확인
             foreach (SpriteRenderer insect in swarm.GetComponentsInChildren<SpriteRenderer>()) // 실제 황충 이미지 순회
             { // 반복 시작
-                Require(insect.sprite != null && insect.sprite.name == "LocustSwarm_Casual", "황충 원본 이미지 누락"); // 실제 생성 이미지 확인
+                Require(insect.sprite != null && insect.sprite.name == "LocustSwarm_Long", "긴 황충 이미지 누락"); // 실제 생성 이미지 확인
             } // 반복 종료
             yield return new WaitForSeconds(0.9f); // 실제 황충떼 교차 대기
             Require(health.CurrentHealth == originalHealth - map.Profile.LocustDamage, "황충떼 공용 체력 피해 오류"); // 실제 단일 피해 확인
-            yield return new WaitForSeconds(0.8f); // 실제 황충 이동 종료 대기
+            yield return new WaitForSeconds(1.2f); // 실제 황충 이동 종료 대기
             Require(!events.IsActive && !events.IsWarning && health.CurrentHealth == originalHealth - map.Profile.LocustDamage, "황충 이동 종료 또는 중복 피해 오류"); // 실제 종료와 단일 피해 확인
+            invulnerability.ClearInvulnerability(); // 뒤쪽 대열 피해 시험 준비
+            Vector3 originalPosition = player.transform.position; // 실제 머리의 원래 위치
+            Collider2D[] bodyColliders = body.GetComponentsInChildren<Collider2D>(); // 실제 몸통 충돌 범위 목록
+            bool[] bodyColliderStates = new bool[bodyColliders.Length]; // 기존 몸통 충돌 활성 상태
+            for (int index = 0; index < bodyColliders.Length; index++) // 실제 몸통 충돌 범위 순회
+            { // 반복 시작
+                bodyColliderStates[index] = bodyColliders[index].enabled; // 기존 충돌 활성 상태 보관
+                bodyColliders[index].enabled = false; // 뒤쪽 대열의 머리 접촉만 확인
+            } // 반복 종료
+            Require(events.TryBeginLocust(), "뒤쪽 대열 시험 예고 실패"); // 실제 뒤쪽 대열 위험 시작
+            Vector3 travel = (Vector3)typeof(WorldEventController).GetField("direction", BindingFlags.Instance | BindingFlags.NonPublic).GetValue(events); // 실제 황충 진행 방향
+            player.transform.position = originalPosition + new Vector3(-travel.y, travel.x, 0f) * 40f; // 경고 영역 밖으로 머리 이동
+            Physics2D.SyncTransforms(); // 실제 머리 충돌 위치 갱신
+            yield return new WaitForSeconds(0.7f); // 실제 황충 출발 대기
+            Transform trailingSwarm = events.transform.Find("WorldHazardVisual/LocustSwarm"); // 실제 이동 중인 황충 무리
+            Require(trailingSwarm != null, "뒤쪽 대열 이동 누락"); // 실제 황충 이동 확인
+            while (events.IsActive && Vector3.Dot(trailingSwarm.position - originalPosition, travel) < 4f) // 앞쪽 무리의 통과 확인
+            { // 반복 시작
+                yield return new WaitForFixedUpdate(); // 실제 물리 이동 대기
+            } // 반복 종료
+            Require(events.IsActive && health.CurrentHealth == originalHealth - map.Profile.LocustDamage, "뒤쪽 대열 시험 중 예상 밖 피해"); // 영역 밖 무피해 확인
+            player.transform.position = originalPosition; // 뒤쪽 무리 영역으로 머리 진입
+            Physics2D.SyncTransforms(); // 실제 머리 충돌 위치 갱신
+            yield return new WaitForSeconds(0.15f); // 실제 뒤쪽 대열 접촉 판정 대기
+            Require(health.CurrentHealth == originalHealth - map.Profile.LocustDamage * 2, "뒤쪽 황충 무리 접촉 피해 누락"); // 앞쪽 통과 후 뒤쪽 대열 피해 확인
+            yield return new WaitForSeconds(1f); // 실제 긴 무리의 통과 완료 대기
+            for (int index = 0; index < bodyColliders.Length; index++) // 실제 몸통 충돌 범위 순회
+            { // 반복 시작
+                bodyColliders[index].enabled = bodyColliderStates[index]; // 기존 충돌 활성 상태 복구
+            } // 반복 종료
             int protectedHealth = health.CurrentHealth; // 실제 무적 전 체력
             invulnerability.StartInvulnerability(4f); // 기존 공통 무적 시작
             Require(events.TryBeginLocust(), "무적 중 황충 예고 실패"); // 실제 두 번째 황충 예고
-            yield return new WaitForSeconds(2.5f); // 실제 황충 예고와 통과 대기
+            yield return new WaitForSeconds(3f); // 실제 황충 예고와 통과 대기
             Require(!events.IsActive && !events.IsWarning && health.CurrentHealth == protectedHealth, "황충떼가 기존 무적을 무시"); // 실제 공통 무적 보존 확인
             invulnerability.ClearInvulnerability(); // 다음 위험의 무적 해제
             int beforeRocks = map.GetComponentsInChildren<SnakeContactHazard>().Length; // 기존 장애물 수
@@ -203,7 +241,7 @@ namespace ProjectEpsilon.Editor // 배치 시험 영역
             transition.Invoke(spawner, null); // 실제 보스 전환 시작
             yield return null; // 실제 보스와 경고 정리 대기
             Require(GameManager.Instance.IsFinalBossPhase && !events.IsWarning && !events.IsActive && !events.TryBeginLocust(), "보스전 중 맵 위험과 경고가 유지됨"); // 실제 보스 경고와 출구 보호
-            AutomatedDay86WorldEventsPlayVerification.Finish(true, "Warning, pause, ten locusts, invulnerability, rock damage, safe debris and boss transition passed."); // 실제 전체 결과
+            AutomatedDay86WorldEventsPlayVerification.Finish(true, "Warning, pause, long locust swarm, invulnerability, rock damage, safe debris and boss transition passed."); // 실제 전체 결과
         } // 함수 종료
         private static void SetFloat(PrototypeMapProfile profile, string name, float value) // 독립 시험 수치 적용
         { // 함수 시작

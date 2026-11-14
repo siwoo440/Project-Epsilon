@@ -17,6 +17,7 @@ namespace ProjectEpsilon.World // 맵 영역
         private GameObject visual; // 실제 경고와 이동 이미지 묶음
         private LineRenderer outline; // 실제 위험 경계
         private Material outlineMaterial; // 실제 경계 재질
+        private Sprite warningAreaSprite; // 황충 경고 영역의 임시 흰색 스프라이트
         private Transform swarm; // 실제 황충떼 이미지 묶음
         private Transform fallingRock; // 실제 낙석 이미지
         private Vector3 origin; // 황충떼 출발 위치
@@ -92,9 +93,10 @@ namespace ProjectEpsilon.World // 맵 영역
             } // 조건 종료
             if (phase == 2) // 실제 황충떼 이동 확인
             { // 조건 시작
-                float distance = Mathf.Min(30f, phaseTime * map.Profile.LocustSpeed); // 실제 직선 이동 거리
+                float travelDistance = 30f + map.Profile.LocustTrailLength; // 뒤쪽 대열의 전체 통과 거리
+                float distance = Mathf.Min(travelDistance, phaseTime * map.Profile.LocustSpeed); // 실제 직선 이동 거리
                 swarm.position = origin + direction * distance; // 실제 황충 무리 이동
-                if (distance >= 30f) // 이동 종료 확인
+                if (distance >= travelDistance) // 전체 대열 이동 종료 확인
                 { // 조건 시작
                     swarmFinished = true; // 마지막 이동 구간의 물리 판정 대기
                 } // 조건 종료
@@ -161,8 +163,8 @@ namespace ProjectEpsilon.World // 맵 영역
                 Vector3 current = swarm.position; // 실제 현재 황충 위치
                 if (!damageQueued) // 같은 위험의 기존 피해 확인
                 { // 조건 시작
-                    Vector3 midpoint = (previousSwarmPosition + current) * 0.5f; // 마지막 물리 판정 이후 이동 구간 중심
-                    float length = Vector2.Distance(previousSwarmPosition, current) + 1.5f; // 실제 이동 거리와 황충 충돌 폭
+                    Vector3 midpoint = (previousSwarmPosition + current) * 0.5f - direction * (map.Profile.LocustTrailLength * 0.5f); // 실제 이동 구간과 뒤쪽 대열의 중심
+                    float length = Vector2.Distance(previousSwarmPosition, current) + 6.2f + map.Profile.LocustTrailLength; // 실제 이동 거리와 무리 이미지의 충돌 길이
                     float angle = Mathf.Atan2(direction.y, direction.x) * Mathf.Rad2Deg; // 실제 이동 방향 각도
                     Collider2D[] contacts = Physics2D.OverlapBoxAll(midpoint, new Vector2(length, map.Profile.LocustWidth), angle); // 실제 연속 이동 구간의 충돌 대상
                     QueueDamage(contacts, map.Profile.LocustDamage); // 기존 충돌 우선순위에 피해 예약
@@ -277,10 +279,25 @@ namespace ProjectEpsilon.World // 맵 영역
             outline.loop = true; // 경계 끝 연결
             outline.positionCount = circular ? 32 : 4; // 원형 또는 직선 구역 좌표 수
             Vector3 side = new Vector3(-travel.y, travel.x, 0f); // 실제 이동 방향의 수직축
+            float halfLength = circular ? 0f : 18.1f + map.Profile.LocustTrailLength; // 긴 무리를 포함한 직선 경고 반길이
+            if (!circular) // 황충 직선 경고 확인
+            { // 조건 시작
+                GameObject area = new GameObject("LocustWarningArea"); // 실제 경고 영역
+                area.transform.SetParent(visual.transform, false); // 위험 표시 수명 연결
+                area.transform.position = center; // 실제 직선 경고 중심
+                area.transform.rotation = Quaternion.FromToRotation(Vector3.right, travel); // 실제 황충 진행 방향 정렬
+                area.transform.localScale = new Vector3(halfLength * 2f, width, 1f); // 실제 전체 위험 구역 크기
+                Texture2D white = Texture2D.whiteTexture; // 기본 흰색 텍스처
+                warningAreaSprite = Sprite.Create(white, new Rect(0f, 0f, white.width, white.height), new Vector2(0.5f, 0.5f), white.width); // 단위 크기 경고 스프라이트
+                SpriteRenderer fill = area.AddComponent<SpriteRenderer>(); // 실제 경고 영역 표시기
+                fill.sprite = warningAreaSprite; // 단색 경고 스프라이트 연결
+                fill.color = new Color(1f, 0.92f, 0.4f, 0.2f); // 연한 노란색 반투명 표시
+                fill.sortingOrder = 1; // 전투 대상 아래 표시
+            } // 조건 종료
             for (int index = 0; index < outline.positionCount; index++) // 실제 경계 좌표 순회
             { // 반복 시작
                 float angle = index * Mathf.PI * 2f / outline.positionCount; // 실제 원형 각도
-                Vector3 position = circular ? center + new Vector3(Mathf.Cos(angle), Mathf.Sin(angle), 0f) * (width * 0.5f) : center + travel * (index == 0 || index == 3 ? -15f : 15f) + side * (index < 2 ? -width * 0.5f : width * 0.5f); // 실제 예고 경계 위치
+                Vector3 position = circular ? center + new Vector3(Mathf.Cos(angle), Mathf.Sin(angle), 0f) * (width * 0.5f) : center + travel * (index == 0 || index == 3 ? -halfLength : halfLength) + side * (index < 2 ? -width * 0.5f : width * 0.5f); // 실제 예고 경계 위치
                 outline.SetPosition(index, position); // 실제 경계 좌표 적용
             } // 반복 종료
         } // 함수 종료
@@ -294,21 +311,22 @@ namespace ProjectEpsilon.World // 맵 영역
             outline.startColor = outline.endColor = Color.red; // 실제 활성 위험 경계 색상
             if (phase == 2) // 실제 황충떼 이동 확인
             { // 조건 시작
-                Sprite sprite = Resources.Load<Sprite>("WorldEvents/LocustSwarm_Casual"); // 생성한 황충 이미지
+                Sprite sprite = Resources.Load<Sprite>("WorldEvents/LocustSwarm_Long"); // 생성한 황충 무리 이미지
                 swarm = new GameObject("LocustSwarm").transform; // 실제 황충 무리 묶음
                 swarm.SetParent(visual.transform, false); // 실제 위험 수명 연결
                 swarm.position = origin; // 실제 황충 이동 출발점
                 previousSwarmPosition = origin; // 첫 물리 판정의 출발 위치
                 Vector3 side = new Vector3(-direction.y, direction.x, 0f); // 실제 이동 방향의 수직축
-                for (int index = 0; index < 10; index++) // 실제 열 마리 황충 생성
+                for (int index = 0; index < 6; index++) // 실제 두 줄의 황충 무리 생성
                 { // 반복 시작
                     GameObject insect = new GameObject("Locust_" + index); // 실제 황충 표시
                     insect.transform.SetParent(swarm, false); // 실제 무리 이동 연결
-                    insect.transform.localPosition = side * ((index % 5 - 2) * map.Profile.LocustWidth / 5f + (index / 5 == 0 ? 0f : map.Profile.LocustWidth / 10f)) - direction * (index / 5 * 1.2f); // 두 줄로 엇갈린 무리 배치
+                    insect.transform.localPosition = side * ((index % 3 - 1) * map.Profile.LocustWidth / 3f) - direction * (index / 3 * map.Profile.LocustTrailLength); // 여러 무리의 긴 대열 배치
                     insect.transform.rotation = Quaternion.FromToRotation(Vector3.up, direction); // 실제 이동 방향으로 황충 회전
-                    insect.transform.localScale = Vector3.one * 0.8f; // 실제 황충 이미지 크기
+                    insect.transform.localScale = Vector3.one * 3f; // 실제 황충 무리 이미지 크기
                     SpriteRenderer renderer = insect.AddComponent<SpriteRenderer>(); // 실제 황충 표시기
                     renderer.sprite = sprite; // 생성한 황충 이미지 연결
+                    renderer.flipX = index % 2 != 0; // 인접 무리의 모습 변화
                     renderer.sortingOrder = 25; // 전투 요소 위와 경고 아래 표시
                 } // 반복 종료
             } // 조건 종료
@@ -356,6 +374,11 @@ namespace ProjectEpsilon.World // 맵 영역
             if (outlineMaterial != null) // 실제 표시 재질 확인
             { // 조건 시작
                 Destroy(outlineMaterial); // 실제 생성 재질 제거
+            } // 조건 종료
+            if (warningAreaSprite != null) // 실제 경고 스프라이트 확인
+            { // 조건 시작
+                Destroy(warningAreaSprite); // 실제 생성 스프라이트 제거
+                warningAreaSprite = null; // 이전 스프라이트 참조 제거
             } // 조건 종료
             visual = null; // 이전 표시 참조 제거
             swarm = null; // 이전 황충 무리 참조 제거

@@ -45,6 +45,7 @@ namespace ProjectEpsilon.World // 맵 영역
         [Min(0.1f)] [SerializeField] private float worldEventWarning = 3f; // 맵 위험 공통 예고 시간 시험값
         [Min(0.1f)] [SerializeField] private float locustSpeed = 12f; // 황충떼 이동 속도 시험값
         [Min(1f)] [SerializeField] private float locustWidth = 8f; // 황충떼 이동 폭 시험값
+        [Min(0f)] [SerializeField] private float locustTrailLength = 5f; // 황충떼 대열 길이 시험값
         [Min(0)] [SerializeField] private int locustDamage = 10; // 황충떼 공용 체력 피해 시험값
         [Min(0.1f)] [SerializeField] private float rockfallDuration = 0.7f; // 낙석 하강 시간 시험값
         [Min(0)] [SerializeField] private int rockfallDamage = 10; // 낙석 공용 체력 피해 시험값
@@ -125,6 +126,7 @@ namespace ProjectEpsilon.World // 맵 영역
         public float WorldEventWarning => Mathf.Max(0.1f, worldEventWarning); // 안전한 위험 예고 시간
         public float LocustSpeed => Mathf.Max(0.1f, locustSpeed); // 안전한 황충떼 속도
         public float LocustWidth => Mathf.Max(1f, locustWidth); // 안전한 황충떼 폭
+        public float LocustTrailLength => Mathf.Max(0f, locustTrailLength); // 안전한 황충떼 대열 길이
         public int LocustDamage => Mathf.Max(0, locustDamage); // 안전한 황충떼 피해
         public float RockfallDuration => Mathf.Max(0.1f, rockfallDuration); // 안전한 낙석 하강 시간
         public int RockfallDamage => Mathf.Max(0, rockfallDamage); // 안전한 낙석 피해

@@ -52,6 +52,7 @@ MonoBehaviour:
   worldEventWarning: 3
   locustSpeed: 12
   locustWidth: 8
+  locustTrailLength: 5
   locustDamage: 10
   rockfallDuration: 0.7
   rockfallDamage: 10
