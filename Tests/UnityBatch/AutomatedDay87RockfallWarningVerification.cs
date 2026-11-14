@@ -111,7 +111,7 @@ namespace ProjectEpsilon.Editor // 배치 시험 영역
             Require(events.TryBeginLocust(), "실제 황충 예고 시작 실패"); // 기존 황충 예고 확인
             yield return null; // 실제 황충 경고 갱신 대기
             yield return null; // 실제 UI 적용 대기
-            Require(label.text == "황충떼 주의", "황충 경고에 낙석 방향 잔류"); // 기존 황충 경고 보존 확인
+            Require(label.text.StartsWith("황충떼 주의 · ", StringComparison.Ordinal) && label.text.EndsWith(" 이동", StringComparison.Ordinal), "황충 경고에 낙석 방향 잔류 또는 황충 방향 누락"); // 실제 황충 경고 전환 확인
             AutomatedDay87RockfallWarningVerification.Finish(true, "Visible and eight offscreen directions, pause and locust warning passed."); // 실제 전체 결과
         } // 함수 종료
         private static void Require(bool condition, string message) // 실제 시험 조건 확인

@@ -58,6 +58,9 @@ namespace ProjectEpsilon.UI // 프로젝트 기능 영역
                 worldWarningText = label.GetComponent<Text>(); // 실제 예고 문구
                 worldWarningText.font = healthText.font; // 기존 한국어 글꼴 재사용
                 worldWarningText.fontSize = 22; // 실제 예고 글자 크기
+                worldWarningText.resizeTextForBestFit = true; // 긴 방향 문구 자동 크기 조정
+                worldWarningText.resizeTextMinSize = 14; // 경고 문구 최소 글자 크기
+                worldWarningText.resizeTextMaxSize = 22; // 경고 문구 최대 글자 크기
                 worldWarningText.alignment = TextAnchor.MiddleCenter; // 예고 문구 가운데 정렬
                 worldWarningText.color = Color.white; // 예고 문구 색상
                 worldWarningText.raycastTarget = false; // 전투 입력 차단 방지

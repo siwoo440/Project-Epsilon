@@ -81,7 +81,7 @@ namespace ProjectEpsilon.World // 맵 영역
             phaseTime += Time.deltaTime; // 실제 단계 시간 누적
             if (IsWarning) // 실제 위험 예고 확인
             { // 조건 시작
-                hud?.SetWorldWarning(phase == 1 ? "황충떼 주의" : RockfallWarningText(), WarningProgress); // 위험 방향과 충전 게이지
+                hud?.SetWorldWarning(phase == 1 ? LocustWarningText() : RockfallWarningText(), WarningProgress); // 위험 방향과 충전 게이지
                 if (phaseTime >= map.Profile.WorldEventWarning) // 예고 완료 확인
                 { // 조건 시작
                     StartActivePhase(); // 실제 이동 또는 하강 시작
@@ -102,6 +102,28 @@ namespace ProjectEpsilon.World // 맵 영역
                 float progress = Mathf.Clamp01(phaseTime / map.Profile.RockfallDuration); // 실제 하강 비율
                 fallingRock.position = impact + Vector3.up * (1f - progress) * 4f; // 실제 낙석 하강 위치
             } // 조건 종료
+        } // 함수 종료
+
+        private string LocustWarningText() // 실제 화면 기준 황충 진행 방향 안내
+        { // 함수 시작
+            Camera camera = Camera.main; // 실제 전투 화면 카메라
+            if (camera == null || direction.sqrMagnitude < 0.0001f) // 카메라와 이동 방향 확인
+            { // 조건 시작
+                return "황충떼 주의"; // 방향을 알 수 없는 기본 경고
+            } // 조건 종료
+            Vector3 start = camera.WorldToViewportPoint(origin); // 실제 황충 출발점의 화면 좌표
+            Vector3 end = camera.WorldToViewportPoint(origin + direction); // 실제 진행 방향의 화면 좌표
+            Vector2 travel = new Vector2((end.x - start.x) * camera.pixelWidth, (end.y - start.y) * camera.pixelHeight); // 화면 비율을 반영한 진행 방향
+            float horizontalAmount = Mathf.Abs(travel.x); // 실제 화면상 가로 이동량
+            float verticalAmount = Mathf.Abs(travel.y); // 실제 화면상 세로 이동량
+            if (horizontalAmount < 0.0001f && verticalAmount < 0.0001f) // 실제 화면상 이동량 확인
+            { // 조건 시작
+                return "황충떼 주의"; // 방향을 알 수 없는 기본 경고
+            } // 조건 종료
+            string horizontal = horizontalAmount >= verticalAmount * 0.5f ? travel.x < 0f ? "왼쪽" : "오른쪽" : ""; // 실제 화면상 가로 방향
+            string vertical = verticalAmount >= horizontalAmount * 0.5f ? travel.y < 0f ? "아래" : "위" : ""; // 실제 화면상 세로 방향
+            string directionText = horizontal.Length == 0 ? vertical : vertical.Length == 0 ? horizontal : horizontal + " " + vertical; // 실제 화면 방향 조합
+            return "황충떼 주의 · " + directionText + " 이동"; // 실제 황충 진행 방향 표시
         } // 함수 종료
 
         private string RockfallWarningText() // 실제 화면 기준 낙석 방향 안내
