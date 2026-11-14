@@ -72,6 +72,7 @@ namespace ProjectEpsilon.Editor // 배치 시험 영역
                 GameObject imageObject = GameObject.Find("FrontendCharacterPortrait"); // 실제 선택 초상화
                 Image image = imageObject == null ? null : imageObject.GetComponent<Image>(); // 실제 화면 이미지
                 Require(image != null && image.sprite == expected && image.preserveAspect && !image.raycastTarget, "선택 화면 초상화 오류: " + names[index]); // 실제 이미지와 버튼 입력 확인
+                Require(Mathf.Approximately(image.rectTransform.anchoredPosition.y, -165f), "선택 화면 머리 높이 오류: " + names[index]); // 실제 머리의 상향 위치 확인
             } // 반복 종료
         } // 함수 종료
         private static void Require(bool condition, string message) // 시험 조건 확인

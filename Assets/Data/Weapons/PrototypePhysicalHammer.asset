@@ -20,6 +20,10 @@ MonoBehaviour:
   attackType: 3
   baseDamage: 11
   attackInterval: 1.8
+  gradeThreePeriodicInterval: 3
+  gradeThreePeriodicDamageMultiplier: 1.2
+  gradeFivePeriodicInterval: 2
+  gradeFivePeriodicDamageMultiplier: 1.35
   range: 2.1
   maxGrade: 5
   gradeThreeAreaRangeMultiplier: 1.25

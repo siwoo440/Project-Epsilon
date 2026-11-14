@@ -677,7 +677,7 @@ namespace ProjectEpsilon.Combat // 프로젝트 기능 영역
             int hitCount = WeaponTarget.VisitAllInRange( // 범위 대상 방문
                 center, // 실제 범위 중심 전달
                 attackRange, // 등급별 공격 범위 전달
-                target => ApplyWeaponHit(attack, target, target.transform.position) // 대상별 명중 적용
+                target => ApplyAreaWeaponHit(slot, attack, target, center) // 대상별 명중과 등급 효과 적용
             ); // 방문 종료
 
             if (hitCount <= 0) // 명중·개수 조건 확인
@@ -746,7 +746,7 @@ namespace ProjectEpsilon.Combat // 프로젝트 기능 영역
 
         private WeaponAttributeAttackSnapshot CreateAttackSnapshot(SnakeWeaponSlot slot, Vector3 origin) // 공격 정보 생성
         {
-            float gradeDamage = CalculateSlotDamage(slot); // 등급 피해 계산
+            float gradeDamage = CalculateSlotDamage(slot) * slot.NextPeriodicMultiplier(); // 등급과 실제 주기 피해 계산
 
             if (attributeCombatEffects != null) // 속성 효과 연결 확인
             {
@@ -770,6 +770,31 @@ namespace ProjectEpsilon.Combat // 프로젝트 기능 영역
 
             target?.TakeDamage(attack.DirectDamage); // 기본 직접 피해 적용
         }
+
+        private void ApplyAreaWeaponHit(SnakeWeaponSlot slot, WeaponAttributeAttackSnapshot attack, WeaponTarget target, Vector3 center) // 실제 범위 명중과 등급 넉백
+        { // 함수 시작
+            if (target == null || !target.IsAlive || !CanContinueAttack()) // 실제 전투와 대상 확인
+            { // 조건 시작
+                return; // 무효 명중 생략
+            } // 조건 종료
+            ApplyWeaponHit(attack, target, target.transform.position); // 기존 속성 명중 적용
+            float distance = slot.Weapon.GetAreaKnockbackDistance(slot.Grade); // 실제 등급의 넉백 거리
+            if (!CanContinueAttack() || !target.IsAlive || distance <= 0f) // 전투와 생존 및 넉백 설정 확인
+            { // 조건 시작
+                return; // 후속 넉백 생략
+            } // 조건 종료
+            WeaponTargetKnockbackController knockback = target.GetComponent<WeaponTargetKnockbackController>(); // 기존 넉백 상태 조회
+            if (knockback == null) // 실제 넉백 상태 부재 확인
+            { // 조건 시작
+                knockback = target.gameObject.AddComponent<WeaponTargetKnockbackController>(); // 기존 넉백 기능 연결
+            } // 조건 종료
+            Vector2 direction = target.transform.position - center; // 실제 범위 중심의 반대 방향
+            if (direction.sqrMagnitude <= 0.0001f) // 중심 적의 방향 확인
+            { // 조건 시작
+                direction = target.transform.position - attack.Origin; // 실제 포탑에서 대상 방향 사용
+            } // 조건 종료
+            knockback.Apply(direction, distance, slot.Weapon.GradeFiveAreaKnockbackDuration); // 기존 면역과 저항을 따르는 넉백
+        } // 함수 종료
 
         private static bool CanContinueAttack() // 실제 전투 중 포탑 공격 가능 여부
         { // 함수 시작
@@ -816,7 +841,7 @@ namespace ProjectEpsilon.Combat // 프로젝트 기능 영역
                     origin, // 발사 위치 항목 전달
                     CalculateSlotDamage( // 계산·슬롯 호출 시작
                         slot // 슬롯 처리
-                    ), // 대상 항목 전달
+                    ) * (trigger == WeaponGradeEffectTrigger.Attack ? slot.LastPeriodicMultiplier : 1f), // 실제 공격의 주기 피해 반영
                     trigger // 접촉 처리
                 ) // 앞선 항목 종료
             ); // 앞선 항목 종료

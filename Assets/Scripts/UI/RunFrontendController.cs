@@ -320,7 +320,7 @@ namespace ProjectEpsilon.UI // 실제 메뉴 영역
             }
             if (active != null && active.Portrait != null) // 실제 선택 캐릭터 초상화 확인
             { // 조건 시작
-                Preview(panel, "FrontendCharacterPortrait", active.Portrait, new Vector2(535f, -210f), new Vector2(220f, 220f)); // 선택 캐릭터 초상화 표시
+                Preview(panel, "FrontendCharacterPortrait", active.Portrait, new Vector2(535f, -165f), new Vector2(220f, 220f)); // 선택 캐릭터 초상화 위치 상향
             } // 조건 종료
             else // 초상화가 없는 기존 데이터 확인
             { // 대체 시작

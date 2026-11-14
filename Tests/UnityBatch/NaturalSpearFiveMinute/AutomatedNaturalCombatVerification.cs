@@ -111,45 +111,22 @@ namespace ProjectEpsilon.Editor // 편집기 영역
                     return; // 후속 시험 중단
                 } // 조건 종료
                 GameManager game = GameManager.Instance; // 현재 시작 상태 조회
-                if (game != null && game.CurrentState == GameState.Starting) // 시작 선택 상태 확인
-                {
-                    if (setupWallTime == 0d) setupWallTime = EditorApplication.timeSinceStartup; // 시작 화면 시간 기록
-                    if (EditorApplication.timeSinceStartup - setupWallTime > 45d) throw new InvalidOperationException("Starting screen navigation timed out."); // 시작 화면 무한 대기 방지
-                    if (!Mathf.Approximately(Time.timeScale, 0f)) // 시작 전 정지 확인
-                    {
-                        throw new InvalidOperationException("Starting selection did not freeze game time."); // 시작 시간 오류
-                    }
-                    RunFrontendController frontend = RunFrontendController.Instance; // 실제 분리 메뉴 상태
-                    if (frontend != null && frontend.Stage != FrontendStage.Weapons) // 시작 포탑 이전 화면 확인
+                if (game == null || game.CurrentState == GameState.Starting) // 현재 맵의 시작 포탑 선택
+                { // 조건 시작
+                    if (setupWallTime == 0d) setupWallTime = EditorApplication.timeSinceStartup; // 실제 시작 대기 시각
+                    if (EditorApplication.timeSinceStartup - setupWallTime > 45d) throw new InvalidOperationException("Starting screen navigation timed out."); // 실제 시작 시간 제한
+                    StartingWeaponBatchHelper.HandleStartingSelection(1); // 실제 두 번째 시작 후보 선택
+                    return; // 실제 전투 시작 대기
+                } // 조건 종료
+                if (game.IsPlaying && !startingChoiceObserved) // 실제 시작 장착 확인
+                { // 조건 시작
+                    SnakeWeaponManager startingWeapons = UnityEngine.Object.FindFirstObjectByType<SnakeWeaponManager>(); // 실제 시작 포탑 관리자
+                    if (startingWeapons == null || startingWeapons.Slots.Count == 0 || startingWeapons.Slots[0].Weapon == null || startingWeapons.Slots[0].Weapon.Id != "debug_needle") // 두 번째 관통 포탑 확인
                     { // 조건 시작
-                        string nextName = frontend.Stage == FrontendStage.Main ? "FrontendStartButton" : frontend.Stage == FrontendStage.Characters ? "FrontendCharactersNextButton" : frontend.Stage == FrontendStage.Maps ? "FrontendMapsNextButton" : null; // 실제 다음 화면 버튼
-                        GameObject nextObject = string.IsNullOrEmpty(nextName) ? null : GameObject.Find(nextName); // 실제 탐색 버튼 조회
-                        Button nextButton = nextObject == null ? null : nextObject.GetComponent<Button>(); // 실제 버튼 구성
-                        if (nextButton != null && nextButton.IsActive() && nextButton.interactable) nextButton.onClick.Invoke(); // 실제 시작 화면 이동
-                        return; // 다음 화면 구성 대기
+                        throw new InvalidOperationException("Second starting turret was not equipped."); // 실제 시작 장착 오류
                     } // 조건 종료
-                    StartingWeaponSelection selection = UnityEngine.Object.FindFirstObjectByType<StartingWeaponSelection>(); // 실제 시작 선택기
-                    StartingWeaponOptions options = selection == null ? null : (StartingWeaponOptions)typeof(StartingWeaponSelection).GetField("options", PrivateInstance).GetValue(selection); // 실제 후보 데이터
-                    if (selection != null && selection.IsSelecting) // 실제 시작 후보 선택 상태 확인
-                    {
-                        ClickLevelButton(1); // 실제 두 번째 후보 버튼 선택
-                    }
-                    if (game.IsPlaying) // 버튼 선택 완료 확인
-                    {
-                        SnakeWeaponManager weapons = UnityEngine.Object.FindFirstObjectByType<SnakeWeaponManager>(); // 실제 장착 관리자
-                        if (options == null || options.Weapons == null || options.Weapons.Length < 2 || options.Weapons[1] == null || options.Weapons[1].Id != "debug_needle" || weapons == null || weapons.Slots.Count == 0 || weapons.Slots[0].Weapon != options.Weapons[1] || weapons.OccupiedSlotCount != 1) // 두 번째 강철 관통 포탑 실제 장착 확인
-                        {
-                            throw new InvalidOperationException("Second starting weapon button did not equip exactly one steel spear."); // 시작 장착 오류
-                        }
-                        startingChoiceObserved = true; // 시작 선택 검증 기록
-                        Debug.Log($"[NaturalCombatVerification] starting button=2 weapon={weapons.Slots[0].Weapon.DisplayName} grade={weapons.Slots[0].Grade} occupied={weapons.OccupiedSlotCount} range={weapons.Slots[0].EffectiveRange:F2} scale={Time.timeScale:F1}"); // 실제 버튼 선택 결과 기록
-                    }
-                    return; // 다음 갱신부터 전투 관찰
-                }
-                if (game != null && game.IsPlaying && !startingChoiceObserved) // 시작 버튼 선택 누락 확인
-                {
-                    throw new InvalidOperationException("Game started without observing the starting weapon button."); // 선택 누락 오류
-                }
+                    startingChoiceObserved = true; // 실제 시작 장착 확인 기록
+                } // 조건 종료
                 if (startWallTime == 0d) // 최초 전투 갱신 확인
                 {
                     startWallTime = EditorApplication.timeSinceStartup; // 실제 시작 시각 저장

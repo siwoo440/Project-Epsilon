@@ -20,6 +20,10 @@ MonoBehaviour:
   attackType: 1
   baseDamage: 6
   attackInterval: 0.7
+  gradeThreePeriodicInterval: 4
+  gradeThreePeriodicDamageMultiplier: 1.2
+  gradeFivePeriodicInterval: 3
+  gradeFivePeriodicDamageMultiplier: 1.35
   range: 6
   maxGrade: 5
   projectileSpeed: 11

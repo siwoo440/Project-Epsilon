@@ -8,7 +8,7 @@ namespace ProjectEpsilon.Editor // 배치 시험 영역
 {
     internal static class StartingWeaponBatchHelper // 시작 선택 공통 처리
     {
-        public static bool HandleStartingSelection() // 시작 무기 버튼 자동 선택
+        public static bool HandleStartingSelection(int index = 0) // 시작 무기 버튼 자동 선택
         {
             GameManager game = GameManager.Instance; // 현재 게임 관리자
             if (game == null || game.CurrentState != GameState.Starting) // 시작 상태 확인
@@ -37,7 +37,8 @@ namespace ProjectEpsilon.Editor // 배치 시험 영역
             {
                 return true; // 화면 준비 대기
             }
-            var field = typeof(LevelUpPanelController).GetField("candidateButton01", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance); // 첫 버튼 필드
+            string buttonName = index == 1 ? "candidateButton02" : "candidateButton01"; // 실제 시작 후보 버튼 이름
+            var field = typeof(LevelUpPanelController).GetField(buttonName, System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance); // 실제 후보 버튼 필드
             Button button = field == null ? null : field.GetValue(panel) as Button; // 첫 후보 버튼
             if (button != null && button.IsActive() && button.interactable) // 실제 버튼 활성 확인
             {

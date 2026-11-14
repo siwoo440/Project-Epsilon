@@ -20,6 +20,8 @@ MonoBehaviour:
   attackType: 0
   baseDamage: 6
   attackInterval: 0.55
+  gradeThreeAttackSpeedMultiplier: 1.15
+  gradeFiveAttackSpeedMultiplier: 1.25
   range: 1.1
   maxGrade: 5
   gradeThreeMeleeTargetLimit: 2

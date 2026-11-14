@@ -24,6 +24,8 @@ MonoBehaviour:
   maxGrade: 5
   gradeThreeAreaRangeMultiplier: 1.25
   gradeFiveAreaRangeMultiplier: 1.5
+  gradeFiveAreaKnockbackDistance: 0.4
+  gradeFiveAreaKnockbackDuration: 0.2
   projectileSpeed: 8
   projectileLifetime: 3
   projectileHitLimit: 1

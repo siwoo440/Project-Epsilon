@@ -39,6 +39,16 @@ namespace ProjectEpsilon.Data // 프로젝트 기능 영역
         [Min(0f)] [SerializeField] private float gradeFiveWideStrikeDamageMultiplier = 1f; // 오 등급 강타 피해 배율
         [Min(0f)] [SerializeField] private float gradeFiveBurnExplosionRadius; // 화상 적 처치 폭발 반경
         [Min(0f)] [SerializeField] private float gradeFiveBurnExplosionDamageMultiplier; // 화상 적 처치 폭발 피해 배율
+        [Min(0)] [SerializeField] private int gradeThreeExtraProjectileHits; // 삼 등급 추가 관통 횟수 시험값
+        [Min(0)] [SerializeField] private int gradeFiveExtraProjectileHits; // 오 등급 추가 관통 횟수 시험값
+        [Min(1f)] [SerializeField] private float gradeThreeAttackSpeedMultiplier = 1f; // 삼 등급 공격속도 배율 시험값
+        [Min(1f)] [SerializeField] private float gradeFiveAttackSpeedMultiplier = 1f; // 오 등급 공격속도 배율 시험값
+        [Min(0)] [SerializeField] private int gradeThreePeriodicInterval; // 삼 등급 주기 공격 횟수 시험값
+        [Min(1f)] [SerializeField] private float gradeThreePeriodicDamageMultiplier = 1f; // 삼 등급 주기 피해 배율 시험값
+        [Min(0)] [SerializeField] private int gradeFivePeriodicInterval; // 오 등급 주기 공격 횟수 시험값
+        [Min(1f)] [SerializeField] private float gradeFivePeriodicDamageMultiplier = 1f; // 오 등급 주기 피해 배율 시험값
+        [Min(0f)] [SerializeField] private float gradeFiveAreaKnockbackDistance; // 오 등급 범위 넉백 거리 시험값
+        [Min(0f)] [SerializeField] private float gradeFiveAreaKnockbackDuration = 0.2f; // 오 등급 범위 넉백 시간 시험값
 
         public string Id => id; // 식별자 값 반환
         public string DisplayName => displayName; // 이름 값 반환
@@ -73,6 +83,12 @@ namespace ProjectEpsilon.Data // 프로젝트 기능 영역
         public float ProjectileSpeed => projectileSpeed; // 투사체·속도 값 반환
         public float ProjectileLifetime => projectileLifetime; // 투사체 값 반환
         public int ProjectileHitLimit => Mathf.Max(1, projectileHitLimit); // 안전한 최대 명중 수
+        public int GetProjectileHitLimit(int grade) => ProjectileHitLimit + (grade >= 5 ? Mathf.Max(Mathf.Max(0, gradeThreeExtraProjectileHits), gradeFiveExtraProjectileHits) : grade >= 3 ? Mathf.Max(0, gradeThreeExtraProjectileHits) : 0); // 등급별 실제 관통 횟수
+        public float GetGradeAttackSpeedMultiplier(int grade) => grade >= 5 ? Mathf.Max(Mathf.Max(1f, gradeThreeAttackSpeedMultiplier), gradeFiveAttackSpeedMultiplier) : grade >= 3 ? Mathf.Max(1f, gradeThreeAttackSpeedMultiplier) : 1f; // 등급별 실제 공격속도 배율
+        public int GetPeriodicInterval(int grade) => grade >= 5 && gradeFivePeriodicInterval > 0 ? gradeFivePeriodicInterval : grade >= 3 ? Mathf.Max(0, gradeThreePeriodicInterval) : 0; // 등급별 주기 공격 간격
+        public float GetPeriodicDamageMultiplier(int grade) => grade >= 5 && gradeFivePeriodicInterval > 0 ? Mathf.Max(1f, gradeFivePeriodicDamageMultiplier) : grade >= 3 ? Mathf.Max(1f, gradeThreePeriodicDamageMultiplier) : 1f; // 등급별 주기 피해 배율
+        public float GetAreaKnockbackDistance(int grade) => grade >= 5 ? Mathf.Max(0f, gradeFiveAreaKnockbackDistance) : 0f; // 등급별 범위 넉백 거리
+        public float GradeFiveAreaKnockbackDuration => Mathf.Max(0f, gradeFiveAreaKnockbackDuration); // 안전한 범위 넉백 시간
         public float GradeThreeTransferRange => Mathf.Max(0f, gradeThreeTransferRange); // 안전한 추가 전달 반경
         public float GradeThreeTransferDamageMultiplier => Mathf.Max(0f, gradeThreeTransferDamageMultiplier); // 안전한 추가 전달 피해 배율
         public float GetTransferDamageMultiplier(int grade) => GradeThreeTransferDamageMultiplier * (grade >= 5 ? Mathf.Max(1f, gradeFiveTransferDamageScale) : 1f); // 등급별 전달 피해 배율

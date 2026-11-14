@@ -58,7 +58,7 @@ namespace ProjectEpsilon.Combat // 프로젝트 기능 영역
             transferDamageMultiplier = snapshot.Weapon == null ? 0f : snapshot.Weapon.GetTransferDamageMultiplier(snapshot.Grade); // 발사 시점 등급별 전달 배율 저장
             hitTargets.Clear(); // 이전 명중 기록 초기화
             transferAttempted = false; // 이전 전달 상태 초기화
-            remainingHits = snapshot.Weapon == null ? 1 : snapshot.Weapon.ProjectileHitLimit; // 무기별 명중 수 적용
+            remainingHits = snapshot.Weapon == null ? 1 : snapshot.Weapon.GetProjectileHitLimit(snapshot.Grade); // 발사 등급의 실제 관통 수 적용
             attributeEffects = effects; // 효과 관리자 저장
             speed = Mathf.Max(0.01f, projectileSpeed); // 속도·최대 값 설정
             remainingLifetime = Mathf.Max(0.1f, lifetime); // 남은 값·최대 값 설정

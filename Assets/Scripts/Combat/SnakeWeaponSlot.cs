@@ -26,6 +26,8 @@ namespace ProjectEpsilon.Combat // 프로젝트 기능 영역
         private const float UpgradeBonus = 0.05f; // 강화 1회당 임시 증가율
         private float nextAttackTime; // 다음 값·공격 구성 선언
         private int meleeAttackCount; // 장착 후 근접 공격 횟수
+        private int periodicAttackCount; // 장착 후 주기 공격 횟수
+        private float lastPeriodicMultiplier = 1f; // 실제 최근 공격의 주기 피해 배율
 
         public SnakeSegment Owner => owner; // 몸통·소유자 값 반환
         public Transform Origin => owner == null ? null : owner.transform; // 위치·발사 위치 값 반환
@@ -35,6 +37,7 @@ namespace ProjectEpsilon.Combat // 프로젝트 기능 영역
         public int DamageUpgrades => damageUpgrades; // 공격력 강화 횟수 조회
         public int SpeedUpgrades => speedUpgrades; // 공격 속도 강화 횟수 조회
         public int RangeUpgrades => rangeUpgrades; // 사거리 강화 횟수 조회
+        public float LastPeriodicMultiplier => lastPeriodicMultiplier; // 실제 최근 주기 피해 배율
         public float DamageMultiplier => 1f + damageUpgrades * UpgradeBonus; // 공격력 배율
         public float SpeedMultiplier => 1f + speedUpgrades * UpgradeBonus; // 공격 속도 배율
         public float EffectiveRange => weapon == null ? 0f : weapon.Range * (1f + rangeUpgrades * UpgradeBonus); // 강화 사거리
@@ -61,12 +64,16 @@ namespace ProjectEpsilon.Combat // 프로젝트 기능 영역
             rangeUpgrades = Mathf.Max(0, rangeBonus); // 사거리 강화 저장
             nextAttackTime = 0f; // 다음 값·공격 값 설정
             meleeAttackCount = 0; // 새 장착의 강타 횟수 초기화
+            periodicAttackCount = 0; // 새 장착의 주기 공격 횟수 초기화
+            lastPeriodicMultiplier = 1f; // 새 장착의 최근 피해 배율 초기화
         }
 
         public void Clear() // 대상 기능 선언
         {
             weapon = null; // 포탑 값 설정
             meleeAttackCount = 0; // 제거한 포탑의 강타 횟수 초기화
+            periodicAttackCount = 0; // 제거한 포탑의 주기 공격 초기화
+            lastPeriodicMultiplier = 1f; // 제거한 포탑의 최근 피해 배율 초기화
             grade = 1; // 등급 값 설정
             damageUpgrades = 0; // 공격력 강화 초기화
             speedUpgrades = 0; // 공격 속도 강화 초기화
@@ -105,6 +112,19 @@ namespace ProjectEpsilon.Combat // 프로젝트 기능 영역
             return meleeAttackCount == 0; // 강타 시점 반환
         }
 
+        public float NextPeriodicMultiplier() // 실제 공격의 주기 피해 배율
+        { // 함수 시작
+            int interval = weapon == null ? 0 : weapon.GetPeriodicInterval(grade); // 실제 등급의 주기
+            if (interval <= 0) // 비활성 주기 확인
+            { // 조건 시작
+                lastPeriodicMultiplier = 1f; // 기본 공격 배율 복구
+                return lastPeriodicMultiplier; // 주기 없는 기본 피해
+            } // 조건 종료
+            periodicAttackCount = (periodicAttackCount + 1) % interval; // 실제 공격 횟수 갱신
+            lastPeriodicMultiplier = periodicAttackCount == 0 ? weapon.GetPeriodicDamageMultiplier(grade) : 1f; // 해당 주기의 실제 피해 배율
+            return lastPeriodicMultiplier; // 실제 발사 피해 배율 반환
+        } // 함수 종료
+
         public void StartCooldown(float currentTime) // 시작·현재 기능 선언
         {
             if (weapon == null) // 포탑 조건 확인
@@ -113,7 +133,7 @@ namespace ProjectEpsilon.Combat // 프로젝트 기능 영역
                 return; // 현재 기능 종료
             }
 
-            nextAttackTime = currentTime + Mathf.Max(0.01f, weapon.AttackInterval / (SpeedMultiplier * ProjectEpsilon.Progression.MetaModifiers.AttackSpeedMultiplier)); // 합성과 영구 성장 공격 주기
+            nextAttackTime = currentTime + Mathf.Max(0.01f, weapon.AttackInterval / (SpeedMultiplier * weapon.GetGradeAttackSpeedMultiplier(grade) * ProjectEpsilon.Progression.MetaModifiers.AttackSpeedMultiplier)); // 합성·등급·영구 성장 공격 주기
         }
     }
 }
