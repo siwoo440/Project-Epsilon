@@ -71,6 +71,10 @@ namespace ProjectEpsilon.Data // 프로젝트 기능 영역
         [Min(1f)] [SerializeField] private float gradeFiveExplosionRangeMultiplier = 1f; // 오 등급 폭발 범위 배율 시험값
         [Min(1f)] [SerializeField] private float gradeThreeExplosionCenterMultiplier = 1f; // 삼 등급 폭발 중심 피해 배율 시험값
         [Min(1f)] [SerializeField] private float gradeFiveExplosionCenterMultiplier = 1f; // 오 등급 폭발 중심 피해 배율 시험값
+        [Min(0)] [SerializeField] private int gradeThreeHolyHealBonus; // 삼 등급 신성 회복 추가량 시험값
+        [Min(0)] [SerializeField] private int gradeFiveHolyHealBonus; // 오 등급 신성 회복 추가량 시험값
+        [Min(0)] [SerializeField] private int gradeThreeHolyShieldBonus; // 삼 등급 신성 보호막 추가량 시험값
+        [Min(0)] [SerializeField] private int gradeFiveHolyShieldBonus; // 오 등급 신성 보호막 추가량 시험값
 
         public string Id => id; // 식별자 값 반환
         public string DisplayName => displayName; // 이름 값 반환
@@ -122,6 +126,8 @@ namespace ProjectEpsilon.Data // 프로젝트 기능 영역
         public float GetPoisonDurationMultiplier(int grade) => grade >= 5 ? Mathf.Max(Mathf.Max(1f, gradeThreePoisonDurationMultiplier), gradeFivePoisonDurationMultiplier) : grade >= 3 ? Mathf.Max(1f, gradeThreePoisonDurationMultiplier) : 1f; // 등급별 독 지속 시간 배율
         public float GetExplosionRangeMultiplier(int grade) => grade >= 5 ? Mathf.Max(Mathf.Max(1f, gradeThreeExplosionRangeMultiplier), gradeFiveExplosionRangeMultiplier) : grade >= 3 ? Mathf.Max(1f, gradeThreeExplosionRangeMultiplier) : 1f; // 등급별 폭발 범위 배율
         public float GetExplosionCenterMultiplier(int grade) => grade >= 5 ? Mathf.Max(Mathf.Max(1f, gradeThreeExplosionCenterMultiplier), gradeFiveExplosionCenterMultiplier) : grade >= 3 ? Mathf.Max(1f, gradeThreeExplosionCenterMultiplier) : 1f; // 등급별 폭발 중심 피해 배율
+        public int GetHolyHealBonus(int grade) => grade >= 5 ? Mathf.Max(Mathf.Max(0, gradeThreeHolyHealBonus), gradeFiveHolyHealBonus) : grade >= 3 ? Mathf.Max(0, gradeThreeHolyHealBonus) : 0; // 등급별 신성 회복 추가량
+        public int GetHolyShieldBonus(int grade) => grade >= 5 ? Mathf.Max(Mathf.Max(0, gradeThreeHolyShieldBonus), gradeFiveHolyShieldBonus) : grade >= 3 ? Mathf.Max(0, gradeThreeHolyShieldBonus) : 0; // 등급별 신성 보호막 추가량
         public float GradeThreeTransferRange => Mathf.Max(0f, gradeThreeTransferRange); // 안전한 추가 전달 반경
         public float GradeThreeTransferDamageMultiplier => Mathf.Max(0f, gradeThreeTransferDamageMultiplier); // 안전한 추가 전달 피해 배율
         public float GetTransferDamageMultiplier(int grade) => GradeThreeTransferDamageMultiplier * (grade >= 5 ? Mathf.Max(1f, gradeFiveTransferDamageScale) : 1f); // 등급별 전달 피해 배율

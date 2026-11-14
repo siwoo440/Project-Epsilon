@@ -18,6 +18,9 @@ MonoBehaviour:
   icon: {fileID: 21300000, guid: 1b3bcb31d9799634db0bcea3f9296d4f, type: 3}
   attribute: 6
   attackType: 1
+  gradeThreeExtraProjectileHits: 1
+  gradeFiveExtraProjectileHits: 2
+  gradeFiveHolyShieldBonus: 1
   baseDamage: 7
   attackInterval: 1
   range: 7

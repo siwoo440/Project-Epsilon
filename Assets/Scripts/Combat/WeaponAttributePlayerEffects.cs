@@ -63,12 +63,14 @@ namespace ProjectEpsilon.Combat // 전투 영역
 
             if (WeaponAttributeHolyRules.ShouldHeal(attack.SynergyStage, Random.value)) // 확률 회복 확인
             {
-                snakeHealth?.Heal(WeaponAttributeHolyRules.HealAmount); // 공유 체력 회복
+                int healBonus = attack.Weapon == null ? 0 : attack.Weapon.GetHolyHealBonus(attack.Grade); // 실제 포탑 등급의 회복 추가량
+                snakeHealth?.Heal(WeaponAttributeHolyRules.HealAmount + healBonus); // 공유 체력 회복
             }
 
             if (shieldController != null && WeaponAttributeHolyRules.ShouldGrantShield(attack.SynergyStage, holyHitCount)) // 보호막 발동 확인
             {
-                shieldController.Apply(WeaponAttributeHolyRules.ShieldAmount, WeaponAttributeHolyRules.ShieldDuration, attack.SynergyStage, attack.DirectDamage); // 보호막 적용
+                int shieldBonus = attack.Weapon == null ? 0 : attack.Weapon.GetHolyShieldBonus(attack.Grade); // 실제 포탑 등급의 보호막 추가량
+                shieldController.Apply(WeaponAttributeHolyRules.ShieldAmount + shieldBonus, WeaponAttributeHolyRules.ShieldDuration, attack.SynergyStage, attack.DirectDamage); // 보호막 적용
             }
         }
 

@@ -18,6 +18,8 @@ MonoBehaviour:
   icon: {fileID: 21300000, guid: b44a4a00a25771c48a42dc185c0960d9, type: 3}
   attribute: 6
   attackType: 0
+  gradeThreeHolyHealBonus: 1
+  gradeFiveHolyHealBonus: 2
   baseDamage: 9
   attackInterval: 0.9
   range: 1.35
