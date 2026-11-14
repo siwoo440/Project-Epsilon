@@ -428,7 +428,8 @@ namespace ProjectEpsilon.World // 맵 영역
             if (hazardPhase == 1 && Time.time >= warningUntil) // 예고 종료 확인
             {
                 hazardPhase = 0; // 안전 확인 전 대기 상태
-                if (!TouchesPlayer()) // 머리와 몸통의 붕괴 구역 이탈 확인
+                bool tailInside = body != null && body.TailSegment != null && body.TailSegment.isActiveAndEnabled && Contains(body.TailSegment.transform.position); // 실제 활성 꼬리의 구역 포함 여부
+                if (!TouchesPlayer() && !tailInside) // 머리와 몸통 및 꼬리의 붕괴 구역 이탈 확인
                 {
                     collapseObstacle = new GameObject("TemporaryCollapseObstacle"); // 실제 일시 장애물 객체
                     collapseObstacle.transform.SetParent(transform, false); // 지역과 수명 연결
