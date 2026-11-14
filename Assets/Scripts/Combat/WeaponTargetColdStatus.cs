@@ -53,7 +53,7 @@ namespace ProjectEpsilon.Combat // 전투 영역
             return Apply(damageTarget, incomingStage, 1f, 1); // 기존 호출의 임시 빙결 설정
         }
 
-        public bool Apply(WeaponTarget damageTarget, int incomingStage, float freezeDuration, int requiredAdditionalHits) // 조정 가능한 냉기 적용
+        public bool Apply(WeaponTarget damageTarget, int incomingStage, float freezeDuration, int requiredAdditionalHits, float durationMultiplier = 1f) // 조정 가능한 냉기 적용
         {
             if (damageTarget == null || !damageTarget.IsAlive) // 대상 유효성 확인
             {
@@ -75,7 +75,7 @@ namespace ProjectEpsilon.Combat // 전투 영역
                 statusController = damageTarget.gameObject.AddComponent<WeaponTargetStatusController>(); // 상태 관리자 추가
             }
 
-            float duration = WeaponAttributeControlRules.GetColdDuration(resolvedStage); // 냉기 지속 시간 계산
+            float duration = WeaponAttributeControlRules.GetColdDuration(resolvedStage) * Mathf.Max(1f, durationMultiplier); // 기존 시너지와 등급의 냉기 지속 시간
             int nextStacks = WeaponAttributeControlRules.ClampColdStacks(stackCount + 1); // 이번 명중 이후 누적
             float movementMultiplier = WeaponAttributeControlRules.GetColdMovementMultiplier(resolvedStage, nextStacks); // 누적별 냉기 이동 배율
             int priority = WeaponAttributeControlRules.GetColdPriority(resolvedStage); // 냉기 우선순위 계산

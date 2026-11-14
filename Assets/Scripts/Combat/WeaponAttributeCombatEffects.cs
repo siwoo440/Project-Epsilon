@@ -287,6 +287,15 @@ namespace ProjectEpsilon.Combat // 전투 영역
                     return new WeaponAttributeAttackSnapshot(attack.Weapon, attack.Attribute, attack.AttributeCount, attack.SynergyStage, attack.Grade, attack.Origin, fireDamage, attack.AreaCenter); // 실제 범위 중심을 보존한 공격
                 } // 조건 종료
             } // 조건 종료
+            if (attack.Attribute == WeaponAttribute.Cold && attack.Weapon != null) // 실제 냉기 포탑 확인
+            { // 조건 시작
+                WeaponTargetColdStatus cold = target.GetComponent<WeaponTargetColdStatus>(); // 실제 명중 전 냉기 상태
+                if (cold != null && cold.RemainingDuration > 0f && cold.StackCount > 0) // 실제 활성 냉기 대상 확인
+                { // 조건 시작
+                    float coldDamage = attack.DirectDamage * attack.Weapon.GetChilledDamageMultiplier(attack.Grade); // 실제 냉기 대상 등급 피해
+                    return new WeaponAttributeAttackSnapshot(attack.Weapon, attack.Attribute, attack.AttributeCount, attack.SynergyStage, attack.Grade, attack.Origin, coldDamage, attack.AreaCenter); // 실제 범위 중심을 보존한 공격
+                } // 조건 종료
+            } // 조건 종료
             if (attack.Attribute != WeaponAttribute.Dark) // 암흑 속성 여부 확인
             {
                 return attack; // 원래 공격 반환
@@ -359,7 +368,8 @@ namespace ProjectEpsilon.Combat // 전투 영역
                 cold = target.gameObject.AddComponent<WeaponTargetColdStatus>(); // 냉기 상태 추가
             }
 
-            cold.Apply(target, attack.SynergyStage, coldFreezeDuration, coldFreezeAdditionalHits); // 냉기 누적과 조정 가능한 빙결 적용
+            float durationMultiplier = attack.Weapon == null ? 1f : attack.Weapon.GetColdDurationMultiplier(attack.Grade); // 실제 포탑 등급의 냉기 시간 배율
+            cold.Apply(target, attack.SynergyStage, coldFreezeDuration, coldFreezeAdditionalHits, durationMultiplier); // 냉기 누적과 기존 빙결 조건 적용
         }
 
         private static void ApplyPoison(WeaponAttributeAttackSnapshot attack, WeaponTarget target) // 독 약화 적용

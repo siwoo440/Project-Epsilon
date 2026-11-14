@@ -22,6 +22,8 @@ MonoBehaviour:
   attackInterval: 1.4
   range: 2.25
   maxGrade: 5
+  gradeThreeColdDurationMultiplier: 1.2
+  gradeFiveColdDurationMultiplier: 1.4
   gradeThreeAreaRangeMultiplier: 1.25
   gradeFiveAreaRangeMultiplier: 1.5
   projectileSpeed: 8
