@@ -106,7 +106,7 @@ namespace ProjectEpsilon.Editor // 배치 시험 영역
             closeSettings.onClick.Invoke(); // 실제 설정 화면 닫기
             yield return Tap(keyboard, Key.DownArrow); // 실제 다음 맵 키 입력
             Text guide = (Text)typeof(LevelUpPanelController).GetField("growthText", BindingFlags.Instance | BindingFlags.NonPublic).GetValue(panel); // 실제 시작 안내 문구
-            Require(maps.SelectedIndex == 1 && guide != null && guide.text.Contains("폐허 회랑"), "Map arrow input or visible selection failed."); // 실제 맵 변경과 안내 확인
+            Require(maps.SelectedIndex == 1 && guide != null && guide.text.Contains("폐허"), "Map arrow input or visible selection failed."); // 실제 맵 변경과 안내 확인
             yield return Tap(keyboard, Key.UpArrow); // 실제 이전 맵 키 입력
             Require(maps.SelectedIndex == 0, "Map arrow did not return to plains."); // 실제 첫 맵 복귀 확인
             yield return Tap(keyboard, Key.UpArrow); // 실제 맵 역순 순환 입력

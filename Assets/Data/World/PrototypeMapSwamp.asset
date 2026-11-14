@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 421dfce3117840c9abe12b22179a0198, type: 3}
   m_Name: PrototypeMapSwamp
   m_EditorClassIdentifier: Assembly-CSharp::ProjectEpsilon.World.PrototypeMapProfile
-  displayName: 변이 습지
+  displayName: 습지
   ground: {fileID: 21300000, guid: 448c87bdcce1442390fdd937122442ab, type: 3}
   selectionPreview: {fileID: 21300000, guid: 45218ca6d7844f62bd021f550c156c04, type: 3}
   bossArtwork: {fileID: 21300000, guid: d191082636cb49bfa860407f4522d5eb, type: 3}

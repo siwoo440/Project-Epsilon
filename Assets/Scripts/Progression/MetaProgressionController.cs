@@ -244,11 +244,11 @@ namespace ProjectEpsilon.Progression // 영구 성장 영역
             LastUnlockNotice = string.Empty; // 실제 새 해금 초기화
             if (!hadRuins && Service.IsMapUnlocked(1)) // 새 폐허 해금 확인
             {
-                LastUnlockNotice += "폐허 회랑  "; // 실제 폐허 해금 표시
+                LastUnlockNotice += "폐허  "; // 실제 폐허 해금 표시
             }
             if (!hadSwamp && Service.IsMapUnlocked(2)) // 새 습지 해금 확인
             {
-                LastUnlockNotice += "변이 습지  "; // 실제 습지 해금 표시
+                LastUnlockNotice += "습지  "; // 실제 습지 해금 표시
             }
             if (!hadCharacter && Service.IsCharacterUnlocked(0)) // 새 캐릭터 해금 확인
             {

@@ -6,10 +6,10 @@ using UnityEngine; // 유니티 기능
 
 namespace ProjectEpsilon.World // 맵 영역
 {
-    public sealed class PrototypeChunkMap : MonoBehaviour // 시험용 개방 평원 청크 관리
+    public sealed class PrototypeChunkMap : MonoBehaviour // 시험용 평원 청크 관리
     {
         [SerializeField] private float chunkSize = 24f; // 청크 크기 임시값
-        [SerializeField] private Sprite groundSprite; // 개방 평원 바닥 이미지
+        [SerializeField] private Sprite groundSprite; // 평원 바닥 이미지
         private readonly Dictionary<Vector2Int, GameObject> chunks = new Dictionary<Vector2Int, GameObject>(); // 실제 활성 청크
         private readonly List<Vector2Int> removed = new List<Vector2Int>(); // 이탈 청크 임시 목록
         private readonly HashSet<Vector3Int> claimedFeatures = new HashSet<Vector3Int>(); // 런당 획득한 지역 보상

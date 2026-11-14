@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 421dfce3117840c9abe12b22179a0198, type: 3}
   m_Name: PrototypeMapPlains
   m_EditorClassIdentifier: Assembly-CSharp::ProjectEpsilon.World.PrototypeMapProfile
-  displayName: 개방 평원
+  displayName: 평원
   ground: {fileID: 21300000, guid: aa8fb6306d6836a47a709a925757de8c, type: 3}
   selectionPreview: {fileID: 21300000, guid: 353082b59d36477a88d24ebf3b7a074a, type: 3}
   bossArtwork: {fileID: 21300000, guid: 81ec9455f85fb50448436b047f6df15e, type: 3}

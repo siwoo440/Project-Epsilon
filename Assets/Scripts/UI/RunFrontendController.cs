@@ -326,7 +326,7 @@ namespace ProjectEpsilon.UI // 실제 메뉴 영역
                     continue; // 잘못된 후보 생략
                 }
                 bool unlocked = meta == null || meta.IsCharacterUnlocked(character.Id); // 실제 해금 상태
-                string label = character.DisplayName + (unlocked ? "" : "  |  잠김: 개방 평원 보스 처치"); // 실제 이름과 해금 조건
+                string label = character.DisplayName + (unlocked ? "" : "  |  잠김: 평원 보스 처치"); // 실제 이름과 해금 조건
                 Button button = CreateButton(panel, "FrontendCharacterButton" + index, label, new Vector2(-520f + index % 2 * 450f, 225f - index / 2 * 185f), new Vector2(420f, 160f), () => SelectCharacter(selected)); // 넓어진 캐릭터 선택 버튼
                 Text buttonLabel = button.GetComponentInChildren<Text>(); // 실제 캐릭터 이름과 잠금 안내
                 RectTransform buttonLabelRect = (RectTransform)buttonLabel.transform; // 실제 이름 영역
@@ -376,13 +376,13 @@ namespace ProjectEpsilon.UI // 실제 메뉴 영역
             CreateButton(panel, "FrontendCharactersBackButton", "뒤로", new Vector2(-815f, 435f), new Vector2(210f, 75f), BackFromCharacters); // 왼쪽 상단의 주 메뉴 복귀
             Button mapButton = CreateButton(panel, "FrontendCharactersNextButton", "맵 선택", new Vector2(520f, -400f), new Vector2(460f, 100f), () => Show(FrontendStage.Maps)); // 커진 맵 선택 버튼
             Text mapLabel = mapButton.GetComponentInChildren<Text>(); // 실제 맵 선택 글자
-            ((RectTransform)mapLabel.transform).anchoredPosition = new Vector2(-40f, 0f); // 아이콘 왼쪽에 글자 배치
-            ((RectTransform)mapLabel.transform).sizeDelta = new Vector2(300f, 90f); // 실제 맵 선택 글자 영역
+            ((RectTransform)mapLabel.transform).anchoredPosition = new Vector2(40f, 0f); // 아이콘 오른쪽의 글자 배치
+            ((RectTransform)mapLabel.transform).sizeDelta = new Vector2(135f, 90f); // 중앙에 모은 글자 영역
             Texture2D mapIconTexture = Resources.Load<Texture2D>("UI/MapSelectIcon"); // 실제 맵 선택 아이콘
             if (mapIconTexture != null) // 아이콘 자원 확인
             { // 조건 시작
                 Sprite mapIcon = Sprite.Create(mapIconTexture, new Rect(0f, 0f, mapIconTexture.width, mapIconTexture.height), new Vector2(0.5f, 0.5f)); // 정사각형 맵 아이콘
-                Preview(mapButton.transform, "FrontendMapSelectIcon", mapIcon, new Vector2(155f, 0f), new Vector2(80f, 80f)); // 맵 선택 버튼 오른쪽 아이콘
+                Preview(mapButton.transform, "FrontendMapSelectIcon", mapIcon, new Vector2(-70f, 0f), new Vector2(80f, 80f)); // 글자 왼쪽의 맵 아이콘
             } // 조건 종료
         }
         private void BackFromCharacters() // 실제 캐릭터 선택 이전 화면
@@ -444,7 +444,7 @@ namespace ProjectEpsilon.UI // 실제 메뉴 영역
                     continue; // 잘못된 맵 생략
                 }
                 bool unlocked = meta == null || meta.IsMapUnlocked(index); // 실제 맵 해금 상태
-                string locked = index == 1 ? "개방 평원 보스 처치" : "폐허 회랑 보스 처치"; // 실제 맵 해금 조건
+                string locked = index == 1 ? "평원 보스 처치" : "폐허 보스 처치"; // 실제 맵 해금 조건
                 string label = profile.DisplayName + (unlocked ? index == selectedMap ? "  [선택됨]" : "" : "\n잠김: " + locked); // 실제 맵과 잠금 안내
                 GameObject card = new GameObject("FrontendMapCard" + index, typeof(RectTransform), typeof(Image), typeof(Outline)); // 맵 카드 배경 생성
                 card.transform.SetParent(panel, false); // 선택 화면에 카드 연결

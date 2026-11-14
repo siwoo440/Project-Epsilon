@@ -111,6 +111,9 @@ namespace ProjectEpsilon.Editor // 실제 배치 시험 영역
             Button("FrontendStartButton").onClick.Invoke(); // 실제 준비 씬 이동
             yield return null; // 실제 준비 씬 초기화 대기
             Require(SceneManager.GetActiveScene().path == SceneFrontendContext.PreparationPath && Button("FrontendCharacterButton2") != null, "Preparation character screen missing."); // 실제 캐릭터 선택 확인
+            RectTransform mapIcon = GameObject.Find("FrontendMapSelectIcon")?.GetComponent<RectTransform>(); // 실제 지도 아이콘 위치
+            RectTransform mapLabel = Button("FrontendCharactersNextButton").GetComponentInChildren<Text>().rectTransform; // 실제 맵 선택 글자 위치
+            Require(mapIcon != null && mapIcon.anchoredPosition.x < 0f && mapLabel.anchoredPosition.x > 0f && mapIcon.anchoredPosition.x + mapIcon.rect.width / 2f <= mapLabel.anchoredPosition.x - mapLabel.rect.width / 2f, "Map icon and label layout invalid."); // 아이콘과 글자의 순서 및 겹침 확인
             Require(!Button("FrontendCharacterButton1").interactable, "Locked character became selectable."); // 실제 캐릭터 해금 차단 확인
             Button("FrontendCharacterButton2").onClick.Invoke(); // 실제 중장형 캐릭터 선택
             yield return null; // 실제 캐릭터 정보 갱신 대기
@@ -119,6 +122,8 @@ namespace ProjectEpsilon.Editor // 실제 배치 시험 영역
             WeaponData turret = selected.StartingWeapons.Weapons[1]; // 실제 두 번째 시작 포탑
             Button("FrontendCharactersNextButton").onClick.Invoke(); // 실제 맵 선택 이동
             yield return null; // 실제 맵 화면 갱신 대기
+            Require(Button("FrontendMapButton0").GetComponentInChildren<Text>().text.StartsWith("평원") && Button("FrontendMapButton1").GetComponentInChildren<Text>().text.StartsWith("폐허") && Button("FrontendMapButton2").GetComponentInChildren<Text>().text.StartsWith("습지"), "Map display names invalid."); // 실제 세 맵 표시 이름 확인
+            Require(Button("FrontendMapButton1").GetComponentInChildren<Text>().text.Contains("평원 보스 처치") && Button("FrontendMapButton2").GetComponentInChildren<Text>().text.Contains("폐허 보스 처치"), "Map unlock guidance invalid."); // 실제 해금 안내 확인
             Require(!Button("FrontendMapButton1").interactable, "Locked map became selectable."); // 실제 맵 해금 차단 확인
             MetaProgressionController preparationMeta = MetaProgressionController.Instance; // 실제 준비 화면 저장 관리자
             Require(preparationMeta.Service.TryCompleteRun("scene-unlock", 0d, 0, 0, true, 0), "Could not unlock the test map."); // 실제 격리 저장의 맵 해금
