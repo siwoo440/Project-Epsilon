@@ -1,5 +1,6 @@
 using System; // 실제 예외 형식
 using System.Collections; // 실제 프레임 대기
+using System.Collections.Generic; // 실제 UI 광선 검사 결과
 using System.Reflection; // 실제 보스 체력 표시 영역 조회
 using ProjectEpsilon.Combat; // 실제 포탑과 시너지
 using ProjectEpsilon.Core; // 실제 게임 상태
@@ -11,6 +12,7 @@ using UnityEditor; // 실제 배치 제어
 using UnityEditor.SceneManagement; // 실제 전투 씬 열기
 using UnityEngine; // Unity 구성
 using UnityEngine.UI; // 실제 패널과 이미지
+using UnityEngine.EventSystems; // 실제 마우스 클릭 전달
 
 namespace ProjectEpsilon.Editor // 실제 배치 시험 영역
 {
@@ -138,11 +140,37 @@ namespace ProjectEpsilon.Editor // 실제 배치 시험 영역
             Transform mounted = weapons.Slots[0].Origin.Find("WeaponVisual"); // 실제 몸통 포탑 그림
             Require(mounted != null && mounted.GetComponent<SpriteRenderer>().sprite == blade.Artwork, "Mounted turret image differs from its data."); // 몸통과 포탑 데이터 일치 확인
             Require(Icon("SidebarWeapon_1") == blade.Icon && Icon("SidebarWeapon_2") == blade.Icon && TextValue("SidebarLabel_1").Contains(blade.DisplayName) && TextValue("SidebarAttribute_0").Contains("2단계"), "Turret image, order or synergy did not update."); // 실제 아이콘과 물리 시너지 확인
+            Click("SidebarAttributeButton_0"); // 실제 물리 속성 클릭
+            yield return null; // 실제 상세 화면의 렌더 등록 대기
+            Require(Visible("SidebarSynergyDetail") && !Visible("SidebarRow_1") && TextValue("SidebarInfoTitle").Contains("물리"), "물리 시너지 상세 전환 실패"); // 실제 상세 화면 전환 확인
+            Require(TextComponent("SidebarSynergyStage_2").color == Color.white && TextComponent("SidebarSynergyStage_4").color != Color.white, "활성 단계와 미활성 단계 색상 오류"); // 실제 단계별 글자 색상 확인
+            for (int index = 0; index < WeaponAttributeSynergyRules.AttributeCount; index++) // 실제 여덟 속성 순회
+            { // 반복 시작
+                Click("SidebarAttributeButton_" + index); // 실제 속성별 클릭
+                Require(TextValue("SidebarInfoTitle").Contains(WeaponDisplayNames.Attribute((WeaponAttribute)index)), "속성 상세 제목 오류: " + index); // 실제 속성별 상세 전환 확인
+            } // 반복 종료
+            Click("SidebarAttributeButton_0"); // 실제 물리 상세 재선택
+            Require(weapons.TryMergeSlots(0, 1, WeaponMergeUpgrade.Damage), "Could not merge test turrets."); // 실제 같은 포탑 합성
+            Require(TextComponent("SidebarSynergyStage_2").color != Color.white && TextValue("SidebarInfoStatus").Contains("미활성"), "합성 후 상세 시너지 미활성 갱신 실패"); // 실제 합성 후 상세 단계 갱신 확인
+            Click("SidebarInfoCloseButton"); // 실제 몸통 목록 복귀
             Text rowLabel = GameObject.Find("SidebarLabel_1").GetComponent<Text>(); // 실제 첫 포탑 이름 글자
             Require(rowLabel.alignment == TextAnchor.MiddleCenter && rowLabel.fontSize >= 22 && !rowLabel.text.Contains("\n") && !rowLabel.text.Contains("기본 공격"), "Turret name is not centered or still shows base attack details."); // 실제 가운데 정렬과 공격 상세 제거 확인
-            Require(weapons.TryMergeSlots(0, 1, WeaponMergeUpgrade.Damage), "Could not merge test turrets."); // 실제 같은 포탑 합성
             Require(TextValue("SidebarLabel_1").Contains("★2") && Icon("SidebarWeapon_2") == null && !TextValue("SidebarAttribute_0").Contains("2단계"), "Merge grade or synergy did not update."); // 실제 합성 등급과 단계 갱신 확인
             Require(weapons.TryEquipAt(1, fire) && Icon("SidebarWeapon_2") == fire.Icon && TextValue("SidebarLabel_2").Contains("화염"), "Replacement turret image or attribute mismatch."); // 실제 교체 아이콘과 속성 확인
+            Click("SidebarReactionsButton"); // 실제 속성 조합 패널 선택
+            yield return null; // 실제 조합 화면의 렌더 등록 대기
+            Require(Visible("SidebarReactionPanel") && !Visible("SidebarRow_1"), "속성 조합 패널 전환 실패"); // 실제 조합 화면 전환 확인
+            WeaponAttribute[] expectedLeft = { WeaponAttribute.Fire, WeaponAttribute.Cold, WeaponAttribute.Physical, WeaponAttribute.Holy, WeaponAttribute.Dark, WeaponAttribute.Holy }; // 실제 첫 조합 속성 순서
+            WeaponAttribute[] expectedRight = { WeaponAttribute.Poison, WeaponAttribute.Electric, WeaponAttribute.Explosion, WeaponAttribute.Fire, WeaponAttribute.Poison, WeaponAttribute.Dark }; // 실제 둘째 조합 속성 순서
+            for (int index = 0; index < 6; index++) // 실제 여섯 가지 조합 순회
+            { // 반복 시작
+                Require(Icon("SidebarReactionLeft_" + index) == ProjectUiSkin.AttributeIcon((int)expectedLeft[index]) && Icon("SidebarReactionRight_" + index) == ProjectUiSkin.AttributeIcon((int)expectedRight[index]) && WeaponAttributeReactionRules.ResolvePair(expectedLeft[index], expectedRight[index]) != WeaponAttributeReaction.None && TextValue("SidebarReactionPlus_" + index) == "+" && TextValue("SidebarReactionEquals_" + index) == "=" && !string.IsNullOrEmpty(TextValue("SidebarReactionText_" + index)), "속성 조합 아이콘과 수식 누락: " + index); // 실제 조합 순서와 수식 확인
+            } // 반복 종료
+            Require(TextComponent("SidebarReactionText_2").color != Color.white, "미보유 조합 글자 색상 오류"); // 실제 미보유 조합 색상 확인
+            WeaponData explosion = AssetDatabase.LoadAssetAtPath<WeaponData>("Assets/Data/Weapons/Day14/DebugExplosion.asset"); // 실제 폭발 포탑 데이터
+            Require(explosion != null && weapons.TryEquipAt(2, explosion) && TextComponent("SidebarReactionText_2").color == Color.white, "속성 보유 후 조합 글자 갱신 실패"); // 실제 포탑 변경에 따른 조합 갱신 확인
+            Click("SidebarInfoCloseButton"); // 실제 몸통 목록 복귀
+            Require(Visible("SidebarRow_1") && !Visible("SidebarReactionPanel"), "몸통 목록 복귀 실패"); // 실제 정보 패널 닫기 확인
             Require(body.TryGainBodyFromLevelUp() && Visible("SidebarRow_4"), "Growth row did not appear."); // 실제 몸통 성장 행 확인
             Require(weapons.TryEquipAt(3, fire) && Icon("SidebarWeapon_4") == fire.Icon, "Tail turret image mismatch."); // 실제 꼬리 쪽 포탑 확인
             Require(body.TryRemoveBody() && !Visible("SidebarRow_4"), "Lost body row remained visible."); // 실제 몸통 손실 행 제거
@@ -155,8 +183,37 @@ namespace ProjectEpsilon.Editor // 실제 배치 시험 영역
             RectTransform lastRow = (RectTransform)GameObject.Find("SidebarRow_20").transform; // 실제 마지막 몸통 행
             Require(lastRow.anchorMin.y >= 0f && lastRow.anchorMax.y <= 1f, "Last body row exceeds sidebar bounds."); // 실제 마지막 행 표시 영역 확인
             Require(body.TryRemoveBody() && !Visible("SidebarRow_20") && body.TryRepairBody() && Visible("SidebarRow_20") && Icon("SidebarWeapon_20") == null, "Twentieth body loss or repair failed."); // 실제 마지막 몸통 손실과 빈 복구 확인
+            for (int index = 3; index < 10; index++) // 실제 물리 여덟 개 장착 준비
+            { // 반복 시작
+                Require(weapons.TryEquipAt(index, blade), "고단계 물리 포탑 장착 실패: " + index); // 실제 물리 속성 수 증가
+            } // 반복 종료
+            Click("SidebarAttributeButton_0"); // 실제 물리 고단계 선택
+            yield return null; // 실제 상세 화면의 렌더 등록 대기
+            Require(synergy.GetStage(WeaponAttribute.Physical) == 8 && TextComponent("SidebarSynergyStage_2").color == Color.white && TextComponent("SidebarSynergyStage_4").color == Color.white && TextComponent("SidebarSynergyStage_6").color != Color.white && TextComponent("SidebarSynergyStage_8").color == Color.white, "고단계 활성 효과 또는 미구현 효과 색상 오류"); // 실제 활성과 미구현 단계 구분 확인
+            Click("SidebarInfoCloseButton"); // 실제 몸통 목록 복귀
             AutomatedBodySidebarVerification.Finish(0, "Viewport, body order, images, replacement, merge, synergy, growth, loss and repair passed."); // 실제 전체 시험 성공
         }
+        private static Text TextComponent(string name) // 실제 패널 글자 조회
+        { // 함수 시작
+            GameObject item = GameObject.Find(name); // 실제 글자 객체 조회
+            return item == null ? null : item.GetComponent<Text>(); // 실제 글자 반환
+        } // 함수 종료
+        private static void Click(string name) // 실제 마우스 위치와 클릭 확인
+        { // 함수 시작
+            GameObject item = GameObject.Find(name); // 실제 버튼 객체 조회
+            Button button = item == null ? null : item.GetComponent<Button>(); // 실제 선택 버튼
+            Require(button != null && button.interactable && EventSystem.current != null, "클릭 버튼 누락: " + name); // 실제 버튼과 입력 시스템 확인
+            Canvas.ForceUpdateCanvases(); // 실제 화면 위치 갱신
+            Vector3[] corners = new Vector3[4]; // 실제 버튼 화면 모서리
+            button.GetComponent<RectTransform>().GetWorldCorners(corners); // 실제 버튼 위치 조회
+            PointerEventData pointer = new PointerEventData(EventSystem.current); // 실제 마우스 포인터 정보
+            pointer.position = RectTransformUtility.WorldToScreenPoint(null, (corners[0] + corners[2]) * 0.5f); // 실제 버튼 중앙 위치
+            pointer.button = PointerEventData.InputButton.Left; // 실제 왼쪽 마우스 버튼
+            List<RaycastResult> hits = new List<RaycastResult>(); // 실제 화면 입력 대상 목록
+            EventSystem.current.RaycastAll(pointer, hits); // 실제 포인터 대상 검색
+            Require(hits.Count > 0 && ExecuteEvents.GetEventHandler<IPointerClickHandler>(hits[0].gameObject) == item, "마우스 클릭 대상 가림: " + name + " / " + (hits.Count == 0 ? "없음" : hits[0].gameObject.name) + " / " + pointer.position + " / " + Screen.width + "x" + Screen.height); // 실제 입력 대상 확인
+            ExecuteEvents.Execute(item, pointer, ExecuteEvents.pointerClickHandler); // 실제 마우스 클릭 전달
+        } // 함수 종료
         private static bool Visible(string name) // 실제 활성 행 확인
         {
             return GameObject.Find(name) != null; // 실제 활성 객체 여부 반환
