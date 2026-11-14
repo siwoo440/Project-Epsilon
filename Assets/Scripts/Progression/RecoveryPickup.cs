@@ -11,6 +11,7 @@ namespace ProjectEpsilon.Progression // 프로젝트 기능 영역
     }
 
     [RequireComponent(typeof(SpriteRenderer))] // 구성 요소·이미지 설정
+    [DefaultExecutionOrder(10)] // 실제 자동 전진 이후 회복 아이템 처리
     public sealed class RecoveryPickup : MonoBehaviour // 회복·행동 자료 구조
     {
         [SerializeField] private Transform receiver; // 필드·위치 설정
@@ -32,6 +33,7 @@ namespace ProjectEpsilon.Progression // 프로젝트 기능 영역
         [SerializeField] private float collectDistance = 0.22f; // 필드·거리 설정
 
         private SpriteRenderer spriteRenderer; // 이미지·렌더러 구성 선언
+        private SnakeMovement receiverMovement; // 실제 수신자의 자동 전진 경로
         private bool collected; // 대상 구성 선언
         public bool IsBodyRepair => pickupType == RecoveryPickupType.BodyRepair; // 몸통 복구 아이템 여부
 
@@ -51,6 +53,7 @@ namespace ProjectEpsilon.Progression // 프로젝트 기능 영역
         ) // 앞선 항목 종료
         {
             receiver = target; // 대상 값 설정
+            receiverMovement = receiver == null ? null : receiver.GetComponent<SnakeMovement>(); // 실제 수신자의 이동 경로 연결
             health = snakeHealth; // 체력 값 설정
             bodyManager = manager; // 몸통·관리자 값 설정
             pickupType = type; // 형식 값 설정
@@ -127,6 +130,11 @@ namespace ProjectEpsilon.Progression // 프로젝트 기능 영역
                 return; // 현재 기능 종료
             }
 
+            if (receiverMovement == null || receiverMovement.transform != receiver) // 실제 수신자 변경 여부 확인
+            { // 조건 시작
+                receiverMovement = receiver.GetComponent<SnakeMovement>(); // 현재 수신자의 이동 경로 조회
+            } // 조건 종료
+
             Vector3 targetPosition = // 벡터·대상 값 설정
                 receiver.position; // 위치 처리
 
@@ -144,6 +152,12 @@ namespace ProjectEpsilon.Progression // 프로젝트 기능 영역
                 Collect(); // 대상 기능 실행
                 return; // 현재 기능 종료
             }
+
+            if (receiverMovement != null && receiverMovement.CrossedPositionThisFrame(transform.position, collectDistance)) // 현재 프레임 실제 자동 전진 경로의 아이템 확인
+            { // 조건 시작
+                Collect(); // 통과한 아이템의 기존 회복 처리
+                return; // 흡수와 중복 획득 방지
+            } // 조건 종료
 
             float attractionRangeSquared = // 범위 값 설정
                 attractionRange * // 범위 처리
