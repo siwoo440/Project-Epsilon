@@ -10,6 +10,7 @@ namespace ProjectEpsilon.Enemies // 적 시각 영역
         [SerializeField, Min(0f)] private float movementFrequency = 8f; // 이동 표시 속도 시험값
         [SerializeField, Min(0f)] private float attackAmount = 0.1f; // 공격 표시 크기 시험값
         [SerializeField, Min(0.01f)] private float attackDuration = 0.2f; // 공격 표시 시간 시험값
+        [SerializeField, Min(0f)] private float movementTilt = 2f; // 이동 시 이미지 기울기 시험값
         private WeaponTarget target; // 실제 적 전투 대상
         private SpriteRenderer original; // 기존 색상과 이미지 기준
         private SpriteRenderer artwork; // 충돌체와 분리된 실제 표시
@@ -17,6 +18,62 @@ namespace ProjectEpsilon.Enemies // 적 시각 영역
         private float movingUntil; // 이동 표시 유지 시각
         private float attackUntil; // 공격 표시 종료 시각
         private bool originalVisible; // 기존 표시 활성 상태
+        public void ConfigureMotion(EarlyEnemyKind kind, ElitePattern elitePattern) // 실제 행동별 표시 시험값
+        { // 함수 시작
+            movementAmount = 0.035f; // 기본 이동 진폭
+            movementFrequency = 8f; // 기본 이동 속도
+            movementTilt = 2f; // 기본 이동 기울기
+            attackAmount = 0.1f; // 기본 공격 진폭
+            attackDuration = 0.2f; // 기본 공격 표시 시간
+            switch (kind) // 실제 적 행동 유형
+            { // 분기 시작
+                case EarlyEnemyKind.Flyer: // 비행 적 움직임
+                    movementAmount = 0.06f; // 빠른 날갯짓 표시 진폭
+                    movementFrequency = 14f; // 빠른 날갯짓 표시 속도
+                    movementTilt = 4f; // 비행 방향 흔들림
+                    break; // 유형 설정 종료
+                case EarlyEnemyKind.Armored: // 장갑 적 움직임
+                    movementAmount = 0.025f; // 무거운 이동 표시 진폭
+                    movementFrequency = 4f; // 느린 이동 표시 속도
+                    movementTilt = 1f; // 작은 이동 기울기
+                    attackAmount = 0.14f; // 무거운 공격 표시 진폭
+                    break; // 유형 설정 종료
+                case EarlyEnemyKind.Charger: // 일반 돌진 적 움직임
+                    movementFrequency = 10f; // 빠른 이동 표시 속도
+                    attackAmount = 0.18f; // 돌진 시작 표시 진폭
+                    attackDuration = 0.3f; // 돌진 시작 표시 시간
+                    break; // 유형 설정 종료
+                case EarlyEnemyKind.Shooter: // 단일 사격 적 움직임
+                case EarlyEnemyKind.Turret: // 부채꼴 사격 적 움직임
+                    movementAmount = 0.025f; // 사격 적 이동 진폭
+                    movementFrequency = 6f; // 사격 적 이동 속도
+                    attackAmount = 0.14f; // 사격 반동 표시 진폭
+                    attackDuration = 0.15f; // 사격 반동 표시 시간
+                    break; // 유형 설정 종료
+                case EarlyEnemyKind.Predator: // 포식 적 움직임
+                    movementFrequency = 10f; // 민첩한 이동 표시 속도
+                    movementTilt = 3f; // 포식 적 이동 기울기
+                    break; // 유형 설정 종료
+                case EarlyEnemyKind.Disruptor: // 감속 지대 적 움직임
+                    movementFrequency = 6f; // 완만한 이동 표시 속도
+                    movementTilt = 3f; // 감속 지대 적 기울기
+                    attackDuration = 0.3f; // 지대 생성 표시 시간
+                    break; // 유형 설정 종료
+                case EarlyEnemyKind.Elite: // 전용 엘리트 움직임
+                    movementFrequency = elitePattern == ElitePattern.Ranged ? 6f : 7f; // 사격 또는 근접 엘리트 속도
+                    attackAmount = 0.16f; // 엘리트 공격 표시 진폭
+                    attackDuration = 0.3f; // 엘리트 공격 표시 시간
+                    break; // 유형 설정 종료
+            } // 분기 종료
+        } // 함수 종료
+        public void ConfigureBossMotion() // 실제 보스 표시 시험값
+        { // 함수 시작
+            movementAmount = 0.02f; // 보스 이동 진폭
+            movementFrequency = 4f; // 보스 이동 표시 속도
+            movementTilt = 1f; // 보스 이동 기울기
+            attackAmount = 0.16f; // 보스 공격 표시 진폭
+            attackDuration = 0.35f; // 보스 공격 표시 시간
+        } // 함수 종료
         private void Awake() // 실제 표시 객체 준비
         { // 함수 시작
             target = GetComponent<WeaponTarget>(); // 실제 적 전투 대상
@@ -78,6 +135,8 @@ namespace ProjectEpsilon.Enemies // 적 시각 영역
             float movement = Time.time < movingUntil ? Mathf.Sin(Time.time * movementFrequency) * movementAmount : 0f; // 실제 이동 표시 진폭
             float attack = Time.time < attackUntil ? Mathf.Clamp01((attackUntil - Time.time) / Mathf.Max(0.01f, attackDuration)) * attackAmount : 0f; // 실제 공격 표시 진폭
             artwork.transform.localScale = new Vector3(1f + movement - attack * 0.5f, 1f - movement + attack, 1f); // 충돌체와 독립된 이미지 크기
+            float tilt = Time.time < movingUntil ? Mathf.Sin(Time.time * movementFrequency) * movementTilt : 0f; // 실제 유형별 이동 기울기
+            artwork.transform.localRotation = Quaternion.Euler(0f, 0f, tilt); // 충돌체와 독립된 이미지 방향
         } // 함수 종료
         private void SyncArtwork() // 기존 표시 상태 동기화
         { // 함수 시작

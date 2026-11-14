@@ -230,6 +230,7 @@ namespace ProjectEpsilon.Enemies // 적 영역
             };
             EarlyEnemyBehaviour behaviour = instance.AddComponent<EarlyEnemyBehaviour>(); // 기존 적 행동 재사용
             behaviour.Configure(settings, player, body, health, projectileVisual != null ? projectileVisual : sprite, keepDistance, projectileSpeed, projectileLifetime, 1f, 0.6f, 3f); // 실제 투사체와 이동 설정
+            instance.GetComponent<EnemyVisualMotion>()?.ConfigureBossMotion(); // 실제 보스 전용 표시 시험값 연결
             if (!GameManager.Instance.RegisterFinalBoss(target)) // 실제 보스 등록 확인
             {
                 instance.SetActive(false); // 등록 실패 시 공격 차단

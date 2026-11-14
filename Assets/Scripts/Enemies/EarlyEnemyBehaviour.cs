@@ -54,6 +54,7 @@ namespace ProjectEpsilon.Enemies // 적 영역
             statuses = GetComponent<WeaponTargetStatusController>(); // 상태 효과 조회
             knockback = GetComponent<WeaponTargetKnockbackController>(); // 넉백 조회
             visualMotion = GetComponent<EnemyVisualMotion>(); // 실제 시각 모션 조회
+            visualMotion?.ConfigureMotion(data.kind, data.elitePattern); // 실제 적 행동별 표시 시험값 연결
             nextAttack = Time.time + Mathf.Max(0.1f, settings.attackInterval); // 첫 공격 시각
             nextSlowZone = nextAttack; // 첫 감속 지대 생성 시각
         }
