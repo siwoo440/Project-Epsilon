@@ -77,6 +77,20 @@ namespace ProjectEpsilon.Editor // 배치 시험 영역
             yield return null; // 실제 맵 화면 갱신 대기
             Image mapCard = GameObject.Find("FrontendMapCard0").GetComponent<Image>(); // 실제 첫 맵 카드
             Require(mapCard.sprite != null && mapCard.sprite.texture.name == "RewardCardFrame" && !mapCard.raycastTarget, "실제 맵 카드 프레임 누락"); // 카드 디자인과 입력 보존 확인
+            string[] mapPreviewNames = { "MapPreview_Plains", "MapPreview_Ruins", "MapPreview_Swamp" }; // 실제 세 맵 미리보기 이름
+            for (int index = 0; index < mapPreviewNames.Length; index++) // 실제 맵 카드 순회
+            { // 반복 시작
+                GameObject item = GameObject.Find("FrontendMapPreview" + index); // 실제 맵 미리보기
+                Image preview = item == null ? null : item.GetComponent<Image>(); // 실제 미리보기 이미지
+                Require(preview != null && preview.sprite != null && preview.sprite.texture.name == mapPreviewNames[index], "실제 맵 미리보기 불일치: " + index); // 맵별 이미지 확인
+                Require(preview.preserveAspect && !preview.raycastTarget && preview.rectTransform.sizeDelta.x >= 400f, "실제 맵 미리보기 비율 또는 입력 오류: " + index); // 넓은 이미지와 입력 보존 확인
+            } // 반복 종료
+            PrototypeMapProfile fallback = ScriptableObject.CreateInstance<PrototypeMapProfile>(); // 미리보기 없는 맵 데이터
+            PrototypeMapProfile plains = AssetDatabase.LoadAssetAtPath<PrototypeMapProfile>("Assets/Data/World/PrototypeMapPlains.asset"); // 실제 평원 바닥 데이터
+            Require(plains != null && plains.Ground != null, "실제 평원 바닥 누락"); // 기존 바닥 확인
+            typeof(PrototypeMapProfile).GetField("ground", BindingFlags.Instance | BindingFlags.NonPublic).SetValue(fallback, plains.Ground); // 실제 기존 바닥 연결
+            Require(fallback.SelectionPreview == plains.Ground, "미리보기 누락 시 기존 바닥 대체 실패"); // 이전 맵 데이터 호환 확인
+            Destroy(fallback); // 임시 맵 데이터 정리
             Button ruins = Button("FrontendMapButton1"); // 실제 폐허 선택 버튼
             Require(ruins != null && ruins.interactable, "해금된 폐허 선택 누락"); // 실제 맵 해금 확인
             ruins.onClick.Invoke(); // 실제 폐허 선택

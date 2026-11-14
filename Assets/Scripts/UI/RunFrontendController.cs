@@ -427,7 +427,7 @@ namespace ProjectEpsilon.UI // 실제 메뉴 영역
                 Outline outline = card.GetComponent<Outline>(); // 카드 테두리
                 outline.effectColor = index == selectedMap ? new Color(0.2f, 0.8f, 0.9f, 1f) : new Color(0.25f, 0.4f, 0.48f, 0.8f); // 선택 상태 구분
                 outline.effectDistance = new Vector2(2f, -2f); // 테두리 두께
-                Preview(card.transform, "FrontendMapPreview" + index, profile.Ground, new Vector2(0f, 90f), new Vector2(320f, 320f)); // 카드 위쪽 맵 이미지
+                Preview(card.transform, "FrontendMapPreview" + index, profile.SelectionPreview, new Vector2(0f, 90f), new Vector2(420f, 320f)); // 카드 위쪽 넓은 맵 이미지
                 Button button = CreateButton(card.transform, "FrontendMapButton" + index, label, new Vector2(0f, -150f), new Vector2(400f, 90f), () => SelectMap(selected)); // 카드 아래쪽 맵 선택 버튼
                 button.interactable = unlocked; // 실제 잠긴 맵 선택 차단
             }
