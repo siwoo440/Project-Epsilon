@@ -2,6 +2,7 @@ using ProjectEpsilon.Combat; // 실제 무기 공격 대상
 using ProjectEpsilon.Core; // 게임 진행 상태
 using ProjectEpsilon.Player; // 플레이어와 공용 체력
 using ProjectEpsilon.World; // 맵별 시험 보스 데이터
+using System.Collections.Generic; // 안전 출현 후보의 겹침 목록
 using UnityEngine; // 유니티 기능
 
 namespace ProjectEpsilon.Enemies // 적 영역
@@ -51,6 +52,8 @@ namespace ProjectEpsilon.Enemies // 적 영역
         private EarlyEnemySettings settings; // 실제 보스 행동 설정
         private readonly PrototypeBossPhase phase = new PrototypeBossPhase(); // 보스 체력 단계 상태
         private bool spawned; // 보스 출현 완료 여부
+        private float nextSpawnAttempt; // 다음 안전 출현 재시도 시각
+        private readonly List<Collider2D> spawnOverlaps = new List<Collider2D>(); // 실제 출현 후보의 충돌 목록
         private int mapBossPattern; // 선택된 맵의 보스 패턴
         public WeaponTarget Boss => boss; // 실제 생성 보스 조회
         public bool IsPhaseTwo => phase.IsPhaseTwo; // 현재 보스 단계 조회
@@ -124,6 +127,10 @@ namespace ProjectEpsilon.Enemies // 적 영역
 
         private void Update() // 실제 보스 체력 단계 관찰
         {
+            if (!spawned && spawner != null && spawner.HasEnteredBossTransition && GameManager.Instance != null && GameManager.Instance.IsPlaying && Time.time >= nextSpawnAttempt) // 전환 후 안전 후보 재시도 확인
+            { // 조건 시작
+                TrySpawnBoss(); // 실제 안전 출현 재시도
+            } // 조건 종료
             if (boss == null || !boss.IsAlive || settings == null) // 실제 생존 보스 확인
             {
                 return; // 단계 갱신 생략
@@ -194,10 +201,15 @@ namespace ProjectEpsilon.Enemies // 적 영역
                 Debug.LogError("[Project Epsilon] 시험 보스 출현에 필요한 플레이어 구성이 없습니다."); // 구성 오류 기록
                 return; // 잘못된 출현 방지
             }
+            if (!TryFindSafeSpawn(player.transform.position, body, out Vector3 spawnPosition)) // 실제 보스 충돌 범위의 안전 후보 확인
+            { // 조건 시작
+                nextSpawnAttempt = Time.time + 0.25f; // 안전 후보가 없을 때 다음 재시도
+                return; // 장애물이나 몸통 위 출현 차단
+            } // 조건 종료
             SpriteRenderer source = player.GetComponentInChildren<SpriteRenderer>(); // 플레이어 스프라이트 조회
             Sprite sprite = bossVisual != null ? bossVisual : source == null ? null : source.sprite; // 지정 이미지 또는 기존 대체 이미지
             GameObject instance = new GameObject("PrototypeFinalBoss"); // 실제 보스 객체 생성
-            instance.transform.position = player.transform.position + Vector3.up * Mathf.Max(1f, spawnDistance); // 시험용 출현 위치
+            instance.transform.position = spawnPosition; // 실제 안전 출현 위치
             instance.transform.localScale = Vector3.one * 2.8f; // 시험용 보스 두 배 크기
             SpriteRenderer renderer = instance.AddComponent<SpriteRenderer>(); // 실제 보스 렌더러
             renderer.sprite = sprite; // 임시 보스 시각 자료
@@ -246,5 +258,58 @@ namespace ProjectEpsilon.Enemies // 적 영역
             instance.AddComponent<PrototypeBossHazardSpawner>().Configure(player, body, health, target, hazardInterval, hazardWarningDuration, hazardDuration, hazardDamageInterval, hazardRadius, hazardDamage, mapBossPattern, this, phaseTwoHazardIntervalMultiplier); // 맵별 위험 구역과 단계별 간격 구성
             instance.AddComponent<PrototypeBossSummoner>().Configure(spawner, target, summonInterval, summonMaximum, summonRadius); // 실제 보스 잡몹 소환 구성
         }
+
+        private bool TryFindSafeSpawn(Vector3 playerPosition, SnakeBodyManager body, out Vector3 position) // 실제 보스 출현 후보 검색
+        { // 함수 시작
+            ContactFilter2D filter = ContactFilter2D.noFilter; // 실제 전체 물리 계층 검색
+            filter.useTriggers = true; // 장애물과 뱀 접촉체 포함
+            float distance = Mathf.Max(1f, spawnDistance); // 기존 보스 출현 거리
+            const float radius = 1.5f; // 보스 충돌 반경과 작은 여유
+            for (int index = 0; index < 16; index++) // 기존 위쪽부터 열여섯 방향 확인
+            { // 반복 시작
+                float radians = index * Mathf.PI * 2f / 16f; // 실제 후보 방향 각도
+                Vector3 candidate = playerPosition + new Vector3(Mathf.Sin(radians), Mathf.Cos(radians), 0f) * distance; // 실제 출현 후보 위치
+                if (Vector2.Distance(candidate, playerPosition) < radius + 0.5f) // 실제 머리 주변 여유 확인
+                { // 조건 시작
+                    continue; // 머리와 가까운 후보 제외
+                } // 조건 종료
+                bool nearBody = false; // 실제 몸통 주변 차단 상태
+                foreach (SnakeSegment segment in body.BodySegments) // 실제 활성 몸통 순회
+                { // 반복 시작
+                    if (segment != null && segment.gameObject.activeInHierarchy && Vector2.Distance(candidate, segment.transform.position) < radius + 0.5f) // 실제 몸통 주변 여유 확인
+                    { // 조건 시작
+                        nearBody = true; // 안전하지 않은 몸통 주변
+                        break; // 나머지 몸통 검사 종료
+                    } // 조건 종료
+                } // 반복 종료
+                if (nearBody || body.TailSegment != null && body.TailSegment.gameObject.activeInHierarchy && Vector2.Distance(candidate, body.TailSegment.transform.position) < radius + 0.5f) // 실제 몸통과 충돌체 없는 꼬리 확인
+                { // 조건 시작
+                    continue; // 몸통이나 꼬리 주변 후보 제외
+                } // 조건 종료
+                spawnOverlaps.Clear(); // 이전 후보의 충돌 목록 초기화
+                Physics2D.OverlapCircle(candidate, radius, filter, spawnOverlaps); // 실제 보스 반경의 충돌체 조회
+                bool blocked = false; // 실제 후보 차단 상태
+                foreach (Collider2D overlap in spawnOverlaps) // 실제 겹친 충돌체 순회
+                { // 반복 시작
+                    if (overlap == null) // 무효 충돌체 확인
+                    { // 조건 시작
+                        continue; // 다음 충돌체 확인
+                    } // 조건 종료
+                    SnakeContactHazard hazard = overlap.GetComponentInParent<SnakeContactHazard>(); // 실제 장애물 접촉 정보
+                    if (hazard != null && hazard.HazardType == SnakeContactHazardType.Obstacle || overlap.GetComponentInParent<SnakeMovement>() != null || overlap.GetComponentInParent<SnakeSegment>() != null) // 장애물과 뱀 머리·몸통 확인
+                    { // 조건 시작
+                        blocked = true; // 안전하지 않은 출현 후보
+                        break; // 다음 후보 확인
+                    } // 조건 종료
+                } // 반복 종료
+                if (!blocked) // 실제 안전한 후보 확인
+                { // 조건 시작
+                    position = candidate; // 실제 보스 출현 위치 반환
+                    return true; // 안전 후보 발견
+                } // 조건 종료
+            } // 반복 종료
+            position = default; // 안전 후보 부재 표시
+            return false; // 현재 보스 출현 보류
+        } // 함수 종료
     }
 }
