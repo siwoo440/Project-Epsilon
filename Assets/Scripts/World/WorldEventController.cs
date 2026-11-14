@@ -81,7 +81,7 @@ namespace ProjectEpsilon.World // 맵 영역
             phaseTime += Time.deltaTime; // 실제 단계 시간 누적
             if (IsWarning) // 실제 위험 예고 확인
             { // 조건 시작
-                hud?.SetWorldWarning(phase == 1 ? "황충떼 주의" : "낙석 주의", WarningProgress); // 위험 이름과 충전 게이지
+                hud?.SetWorldWarning(phase == 1 ? "황충떼 주의" : RockfallWarningText(), WarningProgress); // 위험 방향과 충전 게이지
                 if (phaseTime >= map.Profile.WorldEventWarning) // 예고 완료 확인
                 { // 조건 시작
                     StartActivePhase(); // 실제 이동 또는 하강 시작
@@ -102,6 +102,28 @@ namespace ProjectEpsilon.World // 맵 영역
                 float progress = Mathf.Clamp01(phaseTime / map.Profile.RockfallDuration); // 실제 하강 비율
                 fallingRock.position = impact + Vector3.up * (1f - progress) * 4f; // 실제 낙석 하강 위치
             } // 조건 종료
+        } // 함수 종료
+
+        private string RockfallWarningText() // 실제 화면 기준 낙석 방향 안내
+        { // 함수 시작
+            Camera camera = Camera.main; // 실제 전투 화면 카메라
+            if (camera == null) // 실제 카메라 부재 확인
+            { // 조건 시작
+                return "낙석 주의"; // 방향을 알 수 없는 기본 경고
+            } // 조건 종료
+            Vector3 viewport = camera.WorldToViewportPoint(impact); // 실제 착탄 지점의 화면 좌표
+            if (viewport.z <= 0f) // 카메라 뒤쪽 위치 확인
+            { // 조건 시작
+                return "낙석 주의"; // 방향을 알 수 없는 기본 경고
+            } // 조건 종료
+            string horizontal = viewport.x < 0f ? "왼쪽" : viewport.x > 1f ? "오른쪽" : ""; // 화면 밖 가로 방향
+            string vertical = viewport.y < 0f ? "아래" : viewport.y > 1f ? "위" : ""; // 화면 밖 세로 방향
+            if (horizontal.Length == 0 && vertical.Length == 0) // 실제 화면 안 위치 확인
+            { // 조건 시작
+                return "낙석 주의"; // 화면 안의 기본 경고
+            } // 조건 종료
+            string directionText = horizontal.Length == 0 ? vertical : vertical.Length == 0 ? horizontal : horizontal + " " + vertical; // 실제 가로와 세로 방향 조합
+            return "낙석 주의 · " + directionText; // 화면 밖 착탄 방향 표시
         } // 함수 종료
 
         private void FixedUpdate() // 기존 물리 스텝의 위험 피해
