@@ -40,6 +40,7 @@ namespace ProjectEpsilon.World // 맵 영역
         [Min(0f)] [SerializeField] private float playerObstacleClearance = 5.5f; // 플레이어 주변 장애물 보호 거리
         [Min(0f)] [SerializeField] private float worldEventFirstTime = 90f; // 첫 맵 위험 시작 시간 시험값
         [Min(1f)] [SerializeField] private float worldEventInterval = 90f; // 맵 위험 간격 시험값
+        [Min(0.25f)] [SerializeField] private float worldEventRetryInterval = 3f; // 안전 후보 부재 시 재시도 간격 시험값
         [Min(0.1f)] [SerializeField] private float worldEventWarning = 3f; // 맵 위험 공통 예고 시간 시험값
         [Min(0.1f)] [SerializeField] private float locustSpeed = 12f; // 황충떼 이동 속도 시험값
         [Min(1f)] [SerializeField] private float locustWidth = 8f; // 황충떼 이동 폭 시험값
@@ -118,6 +119,7 @@ namespace ProjectEpsilon.World // 맵 영역
         public float PlayerObstacleClearance => Mathf.Max(0f, playerObstacleClearance); // 안전한 플레이어 보호 거리
         public float WorldEventFirstTime => Mathf.Max(0f, worldEventFirstTime); // 안전한 첫 맵 위험 시각
         public float WorldEventInterval => Mathf.Max(1f, worldEventInterval); // 안전한 맵 위험 간격
+        public float WorldEventRetryInterval => Mathf.Max(0.25f, worldEventRetryInterval); // 안전한 위험 재시도 간격
         public float WorldEventWarning => Mathf.Max(0.1f, worldEventWarning); // 안전한 위험 예고 시간
         public float LocustSpeed => Mathf.Max(0.1f, locustSpeed); // 안전한 황충떼 속도
         public float LocustWidth => Mathf.Max(1f, locustWidth); // 안전한 황충떼 폭

@@ -70,7 +70,7 @@ namespace ProjectEpsilon.World // 맵 영역
             if (phase == 0 && elapsed >= nextEvent) // 실제 다음 위험 시각 확인
             { // 조건 시작
                 bool began = nextRockfall ? TryBeginRockfall() : TryBeginLocust(); // 두 위험의 교대 시작
-                nextEvent = elapsed + map.Profile.WorldEventInterval; // 다음 위험 간격
+                nextEvent = elapsed + (began ? map.Profile.WorldEventInterval : map.Profile.WorldEventRetryInterval); // 성공 시 정상 간격 또는 안전 후보 재시도
                 if (began) // 실제 위험 시작 확인
                 { // 조건 시작
                     nextRockfall = !nextRockfall; // 다음 위험 종류 전환
