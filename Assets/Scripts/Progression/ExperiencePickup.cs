@@ -6,6 +6,7 @@ using UnityEngine; // Unity 엔진 기능 연결
 namespace ProjectEpsilon.Progression // 프로젝트 기능 영역
 {
     [RequireComponent(typeof(SpriteRenderer))] // 구성 요소·이미지 설정
+    [DefaultExecutionOrder(10)] // 실제 자동 전진 이후 보석 획득 처리
     public sealed class ExperiencePickup : MonoBehaviour // 경험치·행동 자료 구조
     {
         [SerializeField] private SnakeExperience receiver; // 필드·경험치 설정
@@ -96,6 +97,12 @@ namespace ProjectEpsilon.Progression // 프로젝트 기능 영역
                 Collect(); // 대상 기능 실행
                 return; // 현재 기능 종료
             }
+
+            if (receiverMovement != null && receiverMovement.CrossedPositionThisFrame(transform.position, collectDistance)) // 현재 프레임 실제 자동 전진 경로의 보석 확인
+            { // 조건 시작
+                Collect(); // 통과한 보석의 기존 경험치 지급
+                return; // 흡수와 중복 획득 방지
+            } // 조건 종료
 
             float attractionRangeSquared = // 범위 값 설정
                 MergeAttractionRange * MergeAttractionRange; // 영구 성장 흡수 범위 적용

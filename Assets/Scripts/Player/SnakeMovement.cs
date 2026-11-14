@@ -23,6 +23,9 @@ namespace ProjectEpsilon.Player // 프로젝트 기능 영역
         private float pollenMultiplier = 1f; // 꽃가루 획득 범위 배율
         private float terrainImmunityUntil; // 지형 감속 면역 종료 시각
         private bool cleanseUntilTerrainExit; // 현재 지형 이탈까지 정화 유지
+        private Vector3 lastMoveStart; // 현재 프레임 자동 전진 시작점
+        private Vector3 lastMoveEnd; // 현재 프레임 자동 전진 종료점
+        private int lastMoveFrame = -1; // 마지막 자동 전진 프레임
 
         public float BaseMoveSpeed => moveSpeed; // 캐릭터 보정 전 기본 이동 속도
         public float MoveSpeed => moveSpeed * CharacterRunInitializer.MoveSpeedMultiplier; // 캐릭터 이동 배율 적용
@@ -40,6 +43,19 @@ namespace ProjectEpsilon.Player // 프로젝트 기능 영역
                 : stamina.CurrentSpeedMultiplier); // 합성 감속은 전체 시간에만 적용
 
         public float PickupRangeMultiplier => Time.time < pollenUntil ? pollenMultiplier : 1f; // 꽃가루의 임시 획득 범위 배율
+
+        public bool CrossedPositionThisFrame(Vector3 position, float radius) // 실제 자동 전진 경로의 위치 확인
+        { // 함수 시작
+            if (!isActiveAndEnabled || lastMoveFrame != Time.frameCount) // 실제 현재 프레임 이동 여부 확인
+            { // 조건 시작
+                return false; // 강제 위치 변경과 이전 이동 제외
+            } // 조건 종료
+            Vector3 path = lastMoveEnd - lastMoveStart; // 실제 자동 전진 구간
+            float lengthSquared = path.sqrMagnitude; // 실제 이동 거리 제곱
+            float fraction = lengthSquared > 0f ? Mathf.Clamp01(Vector3.Dot(position - lastMoveStart, path) / lengthSquared) : 0f; // 구간 안의 가장 가까운 위치 비율
+            float safeRadius = Mathf.Max(0f, radius); // 안전한 획득 반경
+            return (position - (lastMoveStart + path * fraction)).sqrMagnitude <= safeRadius * safeRadius; // 실제 이동 구간의 보석 접촉 여부
+        } // 함수 종료
 
         public void ApplyWind(float duration, float multiplier) // 바람길 이동 효과 갱신
         {
@@ -151,10 +167,13 @@ namespace ProjectEpsilon.Player // 프로젝트 기능 영역
 
         private void MoveForward() // 대상 기능 선언
         {
+            lastMoveStart = transform.position; // 실제 자동 전진 시작점 기록
             transform.position += // 위치 값 설정
                 transform.up * // 위치 처리
                 (CurrentMoveSpeed * // 현재·속도 기능 실행
                 Time.deltaTime); // 시간·변화량 처리
+            lastMoveEnd = transform.position; // 실제 자동 전진 종료점 기록
+            lastMoveFrame = Time.frameCount; // 실제 자동 전진 프레임 기록
         }
     }
 }
