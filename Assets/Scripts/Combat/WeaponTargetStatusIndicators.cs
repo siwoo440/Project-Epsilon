@@ -122,6 +122,26 @@ namespace ProjectEpsilon.Combat // 전투 표시 영역
             { // 조건 시작
                 corrosiveBurnIcon.SetActive(showCorrosiveBurn); // 실제 부식 연소 지속 표시
             } // 조건 종료
+            int visibleCount = (showCold ? 1 : 0) + (showPoison ? 1 : 0) + (showDark ? 1 : 0) + (showCorrosive ? 1 : 0) + (showCorrosiveBurn ? 1 : 0); // 실제 활성 표시 수
+            int visibleIndex = 0; // 실제 배치 순서
+            PlaceIcon(coldIcon, showCold, ref visibleIndex, visibleCount); // 냉기 표시 재배치
+            PlaceIcon(poisonIcon, showPoison, ref visibleIndex, visibleCount); // 독 표시 재배치
+            PlaceIcon(darkIcon, showDark, ref visibleIndex, visibleCount); // 암흑 표시 재배치
+            PlaceIcon(corrosiveIcon, showCorrosive, ref visibleIndex, visibleCount); // 부식 저주 재배치
+            PlaceIcon(corrosiveBurnIcon, showCorrosiveBurn, ref visibleIndex, visibleCount); // 부식 연소 재배치
+        } // 함수 종료
+        private static void PlaceIcon(GameObject icon, bool visible, ref int index, int total) // 활성 표시의 줄별 가운데 배치
+        { // 함수 시작
+            if (!visible || icon == null) // 실제 표시 여부 확인
+            { // 조건 시작
+                return; // 숨겨진 표시 배치 생략
+            } // 조건 종료
+            int row = index / 3; // 세 칸 기준 실제 행
+            int column = index % 3; // 현재 행의 실제 열
+            int rowSize = Mathf.Min(3, total - row * 3); // 현재 행의 실제 표시 수
+            float x = (column - (rowSize - 1) * 0.5f) * 0.38f; // 현재 행의 가운데 정렬 위치
+            icon.transform.localPosition = new Vector3(x, 0.7f + row * 0.35f, 0f); // 실제 적 위의 두 줄 표시
+            index++; // 다음 표시 순서 이동
         } // 함수 종료
         private GameObject CreateIcon(string name, Sprite sprite, float x, float y) // 기존 속성과 반응 이미지 재사용
         { // 함수 시작
