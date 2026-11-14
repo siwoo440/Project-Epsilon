@@ -152,6 +152,10 @@ namespace ProjectEpsilon.Combat // 프로젝트 기능 영역
 
         private void ProcessHit(Collider2D other, Vector3 hitPosition) // 경로와 물리 접촉의 공통 명중
         { // 함수 시작
+            if (StopForGameState()) // 실제 정지 또는 종료 상태 확인
+            { // 조건 시작
+                return; // 종료 후 추가 명중 차단
+            } // 조건 종료
             SnakeContactHazard cover = other.GetComponent<SnakeContactHazard>(); // 기존 장애물 엄폐 조회
             if (isActiveAndEnabled && remainingHits > 0 && cover != null && cover.BlocksProjectiles) // 활성 탄과 실제 엄폐 확인
             {
@@ -178,6 +182,10 @@ namespace ProjectEpsilon.Combat // 프로젝트 기능 영역
             {
                 return; // 이전 발사의 후속 처리 차단
             }
+            if (StopForGameState()) // 최초 명중 중 승리 또는 정지 확인
+            { // 조건 시작
+                return; // 종료 후 추가 대상 전달 차단
+            } // 조건 종료
             if (transfer != null && transfer.isActiveAndEnabled && transfer.IsAlive && hitTargets.Add(transfer)) // 유효한 미명중 전달 대상 확인
             {
                 WeaponAttributeAttackSnapshot additional = new WeaponAttributeAttackSnapshot(attackSnapshot.Weapon, attackSnapshot.Attribute, attackSnapshot.AttributeCount, attackSnapshot.SynergyStage, attackSnapshot.Grade, attackSnapshot.Origin, attackSnapshot.DirectDamage * transferDamageMultiplier); // 발사 정보와 전달 피해 배율
@@ -192,6 +200,21 @@ namespace ProjectEpsilon.Combat // 프로젝트 기능 영역
                 Destroy(gameObject); // 투사체 제거
             }
         }
+
+        private bool StopForGameState() // 정지와 종료 중 추가 명중 방지
+        { // 함수 시작
+            GameManager game = GameManager.Instance; // 실제 게임 관리자
+            if (game == null || game.IsPlaying) // 실제 전투 진행 여부
+            { // 조건 시작
+                return false; // 기존 명중 처리 계속
+            } // 조건 종료
+            if (game.CurrentState == GameState.Victory || game.CurrentState == GameState.Defeated || remainingHits <= 0) // 종료 또는 이미 소진된 탄 확인
+            { // 조건 시작
+                gameObject.SetActive(false); // 지연 파괴 전 후속 접촉 차단
+                Destroy(gameObject); // 종료 또는 소진된 탄 제거
+            } // 조건 종료
+            return true; // 정지 중 후속 명중 중단
+        } // 함수 종료
 
         private void ApplyProjectileHit(WeaponAttributeAttackSnapshot attack, WeaponTarget target, Vector3 position) // 투사체 속성 명중 적용
         {

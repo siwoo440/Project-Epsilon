@@ -1,4 +1,5 @@
 using System.Collections.Generic; // 대상 집합 사용
+using ProjectEpsilon.Core; // 실제 게임 진행 상태
 using ProjectEpsilon.Data; // 무기 데이터 사용
 using ProjectEpsilon.Player; // 캐릭터 패시브 참조
 using UnityEngine; // Unity 기능 사용
@@ -69,7 +70,7 @@ namespace ProjectEpsilon.Combat // 전투 영역
 
         public void ApplyHit(WeaponAttributeAttackSnapshot attack, WeaponTarget target, Vector3 hitPosition) // 실제 명중 적용
         {
-            if (target == null || !target.IsAlive) // 대상 유효성 확인
+            if (!CanContinueCombat() || target == null || !target.IsAlive) // 실제 전투와 대상 유효성 확인
             {
                 return; // 적용 중단
             }
@@ -378,6 +379,10 @@ namespace ProjectEpsilon.Combat // 전투 영역
 
             for (int index = 0; index < remainingTargets; index++) // 연쇄 대상 수만큼 반복
             {
+                if (!CanContinueCombat()) // 앞선 명중의 승리 또는 정지 확인
+                { // 조건 시작
+                    return; // 이후 전기 연쇄 피해 차단
+                } // 조건 종료
                 WeaponTarget nextTarget = FindClosestUnvisitedTarget(searchOrigin, chainRange, visitedTargets); // 다음 대상 탐색
 
                 if (nextTarget == null) // 다음 대상 없음 확인
@@ -423,7 +428,7 @@ namespace ProjectEpsilon.Combat // 전투 영역
 
         private void ApplyExplosionTarget(WeaponAttributeAttackSnapshot attack, WeaponTarget target, Vector3 center, float radius) // 단일 폭발 대상 처리
         {
-            if (target == null || !target.IsAlive) // 대상 유효성 확인
+            if (!CanContinueCombat() || target == null || !target.IsAlive) // 실제 전투와 대상 유효성 확인
             {
                 return; // 대상 처리 생략
             }
@@ -443,6 +448,11 @@ namespace ProjectEpsilon.Combat // 전투 영역
             effectHooks?.NotifyHit(hit); // 폭발 명중 Hook 전달
             SpawnHitPulse(WeaponAttribute.Explosion, attack.SynergyStage, hitPosition); // 폭발 명중 Pulse 표시
         }
+
+        private static bool CanContinueCombat() // 실제 속성 명중 진행 여부
+        { // 함수 시작
+            return GameManager.Instance == null || GameManager.Instance.IsPlaying; // 게임 관리자 부재 또는 전투 진행 확인
+        } // 함수 종료
 
         private static void ApplyExplosionKnockback(WeaponAttributeAttackSnapshot attack, WeaponTarget target, Vector3 center) // 폭발 넉백 적용
         {
