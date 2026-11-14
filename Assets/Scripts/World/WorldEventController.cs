@@ -22,11 +22,13 @@ namespace ProjectEpsilon.World // 맵 영역
         private Vector3 origin; // 황충떼 출발 위치
         private Vector3 direction; // 황충떼 이동 방향
         private Vector3 impact; // 실제 낙석 착탄 지점
+        private Vector3 previousSwarmPosition; // 마지막 물리 판정의 황충 위치
         private float elapsed; // 실제 전투 경과 시간
         private float nextEvent; // 다음 위험 시작 시각
         private float phaseTime; // 현재 단계 경과 시간
         private bool nextRockfall; // 다음 위험 종류
         private bool damageQueued; // 같은 위험의 중복 피해 방지
+        private bool swarmFinished; // 마지막 이동 구간의 물리 판정 대기
         private int phase; // 대기 0, 황충 예고 1, 이동 2, 낙석 예고 3, 하강 4
         public bool IsWarning => phase == 1 || phase == 3; // 실제 위험 예고 상태
         public bool IsActive => phase == 2 || phase == 4; // 실제 위험 진행 상태
@@ -94,7 +96,7 @@ namespace ProjectEpsilon.World // 맵 영역
                 swarm.position = origin + direction * distance; // 실제 황충 무리 이동
                 if (distance >= 30f) // 이동 종료 확인
                 { // 조건 시작
-                    ClearEvent(); // 종료된 황충떼 정리
+                    swarmFinished = true; // 마지막 이동 구간의 물리 판정 대기
                 } // 조건 종료
             } // 조건 종료
             else if (phase == 4) // 실제 낙석 하강 확인
@@ -154,11 +156,22 @@ namespace ProjectEpsilon.World // 맵 영역
             { // 조건 시작
                 return; // 일시정지와 보스 전환 중 피해 차단
             } // 조건 종료
-            if (phase == 2 && swarm != null && !damageQueued) // 실제 이동 황충떼 접촉 확인
+            if (phase == 2 && swarm != null) // 실제 이동 황충떼 접촉 확인
             { // 조건 시작
-                float angle = Mathf.Atan2(direction.y, direction.x) * Mathf.Rad2Deg; // 실제 이동 방향 각도
-                Collider2D[] contacts = Physics2D.OverlapBoxAll(swarm.position, new Vector2(1.5f, map.Profile.LocustWidth), angle); // 실제 이동 폭의 충돌 대상
-                QueueDamage(contacts, map.Profile.LocustDamage); // 기존 충돌 우선순위에 피해 예약
+                Vector3 current = swarm.position; // 실제 현재 황충 위치
+                if (!damageQueued) // 같은 위험의 기존 피해 확인
+                { // 조건 시작
+                    Vector3 midpoint = (previousSwarmPosition + current) * 0.5f; // 마지막 물리 판정 이후 이동 구간 중심
+                    float length = Vector2.Distance(previousSwarmPosition, current) + 1.5f; // 실제 이동 거리와 황충 충돌 폭
+                    float angle = Mathf.Atan2(direction.y, direction.x) * Mathf.Rad2Deg; // 실제 이동 방향 각도
+                    Collider2D[] contacts = Physics2D.OverlapBoxAll(midpoint, new Vector2(length, map.Profile.LocustWidth), angle); // 실제 연속 이동 구간의 충돌 대상
+                    QueueDamage(contacts, map.Profile.LocustDamage); // 기존 충돌 우선순위에 피해 예약
+                } // 조건 종료
+                previousSwarmPosition = current; // 실제 물리 판정 위치 저장
+                if (swarmFinished) // 마지막 이동 구간 판정 확인
+                { // 조건 시작
+                    ClearEvent(); // 실제 마지막 충돌 검사 후 정리
+                } // 조건 종료
             } // 조건 종료
             if (phase == 4 && phaseTime >= map.Profile.RockfallDuration) // 실제 낙석 착탄 확인
             { // 조건 시작
@@ -186,6 +199,7 @@ namespace ProjectEpsilon.World // 맵 영역
             phase = 1; // 황충떼 예고 시작
             phaseTime = 0f; // 실제 예고 시간 초기화
             damageQueued = false; // 실제 피해 상태 초기화
+            swarmFinished = false; // 마지막 물리 판정 상태 초기화
             return true; // 실제 예고 시작 완료
         } // 함수 종료
 
@@ -284,6 +298,7 @@ namespace ProjectEpsilon.World // 맵 영역
                 swarm = new GameObject("LocustSwarm").transform; // 실제 황충 무리 묶음
                 swarm.SetParent(visual.transform, false); // 실제 위험 수명 연결
                 swarm.position = origin; // 실제 황충 이동 출발점
+                previousSwarmPosition = origin; // 첫 물리 판정의 출발 위치
                 Vector3 side = new Vector3(-direction.y, direction.x, 0f); // 실제 이동 방향의 수직축
                 for (int index = 0; index < 10; index++) // 실제 열 마리 황충 생성
                 { // 반복 시작
@@ -347,6 +362,7 @@ namespace ProjectEpsilon.World // 맵 영역
             fallingRock = null; // 이전 낙석 참조 제거
             phase = 0; // 실제 위험 대기 상태
             phaseTime = 0f; // 실제 단계 시간 초기화
+            swarmFinished = false; // 마지막 물리 판정 상태 정리
         } // 함수 종료
 
         private void OnDisable() // 맵 비활성화 처리
