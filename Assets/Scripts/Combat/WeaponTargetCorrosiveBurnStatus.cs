@@ -8,12 +8,17 @@ namespace ProjectEpsilon.Combat // 전투 영역
         private WeaponTarget target; // 실제 피해 대상
         private float remainingDuration; // 반응 남은 시간
         private float damagePerSecond; // 반응 초당 피해
+        public bool IsActive => target != null && target.IsAlive && remainingDuration > 0f; // 실제 연소 지속 여부
 
         public void Apply(WeaponTarget victim, float duration, float damage) // 반응 지속 피해 갱신
         {
             target = victim; // 실제 피해 대상 저장
             remainingDuration = Mathf.Max(0f, duration); // 안전한 지속 시간 저장
             damagePerSecond = Mathf.Max(0f, damage); // 안전한 초당 피해 저장
+            if (IsActive) // 유효한 지속 반응 확인
+            { // 조건 시작
+                WeaponTargetStatusIndicators.Ensure(target); // 실제 부식 연소 표시 연결
+            } // 조건 종료
         }
 
         private void Update() // 반응 지속 피해 처리

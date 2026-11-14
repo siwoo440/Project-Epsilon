@@ -13,10 +13,12 @@ namespace ProjectEpsilon.Combat // 전투 표시 영역
         private WeaponTargetPoisonStatus poison; // 실제 독 상태
         private WeaponTargetDarkCurseStatus dark; // 실제 암흑 저주 상태
         private WeaponTargetCorrosiveCurseStatus corrosive; // 실제 부식 저주 상태
+        private WeaponTargetCorrosiveBurnStatus corrosiveBurn; // 실제 부식 연소 상태
         private GameObject coldIcon; // 실제 냉기 이미지
         private GameObject poisonIcon; // 실제 독 이미지
         private GameObject darkIcon; // 실제 암흑 저주 이미지
         private GameObject corrosiveIcon; // 실제 부식 저주 이미지
+        private GameObject corrosiveBurnIcon; // 실제 부식 연소 이미지
         private bool hasSlot; // 실제 표시 자리 보유 여부
         [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.SubsystemRegistration)] // 새 플레이 세션 초기화
         private static void ResetSession() // 이전 세션 표시 수 정리
@@ -57,11 +59,16 @@ namespace ProjectEpsilon.Combat // 전투 표시 영역
             { // 조건 시작
                 corrosive = GetComponent<WeaponTargetCorrosiveCurseStatus>(); // 현재 부식 저주 조회
             } // 조건 종료
+            if (corrosiveBurn == null) // 실제 부식 연소 재조회 필요 여부
+            { // 조건 시작
+                corrosiveBurn = GetComponent<WeaponTargetCorrosiveBurnStatus>(); // 현재 부식 연소 조회
+            } // 조건 종료
             bool showCold = cold != null && cold.isActiveAndEnabled && cold.RemainingDuration > 0f; // 실제 냉기 지속 여부
             bool showPoison = poison != null && poison.isActiveAndEnabled && poison.IsActive; // 실제 독 지속 여부
             bool showDark = dark != null && dark.isActiveAndEnabled && dark.IsActive; // 실제 암흑 저주 지속 여부
             bool showCorrosive = corrosive != null && corrosive.isActiveAndEnabled && corrosive.IsActive; // 실제 부식 저주 지속 여부
-            if (!showCold && !showPoison && !showDark && !showCorrosive) // 모든 상태의 해제 여부
+            bool showCorrosiveBurn = corrosiveBurn != null && corrosiveBurn.isActiveAndEnabled && corrosiveBurn.IsActive; // 실제 부식 연소 지속 여부
+            if (!showCold && !showPoison && !showDark && !showCorrosive && !showCorrosiveBurn) // 모든 상태의 해제 여부
             { // 조건 시작
                 Destroy(this); // 표시와 자리 정리
                 return; // 후속 표시 중단
@@ -91,6 +98,10 @@ namespace ProjectEpsilon.Combat // 전투 표시 영역
             { // 조건 시작
                 corrosiveIcon = CreateIcon("StatusCorrosiveCurseIndicator", CombatVfx.GetReactionSprite(WeaponAttributeReaction.CorrosiveCurse), 0.19f, 1.05f); // 기존 반응 이미지 연결
             } // 조건 종료
+            if (showCorrosiveBurn && corrosiveBurnIcon == null) // 실제 부식 연소 표시 생성 여부
+            { // 조건 시작
+                corrosiveBurnIcon = CreateIcon("StatusCorrosiveBurnIndicator", CombatVfx.GetReactionSprite(WeaponAttributeReaction.CorrosiveBurn), 0f, 1.4f); // 기존 연소 반응 이미지 연결
+            } // 조건 종료
             if (coldIcon != null) // 실제 냉기 표시 존재 여부
             { // 조건 시작
                 coldIcon.SetActive(showCold); // 실제 냉기 지속 표시
@@ -106,6 +117,10 @@ namespace ProjectEpsilon.Combat // 전투 표시 영역
             if (corrosiveIcon != null) // 실제 부식 저주 표시 존재 여부
             { // 조건 시작
                 corrosiveIcon.SetActive(showCorrosive); // 실제 부식 저주 지속 표시
+            } // 조건 종료
+            if (corrosiveBurnIcon != null) // 실제 부식 연소 표시 존재 여부
+            { // 조건 시작
+                corrosiveBurnIcon.SetActive(showCorrosiveBurn); // 실제 부식 연소 지속 표시
             } // 조건 종료
         } // 함수 종료
         private GameObject CreateIcon(string name, Sprite sprite, float x, float y) // 기존 속성과 반응 이미지 재사용
@@ -142,6 +157,10 @@ namespace ProjectEpsilon.Combat // 전투 표시 영역
             { // 조건 시작
                 corrosiveIcon.SetActive(false); // 비활성 상태의 표시 숨김
             } // 조건 종료
+            if (corrosiveBurnIcon != null) // 실제 부식 연소 표시 확인
+            { // 조건 시작
+                corrosiveBurnIcon.SetActive(false); // 비활성 상태의 표시 숨김
+            } // 조건 종료
         } // 함수 종료
         private void OnDestroy() // 실제 생성 표시 제거
         { // 함수 시작
@@ -160,6 +179,10 @@ namespace ProjectEpsilon.Combat // 전투 표시 영역
             if (corrosiveIcon != null) // 실제 부식 저주 표시 확인
             { // 조건 시작
                 Destroy(corrosiveIcon); // 생성한 부식 저주 표시 제거
+            } // 조건 종료
+            if (corrosiveBurnIcon != null) // 실제 부식 연소 표시 확인
+            { // 조건 시작
+                Destroy(corrosiveBurnIcon); // 생성한 부식 연소 표시 제거
             } // 조건 종료
         } // 함수 종료
     } // 클래스 종료
