@@ -35,6 +35,11 @@ namespace ProjectEpsilon.UI // 프로젝트 기능 영역
         private void Start() // 시작 기능 선언
         {
             RegisterListeners(); // 등록 기능 실행
+            ProjectUiSkin.ApplyButton(closeButton); // 닫기 버튼 프레임
+            ProjectUiSkin.ApplyButton(resetButton); // 기본값 복원 버튼 프레임
+            ProjectUiSkin.ApplyButton(turnLeftButton); // 왼쪽 회전 버튼 프레임
+            ProjectUiSkin.ApplyButton(turnRightButton); // 오른쪽 회전 버튼 프레임
+            ProjectUiSkin.ApplyButton(boostButton); // 가속 버튼 프레임
 
             if (settingsPanel != null) // 설정·화면 조건 확인
             {

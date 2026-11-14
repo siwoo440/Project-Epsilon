@@ -110,6 +110,7 @@ namespace ProjectEpsilon.UI // 실제 전투 화면 영역
             RectTransform panel = CreateRect(root, "BodySidebar", new Vector2(GameplayWidth, 0f), Vector2.one); // 실제 오른쪽 정보 패널
             Image background = panel.gameObject.AddComponent<Image>(); // 실제 우측 배경 이미지
             background.color = new Color(0.025f, 0.06f, 0.09f, 0.97f); // 실제 어두운 패널 배경
+            ProjectUiSkin.ApplySidebar(background, true); // 공통 우측 패널 프레임
             background.raycastTarget = false; // 실제 전투 입력 방해 방지
             CreateText(panel, "SidebarTitle", "속성 · 몸통 포탑", new Vector2(0.04f, 0.95f), new Vector2(0.96f, 0.995f), 29, TextAnchor.MiddleCenter); // 실제 패널 제목
             for (int index = 0; index < attributes.Length; index++) // 실제 여덟 속성 순회
@@ -119,7 +120,13 @@ namespace ProjectEpsilon.UI // 실제 전투 화면 영역
                 float top = 0.944f - row * 0.036f; // 실제 속성 행 위쪽
                 float left = column == 0 ? 0.04f : 0.51f; // 실제 속성 열 왼쪽
                 float right = column == 0 ? 0.49f : 0.96f; // 실제 속성 열 오른쪽
-                attributes[index] = CreateText(panel, "SidebarAttribute_" + index, "", new Vector2(left, top - 0.034f), new Vector2(right, top), 19, TextAnchor.MiddleLeft); // 실제 속성 개수와 단계
+                RectTransform attributeIcon = CreateRect(panel, "SidebarAttributeIcon_" + index, new Vector2(left, top - 0.034f), new Vector2(left + 0.055f, top)); // 실제 속성 아이콘 영역
+                Image attributeImage = attributeIcon.gameObject.AddComponent<Image>(); // 실제 속성 아이콘 표시
+                attributeImage.sprite = ProjectUiSkin.AttributeIcon(index); // 속성 순서에 맞는 이미지
+                attributeImage.enabled = attributeImage.sprite != null; // 누락 이미지 숨김
+                attributeImage.preserveAspect = true; // 실제 아이콘 비율 유지
+                attributeImage.raycastTarget = false; // 실제 전투 입력 보존
+                attributes[index] = CreateText(panel, "SidebarAttribute_" + index, "", new Vector2(left + 0.06f, top - 0.034f), new Vector2(right, top), 19, TextAnchor.MiddleLeft); // 실제 속성 개수와 단계
             }
             for (int index = 0; index < MaximumRows; index++) // 실제 최대 몸통 슬롯 순회
             {
@@ -128,6 +135,7 @@ namespace ProjectEpsilon.UI // 실제 전투 화면 영역
                 rows[index] = row.gameObject; // 실제 몸통 행 저장
                 Image stripe = row.gameObject.AddComponent<Image>(); // 실제 몸통 행 배경
                 stripe.color = index % 2 == 0 ? new Color(0.13f, 0.22f, 0.25f, 0.8f) : new Color(0.09f, 0.16f, 0.20f, 0.8f); // 실제 순서 구분 색상
+                ProjectUiSkin.ApplySidebar(stripe, false); // 공통 몸통 행 프레임
                 stripe.raycastTarget = false; // 실제 전투 입력 차단 방지
                 CreateText(row, "SidebarNumber_" + (index + 1), (index + 1).ToString(), new Vector2(0f, 0f), new Vector2(0.1f, 1f), 20, TextAnchor.MiddleCenter); // 실제 머리 뒤 몸통 번호
                 RectTransform iconRect = CreateRect(row, "SidebarWeapon_" + (index + 1), new Vector2(0.11f, 0.05f), new Vector2(0.24f, 0.95f)); // 실제 포탑 이미지 영역

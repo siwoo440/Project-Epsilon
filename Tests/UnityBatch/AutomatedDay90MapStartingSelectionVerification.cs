@@ -62,6 +62,7 @@ namespace ProjectEpsilon.Editor // 배치 시험 영역
         { // 함수 시작
             Require(Application.productName.EndsWith("-Isolated", StringComparison.Ordinal), "독립 시험 저장 필요"); // 실제 사용자 저장 보호
             yield return WaitFor(() => SceneManager.GetActiveScene().path == SceneFrontendContext.MainMenuPath && Button("FrontendStartButton") != null, "실제 메인 메뉴 누락"); // 실제 분리 메인 메뉴 확인
+            Require(Button("FrontendStartButton").GetComponent<Image>().sprite != null && Button("FrontendStartButton").GetComponent<Image>().sprite.texture.name == "ButtonFrame", "실제 메인 메뉴 버튼 프레임 누락"); // 실제 시작 버튼 이미지 확인
             MetaProgressionController meta = MetaProgressionController.Instance; // 실제 해금 관리자
             Require(meta != null && meta.Service != null, "실제 해금 관리자 누락"); // 실제 저장 구성 확인
             if (!meta.IsMapUnlocked(1)) // 실제 폐허 해금 확인
@@ -74,6 +75,8 @@ namespace ProjectEpsilon.Editor // 배치 시험 영역
             yield return null; // 실제 선택 화면 갱신 대기
             Button("FrontendCharactersNextButton").onClick.Invoke(); // 실제 맵 선택 이동
             yield return null; // 실제 맵 화면 갱신 대기
+            Image mapCard = GameObject.Find("FrontendMapCard0").GetComponent<Image>(); // 실제 첫 맵 카드
+            Require(mapCard.sprite != null && mapCard.sprite.texture.name == "RewardCardFrame" && !mapCard.raycastTarget, "실제 맵 카드 프레임 누락"); // 카드 디자인과 입력 보존 확인
             Button ruins = Button("FrontendMapButton1"); // 실제 폐허 선택 버튼
             Require(ruins != null && ruins.interactable, "해금된 폐허 선택 누락"); // 실제 맵 해금 확인
             ruins.onClick.Invoke(); // 실제 폐허 선택

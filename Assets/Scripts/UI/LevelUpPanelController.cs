@@ -79,8 +79,16 @@ namespace ProjectEpsilon.UI // 프로젝트 기능 영역
 
         private void OnEnable() // 활성 기능 선언
         {
+            ApplyCardSkin(); // 실제 보상 카드 프레임 적용
             BindButtons(); // 연결 기능 실행
         }
+
+        private void ApplyCardSkin() // 공용 보상 카드 디자인
+        { // 함수 시작
+            ProjectUiSkin.ApplyButton(candidateButton01, true); // 첫 카드 프레임
+            ProjectUiSkin.ApplyButton(candidateButton02, true); // 둘째 카드 프레임
+            ProjectUiSkin.ApplyButton(candidateButton03, true); // 셋째 카드 프레임
+        } // 함수 종료
 
         private void OnDisable() // 비활성 기능 선언
         {
@@ -119,6 +127,8 @@ namespace ProjectEpsilon.UI // 프로젝트 기능 영역
 
             candidateButton03 = button03; // 후보·버튼 값 설정
             candidateLabel03 = label03; // 후보·문구 값 설정
+
+            ApplyCardSkin(); // 새로 연결된 보상 카드 프레임 적용
 
             if (Application.isPlaying) // 대상 조건 확인
             {

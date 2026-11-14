@@ -219,6 +219,10 @@ namespace ProjectEpsilon.UI // 실제 메뉴 영역
             {
                 CreateSelectionBackground(); // 승인된 이미지의 불투명 선택 배경
             }
+            if (next == FrontendStage.Paused || next == FrontendStage.Settings || next == FrontendStage.Results || next == FrontendStage.Tutorial) // 실제 공통 정보 화면 확인
+            { // 조건 시작
+                CreateContentFrame(panel, new Vector2(1600f, 1020f)); // 실제 정보 화면 프레임
+            } // 조건 종료
             switch (next) // 실제 화면 종류 확인
             {
                 case FrontendStage.Main: BuildMain(); break; // 실제 주 메뉴 구성
@@ -230,6 +234,19 @@ namespace ProjectEpsilon.UI // 실제 메뉴 영역
                 case FrontendStage.Tutorial: BuildTutorial(); break; // 첫 플레이 안내 구성
             }
         }
+        private static void CreateContentFrame(Transform parent, Vector2 size) // 공통 정보 화면 배경
+        { // 함수 시작
+            GameObject frame = new GameObject("FrontendContentFrame", typeof(RectTransform), typeof(Image)); // 실제 공통 패널
+            RectTransform rect = (RectTransform)frame.transform; // 실제 패널 위치
+            rect.SetParent(parent, false); // 실제 화면에 연결
+            rect.anchorMin = rect.anchorMax = new Vector2(0.5f, 0.5f); // 실제 중앙 기준
+            rect.anchoredPosition = Vector2.zero; // 실제 중앙 배치
+            rect.sizeDelta = size; // 실제 패널 크기
+            Image image = frame.GetComponent<Image>(); // 실제 배경 이미지
+            image.color = new Color(0.035f, 0.06f, 0.12f, 0.94f); // 이미지 부재 시 기본 배경
+            ProjectUiSkin.ApplySidebar(image, true); // 공통 정보 화면 프레임
+            image.raycastTarget = false; // 실제 버튼 입력 보존
+        } // 함수 종료
         private void CreateSelectionBackground() // 실제 출격 선택 배경 구성
         {
             Texture2D background = Resources.Load<Texture2D>("MenuBackground_Casual"); // 실제 승인된 메뉴 배경 이미지
@@ -405,6 +422,7 @@ namespace ProjectEpsilon.UI // 실제 메뉴 영역
                 cardRect.sizeDelta = new Vector2(460f, 550f); // 카드 크기 설정
                 Image cardImage = card.GetComponent<Image>(); // 카드 배경 표시기
                 cardImage.color = new Color(0.025f, 0.09f, 0.14f, 0.92f); // 어두운 카드 배경
+                ProjectUiSkin.ApplySidebar(cardImage, true); // 공통 맵 카드 프레임
                 cardImage.raycastTarget = false; // 버튼 입력 보존
                 Outline outline = card.GetComponent<Outline>(); // 카드 테두리
                 outline.effectColor = index == selectedMap ? new Color(0.2f, 0.8f, 0.9f, 1f) : new Color(0.25f, 0.4f, 0.48f, 0.8f); // 선택 상태 구분
@@ -475,6 +493,7 @@ namespace ProjectEpsilon.UI // 실제 메뉴 영역
             rect.offsetMin = Vector2.zero; // 실제 화면 여백 제거
             rect.offsetMax = Vector2.zero; // 실제 화면 여백 제거
             background.GetComponent<Image>().color = new Color(0.025f, 0.05f, 0.085f, 0.98f); // 실제 설정 배경색
+            CreateContentFrame(background.transform, new Vector2(1500f, 940f)); // 실제 키 설정 공통 프레임
             Label(background.transform, "InputTitle", "키 설정", new Vector2(0f, 350f), new Vector2(900f, 90f), 48); // 실제 키 설정 제목
             Button left = CreateButton(background.transform, "InputTurnLeft", "왼쪽 회전", new Vector2(-300f, 170f), new Vector2(380f, 75f), null); // 실제 왼쪽 키 변경
             Button right = CreateButton(background.transform, "InputTurnRight", "오른쪽 회전", new Vector2(-300f, 70f), new Vector2(380f, 75f), null); // 실제 오른쪽 키 변경
@@ -713,6 +732,7 @@ namespace ProjectEpsilon.UI // 실제 메뉴 영역
             rect.sizeDelta = size; // 실제 버튼 크기
             item.GetComponent<Image>().color = new Color(0.12f, 0.34f, 0.43f, 1f); // 실제 버튼 배경색
             Button button = item.GetComponent<Button>(); // 실제 버튼 컴포넌트
+            ProjectUiSkin.ApplyButton(button); // 공통 버튼 프레임 적용
             if (action != null) // 실제 버튼 동작 확인
             {
                 button.onClick.AddListener(action); // 실제 사용자 동작 연결

@@ -30,6 +30,10 @@ namespace ProjectEpsilon.Progression // 영구 성장 영역
         private void OnGUI() // 실제 시작 화면 표시
         {
             Font previous = GUI.skin.font; // 실제 이전 공용 글꼴
+            Color previousBackground = GUI.backgroundColor; // 실제 이전 배경 색상
+            Color previousContent = GUI.contentColor; // 실제 이전 글자 색상
+            GUI.backgroundColor = new Color(0.15f, 0.35f, 0.48f, 1f); // 공통 남색 버튼 계열
+            GUI.contentColor = Color.white; // 공통 흰색 글자
             Font current = RunFrontendController.Instance == null ? null : RunFrontendController.Instance.DisplayFont; // 실제 화면 한글 글꼴
             if (current != null) // 실제 한글 글꼴 확인
             {
@@ -42,6 +46,8 @@ namespace ProjectEpsilon.Progression // 영구 성장 영역
             finally // 실제 화면 오류와 관계없는 복원
             {
                 GUI.skin.font = previous; // 실제 다른 화면 글꼴 복원
+                GUI.backgroundColor = previousBackground; // 실제 이전 배경 색상 복원
+                GUI.contentColor = previousContent; // 실제 이전 글자 색상 복원
             }
         }
         private void DrawMenu() // 실제 영구 성장 내용 표시

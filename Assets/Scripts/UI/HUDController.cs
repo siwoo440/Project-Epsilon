@@ -262,6 +262,7 @@ namespace ProjectEpsilon.UI // 프로젝트 기능 영역
                 frame.sizeDelta = new Vector2(0f, 10f); // 실제 막대 높이
                 Image backgroundImage = background.GetComponent<Image>(); // 실제 배경 이미지
                 backgroundImage.color = new Color(0.05f, 0.06f, 0.09f, 0.85f); // 어두운 막대 배경
+                ProjectUiSkin.ApplyBar(backgroundImage); // 공통 체력과 경험치 막대 프레임
                 backgroundImage.raycastTarget = false; // UI 입력 차단 방지
                 GameObject foreground = new GameObject("Fill", typeof(RectTransform), typeof(CanvasRenderer), typeof(Image)); // 실제 채움 이미지 생성
                 fill = (RectTransform)foreground.transform; // 실제 채움 영역 저장
