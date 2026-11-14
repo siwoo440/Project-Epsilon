@@ -37,7 +37,6 @@ namespace ProjectEpsilon.UI // 실제 메뉴 영역
         private bool tutorialAutoChecked; // 첫 안내 자동 확인 여부
         private bool tutorialOwnsPause; // 안내가 시작한 일시정지 여부
         private int tutorialPage; // 현재 안내 단계
-        private FrontendStage tutorialReturn; // 안내 종료 후 복귀 화면
         public static RunFrontendController Instance { get; private set; } // 실제 메뉴 관리자
         public FrontendStage Stage { get; private set; } // 실제 현재 단계
         public Font DisplayFont => font; // 실제 화면의 한글 우선 글꼴
@@ -170,7 +169,7 @@ namespace ProjectEpsilon.UI // 실제 메뉴 영역
                 tutorialAutoChecked = true; // 같은 런의 중복 안내 방지
                 if (NeedsFirstTutorial()) // 첫 플레이 안내 확인
                 { // 조건 시작
-                    BeginTutorial(false); // 첫 전투 안내 시작
+                    BeginTutorial(); // 첫 전투 안내 시작
                 } // 조건 종료
             } // 조건 종료
         }
@@ -527,13 +526,12 @@ namespace ProjectEpsilon.UI // 실제 메뉴 영역
             settingsReturn = from; // 실제 복귀 화면 저장
             Show(FrontendStage.Settings); // 실제 설정 화면 표시
         }
-        private void BeginTutorial(bool fromSettings) // 첫 안내 또는 다시 보기 시작
+        private void BeginTutorial() // 첫 전투 안내 시작
         { // 함수 시작
             tutorialPage = 0; // 첫 안내 단계 설정
-            tutorialReturn = fromSettings ? FrontendStage.Settings : FrontendStage.Playing; // 종료 후 복귀 화면
             tutorialOwnsPause = false; // 기존 정지 소유 초기화
             GameManager game = GameManager.Instance; // 현재 게임 관리자
-            if (!fromSettings && game != null && game.IsPlaying) // 자동 안내의 진행 상태 확인
+            if (game != null && game.IsPlaying) // 자동 안내의 진행 상태 확인
             { // 조건 시작
                 game.PauseGame(); // 안내 중 전투 일시정지
                 tutorialOwnsPause = game.IsPaused; // 안내가 시작한 정지 기록
@@ -615,7 +613,7 @@ namespace ProjectEpsilon.UI // 실제 메뉴 영역
                 game.ResumeGame(); // 안내가 정지한 전투만 재개
             } // 조건 종료
             tutorialOwnsPause = false; // 정지 소유 해제
-            Show(tutorialReturn); // 기존 전투 또는 설정 복귀
+            Show(FrontendStage.Playing); // 기존 전투 화면 복귀
         } // 함수 종료
         private void BuildSettings() // 실제 음량과 화면 설정 구성
         {
@@ -627,7 +625,6 @@ namespace ProjectEpsilon.UI // 실제 메뉴 영역
             Button mode = CreateButton(panel, "FrontendScreenModeButton", "화면 모드 변경", new Vector2(300f, -35f), new Vector2(480f, 80f), () => ChangeOptions(0, 0, 0, true)); // 실제 화면 모드 변경
             volume.interactable = shake.interactable = resolution.interactable = mode.interactable = options.IsAvailable; // 실제 저장 오류 시 변경 차단
             CreateButton(panel, "FrontendInputSettingsButton", "키 설정", new Vector2(0f, -150f), new Vector2(500f, 80f), () => inputSettings?.OpenSettings()); // 실제 기존 키 설정 열기
-            CreateButton(panel, "FrontendTutorialReplayButton", "조작 안내 다시 보기", new Vector2(500f, -150f), new Vector2(420f, 80f), () => BeginTutorial(true)); // 첫 플레이 안내 다시 보기
             CreateButton(panel, "FrontendSettingsBackButton", "뒤로", new Vector2(0f, -280f), new Vector2(320f, 80f), () => Show(settingsReturn)); // 실제 이전 메뉴 복귀
             Label(panel, "FrontendShakeNote", "흔들림 설정은 저장되며 화면 효과는 아직 적용되지 않았습니다.", new Vector2(0f, -350f), new Vector2(1200f, 40f), 20); // 실제 흔들림 구현 상태
             Label(panel, "FrontendDebugHelp", "전투 중 시험 조작\nN: 합성 재료  |  E: 합성  |  P: 피해  |  [: 몸통 손실\nH: 회복 보석  |  J: 복구 보석  |  Shift+3 / Shift+5: 포탑 등급", new Vector2(0f, -445f), new Vector2(1500f, 105f), 22); // 설정 화면의 실제 시험 조작 안내

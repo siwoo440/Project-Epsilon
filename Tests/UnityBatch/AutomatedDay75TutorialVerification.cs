@@ -104,7 +104,7 @@ namespace ProjectEpsilon.Editor // 배치 시험 영역
                 } // 실패 종료
                 yield return current; // 실제 프레임 대기
             } // 반복 종료
-            AutomatedDay75TutorialVerification.Finish(0, "First-run pages, completion, saved state, replay, ESC and pause ownership passed."); // 성공 결과 기록
+            AutomatedDay75TutorialVerification.Finish(0, "First-run pages, completion, saved state, settings and pause ownership passed."); // 성공 결과 기록
         } // 함수 종료
         private IEnumerator RunSteps() // 실제 안내와 설정 흐름
         { // 함수 시작
@@ -143,18 +143,8 @@ namespace ProjectEpsilon.Editor // 배치 시험 영역
             Require(frontend.Stage.ToString() == "Paused" && GameManager.Instance.IsPaused, "기존 일시정지 진입 실패"); // 기존 수동 일시정지 확인
             FindButton("FrontendPauseSettingsButton").onClick.Invoke(); // 실제 설정 진입
             yield return null; // 설정 화면 대기
-            Button replay = FindButton("FrontendTutorialReplayButton"); // 실제 안내 다시 보기
-            Require(replay != null && replay.interactable, "설정의 다시 보기 누락"); // 실제 다시 보기 확인
-            replay.onClick.Invoke(); // 실제 안내 다시 열기
-            yield return null; // 안내 화면 대기
-            Require(frontend.Stage.ToString() == "Tutorial" && GameManager.Instance.IsPaused, "다시 보기의 정지 상태 실패"); // 실제 안내와 정지 확인
-            FindButton("FrontendTutorialSkipButton").onClick.Invoke(); // 실제 안내 건너뛰기 버튼
-            yield return null; // 설정 화면 복귀 대기
-            Require(frontend.Stage.ToString() == "Settings" && GameManager.Instance.IsPaused, "건너뛰기가 기존 일시정지를 해제함"); // 건너뛰기 정지 유지 확인
-            FindButton("FrontendTutorialReplayButton").onClick.Invoke(); // 실제 안내 다시 열기
-            yield return null; // 안내 화면 대기
-            yield return Tap(keyboard, Key.Escape); // 실제 안내 건너뛰기 입력
-            Require(frontend.Stage.ToString() == "Settings" && GameManager.Instance.IsPaused, "안내 취소가 기존 일시정지를 해제함"); // 설정과 정지 소유 확인
+            Require(FindButton("FrontendTutorialReplayButton") == null, "설정에 삭제한 안내 다시 보기 버튼이 남음"); // 다시 보기 제거 확인
+            Require(FindButton("FrontendInputSettingsButton") != null && GameManager.Instance.IsPaused, "기존 키 설정 또는 일시정지 누락"); // 기존 설정과 정지 유지 확인
             FindButton("FrontendSettingsBackButton").onClick.Invoke(); // 기존 일시정지 화면 복귀
             yield return null; // 화면 전환 대기
             FindButton("FrontendResumeButton").onClick.Invoke(); // 실제 전투 재개
