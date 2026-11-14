@@ -223,7 +223,13 @@ namespace ProjectEpsilon.Combat // 전투 영역
                 case WeaponAttributeReaction.SacredExplosion: // 신성과 화염 반응
                     burn.Clear(); // 화상 재료 소비
                     Vector3 center = target.transform.position; // 실제 반응 중심
-                    WeaponTarget.VisitAllInRange(center, sacredExplosionRadius, candidate => candidate.TakeReactionDamage(sacredExplosionDamage)); // 반응 범위 피해
+                    WeaponTarget.VisitAllInRange(center, sacredExplosionRadius, candidate => // 실제 성화 폭발 대상 순회
+                    { // 반응 처리 시작
+                        if (CanContinueCombat()) // 앞선 대상의 승리 또는 정지 확인
+                        { // 조건 시작
+                            candidate.TakeReactionDamage(sacredExplosionDamage); // 실제 전투 중 반응 범위 피해
+                        } // 조건 종료
+                    }); // 반응 처리 종료
                     break; // 반응 처리 종료
                 case WeaponAttributeReaction.CorrosiveCurse: // 암흑과 독 반응
                     curse.Clear(); // 저주 재료 소비
@@ -248,6 +254,10 @@ namespace ProjectEpsilon.Combat // 전투 영역
             Vector3 center = target.transform.position; // 반응 대상 중심 위치
             WeaponTarget.VisitAllInRange(center, shatteringImpactRadius, candidate => // 반응 범위의 실제 대상 순회
             {
+                if (!CanContinueCombat()) // 앞선 대상의 승리 또는 정지 확인
+                { // 조건 시작
+                    return; // 이후 파쇄 반응 피해와 넉백 차단
+                } // 조건 종료
                 candidate.TakeReactionDamage(shatteringImpactDamage); // 파생 공격 없는 반응 피해
                 if (!candidate.IsAlive) // 반응 피해 이후 생존 확인
                 {
