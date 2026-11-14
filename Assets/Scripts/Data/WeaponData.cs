@@ -63,6 +63,10 @@ namespace ProjectEpsilon.Data // 프로젝트 기능 영역
         [Min(0)] [SerializeField] private int gradeFiveExtraElectricTargets; // 오 등급 추가 전기 연쇄 대상 시험값
         [Min(1f)] [SerializeField] private float gradeThreeElectricRangeMultiplier = 1f; // 삼 등급 전기 연쇄 범위 배율 시험값
         [Min(1f)] [SerializeField] private float gradeFiveElectricRangeMultiplier = 1f; // 오 등급 전기 연쇄 범위 배율 시험값
+        [Min(1f)] [SerializeField] private float gradeThreePoisonedDamageMultiplier = 1f; // 삼 등급 독 대상 피해 배율 시험값
+        [Min(1f)] [SerializeField] private float gradeFivePoisonedDamageMultiplier = 1f; // 오 등급 독 대상 피해 배율 시험값
+        [Min(1f)] [SerializeField] private float gradeThreePoisonDurationMultiplier = 1f; // 삼 등급 독 시간 배율 시험값
+        [Min(1f)] [SerializeField] private float gradeFivePoisonDurationMultiplier = 1f; // 오 등급 독 시간 배율 시험값
 
         public string Id => id; // 식별자 값 반환
         public string DisplayName => displayName; // 이름 값 반환
@@ -110,6 +114,8 @@ namespace ProjectEpsilon.Data // 프로젝트 기능 영역
         public float GetColdDurationMultiplier(int grade) => grade >= 5 ? Mathf.Max(Mathf.Max(1f, gradeThreeColdDurationMultiplier), gradeFiveColdDurationMultiplier) : grade >= 3 ? Mathf.Max(1f, gradeThreeColdDurationMultiplier) : 1f; // 등급별 냉기 지속 시간 배율
         public int GetExtraElectricTargets(int grade) => grade >= 5 ? Mathf.Clamp(Mathf.Max(gradeThreeExtraElectricTargets, gradeFiveExtraElectricTargets), 0, 3) : grade >= 3 ? Mathf.Clamp(gradeThreeExtraElectricTargets, 0, 3) : 0; // 등급별 추가 전기 연쇄 대상
         public float GetElectricRangeMultiplier(int grade) => grade >= 5 ? Mathf.Max(Mathf.Max(1f, gradeThreeElectricRangeMultiplier), gradeFiveElectricRangeMultiplier) : grade >= 3 ? Mathf.Max(1f, gradeThreeElectricRangeMultiplier) : 1f; // 등급별 전기 연쇄 범위 배율
+        public float GetPoisonedDamageMultiplier(int grade) => grade >= 5 ? Mathf.Max(Mathf.Max(1f, gradeThreePoisonedDamageMultiplier), gradeFivePoisonedDamageMultiplier) : grade >= 3 ? Mathf.Max(1f, gradeThreePoisonedDamageMultiplier) : 1f; // 등급별 독 대상 직접 피해 배율
+        public float GetPoisonDurationMultiplier(int grade) => grade >= 5 ? Mathf.Max(Mathf.Max(1f, gradeThreePoisonDurationMultiplier), gradeFivePoisonDurationMultiplier) : grade >= 3 ? Mathf.Max(1f, gradeThreePoisonDurationMultiplier) : 1f; // 등급별 독 지속 시간 배율
         public float GradeThreeTransferRange => Mathf.Max(0f, gradeThreeTransferRange); // 안전한 추가 전달 반경
         public float GradeThreeTransferDamageMultiplier => Mathf.Max(0f, gradeThreeTransferDamageMultiplier); // 안전한 추가 전달 피해 배율
         public float GetTransferDamageMultiplier(int grade) => GradeThreeTransferDamageMultiplier * (grade >= 5 ? Mathf.Max(1f, gradeFiveTransferDamageScale) : 1f); // 등급별 전달 피해 배율

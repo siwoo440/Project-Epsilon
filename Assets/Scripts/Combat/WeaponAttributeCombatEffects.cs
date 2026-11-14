@@ -296,6 +296,15 @@ namespace ProjectEpsilon.Combat // 전투 영역
                     return new WeaponAttributeAttackSnapshot(attack.Weapon, attack.Attribute, attack.AttributeCount, attack.SynergyStage, attack.Grade, attack.Origin, coldDamage, attack.AreaCenter); // 실제 범위 중심을 보존한 공격
                 } // 조건 종료
             } // 조건 종료
+            if (attack.Attribute == WeaponAttribute.Poison && attack.Weapon != null) // 실제 독 포탑 확인
+            { // 조건 시작
+                WeaponTargetPoisonStatus poison = target.GetComponent<WeaponTargetPoisonStatus>(); // 실제 명중 전 독 상태
+                if (poison != null && poison.IsActive) // 실제 활성 독 대상 확인
+                { // 조건 시작
+                    float poisonDamage = attack.DirectDamage * attack.Weapon.GetPoisonedDamageMultiplier(attack.Grade); // 실제 독 대상 등급 피해
+                    return new WeaponAttributeAttackSnapshot(attack.Weapon, attack.Attribute, attack.AttributeCount, attack.SynergyStage, attack.Grade, attack.Origin, poisonDamage, attack.AreaCenter); // 실제 범위 중심을 보존한 공격
+                } // 조건 종료
+            } // 조건 종료
             if (attack.Attribute != WeaponAttribute.Dark) // 암흑 속성 여부 확인
             {
                 return attack; // 원래 공격 반환
@@ -386,7 +395,8 @@ namespace ProjectEpsilon.Combat // 전투 영역
                 poison = target.gameObject.AddComponent<WeaponTargetPoisonStatus>(); // 독 상태 추가
             }
 
-            poison.Apply(target, attack.SynergyStage); // 독 중첩과 약화 적용
+            float durationMultiplier = attack.Weapon == null ? 1f : attack.Weapon.GetPoisonDurationMultiplier(attack.Grade); // 실제 포탑 등급의 독 시간 배율
+            poison.Apply(target, attack.SynergyStage, durationMultiplier); // 기존 시너지의 독 중첩과 약화 적용
         }
 
         private void ApplyElectricChain(WeaponAttributeAttackSnapshot attack, WeaponTarget firstTarget, Vector3 firstHitPosition) // 전기 연쇄 적용

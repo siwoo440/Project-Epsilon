@@ -44,7 +44,7 @@ namespace ProjectEpsilon.Combat // 전투 영역
             }
         }
 
-        public bool Apply(WeaponTarget damageTarget, int incomingStage) // 독 상태 적용
+        public bool Apply(WeaponTarget damageTarget, int incomingStage, float durationMultiplier = 1f) // 독 상태 적용
         {
             if (damageTarget == null || !damageTarget.IsAlive) // 대상 유효성 확인
             {
@@ -59,7 +59,7 @@ namespace ProjectEpsilon.Combat // 전투 영역
             target = damageTarget; // 대상 저장
             synergyStage = WeaponAttributeSynergyRules.ResolveStage(incomingStage); // 독 단계 저장
             stackCount = Mathf.Clamp(stackCount, 0, 4) + 1; // 독 다섯 중첩 상한
-            remainingDuration = WeaponAttributePoisonRules.NormalizeDuration(WeaponAttributePoisonRules.TemporaryDuration); // 임시 지속 시간 갱신
+            remainingDuration = WeaponAttributePoisonRules.NormalizeDuration(WeaponAttributePoisonRules.TemporaryDuration * Mathf.Max(1f, durationMultiplier)); // 기존 독과 등급의 지속 시간 갱신
             WeaponTargetStatusIndicators.Ensure(target); // 실제 독 지속 표시 연결
             return true; // 적용 성공
         }
