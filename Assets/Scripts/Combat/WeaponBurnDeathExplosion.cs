@@ -1,4 +1,5 @@
 using System; // 피해 콜백 예외 처리
+using ProjectEpsilon.Core; // 실제 게임 진행 상태
 using ProjectEpsilon.Data; // 속성 데이터
 using UnityEngine; // Unity 기능
 
@@ -56,7 +57,7 @@ namespace ProjectEpsilon.Combat // 전투 영역
         private void HandleDeath(WeaponTarget victim) // 실제 화상 적 사망 처리
         {
             WeaponTargetBurnStatus burn = victim == null ? null : victim.GetComponent<WeaponTargetBurnStatus>(); // 실제 화상 상태 조회
-            if (triggered || resolvingExplosion || (victim != null && victim.IsReactionDamage) || burn == null || !burn.isActiveAndEnabled || burn.RemainingDuration <= 0f || radius <= 0f || damage <= 0f) // 화상과 폭발 유효성 확인
+            if (!CanContinueCombat() || triggered || resolvingExplosion || (victim != null && victim.IsReactionDamage) || burn == null || !burn.isActiveAndEnabled || burn.RemainingDuration <= 0f || radius <= 0f || damage <= 0f) // 실제 전투와 화상 폭발 유효성 확인
             {
                 return; // 무효 또는 연쇄 폭발 차단
             }
@@ -68,6 +69,10 @@ namespace ProjectEpsilon.Combat // 전투 영역
                 WeaponTarget[] targets = UnityEngine.Object.FindObjectsByType<WeaponTarget>(FindObjectsSortMode.None); // 폭발 전 실제 대상 목록
                 foreach (WeaponTarget candidate in targets) // 실제 폭발 대상 순회
                 {
+                    if (!CanContinueCombat()) // 앞선 대상의 승리 또는 정지 확인
+                    { // 조건 시작
+                        break; // 이후 폭발 대상 피해 차단
+                    } // 조건 종료
                     if (candidate != null && candidate != victim && candidate.isActiveAndEnabled && candidate.IsAlive && (candidate.transform.position - center).sqrMagnitude <= radius * radius) // 범위 안 생존 대상 확인
                     {
                         candidate.TakeDamage(damage); // 실제 폭발 피해 적용
@@ -82,5 +87,10 @@ namespace ProjectEpsilon.Combat // 전투 영역
                 resolvingExplosion = false; // 후속 독립 폭발 허용
             }
         }
+
+        private static bool CanContinueCombat() // 실제 화상 폭발 진행 여부
+        { // 함수 시작
+            return GameManager.Instance == null || GameManager.Instance.IsPlaying; // 게임 관리자 부재 또는 전투 진행 확인
+        } // 함수 종료
     }
 }
