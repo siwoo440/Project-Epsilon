@@ -571,7 +571,12 @@ namespace ProjectEpsilon.UI // 실제 메뉴 영역
             }; // 목록 종료
             int page = Mathf.Clamp(tutorialPage, 0, TutorialPageCount - 1); // 유효한 안내 단계
             Title(titles[page], $"첫 플레이 안내  {page + 1} / {TutorialPageCount}"); // 실제 안내 제목
-            Label(panel, "FrontendTutorialBody", pages[page], new Vector2(0f, 70f), new Vector2(1450f, 330f), 38); // 실제 안내 내용
+            Sprite tutorialArt = ProjectUiSkin.TutorialIcon(page); // 실제 안내 단계의 그림
+            if (tutorialArt != null) // 실제 안내 그림 확인
+            { // 조건 시작
+                Preview(panel, "FrontendTutorialArtwork", tutorialArt, new Vector2(0f, -75f), new Vector2(340f, 200f)); // 실제 안내 단계 이미지
+            } // 조건 종료
+            Label(panel, "FrontendTutorialBody", pages[page], tutorialArt != null ? new Vector2(0f, 165f) : new Vector2(0f, 70f), tutorialArt != null ? new Vector2(1450f, 180f) : new Vector2(1450f, 330f), 38); // 실제 그림 위 또는 기존 안내 내용
             Button previous = CreateButton(panel, "FrontendTutorialPreviousButton", "이전", new Vector2(-350f, -280f), new Vector2(300f, 80f), PreviousTutorialPage); // 이전 단계 버튼
             previous.interactable = page > 0; // 첫 단계 이전 이동 차단
             CreateButton(panel, "FrontendTutorialNextButton", page == TutorialPageCount - 1 ? "완료" : "다음", new Vector2(0f, -280f), new Vector2(300f, 80f), NextTutorialPage); // 다음 단계 또는 완료 버튼

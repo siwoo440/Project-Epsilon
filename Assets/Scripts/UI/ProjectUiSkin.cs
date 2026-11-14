@@ -10,6 +10,7 @@ namespace ProjectEpsilon.UI // 게임 UI 영역
         private static Sprite barSprite; // 막대 이미지 저장
         private static readonly Sprite[] attributeSprites = new Sprite[8]; // 실제 여덟 속성 이미지 저장
         private static readonly Sprite[] eliteRewardSprites = new Sprite[4]; // 실제 네 가지 정예 보상 이미지
+        private static readonly Sprite[] tutorialSprites = new Sprite[8]; // 실제 여덟 안내 단계 이미지
         private static Sprite Load(ref Sprite cached, string path, Rect normalized, Vector4 border) // 이미지 불러오기와 테두리 구성
         { // 함수 시작
             if (cached != null) // 기존 이미지 확인
@@ -105,6 +106,31 @@ namespace ProjectEpsilon.UI // 게임 UI 영역
             Rect rect = new Rect(left, 0, right - left, atlas.height); // 실제 보상 이미지 영역
             eliteRewardSprites[kind] = Sprite.Create(atlas, rect, new Vector2(0.5f, 0.5f), 100f, 0, SpriteMeshType.FullRect); // 실제 보상 아이콘 생성
             return eliteRewardSprites[kind]; // 실제 보상 아이콘 반환
+        } // 함수 종료
+        public static Sprite TutorialIcon(int page) // 실제 안내 단계별 그림
+        { // 함수 시작
+            if (page < 0 || page >= tutorialSprites.Length) // 유효한 안내 단계 확인
+            { // 조건 시작
+                return null; // 잘못된 안내 그림 생략
+            } // 조건 종료
+            if (tutorialSprites[page] != null) // 기존 안내 그림 확인
+            { // 조건 시작
+                return tutorialSprites[page]; // 실제 이미지 재사용
+            } // 조건 종료
+            Texture2D atlas = Resources.Load<Texture2D>("UI/TutorialIcons"); // 실제 여덟 안내 그림
+            if (atlas == null) // 실제 이미지 누락 확인
+            { // 조건 시작
+                return null; // 기존 글자 안내 유지
+            } // 조건 종료
+            int column = page % 4; // 실제 안내 열 번호
+            int row = page / 4; // 실제 안내 행 번호
+            int left = column * atlas.width / 4; // 정수 기준 왼쪽 경계
+            int right = (column + 1) * atlas.width / 4; // 정수 기준 오른쪽 경계
+            int bottom = (1 - row) * atlas.height / 2; // 정수 기준 아래쪽 경계
+            int top = (2 - row) * atlas.height / 2; // 정수 기준 위쪽 경계
+            Rect rect = new Rect(left, bottom, right - left, top - bottom); // 실제 안내 이미지 영역
+            tutorialSprites[page] = Sprite.Create(atlas, rect, new Vector2(0.5f, 0.5f), 100f, 0, SpriteMeshType.FullRect); // 실제 안내 그림 생성
+            return tutorialSprites[page]; // 실제 안내 그림 반환
         } // 함수 종료
         private static bool Apply(Image image, Sprite sprite, float pixelMultiplier) // 실제 UI 프레임 적용
         { // 함수 시작

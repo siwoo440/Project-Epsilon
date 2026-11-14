@@ -83,6 +83,18 @@ namespace ProjectEpsilon.Editor // 배치 시험 영역
             show.Invoke(frontend, new object[] { ProjectEpsilon.UI.FrontendStage.Paused }); // 실제 일시정지 화면 구성
             Image modal = FindImage("FrontendContentFrame"); // 실제 일시정지 배경
             Require(modal != null && modal.sprite != null && modal.sprite.texture.name == "RewardCardFrame" && !modal.raycastTarget, "실제 일시정지 프레임 또는 입력 오류"); // 실제 배경과 입력 확인
+            FieldInfo pageField = typeof(ProjectEpsilon.UI.RunFrontendController).GetField("tutorialPage", BindingFlags.Instance | BindingFlags.NonPublic); // 실제 안내 단계
+            Require(pageField != null, "실제 안내 단계 누락"); // 기존 안내 상태 확인
+            for (int page = 0; page < 8; page++) // 실제 여덟 안내 단계 순회
+            { // 반복 시작
+                pageField.SetValue(frontend, page); // 실제 안내 단계 설정
+                show.Invoke(frontend, new object[] { ProjectEpsilon.UI.FrontendStage.Tutorial }); // 실제 안내 화면 구성
+                GameObject artworkObject = GameObject.Find("FrontendTutorialArtwork"); // 실제 안내 그림
+                Image artwork = artworkObject == null ? null : artworkObject.GetComponent<Image>(); // 실제 안내 이미지
+                Require(artwork != null && artwork.sprite != null && artwork.sprite.texture.name == "TutorialIcons" && !artwork.raycastTarget, "실제 안내 그림 누락: " + page); // 실제 안내 이미지와 입력 확인
+                Rect area = artwork.sprite.rect; // 실제 안내 원본 영역
+                Require(Mathf.Approximately(area.x, page % 4 * artwork.sprite.texture.width / 4) && Mathf.Approximately(area.y, (1 - page / 4) * artwork.sprite.texture.height / 2), "실제 안내 이미지 순서 오류: " + page); // 실제 안내 단계별 이미지 확인
+            } // 반복 종료
             show.Invoke(frontend, new object[] { ProjectEpsilon.UI.FrontendStage.Playing }); // 실제 전투 화면 복구
             AutomatedDay126UiSkinVerification.Finish(true, "Actual reward, body sidebar and HUD frame skins are present and non-blocking."); // 실제 시험 결과
         } // 함수 종료
