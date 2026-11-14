@@ -292,8 +292,11 @@ namespace ProjectEpsilon.UI // 실제 메뉴 영역
             growth.interactable = MetaProgressionController.Instance != null && MetaProgressionController.Instance.Service != null && MetaProgressionController.Instance.Service.FinishedFirstRun && MetaProgressionController.Instance.Service.IsAvailable; // 실제 첫 런 해금 확인
             CreateButton(panel, "FrontendSettingsButton", "설정", new Vector2(500f, -70f), new Vector2(460f, 86f), () => OpenSettings(FrontendStage.Main)); // 실제 설정 진입
             CreateButton(panel, "FrontendQuitButton", "종료", new Vector2(500f, -175f), new Vector2(460f, 86f), Application.Quit); // 실제 게임 종료
-            MetaProgressionController meta = MetaProgressionController.Instance; // 실제 코어 관리자
-            Label(panel, "FrontendCoreStatus", meta != null && meta.Service != null && meta.Service.IsAvailable ? $"코어  {meta.Service.Cores}" : "성장 저장을 사용할 수 없습니다", new Vector2(500f, -300f), new Vector2(800f, 55f), 26); // 오른쪽 저장 상태 표시
+            MetaProgressionController meta = MetaProgressionController.Instance; // 실제 성장 저장 관리자
+            if (meta == null || meta.Service == null || !meta.Service.IsAvailable) // 성장 저장 오류 확인
+            { // 조건 시작
+                Label(panel, "FrontendGrowthError", "성장 저장을 사용할 수 없습니다", new Vector2(500f, -300f), new Vector2(800f, 55f), 26); // 저장 오류 안내 유지
+            } // 조건 종료
         }
         private void GoToPreparation() // 실제 출격 준비 화면 이동
         {
@@ -324,7 +327,15 @@ namespace ProjectEpsilon.UI // 실제 메뉴 영역
                 }
                 bool unlocked = meta == null || meta.IsCharacterUnlocked(character.Id); // 실제 해금 상태
                 string label = character.DisplayName + (unlocked ? "" : "  |  잠김: 개방 평원 보스 처치"); // 실제 이름과 해금 조건
-                Button button = CreateButton(panel, "FrontendCharacterButton" + index, label, new Vector2(-520f + index % 2 * 450f, 240f - index / 2 * 105f), new Vector2(420f, 82f), () => SelectCharacter(selected)); // 실제 캐릭터 선택 버튼
+                Button button = CreateButton(panel, "FrontendCharacterButton" + index, label, new Vector2(-520f + index % 2 * 450f, 225f - index / 2 * 185f), new Vector2(420f, 160f), () => SelectCharacter(selected)); // 넓어진 캐릭터 선택 버튼
+                Text buttonLabel = button.GetComponentInChildren<Text>(); // 실제 캐릭터 이름과 잠금 안내
+                RectTransform buttonLabelRect = (RectTransform)buttonLabel.transform; // 실제 이름 영역
+                buttonLabelRect.anchoredPosition = new Vector2(-55f, 0f); // 이름을 이미지 왼쪽에 배치
+                buttonLabelRect.sizeDelta = new Vector2(275f, 135f); // 잠금 안내를 포함한 글자 영역
+                buttonLabel.resizeTextForBestFit = true; // 긴 잠금 안내 크기 조절
+                buttonLabel.resizeTextMinSize = 18; // 잠금 안내 최소 글자 크기
+                buttonLabel.resizeTextMaxSize = 27; // 캐릭터 이름 최대 글자 크기
+                Preview(button.transform, "FrontendCharacterButtonPortrait" + index, character.Portrait, new Vector2(145f, 0f), new Vector2(125f, 125f)); // 버튼 오른쪽의 캐릭터 머리
                 button.interactable = unlocked; // 잠긴 캐릭터 선택 차단
             }
             CharacterData active = sceneContext == null ? CharacterRunInitializer.ActiveCharacter : sceneContext.SelectedCharacter; // 실제 선택 캐릭터
@@ -332,7 +343,19 @@ namespace ProjectEpsilon.UI // 실제 메뉴 영역
             {
                 string weapons = active.StartingWeapons == null || active.StartingWeapons.Weapons == null ? "-" : string.Join("  /  ", Array.ConvertAll(active.StartingWeapons.Weapons, item => item == null ? "-" : item.DisplayName)); // 실제 세 포탑 후보
                 string info = $"{active.DisplayName}\n몸통 {active.StartingBodyCount}   체력 {active.BodyMaxHealth:0}\n이동 ×{active.MoveSpeedMultiplier:0.00}   회전 ×{active.TurnPowerMultiplier:0.00}\n특성: {DescribePassive(active)}\n시작 포탑: {weapons}"; // 실제 캐릭터 능력과 후보
-                Label(panel, "FrontendCharacterDetails", info, new Vector2(535f, 110f), new Vector2(700f, 400f), 25); // 실제 선택 캐릭터 정보
+                GameObject detailsFrame = new GameObject("FrontendCharacterDetailsFrame", typeof(RectTransform), typeof(Image)); // 캐릭터 정보 배경
+                RectTransform detailsRect = (RectTransform)detailsFrame.transform; // 캐릭터 정보 배경 위치
+                detailsRect.SetParent(panel, false); // 선택 화면에 정보 배경 연결
+                detailsRect.anchorMin = detailsRect.anchorMax = new Vector2(0.5f, 0.5f); // 화면 중앙 기준
+                detailsRect.anchoredPosition = new Vector2(535f, 115f); // 화면 오른쪽 정보 위치
+                detailsRect.sizeDelta = new Vector2(700f, 350f); // 실제 정보 배경 크기
+                Image detailsImage = detailsFrame.GetComponent<Image>(); // 실제 정보 배경 이미지
+                ProjectUiSkin.ApplySidebar(detailsImage, true); // 기존 공통 카드 스킨
+                detailsImage.raycastTarget = false; // 선택 버튼 입력 방해 방지
+                Text details = Label(detailsRect, "FrontendCharacterDetails", info, Vector2.zero, new Vector2(630f, 300f), 28); // 카드 안의 캐릭터 정보
+                details.resizeTextForBestFit = true; // 긴 포탑 이름 크기 조절
+                details.resizeTextMinSize = 20; // 정보의 최소 글자 크기
+                details.resizeTextMaxSize = 28; // 정보의 최대 글자 크기
             }
             if (active != null && active.Portrait != null) // 실제 선택 캐릭터 초상화 확인
             { // 조건 시작
@@ -350,8 +373,17 @@ namespace ProjectEpsilon.UI // 실제 메뉴 영역
                 Preview(panel, "FrontendCharacterBody1", bodyImage, new Vector2(515f, -210f), new Vector2(150f, 150f)); // 실제 첫 몸통 미리보기
                 Preview(panel, "FrontendCharacterBody2", bodyImage, new Vector2(665f, -210f), new Vector2(150f, 150f)); // 실제 둘째 몸통 미리보기
             } // 대체 종료
-            CreateButton(panel, "FrontendCharactersBackButton", "뒤로", new Vector2(-520f, -350f), new Vector2(260f, 75f), BackFromCharacters); // 실제 주 메뉴 복귀
-            CreateButton(panel, "FrontendCharactersNextButton", "다음: 맵", new Vector2(520f, -350f), new Vector2(360f, 75f), () => Show(FrontendStage.Maps)); // 실제 맵 선택 진입
+            CreateButton(panel, "FrontendCharactersBackButton", "뒤로", new Vector2(-815f, 435f), new Vector2(210f, 75f), BackFromCharacters); // 왼쪽 상단의 주 메뉴 복귀
+            Button mapButton = CreateButton(panel, "FrontendCharactersNextButton", "맵 선택", new Vector2(520f, -400f), new Vector2(460f, 100f), () => Show(FrontendStage.Maps)); // 커진 맵 선택 버튼
+            Text mapLabel = mapButton.GetComponentInChildren<Text>(); // 실제 맵 선택 글자
+            ((RectTransform)mapLabel.transform).anchoredPosition = new Vector2(-40f, 0f); // 아이콘 왼쪽에 글자 배치
+            ((RectTransform)mapLabel.transform).sizeDelta = new Vector2(300f, 90f); // 실제 맵 선택 글자 영역
+            Texture2D mapIconTexture = Resources.Load<Texture2D>("UI/MapSelectIcon"); // 실제 맵 선택 아이콘
+            if (mapIconTexture != null) // 아이콘 자원 확인
+            { // 조건 시작
+                Sprite mapIcon = Sprite.Create(mapIconTexture, new Rect(0f, 0f, mapIconTexture.width, mapIconTexture.height), new Vector2(0.5f, 0.5f)); // 정사각형 맵 아이콘
+                Preview(mapButton.transform, "FrontendMapSelectIcon", mapIcon, new Vector2(155f, 0f), new Vector2(80f, 80f)); // 맵 선택 버튼 오른쪽 아이콘
+            } // 조건 종료
         }
         private void BackFromCharacters() // 실제 캐릭터 선택 이전 화면
         {

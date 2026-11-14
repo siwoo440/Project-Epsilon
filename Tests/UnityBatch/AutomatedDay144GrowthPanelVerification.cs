@@ -62,6 +62,16 @@ namespace ProjectEpsilon.Editor // 배치 시험 영역
             Require(service.TryCompleteRun("growth-ui-test", 12000d, 0, 0, false, 0), "시험용 코어 지급 실패"); // 실제 보상 서비스로 시험 자원 준비
             int initialCores = service.Cores; // 실제 시작 코어 보존
             typeof(RunFrontendController).GetMethod("Show", BindingFlags.Instance | BindingFlags.NonPublic).Invoke(RunFrontendController.Instance, new object[] { FrontendStage.Main }); // 새 해금 상태의 실제 메인 메뉴
+            Require(GameObject.Find("FrontendCoreStatus") == null, "메인 메뉴의 코어 표시가 남음"); // 메인 메뉴의 재화 표시 제거 확인
+            Require(GameObject.Find("FrontendGrowthError") == null, "정상 저장에서 오류 표시"); // 정상 저장 상태 확인
+            if (SystemInfo.graphicsDeviceType != UnityEngine.Rendering.GraphicsDeviceType.Null) // 그래픽 장치 확인
+            { // 조건 시작
+                Camera camera = Camera.main; // 실제 메뉴 카메라
+                int previousMask = camera.cullingMask; // 기존 표시 범위
+                camera.cullingMask = ~0; // 캡처에 메뉴 포함
+                typeof(AutomatedDay139ScreenCapture).GetMethod("Capture", BindingFlags.Static | BindingFlags.NonPublic).Invoke(null, new object[] { "day145-menu.png" }); // 실제 메뉴 화면 저장
+                camera.cullingMask = previousMask; // 기존 표시 범위 복구
+            } // 조건 종료
             Button open = FindButton("FrontendGrowthButton"); // 실제 메인 메뉴의 성장 버튼
             Require(open != null && open.interactable, "해금된 영구 성장 진입 버튼 오류"); // 실제 메인 메뉴 진입 확인
             open.onClick.Invoke(); // 실제 성장 버튼으로 메뉴 열기
@@ -88,8 +98,8 @@ namespace ProjectEpsilon.Editor // 배치 시험 영역
             FindButton("GrowthNodeButton0").onClick.Invoke(); // 실제 첫 성장 구매
             yield return null; // 실제 성장 화면 갱신 대기
             Require(service.GetLevel(MetaNode.Health) == 1 && service.Cores == initialCores - 3 && FindButton("GrowthNodeButton1").interactable, "실제 성장 구매 또는 선행 해금 오류"); // 기존 구매와 계열 잠금 확인
-            Text mainCore = GameObject.Find("FrontendCoreStatus")?.GetComponent<Text>(); // 실제 메인 메뉴의 재화 글자
-            Require(mainCore != null && mainCore.text.Contains(service.Cores.ToString()), "구매 후 메인 메뉴 코어 미갱신"); // 실제 남은 재화 표시 확인
+            Text panelCore = GameObject.Find("GrowthCoreLabel")?.GetComponent<Text>(); // 영구 성장 화면의 재화 글자
+            Require(panelCore != null && panelCore.text.Contains(service.Cores.ToString("N0")), "구매 후 영구 성장 코어 미갱신"); // 실제 남은 재화 표시 확인
             Text lockedCost = GameObject.Find("GrowthNodeButton2Label")?.GetComponent<Text>(); // 실제 잠긴 노드 비용 글자
             Require(lockedCost != null && lockedCost.color.r < 0.8f, "잠긴 성장 버튼의 글자 구분 누락"); // 실제 잠금 글자 색상 확인
             int afterPurchase = service.Cores; // 정상 구매 후 실제 코어
@@ -132,12 +142,16 @@ namespace ProjectEpsilon.Editor // 배치 시험 영역
             FindButton("GrowthRefundButton").onClick.Invoke(); // 실제 성장 무료 초기화
             yield return null; // 실제 초기화 갱신 대기
             Require(service.GetLevel(MetaNode.Health) == 0 && service.Cores == initialCores && !FindButton("GrowthNodeButton1").interactable, "성장 초기화 또는 재화 반환 오류"); // 실제 초기화 규칙 확인
-            Require(mainCore.text.Contains(initialCores.ToString()), "초기화 후 메인 메뉴 코어 미갱신"); // 실제 반환된 재화 표시 확인
+            Require(panelCore.text.Contains(initialCores.ToString("N0")), "초기화 후 영구 성장 코어 미갱신"); // 실제 반환된 재화 표시 확인
             FindButton("GrowthCloseButton").onClick.Invoke(); // 실제 성장 화면 닫기
             Require(!meta.Menu.IsOpen && GameObject.Find("GrowthPanel") == null, "성장 화면 닫기 실패"); // 실제 화면 닫기 확인
             meta.Menu.Open(); // 실제 성장 화면 재진입
             Require(meta.Menu.IsOpen && FindButton("GrowthNodeButton0") != null, "성장 화면 재진입 실패"); // 기존 UI 재사용 확인
             FindButton("GrowthCloseButton").onClick.Invoke(); // 실제 재진입 화면 닫기
+            storage.FailRead = true; // 저장 읽기 실패 재현
+            typeof(MetaProgressionController).GetProperty("Service").SetValue(meta, new MetaProgressionService(storage)); // 오류 저장 서비스 연결
+            typeof(RunFrontendController).GetMethod("Show", BindingFlags.Instance | BindingFlags.NonPublic).Invoke(RunFrontendController.Instance, new object[] { FrontendStage.Main }); // 오류 상태의 메인 메뉴 갱신
+            Require(GameObject.Find("FrontendGrowthError") != null && !FindButton("FrontendGrowthButton").interactable, "성장 저장 오류 안내 또는 차단 누락"); // 실제 저장 오류 안내 확인
             AutomatedDay144GrowthPanelVerification.Finish(true, "Growth panel, purchase, prerequisite, refund and close passed."); // 실제 성공 결과
         } // 함수 종료
         private static Button FindButton(string name) // 실제 활성 버튼 조회
@@ -158,10 +172,11 @@ namespace ProjectEpsilon.Editor // 배치 시험 영역
     { // 저장소 시작
         private string content; // 실제 시험 저장 내용
         public bool FailWrite { get; set; } // 시험용 저장 실패 상태
+        public bool FailRead { get; set; } // 시험용 읽기 실패 상태
         public bool TryRead(out string json) // 실제 시험 저장 읽기
         { // 함수 시작
             json = content; // 실제 저장 내용 전달
-            return true; // 읽기 성공
+            return !FailRead; // 읽기 성공 또는 시험 오류
         } // 함수 종료
         public bool TryWrite(string json) // 실제 시험 저장 기록
         { // 함수 시작

@@ -133,12 +133,6 @@ namespace ProjectEpsilon.Progression // 영구 성장 영역
             MetaProgressionService service = controller.Service; // 실제 저장 서비스
             coreLabel.text = $"보유 코어  {service.Cores:N0}"; // 실제 보유 재화
             remainingLabel.text = $"전체 강화까지  {service.RemainingUpgradeCost:N0} 코어"; // 실제 남은 강화 비용
-            GameObject mainCoreObject = GameObject.Find("FrontendCoreStatus"); // 실제 메인 메뉴의 재화 표시
-            Text mainCore = mainCoreObject == null ? null : mainCoreObject.GetComponent<Text>(); // 실제 메인 메뉴 재화 글자
-            if (mainCore != null) // 실제 메인 메뉴 표시 확인
-            { // 조건 시작
-                mainCore.text = $"코어  {service.Cores}"; // 구매와 초기화 후 재화 즉시 반영
-            } // 조건 종료
             for (int index = 0; index < nodeButtons.Length; index++) // 실제 열두 노드 순회
             { // 순회 시작
                 MetaNode node = (MetaNode)index; // 실제 성장 노드

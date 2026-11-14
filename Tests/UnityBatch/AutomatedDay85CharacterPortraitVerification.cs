@@ -68,12 +68,29 @@ namespace ProjectEpsilon.Editor // 배치 시험 영역
                 GameObject buttonObject = GameObject.Find("FrontendCharacterButton" + index); // 실제 선택 버튼
                 Button button = buttonObject == null ? null : buttonObject.GetComponent<Button>(); // 실제 버튼 입력
                 Require(button != null && button.interactable, "해금된 선택 버튼 누락: " + names[index]); // 실제 해금과 선택 확인
+                Image buttonPortrait = buttonObject.transform.Find("FrontendCharacterButtonPortrait" + index)?.GetComponent<Image>(); // 실제 버튼의 캐릭터 이미지
+                Require(buttonPortrait != null && buttonPortrait.sprite == expected && !buttonPortrait.raycastTarget, "선택 버튼 초상화 오류: " + names[index]); // 캐릭터별 버튼 이미지 확인
+                Require(buttonPortrait.rectTransform.anchoredPosition.x > 0f && button.GetComponentInChildren<Text>().rectTransform.anchoredPosition.x < 0f && ((RectTransform)button.transform).rect.height >= 150f, "선택 버튼의 이미지 또는 크기 오류: " + names[index]); // 이미지와 이름 배치 확인
                 button.onClick.Invoke(); // 실제 캐릭터 선택
                 GameObject imageObject = GameObject.Find("FrontendCharacterPortrait"); // 실제 선택 초상화
                 Image image = imageObject == null ? null : imageObject.GetComponent<Image>(); // 실제 화면 이미지
                 Require(image != null && image.sprite == expected && image.preserveAspect && !image.raycastTarget, "선택 화면 초상화 오류: " + names[index]); // 실제 이미지와 버튼 입력 확인
                 Require(Mathf.Approximately(image.rectTransform.anchoredPosition.y, -165f), "선택 화면 머리 높이 오류: " + names[index]); // 실제 머리의 상향 위치 확인
+                if (index == 2 && SystemInfo.graphicsDeviceType != UnityEngine.Rendering.GraphicsDeviceType.Null) // 실제 중장형 화면 캡처 확인
+                { // 조건 시작
+                    Camera camera = Camera.main; // 실제 선택 화면 카메라
+                    int previousMask = camera.cullingMask; // 기존 표시 범위
+                    camera.cullingMask = ~0; // 캡처에 선택 화면 포함
+                    typeof(AutomatedDay139ScreenCapture).GetMethod("Capture", BindingFlags.Static | BindingFlags.NonPublic).Invoke(null, new object[] { "day145-character.png" }); // 실제 캐릭터 선택 화면 저장
+                    camera.cullingMask = previousMask; // 기존 표시 범위 복구
+                } // 조건 종료
             } // 반복 종료
+            Require(GameObject.Find("FrontendCharacterDetailsFrame") != null, "캐릭터 정보 카드 누락"); // 실제 상세 정보 프레임 확인
+            Button back = GameObject.Find("FrontendCharactersBackButton").GetComponent<Button>(); // 실제 뒤로 가기 버튼
+            Require(((RectTransform)back.transform).anchoredPosition.x < -700f && ((RectTransform)back.transform).anchoredPosition.y > 350f, "뒤로 가기 버튼 위치 오류"); // 왼쪽 상단 위치 확인
+            Button next = GameObject.Find("FrontendCharactersNextButton").GetComponent<Button>(); // 실제 맵 선택 버튼
+            Image mapIcon = GameObject.Find("FrontendMapSelectIcon")?.GetComponent<Image>(); // 실제 맵 선택 이미지
+            Require(next.GetComponentInChildren<Text>().text == "맵 선택" && ((RectTransform)next.transform).rect.width >= 450f && mapIcon != null && mapIcon.sprite != null && !mapIcon.raycastTarget, "맵 선택 버튼 오류"); // 버튼 이름과 아이콘 확인
         } // 함수 종료
         private static void Require(bool condition, string message) // 시험 조건 확인
         { // 함수 시작
