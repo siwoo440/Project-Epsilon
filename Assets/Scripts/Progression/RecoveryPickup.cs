@@ -90,7 +90,7 @@ namespace ProjectEpsilon.Progression // 프로젝트 기능 영역
         private void Update() // 갱신 기능 선언
         {
             if (collected || // 대상 조건 확인
-                !CanApply()) // 가능 여부·적용 기능 실행
+                (!CanApply() && !CanConvertToScore())) // 회복 또는 점수 획득 가능 상태
             {
                 return; // 현재 기능 종료
             }
@@ -197,6 +197,13 @@ namespace ProjectEpsilon.Progression // 프로젝트 기능 영역
                 return; // 현재 기능 종료
             }
 
+            if (CanConvertToScore() && MetaProgressionController.Instance.TryAwardFullRecoveryPickupScore()) // 가득 찬 상태의 점수 획득
+            { // 조건 시작
+                collected = true; // 중복 획득 방지
+                Destroy(gameObject); // 획득한 아이템 제거
+                return; // 기존 회복 처리 생략
+            } // 조건 종료
+
             bool applied; // 대상 처리
 
             if (pickupType == // 형식 조건 확인
@@ -221,6 +228,17 @@ namespace ProjectEpsilon.Progression // 프로젝트 기능 영역
             collected = true; // 대상 값 설정
             Destroy(gameObject); // 제거·게임 기능 실행
         }
+
+        private bool CanConvertToScore() // 가득 찬 상태의 점수 전환 확인
+        { // 함수 시작
+            ResolveSystems(); // 실제 체력과 몸통 조회
+            MetaProgressionController score = MetaProgressionController.Instance; // 실제 점수 관리자
+            if (score == null || !score.CanAwardPickupScore || health == null || bodyManager == null || health.CurrentHealth <= 0 || bodyManager.CurrentBodyCount <= 0) // 전투와 살아 있는 플레이어 확인
+            { // 조건 시작
+                return false; // 점수 획득 차단
+            } // 조건 종료
+            return pickupType == RecoveryPickupType.Heal ? health.CurrentHealth >= health.MaximumHealth : bodyManager.MissingRepairableBodyCount == 0; // 실제 아이템별 가득 찬 상태
+        } // 함수 종료
 
         private void ResolveReceiver() // 대상 기능 선언
         {

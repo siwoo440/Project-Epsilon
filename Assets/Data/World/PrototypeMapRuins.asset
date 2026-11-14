@@ -47,13 +47,16 @@ MonoBehaviour:
   safeCorridorWidth: 4
   playerObstacleClearance: 5.5
   worldEventFirstTime: 90
-  worldEventInterval: 90
+  worldEventInterval: 30
   worldEventRetryInterval: 3
   worldEventWarning: 3
   locustSpeed: 12
   locustWidth: 8
   locustTrailLength: 5
   locustDamage: 10
+  locustMinimumWaves: 2
+  locustMaximumWaves: 5
+  locustWaveGap: 0.8
   rockfallDuration: 0.7
   rockfallDamage: 10
   specialZoneChance: 0.18

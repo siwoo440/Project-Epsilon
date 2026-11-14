@@ -30,7 +30,7 @@ namespace ProjectEpsilon.Editor // 배치 시험 영역
             foreach (string path in paths) // 실제 세 맵 데이터 순회
             { // 반복 시작
                 PrototypeMapProfile profile = AssetDatabase.LoadAssetAtPath<PrototypeMapProfile>(path); // 실제 맵 설정
-                if (profile == null || !Mathf.Approximately(profile.WorldEventRetryInterval, 3f)) // 실제 재시도 시험값 확인
+                if (profile == null || !Mathf.Approximately(profile.WorldEventRetryInterval, 3f) || !Mathf.Approximately(profile.WorldEventFirstTime, 90f) || !Mathf.Approximately(profile.WorldEventInterval, 30f)) // 첫 등장과 실제 재시도 및 정상 간격 확인
                 { // 조건 시작
                     Finish(false, "세 맵의 실제 재시도 설정 오류: " + path); // 실제 데이터 실패 기록
                     return; // 실제 전투 시험 중단
@@ -96,7 +96,7 @@ namespace ProjectEpsilon.Editor // 배치 시험 영역
             Require(events.IsWarning && !(bool)Get(events, "nextRockfall"), "안전 후보 복구 후 낙석 예고 또는 교대 실패"); // 실제 안전 낙석 예고 확인
             elapsed = (float)Get(events, "elapsed"); // 실제 위험 경과 시간
             next = (float)Get(events, "nextEvent"); // 실제 다음 정상 일정
-            Require(next - elapsed > 80f, "낙석 성공 후 기존 정상 간격 미적용"); // 실제 성공 후 정상 간격 확인
+            Require(next - elapsed > 28f && next - elapsed <= 30f, "낙석 성공 후 30초 정상 간격 미적용"); // 실제 성공 후 정상 간격 확인
             AutomatedDay117RockfallRetryVerification.Finish(true, "Actual unsafe rockfall retried promptly and kept the normal interval after success."); // 실제 시험 결과
         } // 함수 종료
         private static object Get(object target, string name) // 실제 일정 필드 조회

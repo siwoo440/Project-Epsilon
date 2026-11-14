@@ -20,6 +20,7 @@ namespace ProjectEpsilon.Progression // 프로젝트 기능 영역
 
         [Range(0f, 1f)] // 범위 설정
         [SerializeField] private float bodyRepairDropChance = 0.10f; // 필드·몸통 설정
+        [Range(0f, 1f)] [SerializeField] private float recoveryDropMultiplier = 0.5f; // 회복 아이템 공통 확률 배율
 
         [Min(1)] // 최소 설정
         [SerializeField] private int healAmount = 15; // 필드·회복 설정
@@ -163,8 +164,8 @@ namespace ProjectEpsilon.Progression // 프로젝트 기능 영역
             }
 
             if (health != null && // 체력 조건 확인
-                Random.value <= // 난수·값 처리
-                healDropChance) // 회복·드롭 처리
+                Random.value < // 난수·값 처리
+                healDropChance * Mathf.Clamp01(recoveryDropMultiplier)) // 조정된 체력 아이템 확률
             {
                 RecoveryPickup.Spawn( // 회복·생성 호출 시작
                     position + // 위치 처리
@@ -180,8 +181,8 @@ namespace ProjectEpsilon.Progression // 프로젝트 기능 영역
             }
 
             if (bodyManager != null && // 몸통·관리자 조건 확인
-                Random.value <= // 난수·값 처리
-                bodyRepairDropChance) // 몸통·드롭 처리
+                Random.value < // 난수·값 처리
+                bodyRepairDropChance * Mathf.Clamp01(recoveryDropMultiplier)) // 조정된 몸통 아이템 확률
             {
                 RecoveryPickup.Spawn( // 회복·생성 호출 시작
                     position + // 위치 처리

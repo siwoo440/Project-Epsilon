@@ -23,6 +23,7 @@ namespace ProjectEpsilon.Progression // 영구 성장 영역
         private SnakeExperience scoreExperience; // 실제 경험치 획득 대상
         private long totalExperience; // 이번 전투의 실제 경험치
         private int currentScore; // 현재 전투 점수
+        private int earnedPickupBonus; // 획득한 회복 아이템 보너스
         private bool scoreFinalized; // 승리 점수 확정 여부
         public int CurrentScore => currentScore; // 현재 표시 점수
         public int BossScore { get; private set; } // 보스 처치 점수
@@ -31,6 +32,8 @@ namespace ProjectEpsilon.Progression // 영구 성장 영역
         public int EliteScore { get; private set; } // 엘리트 처치 점수
         public int HealthScore { get; private set; } // 남은 체력 점수
         public int BodyScore { get; private set; } // 남은 몸통 점수
+        public int PickupScore { get; private set; } // 점수 상한을 반영한 아이템 보너스
+        public bool CanAwardPickupScore => runActive && !finished && !pending; // 현재 아이템 점수 지급 가능 상태
         public int ExperienceScoreTarget { get; private set; } // 점수 계산에 사용한 경험치 기준
         public int NormalKillScoreTarget { get; private set; } // 점수 계산에 사용한 처치 기준
         public int NormalKills => Math.Max(0, kills - elites); // 일반 적 처치 수
@@ -111,6 +114,7 @@ namespace ProjectEpsilon.Progression // 영구 성장 영역
             elites = 0; // 실제 엘리트 수 초기화
             totalExperience = 0; // 새 전투의 경험치 초기화
             currentScore = 0; // 새 전투의 점수 초기화
+            earnedPickupBonus = PickupScore = 0; // 이전 아이템 보너스 초기화
             BossScore = ExperienceScore = NormalKillScore = EliteScore = HealthScore = BodyScore = 0; // 점수 항목 초기화
             ExperienceScoreTarget = scoreSettings == null ? 0 : scoreSettings.ExperienceTarget; // 새 전투의 경험치 기준
             NormalKillScoreTarget = scoreSettings == null ? 0 : scoreSettings.NormalKillTarget; // 새 전투의 일반 적 기준
@@ -188,7 +192,20 @@ namespace ProjectEpsilon.Progression // 영구 성장 영역
             ExperienceScore = FractionScore(totalExperience, ExperienceScoreTarget, 20000); // 경험치 점수
             NormalKillScore = FractionScore(NormalKills, NormalKillScoreTarget, 10000); // 일반 적 점수
             EliteScore = FractionScore(elites, 4, 10000); // 엘리트 점수
-            SetScore(ExperienceScore + NormalKillScore + EliteScore); // 현재 누적 점수 반영
+            int baseScore = ExperienceScore + NormalKillScore + EliteScore; // 보너스를 제외한 전투 점수
+            PickupScore = Mathf.Min(earnedPickupBonus, 100000 - baseScore); // 총점 상한에 들어가는 보너스
+            SetScore(baseScore + PickupScore); // 현재 누적 점수 반영
+        } // 함수 종료
+        public bool TryAwardFullRecoveryPickupScore() // 가득 찬 회복 아이템 점수 지급
+        { // 함수 시작
+            if (!CanAwardPickupScore) // 전투 점수 지급 상태 확인
+            { // 조건 시작
+                return false; // 종료된 전투의 획득 차단
+            } // 조건 종료
+            int points = scoreSettings == null ? 100 : scoreSettings.FullRecoveryPickupScore; // 조정 가능한 아이템 점수
+            earnedPickupBonus = (int)Math.Min(100000L, (long)earnedPickupBonus + points); // 누적 보너스 상한
+            RefreshLiveScore(); // 기존 점수와 HUD 즉시 갱신
+            return true; // 실제 아이템 획득 허용
         } // 함수 종료
         private void FinalizeScore(bool victory) // 실제 종료 시 점수 확정
         { // 함수 시작
@@ -202,7 +219,9 @@ namespace ProjectEpsilon.Progression // 영구 성장 영역
             BodyScore = body == null ? 0 : FractionScore(body.CurrentBodyCount, body.EarnedBodyCount, 10000); // 남은 몸통 점수
             BossScore = 40000; // 실제 보스 처치 점수
             scoreFinalized = true; // 승리 점수 확정 표시
-            SetScore(currentScore + BossScore + HealthScore + BodyScore); // 보스와 생존 보너스 반영
+            int baseScore = ExperienceScore + NormalKillScore + EliteScore + BossScore + HealthScore + BodyScore; // 아이템을 제외한 최종 점수
+            PickupScore = Mathf.Min(earnedPickupBonus, Mathf.Max(0, 100000 - baseScore)); // 최종 상한에 들어가는 아이템 보너스
+            SetScore(baseScore + PickupScore); // 보스와 생존 보너스 반영
         } // 함수 종료
         private void HandleSynergyChanged() // 실제 속성 포탑 해금 갱신
         {

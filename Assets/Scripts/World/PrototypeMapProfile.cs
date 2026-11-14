@@ -40,13 +40,16 @@ namespace ProjectEpsilon.World // 맵 영역
         [Min(3f)] [SerializeField] private float safeCorridorWidth = 4f; // 연결된 안전 통로 폭 임시값
         [Min(0f)] [SerializeField] private float playerObstacleClearance = 5.5f; // 플레이어 주변 장애물 보호 거리
         [Min(0f)] [SerializeField] private float worldEventFirstTime = 90f; // 첫 맵 위험 시작 시간 시험값
-        [Min(1f)] [SerializeField] private float worldEventInterval = 90f; // 맵 위험 간격 시험값
+        [Min(1f)] [SerializeField] private float worldEventInterval = 30f; // 맵 위험 간격 시험값
         [Min(0.25f)] [SerializeField] private float worldEventRetryInterval = 3f; // 안전 후보 부재 시 재시도 간격 시험값
         [Min(0.1f)] [SerializeField] private float worldEventWarning = 3f; // 맵 위험 공통 예고 시간 시험값
         [Min(0.1f)] [SerializeField] private float locustSpeed = 12f; // 황충떼 이동 속도 시험값
         [Min(1f)] [SerializeField] private float locustWidth = 8f; // 황충떼 이동 폭 시험값
         [Min(0f)] [SerializeField] private float locustTrailLength = 5f; // 황충떼 대열 길이 시험값
         [Min(0)] [SerializeField] private int locustDamage = 10; // 황충떼 공용 체력 피해 시험값
+        [Min(1)] [SerializeField] private int locustMinimumWaves = 2; // 황충떼 최소 통과 횟수
+        [Min(1)] [SerializeField] private int locustMaximumWaves = 5; // 황충떼 최대 통과 횟수
+        [Min(0.1f)] [SerializeField] private float locustWaveGap = 0.8f; // 황충떼 통과 간격
         [Min(0.1f)] [SerializeField] private float rockfallDuration = 0.7f; // 낙석 하강 시간 시험값
         [Min(0)] [SerializeField] private int rockfallDamage = 10; // 낙석 공용 체력 피해 시험값
         [Range(0f, 1f)] [SerializeField] private float specialZoneChance; // 청크 특수 지역 확률 임시값
@@ -128,6 +131,9 @@ namespace ProjectEpsilon.World // 맵 영역
         public float LocustWidth => Mathf.Max(1f, locustWidth); // 안전한 황충떼 폭
         public float LocustTrailLength => Mathf.Max(0f, locustTrailLength); // 안전한 황충떼 대열 길이
         public int LocustDamage => Mathf.Max(0, locustDamage); // 안전한 황충떼 피해
+        public int LocustMinimumWaves => Mathf.Max(1, locustMinimumWaves); // 안전한 최소 통과 횟수
+        public int LocustMaximumWaves => Mathf.Max(LocustMinimumWaves, locustMaximumWaves); // 안전한 최대 통과 횟수
+        public float LocustWaveGap => Mathf.Max(0.1f, locustWaveGap); // 안전한 통과 간격
         public float RockfallDuration => Mathf.Max(0.1f, rockfallDuration); // 안전한 낙석 하강 시간
         public int RockfallDamage => Mathf.Max(0, rockfallDamage); // 안전한 낙석 피해
         public float SpecialZoneChance => Mathf.Clamp01(specialZoneChance); // 안전한 특수 지역 확률

@@ -89,6 +89,7 @@ namespace ProjectEpsilon.Editor // 배치 시험 영역
             enemyDied.Invoke(meta, new object[] { false }); // 일반 적 처치 집계
             enemyDied.Invoke(meta, new object[] { true }); // 엘리트 처치 집계
             Require(meta.CurrentScore == 2500, "미정 기준 또는 엘리트 점수 오류"); // 기존 점수 계산 확인
+            Require(meta.TryAwardFullRecoveryPickupScore() && meta.CurrentScore == 2600, "실제 아이템 보너스 집계 오류"); // 결과 화면의 보너스 구성
             ProjectEpsilon.Player.SnakeHealth health = UnityEngine.Object.FindFirstObjectByType<ProjectEpsilon.Player.SnakeHealth>(); // 실제 플레이어 체력
             ProjectEpsilon.Player.SnakeBodyManager body = UnityEngine.Object.FindFirstObjectByType<ProjectEpsilon.Player.SnakeBodyManager>(); // 실제 몸통 관리자
             Require(health.TakeDamage(25), "시험 체력 피해 실패"); // 실제 남은 체력 변경
@@ -108,8 +109,8 @@ namespace ProjectEpsilon.Editor // 배치 시험 영역
             ProjectEpsilon.Progression.RunScoreSettings settings = Resources.Load<ProjectEpsilon.Progression.RunScoreSettings>("RunScoreSettings"); // 실제 점수 설정
             typeof(ProjectEpsilon.Progression.RunScoreSettings).GetField("experienceTarget", Private).SetValue(settings, 1); // 종료 후 기준 변경 시험
             typeof(ProjectEpsilon.Progression.RunScoreSettings).GetField("normalKillTarget", Private).SetValue(settings, 1); // 종료 후 처치 기준 변경 시험
-            string[] properties = { "BossScore", "ExperienceScore", "NormalKillScore", "EliteScore", "HealthScore", "BodyScore" }; // 실제 점수 항목 이름
-            int[] expected = { 40000, 0, 0, 2500, expectedHealth, expectedBody }; // 실제 점수 항목 기대값
+            string[] properties = { "BossScore", "ExperienceScore", "NormalKillScore", "EliteScore", "HealthScore", "BodyScore", "PickupScore" }; // 아이템을 포함한 점수 항목 이름
+            int[] expected = { 40000, 0, 0, 2500, expectedHealth, expectedBody, 100 }; // 실제 점수 항목 기대값
             int sum = 0; // 상세 점수 합계
             for (int index = 0; index < properties.Length; index++) // 실제 점수 항목 순회
             { // 순회 시작
@@ -122,6 +123,7 @@ namespace ProjectEpsilon.Editor // 배치 시험 영역
             typeof(RunFrontendController).GetMethod("Show", Private).Invoke(frontend, new object[] { FrontendStage.Results }); // 실제 결과 화면 구성
             Text detail = GameObject.Find("FrontendScoreDetails")?.GetComponent<Text>(); // 실제 상세 점수 글자
             Require(detail != null && detail.text.Contains("기준 미정") && detail.text.Contains("2,500") && detail.text.Contains("40,000"), "결과 화면 점수 상세 누락"); // 점수 항목과 미정 기준 표시 확인
+            Require(detail.text.Contains("아이템 보너스") && detail.text.Contains("100"), "결과 화면 아이템 점수 누락"); // 실제 아이템 보너스 표시 확인
             Require(detail.text.Contains(meta.TotalExperience.ToString("N0")), "실제 경험치 집계 표시 누락"); // 경험치 획득량 표시 확인
             Text total = GameObject.Find("FrontendTotalScore")?.GetComponent<Text>(); // 독립된 실제 총점 글자
             Require(total != null && total.text.Contains(meta.CurrentScore.ToString("N0")) && !detail.text.Contains("총점"), "총점의 별도 표시 누락"); // 총점 분리와 실제 점수 확인

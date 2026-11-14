@@ -128,6 +128,8 @@ namespace ProjectEpsilon.Editor // 배치 시험 영역
             } // 반복 종료
             SetFloat(map.Profile, "worldEventWarning", 0.6f); // 빠른 시험용 예고 시간
             SetFloat(map.Profile, "locustSpeed", 20f); // 빠른 시험용 황충 속도
+            typeof(PrototypeMapProfile).GetField("locustMinimumWaves", BindingFlags.Instance | BindingFlags.NonPublic).SetValue(map.Profile, 1); // 기존 단일 대열 접촉 대조
+            typeof(PrototypeMapProfile).GetField("locustMaximumWaves", BindingFlags.Instance | BindingFlags.NonPublic).SetValue(map.Profile, 1); // 기존 단일 대열 접촉 대조
             SetFloat(map.Profile, "rockfallDuration", 0.4f); // 빠른 시험용 낙석 하강
             health.ResetHealth(); // 실제 체력 복구
             invulnerability.ClearInvulnerability(); // 기존 무적 제거

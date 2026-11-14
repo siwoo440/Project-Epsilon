@@ -19,6 +19,19 @@ namespace ProjectEpsilon.World // 맵 영역
         private Material outlineMaterial; // 실제 경계 재질
         private Sprite warningAreaSprite; // 황충 경고 영역의 임시 흰색 스프라이트
         private Transform swarm; // 실제 황충떼 이미지 묶음
+        private SpriteRenderer[] swarmRenderers; // 실제 황충 그림 목록
+        private readonly Collider2D[] locustOverlaps = new Collider2D[256]; // 황충 접촉 결과 재사용
+        private readonly RaycastHit2D[] locustHits = new RaycastHit2D[256]; // 황충 이동 충돌 결과 재사용
+        private static readonly Vector2[] LocustCenters = // 원본 그림의 개별 황충 중심
+        { // 중심 목록 시작
+            new Vector2(388f, 130f), new Vector2(231f, 279f), new Vector2(514f, 330f), // 첫 황충 줄
+            new Vector2(315f, 465f), new Vector2(186f, 615f), new Vector2(540f, 550f), // 둘째 황충 줄
+            new Vector2(400f, 670f), new Vector2(210f, 815f), new Vector2(485f, 820f), // 셋째 황충 줄
+            new Vector2(330f, 975f), new Vector2(550f, 1010f), new Vector2(171f, 1105f), // 넷째 황충 줄
+            new Vector2(400f, 1185f), new Vector2(254f, 1340f), new Vector2(530f, 1300f), // 다섯째 황충 줄
+            new Vector2(162f, 1510f), new Vector2(386f, 1490f), new Vector2(512f, 1610f), // 여섯째 황충 줄
+            new Vector2(280f, 1690f), new Vector2(402f, 1810f), new Vector2(215f, 1900f), new Vector2(332f, 2070f) // 마지막 황충 줄
+        }; // 중심 목록 종료
         private Transform fallingRock; // 실제 낙석 이미지
         private Vector3 origin; // 황충떼 출발 위치
         private Vector3 direction; // 황충떼 이동 방향
@@ -30,9 +43,11 @@ namespace ProjectEpsilon.World // 맵 영역
         private bool nextRockfall; // 다음 위험 종류
         private bool damageQueued; // 같은 위험의 중복 피해 방지
         private bool swarmFinished; // 마지막 이동 구간의 물리 판정 대기
-        private int phase; // 대기 0, 황충 예고 1, 이동 2, 낙석 예고 3, 하강 4
+        private int locustWaveCount; // 이번 이벤트의 황충 통과 횟수
+        private int locustWaveIndex; // 현재 황충 통과 번호
+        private int phase; // 대기 0, 황충 예고 1, 이동 2, 낙석 예고 3, 하강 4, 황충 간격 5
         public bool IsWarning => phase == 1 || phase == 3; // 실제 위험 예고 상태
-        public bool IsActive => phase == 2 || phase == 4; // 실제 위험 진행 상태
+        public bool IsActive => phase == 2 || phase == 4 || phase == 5; // 실제 위험 진행과 황충 간격
         public float WarningProgress => IsWarning && map != null && map.Profile != null ? Mathf.Clamp01(phaseTime / map.Profile.WorldEventWarning) : 0f; // 실제 예고 게이지 비율
 
         private void Awake() // 기존 맵과 플레이어 연결
@@ -101,6 +116,16 @@ namespace ProjectEpsilon.World // 맵 영역
                     swarmFinished = true; // 마지막 이동 구간의 물리 판정 대기
                 } // 조건 종료
             } // 조건 종료
+            else if (phase == 5 && phaseTime >= map.Profile.LocustWaveGap) // 다음 황충 대열 대기 완료
+            { // 조건 시작
+                swarm.position = origin; // 다음 대열의 출발 위치
+                previousSwarmPosition = origin; // 다음 대열의 첫 물리 위치
+                swarm.gameObject.SetActive(true); // 다음 황충 대열 표시
+                damageQueued = false; // 새로운 대열의 피해 허용
+                swarmFinished = false; // 새로운 대열 이동 준비
+                phaseTime = 0f; // 새로운 대열 시간 초기화
+                phase = 2; // 다음 황충 대열 이동
+            } // 조건 종료
             else if (phase == 4) // 실제 낙석 하강 확인
             { // 조건 시작
                 float progress = Mathf.Clamp01(phaseTime / map.Profile.RockfallDuration); // 실제 하강 비율
@@ -167,12 +192,29 @@ namespace ProjectEpsilon.World // 맵 영역
                     float length = Vector2.Distance(previousSwarmPosition, current) + 6.2f + map.Profile.LocustTrailLength; // 실제 이동 거리와 무리 이미지의 충돌 길이
                     float angle = Mathf.Atan2(direction.y, direction.x) * Mathf.Rad2Deg; // 실제 이동 방향 각도
                     Collider2D[] contacts = Physics2D.OverlapBoxAll(midpoint, new Vector2(length, map.Profile.LocustWidth), angle); // 실제 연속 이동 구간의 충돌 대상
-                    QueueDamage(contacts, map.Profile.LocustDamage); // 기존 충돌 우선순위에 피해 예약
+                    foreach (Collider2D contact in contacts) // 넓은 예비 충돌 대상 순회
+                    { // 반복 시작
+                        if (IsPlayerContact(contact)) // 실제 뱀의 예비 접촉 확인
+                        { // 조건 시작
+                            QueueLocustDamage(previousSwarmPosition, current); // 벌레 위치와 이동 경로만 판정
+                            break; // 예비 대상 중복 검사 방지
+                        } // 조건 종료
+                    } // 반복 종료
                 } // 조건 종료
                 previousSwarmPosition = current; // 실제 물리 판정 위치 저장
                 if (swarmFinished) // 마지막 이동 구간 판정 확인
                 { // 조건 시작
-                    ClearEvent(); // 실제 마지막 충돌 검사 후 정리
+                    locustWaveIndex++; // 완료한 황충 대열 수 증가
+                    if (locustWaveIndex < locustWaveCount) // 남은 황충 대열 확인
+                    { // 조건 시작
+                        swarm.gameObject.SetActive(false); // 대열 사이 그림 숨김
+                        phaseTime = 0f; // 대열 간격 시간 초기화
+                        phase = 5; // 다음 대열까지 대기
+                    } // 조건 종료
+                    else // 모든 황충 대열 통과
+                    { // 대체 시작
+                        ClearEvent(); // 실제 마지막 충돌 검사 후 정리
+                    } // 대체 종료
                 } // 조건 종료
             } // 조건 종료
             if (phase == 4 && phaseTime >= map.Profile.RockfallDuration) // 실제 낙석 착탄 확인
@@ -202,6 +244,8 @@ namespace ProjectEpsilon.World // 맵 영역
             phaseTime = 0f; // 실제 예고 시간 초기화
             damageQueued = false; // 실제 피해 상태 초기화
             swarmFinished = false; // 마지막 물리 판정 상태 초기화
+            locustWaveCount = Random.Range(map.Profile.LocustMinimumWaves, map.Profile.LocustMaximumWaves + 1); // 실제 대열 수 무작위 결정
+            locustWaveIndex = 0; // 첫 대열부터 시작
             return true; // 실제 예고 시작 완료
         } // 함수 종료
 
@@ -329,6 +373,7 @@ namespace ProjectEpsilon.World // 맵 영역
                     renderer.flipX = index % 2 != 0; // 인접 무리의 모습 변화
                     renderer.sortingOrder = 25; // 전투 요소 위와 경고 아래 표시
                 } // 반복 종료
+                swarmRenderers = swarm.GetComponentsInChildren<SpriteRenderer>(); // 생성한 황충 그림 보관
             } // 조건 종료
             else // 실제 낙석 하강 확인
             { // 대체 시작
@@ -351,15 +396,72 @@ namespace ProjectEpsilon.World // 맵 영역
             } // 조건 종료
             foreach (Collider2D contact in contacts) // 실제 접촉 대상 순회
             { // 반복 시작
-                SnakeSegment segment = contact.GetComponent<SnakeSegment>(); // 실제 뱀 몸통 조회
-                bool isHead = contact.transform == player.transform; // 실제 머리 접촉 확인
-                bool isBody = segment != null && segment.transform.IsChildOf(body.transform); // 실제 뱀 몸통 접촉 확인
-                if (isHead || isBody) // 실제 뱀 접촉 확인
+                if (IsPlayerContact(contact)) // 실제 뱀 접촉 확인
                 { // 조건 시작
                     resolver.QueueHealthDamage(health, damage, DamageOrigin.SpecialZone); // 기존 무적과 충돌 우선순위 사용
                     damageQueued = true; // 같은 위험의 중복 피해 방지
                     return; // 추가 접촉 처리 종료
                 } // 조건 종료
+            } // 반복 종료
+        } // 함수 종료
+
+        private bool IsPlayerContact(Collider2D contact) // 실제 머리 또는 몸통 확인
+        { // 함수 시작
+            if (contact == null) // 실제 충돌체 확인
+            { // 조건 시작
+                return false; // 빈 충돌 결과 제외
+            } // 조건 종료
+            SnakeSegment segment = contact.GetComponent<SnakeSegment>(); // 실제 뱀 몸통 조회
+            return contact.transform == player.transform || segment != null && segment.transform.IsChildOf(body.transform); // 실제 머리와 몸통 여부
+        } // 함수 종료
+
+        private void QueueLocustDamage(Vector3 previous, Vector3 current) // 개별 황충의 실제 이동 충돌
+        { // 함수 시작
+            if (swarmRenderers == null || map.Profile.LocustDamage <= 0) // 실제 그림과 피해 확인
+            { // 조건 시작
+                return; // 누락 그림의 보이지 않는 피해 방지
+            } // 조건 종료
+            Vector3 movement = current - previous; // 물리 스텝의 실제 이동
+            float distance = movement.magnitude; // 실제 이동 거리
+            foreach (SpriteRenderer renderer in swarmRenderers) // 각 황충 무리 그림 순회
+            { // 반복 시작
+                if (renderer == null || renderer.sprite == null) // 실제 표시 이미지 확인
+                { // 조건 시작
+                    continue; // 보이지 않는 그림의 피해 차단
+                } // 조건 종료
+                Bounds bounds = renderer.sprite.bounds; // 원본 이미지의 로컬 크기
+                float radius = bounds.size.x * Mathf.Abs(renderer.transform.lossyScale.x) * (55f / 724f); // 개별 황충 몸체의 원형 범위
+                foreach (Vector2 pixel in LocustCenters) // 원본의 각 황충 위치 순회
+                { // 반복 시작
+                    float x = (pixel.x / 724f - 0.5f) * bounds.size.x * (renderer.flipX ? -1f : 1f); // 좌우 반전을 반영한 황충 위치
+                    float y = (0.5f - pixel.y / 2172f) * bounds.size.y; // 원본 위쪽 기준 황충 위치
+                    Vector3 end = renderer.transform.TransformPoint(bounds.center + new Vector3(x, y, 0f)); // 현재 그림의 실제 황충 위치
+                    Vector3 start = end - movement; // 이전 물리 스텝의 황충 위치
+                    int overlapCount = Physics2D.OverlapCircleNonAlloc(start, radius, locustOverlaps); // 이전 위치의 실제 접촉
+                    for (int index = 0; index < overlapCount; index++) // 이전 접촉 순회
+                    { // 반복 시작
+                        if (IsPlayerContact(locustOverlaps[index])) // 실제 뱀 접촉 확인
+                        { // 조건 시작
+                            resolver.QueueHealthDamage(health, map.Profile.LocustDamage, DamageOrigin.SpecialZone); // 기존 충돌과 무적에 피해 예약
+                            damageQueued = true; // 같은 대열의 중복 피해 방지
+                            return; // 추가 황충 검사 종료
+                        } // 조건 종료
+                    } // 반복 종료
+                    if (distance <= 0f) // 실제 이동이 없는 경우
+                    { // 조건 시작
+                        continue; // 이동 경로 검사 생략
+                    } // 조건 종료
+                    int hitCount = Physics2D.CircleCastNonAlloc(start, radius, movement / distance, locustHits, distance); // 빠른 이동 중 실제 벌레 충돌
+                    for (int index = 0; index < hitCount; index++) // 실제 이동 충돌 순회
+                    { // 반복 시작
+                        if (IsPlayerContact(locustHits[index].collider)) // 실제 뱀 접촉 확인
+                        { // 조건 시작
+                            resolver.QueueHealthDamage(health, map.Profile.LocustDamage, DamageOrigin.SpecialZone); // 기존 충돌과 무적에 피해 예약
+                            damageQueued = true; // 같은 대열의 중복 피해 방지
+                            return; // 추가 황충 검사 종료
+                        } // 조건 종료
+                    } // 반복 종료
+                } // 반복 종료
             } // 반복 종료
         } // 함수 종료
 
@@ -382,6 +484,7 @@ namespace ProjectEpsilon.World // 맵 영역
             } // 조건 종료
             visual = null; // 이전 표시 참조 제거
             swarm = null; // 이전 황충 무리 참조 제거
+            swarmRenderers = null; // 이전 황충 그림 참조 제거
             fallingRock = null; // 이전 낙석 참조 제거
             phase = 0; // 실제 위험 대기 상태
             phaseTime = 0f; // 실제 단계 시간 초기화

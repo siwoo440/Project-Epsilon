@@ -14,3 +14,4 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::ProjectEpsilon.Progression.RunScoreSettings
   experienceTarget: 0
   normalKillTarget: 0
+  fullRecoveryPickupScore: 100

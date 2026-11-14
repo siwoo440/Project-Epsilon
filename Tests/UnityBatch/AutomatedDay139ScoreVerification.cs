@@ -67,10 +67,11 @@ namespace ProjectEpsilon.Editor // 배치 시험 영역
             Text score = GameObject.Find("CurrentScoreText").GetComponent<Text>(); // 실제 현재 점수 글자
             Text gain = GameObject.Find("ScoreGainText").GetComponent<Text>(); // 실제 증가량 글자
             Require(score.text.Contains("2,500") && gain.text.Contains("2,500"), "점수 또는 증가량 표시 오류"); // 실제 HUD 반영 확인
+            Require(meta.TryAwardFullRecoveryPickupScore() && meta.PickupScore == 100 && meta.CurrentScore == 2600 && gain.text.Contains("100"), "아이템 보너스 또는 증가량 표시 오류"); // 실제 보너스와 HUD 표시 확인
             typeof(ProjectEpsilon.Progression.RunScoreSettings).GetField("experienceTarget", Private).SetValue(settings, 1000); // 시험용 경험치 기준 설정
             typeof(ProjectEpsilon.Progression.RunScoreSettings).GetField("normalKillTarget", Private).SetValue(settings, 100); // 시험용 일반 처치 기준 설정
             experience.AddExperience(25); // 실제 경험치 획득과 기준 반영
-            int expected = (int)Math.Floor(Math.Min(1d, meta.TotalExperience / 1000d) * 20000d) + 100 + 2500; // 시험 기준의 현재 점수
+            int expected = (int)Math.Floor(Math.Min(1d, meta.TotalExperience / 1000d) * 20000d) + 100 + 2500 + 100; // 시험 기준과 아이템 보너스
             Require(meta.CurrentScore == expected, "경험치 또는 일반 처치 점수 오류"); // 실제 누적 점수 확인
             ProjectEpsilon.Player.SnakeHealth health = UnityEngine.Object.FindFirstObjectByType<ProjectEpsilon.Player.SnakeHealth>(); // 실제 공용 체력
             ProjectEpsilon.Player.SnakeBodyManager body = UnityEngine.Object.FindFirstObjectByType<ProjectEpsilon.Player.SnakeBodyManager>(); // 실제 몸통
@@ -78,7 +79,19 @@ namespace ProjectEpsilon.Editor // 배치 시험 영역
             Require(meta.CompleteRun(true) && meta.ScoreFinalized && meta.CurrentScore == expected + bonus, "승리 점수 확정 오류"); // 실제 승리 점수 확인
             Require(meta.CompleteRun(true) && meta.CurrentScore == expected + bonus, "승리 점수 중복 지급"); // 종료 재시도 중복 방지 확인
             meta.BeginRun(); // 새 전투 점수 초기화
-            Require(meta.CurrentScore == 0 && meta.TotalExperience == 0 && !meta.ScoreFinalized, "새 전투 초기화 오류"); // 이전 전투 점수 제거 확인
+            Require(meta.CurrentScore == 0 && meta.PickupScore == 0 && meta.TotalExperience == 0 && !meta.ScoreFinalized, "새 전투 초기화 오류"); // 이전 전투 점수와 보너스 제거 확인
+            typeof(ProjectEpsilon.Progression.RunScoreSettings).GetField("experienceTarget", Private).SetValue(settings, 1); // 경험치 만점 시험 기준
+            typeof(ProjectEpsilon.Progression.RunScoreSettings).GetField("normalKillTarget", Private).SetValue(settings, 1); // 일반 적 만점 시험 기준
+            experience.AddExperience(1); // 실제 경험치 만점 달성
+            enemyDied.Invoke(meta, new object[] { false }); // 실제 일반 적 만점 달성
+            for (int index = 0; index < 4; index++) // 실제 엘리트 만점 순회
+            { // 반복 시작
+                enemyDied.Invoke(meta, new object[] { true }); // 실제 엘리트 처치 집계
+            } // 반복 종료
+            health.ResetHealth(); // 실제 체력 만점 구성
+            Require(meta.TryAwardFullRecoveryPickupScore(), "최종 상한 시험 아이템 보너스 실패"); // 실제 아이템 보너스 지급
+            Require(meta.CompleteRun(true) && meta.CurrentScore == 100000 && meta.PickupScore == 0, "최종 점수 상한 또는 보너스 조정 오류"); // 총점 상한과 상세 합계 확인
+            meta.BeginRun(); // 패배 점수 시험 초기화
             Require(meta.CompleteRun(false) && !meta.ScoreFinalized && meta.CurrentScore == 0, "패배에 승리 점수 반영"); // 패배 승리 보너스 제외 확인
         } // 함수 종료
         private static Vector2 GlyphHeight(Text label) // 실제 보이는 글자 높이 범위

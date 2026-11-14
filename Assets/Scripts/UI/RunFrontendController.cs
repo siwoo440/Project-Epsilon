@@ -686,7 +686,7 @@ namespace ProjectEpsilon.UI // 실제 메뉴 영역
             resultDetails.resizeTextMinSize = 20; // 전투 성과 최소 글자 크기
             resultDetails.resizeTextMaxSize = 30; // 전투 성과 최대 글자 크기
             string scoreDetails = FormatScoreDetails(meta); // 실제 항목별 점수 문구
-            Text scoreLabel = Label(panel, "FrontendScoreDetails", scoreDetails, new Vector2(370f, 120f), new Vector2(760f, 240f), 29); // 실제 항목별 점수 표시
+            Text scoreLabel = Label(panel, "FrontendScoreDetails", scoreDetails, new Vector2(370f, 140f), new Vector2(760f, 280f), 29); // 아이템 항목을 포함한 점수 영역
             scoreLabel.alignment = TextAnchor.MiddleLeft; // 항목별 점수 왼쪽 정렬
             scoreLabel.resizeTextForBestFit = true; // 화면 크기에 맞는 글자 조정
             scoreLabel.resizeTextMinSize = 19; // 상세 점수 최소 글자 크기
@@ -715,7 +715,8 @@ namespace ProjectEpsilon.UI // 실제 메뉴 영역
                 $"일반 적  {meta.NormalKillScore:N0} / 10,000  ({normal})\n" + // 실제 일반 적 점수와 기준
                 $"엘리트  {meta.EliteScore:N0} / 10,000  ({meta.Elites:N0}마리)\n" + // 실제 엘리트 점수와 처치 수
                 $"남은 체력  {meta.HealthScore:N0} / 10,000\n" + // 실제 종료 시 체력 점수
-                $"남은 몸통  {meta.BodyScore:N0} / 10,000"; // 실제 종료 시 몸통 점수
+                $"남은 몸통  {meta.BodyScore:N0} / 10,000\n" + // 실제 종료 시 몸통 점수
+                $"아이템 보너스  {meta.PickupScore:N0}"; // 실제 상한 반영 아이템 점수
         } // 함수 종료
         private void Retry() // 실제 동일 캐릭터와 맵 재도전
         {

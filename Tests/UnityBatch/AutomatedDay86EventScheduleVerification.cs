@@ -65,6 +65,8 @@ namespace ProjectEpsilon.Editor // 배치 시험 영역
             SetFloat(map.Profile, "worldEventWarning", 0.4f); // 빠른 시험용 예고 시간
             SetFloat(map.Profile, "worldEventInterval", 2.5f); // 빠른 시험용 위험 간격
             SetFloat(map.Profile, "locustSpeed", 30f); // 빠른 시험용 황충 속도
+            typeof(PrototypeMapProfile).GetField("locustMinimumWaves", BindingFlags.Instance | BindingFlags.NonPublic).SetValue(map.Profile, 1); // 기존 단일 대열 일정 대조
+            typeof(PrototypeMapProfile).GetField("locustMaximumWaves", BindingFlags.Instance | BindingFlags.NonPublic).SetValue(map.Profile, 1); // 기존 단일 대열 일정 대조
             SetFloat(events, "elapsed", 0f); // 실제 일정 경과 시간 초기화
             SetFloat(events, "nextEvent", 0.4f); // 실제 첫 위험 시간 단축
             yield return new WaitForSeconds(0.5f); // 실제 첫 위험 일정 경과
