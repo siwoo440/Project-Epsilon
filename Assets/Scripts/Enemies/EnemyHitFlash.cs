@@ -12,6 +12,15 @@ namespace ProjectEpsilon.Enemies // 적 영역
         private Color originalColor; // 피격 전 적 색상
         private float endTime; // 피격 색상 종료 시각
         private bool flashing; // 피격 표시 상태
+        public bool IsFlashing => flashing; // 실제 피격 표시 진행 여부
+        public Color RestoreColor => originalColor; // 피격 종료 후 복원할 색상
+        public void SetRestoreColor(Color color) // 진행 중인 피격의 복원 색상 변경
+        { // 함수 시작
+            if (flashing) // 실제 피격 표시 진행 확인
+            { // 조건 시작
+                originalColor = color; // 종료 후 복원할 색상 저장
+            } // 조건 종료
+        } // 함수 종료
         private void OnEnable() // 실제 피해 이벤트 연결
         {
             target = GetComponent<WeaponTarget>(); // 실제 적 대상 조회
@@ -28,7 +37,7 @@ namespace ProjectEpsilon.Enemies // 적 영역
         }
         private void OnDamaged(float damage) // 실제 피해 표시
         {
-            if (damage <= 0f || visual == null) // 실제 피해와 표시기 확인
+            if (damage <= 0f || visual == null || target.IsDamageOverTime) // 실제 직접 피해와 표시기 확인
             {
                 return; // 무효 피해 무시
             }

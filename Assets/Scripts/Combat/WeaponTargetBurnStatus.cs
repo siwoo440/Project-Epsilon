@@ -1,4 +1,5 @@
 using ProjectEpsilon.Core; // 게임 상태 사용
+using ProjectEpsilon.Enemies; // 기존 적 피격 표시
 using UnityEngine; // Unity 기능 사용
 
 namespace ProjectEpsilon.Combat // 전투 영역
@@ -11,6 +12,7 @@ namespace ProjectEpsilon.Combat // 전투 영역
         [SerializeField] private float remainingDuration; // 남은 화상 시간
 
         private SpriteRenderer targetRenderer; // 대상 표시기
+        private EnemyHitFlash hitFlash; // 기존 피격 색상 표시
         private Color originalColor = Color.white; // 원래 색상
 
         public int SynergyStage => synergyStage; // 현재 단계 반환
@@ -37,7 +39,7 @@ namespace ProjectEpsilon.Combat // 전투 영역
             }
 
             float delta = Mathf.Min(Time.deltaTime, remainingDuration); // 실제 적용 시간 계산
-            target.TakeDamage(damagePerSecond * delta); // 프레임 비례 피해 적용
+            target.TakeDamageOverTime(damagePerSecond * delta); // 피격 점멸을 반복하지 않는 지속 피해
             remainingDuration = Mathf.Max(0f, remainingDuration - delta); // 피해 적용 뒤 남은 시간 감소
             UpdateVisual(); // 화상 색상 갱신
 
@@ -99,13 +101,14 @@ namespace ProjectEpsilon.Combat // 전투 영역
 
             if (targetRenderer != null) // 표시기 존재 확인
             {
-                originalColor = targetRenderer.color; // 원래 색상 저장
+                hitFlash = GetComponent<EnemyHitFlash>(); // 같은 적의 피격 표시 조회
+                originalColor = hitFlash != null && hitFlash.IsFlashing ? hitFlash.RestoreColor : targetRenderer.color; // 피격 전의 실제 원래 색상 저장
             }
         }
 
         private void UpdateVisual() // 화상 시각 갱신
         {
-            if (targetRenderer == null) // 표시기 없음 확인
+            if (targetRenderer == null || hitFlash != null && hitFlash.IsFlashing) // 표시기 부재 또는 피격 우선 확인
             {
                 return; // 갱신 생략
             }
@@ -118,6 +121,11 @@ namespace ProjectEpsilon.Combat // 전투 영역
         {
             if (targetRenderer != null) // 표시기 존재 확인
             {
+                if (hitFlash != null && hitFlash.IsFlashing) // 진행 중인 실제 피격 표시 확인
+                { // 조건 시작
+                    hitFlash.SetRestoreColor(originalColor); // 피격 종료 후 원래 색상 복구
+                    return; // 진행 중인 빨간 표시 유지
+                } // 조건 종료
                 targetRenderer.color = originalColor; // 원래 색상 적용
             }
         }

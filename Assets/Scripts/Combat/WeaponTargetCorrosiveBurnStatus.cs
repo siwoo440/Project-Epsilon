@@ -29,7 +29,7 @@ namespace ProjectEpsilon.Combat // 전투 영역
             }
             float delta = Mathf.Min(Time.deltaTime, remainingDuration); // 남은 시간에 맞춘 피해 간격
             remainingDuration = Mathf.Max(0f, remainingDuration - delta); // 남은 반응 시간 감소
-            target.TakeReactionDamage(damagePerSecond * delta); // 추가 속성 부여 없는 반응 피해
+            target.TakeDamageOverTime(damagePerSecond * delta, true); // 반응 규칙을 유지하는 지속 피해
         }
     }
 }

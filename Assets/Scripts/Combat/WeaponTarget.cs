@@ -14,6 +14,7 @@ namespace ProjectEpsilon.Combat // 전투 영역
 
         private bool deathHandled; // 사망 처리 여부
         private bool reactionDamage; // 반응 피해 처리 여부
+        private bool damageOverTime; // 현재 피해 알림의 지속 피해 여부
 
         public event Action<WeaponTarget> Died; // 사망 이벤트
         public event Action<float> Damaged; // 실제 피해 이벤트
@@ -22,6 +23,7 @@ namespace ProjectEpsilon.Combat // 전투 영역
         public float MaximumHealth => maximumHealth; // 최대 체력 반환
         public bool IsAlive => !deathHandled && currentHealth > 0f; // 생존 여부 반환
         public bool IsReactionDamage => reactionDamage; // 반응 피해 중 처치 확인
+        public bool IsDamageOverTime => damageOverTime; // 현재 지속 피해 알림 확인
         public float IncomingDamageMultiplier => ResolvePoisonIncomingDamageMultiplier() * ResolveCorrosiveCurseIncomingMultiplier(); // 받는 피해 배율 반환
         public float OutgoingDamageMultiplier => ResolvePoisonOutgoingDamageMultiplier() * ResolveCorrosiveCurseOutgoingMultiplier(); // 주는 피해 배율 반환
 
@@ -87,8 +89,30 @@ namespace ProjectEpsilon.Combat // 전투 영역
             }
         }
 
+        public void TakeDamageOverTime(float damage, bool reaction = false) // 지속 피해와 기존 반응 구분
+        { // 함수 시작
+            bool previousReaction = reactionDamage; // 이전 반응 피해 상태
+            if (reaction) // 반응 지속 피해 확인
+            { // 조건 시작
+                reactionDamage = true; // 기존 반응 피해 규칙 유지
+            } // 조건 종료
+            try // 지속 피해 적용
+            { // 처리 시작
+                TakeDamageAndReport(damage, true); // 지속 피해 알림으로 기존 피해 적용
+            } // 처리 종료
+            finally // 중첩 피해 이후 상태 복원
+            { // 복원 시작
+                reactionDamage = previousReaction; // 이전 반응 피해 상태 복구
+            } // 복원 종료
+        } // 함수 종료
+
         public float TakeDamageAndReport(float damage) // 실제 피해량 반환 적용
-        {
+        { // 함수 시작
+            return TakeDamageAndReport(damage, false); // 기존 직접 피해 경로 유지
+        } // 함수 종료
+
+        private float TakeDamageAndReport(float damage, bool overTime) // 피해 종류를 포함한 실제 피해 적용
+        { // 함수 시작
             if (!IsAlive) // 생존 상태 확인
             {
                 return 0f; // 피해 없음 반환
@@ -105,7 +129,16 @@ namespace ProjectEpsilon.Combat // 전투 영역
             float previousHealth = currentHealth; // 피해 전 체력 저장
             currentHealth = Mathf.Max(0f, currentHealth - finalDamage); // 체력 감소
             float dealtDamage = previousHealth - currentHealth; // 실제 피해량 계산
-            Damaged?.Invoke(dealtDamage); // 실제 피해 알림
+            bool previousOverTime = damageOverTime; // 중첩 피해 전 알림 상태
+            damageOverTime = overTime; // 현재 피해 알림 종류 적용
+            try // 실제 피해 알림
+            { // 처리 시작
+                Damaged?.Invoke(dealtDamage); // 기존 피해 이벤트 유지
+            } // 처리 종료
+            finally // 중첩 알림 이후 상태 복구
+            { // 복원 시작
+                damageOverTime = previousOverTime; // 이전 피해 알림 종류 복원
+            } // 복원 종료
 
             if (currentHealth <= 0f) // 사망 체력 확인
             {
