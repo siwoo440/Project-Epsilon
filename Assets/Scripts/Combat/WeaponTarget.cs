@@ -3,9 +3,9 @@ using System.Collections.Generic; // 대상 목록 사용
 using UnityEngine; // Unity 기능 사용
 
 namespace ProjectEpsilon.Combat // 전투 영역
-{
+{ // 이름 공간 시작
     public sealed class WeaponTarget : MonoBehaviour // 공격 가능 대상
-    {
+    { // 형식 시작
         private static readonly List<WeaponTarget> ActiveTargets = new List<WeaponTarget>(); // 활성 대상 목록
         private static readonly Stack<List<WeaponTarget>> RangeSnapshots = new Stack<List<WeaponTarget>>(); // 중첩 범위 공격용 재사용 목록
 
@@ -28,66 +28,66 @@ namespace ProjectEpsilon.Combat // 전투 영역
         public float OutgoingDamageMultiplier => ResolvePoisonOutgoingDamageMultiplier() * ResolveCorrosiveCurseOutgoingMultiplier(); // 주는 피해 배율 반환
 
         private void OnEnable() // 활성 대상 등록
-        {
+        { // 함수 시작
             if (!ActiveTargets.Contains(this)) // 중복 등록 확인
-            {
+            { // 조건 시작
                 ActiveTargets.Add(this); // 활성 목록 추가
-            }
-        }
+            } // 조건 종료
+        } // 함수 종료
 
         private void OnDisable() // 활성 대상 해제
-        {
+        { // 함수 시작
             ActiveTargets.Remove(this); // 활성 목록 제거
-        }
+        } // 함수 종료
 
         private void Awake() // 체력 초기화
-        {
+        { // 함수 시작
             maximumHealth = Mathf.Max(1f, maximumHealth); // 최대 체력 보정
 
             if (currentHealth <= 0f || currentHealth > maximumHealth) // 현재 체력 범위 확인
-            {
+            { // 조건 시작
                 currentHealth = maximumHealth; // 최대 체력으로 초기화
-            }
+            } // 조건 종료
 
             deathHandled = false; // 사망 처리 초기화
-        }
+        } // 함수 종료
 
         public void Configure(float health) // 체력 구성
-        {
+        { // 함수 시작
             maximumHealth = Mathf.Max(1f, health); // 최대 체력 저장
             currentHealth = maximumHealth; // 현재 체력 회복
             deathHandled = false; // 사망 처리 초기화
-        }
+        } // 함수 종료
 
         public void SetMaximumHealthPreservingRatio(float health) // 생존 체력 비율 유지 갱신
-        {
+        { // 함수 시작
             if (!IsAlive) // 사망 대상 확인
-            {
+            { // 조건 시작
                 return; // 사망 상태 유지
-            }
+            } // 조건 종료
             float ratio = Mathf.Clamp01(currentHealth / Mathf.Max(1f, maximumHealth)); // 기존 체력 비율
             maximumHealth = Mathf.Max(1f, health); // 변경된 최대 체력
             currentHealth = maximumHealth * ratio; // 기존 비율의 현재 체력
-        }
+        } // 함수 종료
 
         public void TakeDamage(float damage) // 피해 적용
-        {
+        { // 함수 시작
             TakeDamageAndReport(damage); // 피해 적용과 결과 무시
-        }
+        } // 함수 종료
 
         public void TakeReactionDamage(float damage) // 파생 공격을 발생시키지 않는 반응 피해
-        {
+        { // 함수 시작
             bool previous = reactionDamage; // 이전 반응 피해 상태
             reactionDamage = true; // 반응 피해 처리 시작
             try // 반응 피해 적용
-            {
+            { // 조건 시작
                 TakeDamage(damage); // 기존 피해와 보상 처리
-            }
+            } // 조건 종료
             finally // 예외 이후 상태 복원
-            {
+            { // 조건 시작
                 reactionDamage = previous; // 이전 반응 피해 상태 복원
-            }
-        }
+            } // 조건 종료
+        } // 함수 종료
 
         public void TakeDamageOverTime(float damage, bool reaction = false) // 지속 피해와 기존 반응 구분
         { // 함수 시작
@@ -114,17 +114,17 @@ namespace ProjectEpsilon.Combat // 전투 영역
         private float TakeDamageAndReport(float damage, bool overTime) // 피해 종류를 포함한 실제 피해 적용
         { // 함수 시작
             if (!IsAlive) // 생존 상태 확인
-            {
+            { // 조건 시작
                 return 0f; // 피해 없음 반환
-            }
+            } // 조건 종료
 
             float safeDamage = Mathf.Max(0f, damage); // 음수 피해 제거
             float finalDamage = safeDamage * IncomingDamageMultiplier; // 상태 약화 배율 적용
 
             if (finalDamage <= 0f) // 유효 피해 확인
-            {
+            { // 조건 시작
                 return 0f; // 피해 없음 반환
-            }
+            } // 조건 종료
 
             float previousHealth = currentHealth; // 피해 전 체력 저장
             currentHealth = Mathf.Max(0f, currentHealth - finalDamage); // 체력 감소
@@ -141,80 +141,80 @@ namespace ProjectEpsilon.Combat // 전투 영역
             } // 복원 종료
 
             if (currentHealth <= 0f) // 사망 체력 확인
-            {
+            { // 조건 시작
                 Die(); // 사망 처리
-            }
+            } // 조건 종료
 
             return dealtDamage; // 실제 피해량 반환
-        }
+        } // 함수 종료
 
         private void Die() // 사망 처리
-        {
+        { // 함수 시작
             if (deathHandled) // 중복 사망 확인
-            {
+            { // 조건 시작
                 return; // 중복 처리 방지
-            }
+            } // 조건 종료
 
             deathHandled = true; // 사망 처리 저장
             currentHealth = 0f; // 체력 0 고정
             Died?.Invoke(this); // 사망 이벤트 전달
             Destroy(gameObject); // 대상 제거
-        }
+        } // 함수 종료
 
         public static WeaponTarget FindClosest(Vector3 origin, float maximumRange) // 최근접 대상 탐색
-        {
+        { // 함수 시작
             return FindClosest(origin, maximumRange, null); // 제외 대상 없는 탐색
-        }
+        } // 함수 종료
 
         public static WeaponTarget FindClosest(Vector3 origin, float maximumRange, WeaponTarget excluded) // 제외 대상을 고려한 탐색
-        {
+        { // 함수 시작
             return FindClosest(origin, maximumRange, excluded, null); // 단일 제외 대상을 전달
-        }
+        } // 함수 종료
 
         public static WeaponTarget FindClosest(Vector3 origin, float maximumRange, WeaponTarget excluded, WeaponTarget secondExcluded) // 두 제외 대상을 고려한 탐색
-        {
+        { // 함수 시작
             float safeRange = Mathf.Max(0f, maximumRange); // 탐색 범위 정규화
             float bestDistanceSquared = safeRange * safeRange; // 최대 거리 제곱 저장
             WeaponTarget closest = null; // 최근접 대상 초기화
 
             for (int index = ActiveTargets.Count - 1; index >= 0; index--) // 활성 대상 역순 순회
-            {
+            { // 반복 시작
                 WeaponTarget target = ActiveTargets[index]; // 현재 대상 조회
 
                 if (target == null) // 사라진 대상 확인
-                {
+                { // 조건 시작
                     ActiveTargets.RemoveAt(index); // 빈 항목 제거
                     continue; // 다음 대상 이동
-                }
+                } // 조건 종료
 
                 if (target == excluded || target == secondExcluded || !target.isActiveAndEnabled || !target.IsAlive) // 제외 대상과 공격 가능 여부 확인
-                {
+                { // 조건 시작
                     continue; // 대상 제외
-                }
+                } // 조건 종료
 
                 float distanceSquared = (target.transform.position - origin).sqrMagnitude; // 중심 거리 계산
 
                 if (distanceSquared > bestDistanceSquared) // 현재 후보보다 먼지 확인
-                {
+                { // 조건 시작
                     continue; // 대상 제외
-                }
+                } // 조건 종료
 
                 bestDistanceSquared = distanceSquared; // 최근접 거리 갱신
                 closest = target; // 최근접 대상 저장
-            }
+            } // 반복 종료
 
             return closest; // 최근접 대상 반환
-        }
+        } // 함수 종료
 
         public static int DamageAllInRange(Vector3 origin, float maximumRange, float damage) // 범위 피해 적용
-        {
+        { // 함수 시작
             float safeRange = Mathf.Max(0f, maximumRange); // 범위 정규화
             float safeDamage = Mathf.Max(0f, damage); // 피해 정규화
 
             if (safeRange <= 0f || safeDamage <= 0f) // 적용 가능 여부 확인
-            {
+            { // 조건 시작
                 return 0; // 피해 대상 없음 반환
-            }
+            } // 조건 종료
 
             float rangeSquared = safeRange * safeRange; // 범위 제곱 계산
             int hitCount = 0; // 명중 수 초기화
@@ -242,16 +242,16 @@ namespace ProjectEpsilon.Combat // 전투 영역
             { // 정리 시작
                 ReturnRangeSnapshot(snapshot); // 사용한 목록 반환
             } // 정리 종료
-        }
+        } // 함수 종료
 
         public static int VisitAllInRange(Vector3 origin, float maximumRange, Action<WeaponTarget> visitor) // 범위 대상 방문
-        {
+        { // 함수 시작
             float safeRange = Mathf.Max(0f, maximumRange); // 안전 범위 계산
 
             if (safeRange <= 0f || visitor == null) // 실행 가능 여부 확인
-            {
+            { // 조건 시작
                 return 0; // 방문 없음 반환
-            }
+            } // 조건 종료
 
             float rangeSquared = safeRange * safeRange; // 거리 제곱 계산
             int visitedCount = 0; // 방문 수 초기화
@@ -279,7 +279,7 @@ namespace ProjectEpsilon.Combat // 전투 영역
             { // 정리 시작
                 ReturnRangeSnapshot(snapshot); // 사용한 목록 반환
             } // 정리 종료
-        }
+        } // 함수 종료
 
         private static List<WeaponTarget> RentRangeSnapshot() // 독립된 범위 공격 목록 준비
         { // 함수 시작
@@ -302,27 +302,27 @@ namespace ProjectEpsilon.Combat // 전투 영역
         } // 함수 종료
 
         private float ResolveCorrosiveCurseIncomingMultiplier() // 부식 저주의 받는 피해 배율 조회
-        {
+        { // 함수 시작
             WeaponTargetCorrosiveCurseStatus status = GetComponent<WeaponTargetCorrosiveCurseStatus>(); // 반응 약화 조회
             return status == null ? 1f : status.IncomingMultiplier; // 안전한 받는 피해 배율
-        }
+        } // 함수 종료
 
         private float ResolveCorrosiveCurseOutgoingMultiplier() // 부식 저주의 주는 피해 배율 조회
-        {
+        { // 함수 시작
             WeaponTargetCorrosiveCurseStatus status = GetComponent<WeaponTargetCorrosiveCurseStatus>(); // 반응 약화 조회
             return status == null ? 1f : status.OutgoingMultiplier; // 안전한 주는 피해 배율
-        }
+        } // 함수 종료
 
         private float ResolvePoisonIncomingDamageMultiplier() // 독 방어 약화 배율 조회
-        {
+        { // 함수 시작
             WeaponTargetPoisonStatus poison = GetComponent<WeaponTargetPoisonStatus>(); // 독 상태 조회
             return poison == null ? 1f : poison.IncomingDamageMultiplier; // 받는 피해 배율 반환
-        }
+        } // 함수 종료
 
         private float ResolvePoisonOutgoingDamageMultiplier() // 독 공격 약화 배율 조회
-        {
+        { // 함수 시작
             WeaponTargetPoisonStatus poison = GetComponent<WeaponTargetPoisonStatus>(); // 독 상태 조회
             return poison == null ? 1f : poison.OutgoingDamageMultiplier; // 주는 피해 배율 반환
-        }
-    }
-}
+        } // 함수 종료
+    } // 형식 종료
+} // 이름 공간 종료

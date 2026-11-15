@@ -1,9 +1,9 @@
 using UnityEngine; // Unity 기능 사용
 
 namespace ProjectEpsilon.Combat // 전투 영역
-{
+{ // 이름 공간 시작
     public sealed class WeaponTargetKnockbackController : MonoBehaviour // 대상 넉백 상태 관리자
-    {
+    { // 형식 시작
         [SerializeField] private bool knockbackImmune; // 넉백 면역 여부
         [SerializeField, Range(0f, 1f)] private float distanceMultiplier = 1f; // 넉백 거리 배율
         [SerializeField] private Vector2 direction; // 현재 넉백 방향
@@ -21,40 +21,40 @@ namespace ProjectEpsilon.Combat // 전투 영역
         } // 함수 종료
 
         public void Configure(bool immune) // 넉백 설정 구성
-        {
+        { // 함수 시작
             knockbackImmune = immune; // 면역 상태 저장
 
             if (knockbackImmune) // 면역 전환 확인
-            {
+            { // 조건 시작
                 Clear(); // 진행 중 넉백 해제
-            }
-        }
+            } // 조건 종료
+        } // 함수 종료
 
         public bool Apply(Vector2 knockbackDirection, float distance, float duration) // 넉백 적용
-        {
+        { // 함수 시작
             float safeDistance = Mathf.Max(0f, distance) * Mathf.Clamp01(distanceMultiplier); // 적별 저항을 적용한 거리
             float safeDuration = Mathf.Max(0f, duration); // 시간 정규화
 
             if (knockbackImmune || safeDistance <= 0f || safeDuration <= 0f) // 적용 가능 여부 확인
-            {
+            { // 조건 시작
                 return false; // 적용 실패
-            }
+            } // 조건 종료
 
             Vector2 safeDirection = knockbackDirection.sqrMagnitude <= 0.0001f ? Vector2.up : knockbackDirection.normalized; // 방향 정규화
             direction = safeDirection; // 넉백 방향 저장
             remainingDistance = safeDistance; // 넉백 거리 저장
             remainingDuration = safeDuration; // 넉백 시간 저장
             return true; // 적용 성공
-        }
+        } // 함수 종료
 
         public bool TryConsumeMovement(float deltaTime, out Vector2 displacement) // 프레임 넉백 이동 계산
-        {
+        { // 함수 시작
             displacement = Vector2.zero; // 기본 이동량 초기화
 
             if (!IsActive || deltaTime <= 0f) // 이동 가능 여부 확인
-            {
+            { // 조건 시작
                 return false; // 이동 없음 반환
-            }
+            } // 조건 종료
 
             float stepTime = Mathf.Min(deltaTime, remainingDuration); // 실제 진행 시간 계산
             float speed = remainingDuration <= 0f ? 0f : remainingDistance / remainingDuration; // 남은 기준 속도 계산
@@ -64,19 +64,19 @@ namespace ProjectEpsilon.Combat // 전투 영역
             remainingDuration = Mathf.Max(0f, remainingDuration - stepTime); // 남은 시간 감소
 
             if (remainingDistance <= 0f || remainingDuration <= 0f) // 넉백 종료 확인
-            {
+            { // 조건 시작
                 remainingDistance = 0f; // 거리 종료 정리
                 remainingDuration = 0f; // 시간 종료 정리
-            }
+            } // 조건 종료
 
             return displacement.sqrMagnitude > 0f; // 실제 이동 여부 반환
-        }
+        } // 함수 종료
 
         public void Clear() // 넉백 즉시 해제
-        {
+        { // 함수 시작
             direction = Vector2.zero; // 방향 초기화
             remainingDistance = 0f; // 거리 초기화
             remainingDuration = 0f; // 시간 초기화
-        }
-    }
-}
+        } // 함수 종료
+    } // 형식 종료
+} // 이름 공간 종료

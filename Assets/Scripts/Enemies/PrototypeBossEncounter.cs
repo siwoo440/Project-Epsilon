@@ -6,9 +6,9 @@ using System.Collections.Generic; // 안전 출현 후보의 겹침 목록
 using UnityEngine; // 유니티 기능
 
 namespace ProjectEpsilon.Enemies // 적 영역
-{
+{ // 이름 공간 시작
     public sealed class PrototypeBossEncounter : MonoBehaviour // 시험용 최종 보스 출현기
-    {
+    { // 형식 시작
         [SerializeField] private float maximumHealth = 600f; // 보스 체력 임시값
         [SerializeField] private int damage = 15; // 투사체 피해 임시값
         [SerializeField] private float speedRatio = 0.75f; // 플레이어 기준 이동 속도 임시값
@@ -65,11 +65,11 @@ namespace ProjectEpsilon.Enemies // 적 영역
         } // 함수 종료
 
         public bool ApplyProfile(PrototypeMapProfile profile) // 시작 전 맵별 보스 설정
-        {
+        { // 함수 시작
             if (profile == null || spawned) // 실제 데이터와 출현 상태 확인
-            {
+            { // 조건 시작
                 return false; // 출현 후 보스 변경 방지
-            }
+            } // 조건 종료
             maximumHealth = profile.BossHealth; // 맵별 임시 체력
             speedRatio = profile.BossSpeedRatio; // 맵별 임시 이동 비율
             attackInterval = profile.BossAttackInterval; // 맵별 임시 발사 간격
@@ -98,59 +98,59 @@ namespace ProjectEpsilon.Enemies // 적 영역
             bossTint = profile.BossTint; // 맵별 이미지 색상
             mapBossPattern = profile.BossPattern; // 선택된 맵의 보스 패턴
             return true; // 맵별 설정 적용 완료
-        }
+        } // 함수 종료
 
         private void OnEnable() // 실제 전환 알림 연결
-        {
+        { // 함수 시작
             spawner = GetComponent<EarlyEnemyWaveSpawner>(); // 같은 관리자 출현기 조회
             if (spawner == null) // 출현기 부재 확인
-            {
+            { // 조건 시작
                 spawner = FindFirstObjectByType<EarlyEnemyWaveSpawner>(); // 활성 출현기 대체 조회
-            }
+            } // 조건 종료
             if (spawner != null) // 실제 출현기 연결 확인
-            {
+            { // 조건 시작
                 spawner.BossTransitionStarted += TrySpawnBoss; // 실제 전환 이벤트 구독
                 if (spawner.HasEnteredBossTransition) // 이미 완료된 전환 확인
-                {
+                { // 조건 시작
                     TrySpawnBoss(); // 늦은 활성화 시 보스 출현
-                }
-            }
-        }
+                } // 조건 종료
+            } // 조건 종료
+        } // 함수 종료
 
         private void OnDisable() // 실제 전환 알림 해제
-        {
+        { // 함수 시작
             if (spawner != null) // 출현기 연결 확인
-            {
+            { // 조건 시작
                 spawner.BossTransitionStarted -= TrySpawnBoss; // 중복 구독 방지
-            }
-        }
+            } // 조건 종료
+        } // 함수 종료
 
         private void Update() // 실제 보스 체력 단계 관찰
-        {
+        { // 함수 시작
             if (!spawned && spawner != null && spawner.HasEnteredBossTransition && GameManager.Instance != null && GameManager.Instance.IsPlaying && Time.time >= nextSpawnAttempt) // 전환 후 안전 후보 재시도 확인
             { // 조건 시작
                 TrySpawnBoss(); // 실제 안전 출현 재시도
             } // 조건 종료
             if (boss == null || !boss.IsAlive || settings == null) // 실제 생존 보스 확인
-            {
+            { // 조건 시작
                 return; // 단계 갱신 생략
-            }
+            } // 조건 종료
             bool wasPhaseTwo = phase.IsPhaseTwo; // 기존 단계 저장
             phase.Observe(boss.CurrentHealth, boss.MaximumHealth, boss.IsAlive); // 실제 체력 경계 반영
             if (!wasPhaseTwo && phase.IsPhaseTwo) // 두 번째 단계 최초 진입 확인
-            {
+            { // 조건 시작
                 settings.speedRatio = Mathf.Max(0f, speedRatio) * Mathf.Max(0f, phaseTwoSpeedMultiplier); // 임시 이동 속도 변경
                 settings.attackInterval = Mathf.Max(0.1f, attackInterval * Mathf.Max(0f, phaseTwoIntervalMultiplier)); // 임시 사격 간격 변경
                 settings.projectileCount = Mathf.Clamp(phaseTwoProjectileCount, 1, 9); // 두 번째 단계 임시 사격 수
-            }
-        }
+            } // 조건 종료
+        } // 함수 종료
 
         private void OnGUI() // 시험용 보스 체력 표시
-        {
+        { // 함수 시작
             if (boss == null || !boss.IsAlive || boss.MaximumHealth <= 0f) // 생존 보스와 최대 체력 확인
-            {
+            { // 조건 시작
                 return; // 표시 생략
-            }
+            } // 조건 종료
             Rect background = ResolveHealthBarRect(Camera.main); // 실제 전투 화면 안의 체력 바
             GUI.Box(background, GUIContent.none); // 체력 바 배경
             float ratio = Mathf.Clamp01(boss.CurrentHealth / boss.MaximumHealth); // 현재 체력 비율
@@ -162,45 +162,45 @@ namespace ProjectEpsilon.Enemies // 적 영역
             Font previousFont = GUI.skin.font; // 실제 이전 화면 글꼴
             Font displayFont = ProjectEpsilon.UI.RunFrontendController.Instance == null ? null : ProjectEpsilon.UI.RunFrontendController.Instance.DisplayFont; // 실제 한글 화면 글꼴
             if (displayFont != null) // 실제 한글 글꼴 확인
-            {
+            { // 조건 시작
                 GUI.skin.font = displayFont; // 실제 보스 체력 글꼴 적용
-            }
+            } // 조건 종료
             try // 실제 보스 체력 표시 중 글꼴 보호
-            {
+            { // 조건 시작
                 GUI.Label(background, FormatHealthLabel(boss.CurrentHealth, boss.MaximumHealth)); // 실제 한국어 보스 체력 문구
-            }
+            } // 조건 종료
             finally // 실제 다른 화면 글꼴 복원
-            {
+            { // 조건 시작
                 GUI.skin.font = previousFont; // 실제 공용 글꼴 복원
-            }
-        }
+            } // 조건 종료
+        } // 함수 종료
 
         private static string FormatHealthLabel(float current, float maximum) // 실제 한국어 보스 체력 문구
-        {
+        { // 함수 시작
             return $"보스 {Mathf.CeilToInt(current)} / {Mathf.CeilToInt(maximum)}"; // 실제 현재와 최대 체력 표시
-        }
+        } // 함수 종료
 
         private static Rect ResolveHealthBarRect(Camera camera) // 실제 전투 카메라 기준 체력 표시 영역
-        {
+        { // 함수 시작
             Rect viewport = camera == null ? new Rect(0f, 0f, Screen.width, Screen.height) : camera.pixelRect; // 실제 카메라 또는 전체 화면
             float width = Mathf.Min(400f, Mathf.Max(1f, viewport.width - 40f)); // 실제 전투 영역에 맞춘 체력 바
             return new Rect(viewport.xMin + (viewport.width - width) * 0.5f, Screen.height - viewport.yMax + 48f, width, 22f); // 실제 전투 영역 상단 중앙
-        }
+        } // 함수 종료
 
         private void TrySpawnBoss() // 실제 최종 보스 출현
-        {
+        { // 함수 시작
             if (spawned || GameManager.Instance == null) // 중복 출현과 관리자 확인
-            {
+            { // 조건 시작
                 return; // 출현 생략
-            }
+            } // 조건 종료
             SnakeMovement player = FindFirstObjectByType<SnakeMovement>(); // 실제 플레이어 이동 조회
             SnakeBodyManager body = FindFirstObjectByType<SnakeBodyManager>(); // 실제 몸통 조회
             SnakeHealth health = FindFirstObjectByType<SnakeHealth>(); // 실제 공용 체력 조회
             if (player == null || body == null || health == null) // 필수 플레이어 구성 확인
-            {
+            { // 조건 시작
                 Debug.LogError("[Project Epsilon] 시험 보스 출현에 필요한 플레이어 구성이 없습니다."); // 구성 오류 기록
                 return; // 잘못된 출현 방지
-            }
+            } // 조건 종료
             if (!TryFindSafeSpawn(player.transform.position, body, out Vector3 spawnPosition)) // 실제 보스 충돌 범위의 안전 후보 확인
             { // 조건 시작
                 nextSpawnAttempt = Time.time + 0.25f; // 안전 후보가 없을 때 다음 재시도
@@ -228,7 +228,7 @@ namespace ProjectEpsilon.Enemies // 적 영역
             instance.AddComponent<WeaponTargetStatusController>().ConfigureColdFreezeResistance(true, coldFreezeSlowMultiplier); // 보스 냉기 빙결 저항 설정
             instance.AddComponent<WeaponTargetKnockbackController>().Configure(true); // 보스 넉백 면역
             settings = new EarlyEnemySettings // 기존 사수 행동의 임시 설정
-            {
+            { // 자료 묶음 시작
                 kind = EarlyEnemyKind.Shooter, // 시험용 사격 행동
                 health = maximumHealth, // 임시 체력
                 damage = damage, // 임시 투사체 피해
@@ -239,17 +239,17 @@ namespace ProjectEpsilon.Enemies // 적 영역
                 projectileSpreadDegrees = Mathf.Clamp(projectileSpreadDegrees, 0f, 180f), // 임시 부채꼴 각도
                 opposedProjectileFan = mapBossPattern == 1, // 폐허 보스의 양방향 부채꼴
                 enemySprite = alignVisualWithTarget ? bossVisual : null // 보스 이미지 방향 회전 설정
-            };
+            }; // 자료 묶음 종료
             EarlyEnemyBehaviour behaviour = instance.AddComponent<EarlyEnemyBehaviour>(); // 기존 적 행동 재사용
             behaviour.Configure(settings, player, body, health, projectileVisual != null ? projectileVisual : sprite, keepDistance, projectileSpeed, projectileLifetime, 1f, 0.6f, 3f); // 실제 투사체와 이동 설정
             instance.GetComponent<EnemyVisualMotion>()?.ConfigureBossMotion(); // 실제 보스 전용 표시 시험값 연결
             if (!GameManager.Instance.RegisterFinalBoss(target)) // 실제 보스 등록 확인
-            {
+            { // 조건 시작
                 instance.SetActive(false); // 등록 실패 시 공격 차단
                 Destroy(instance); // 등록 실패 보스 제거
                 settings = null; // 임시 행동 참조 해제
                 return; // 승리 대상 없는 출현 방지
-            }
+            } // 조건 종료
             boss = target; // 실제 보스 참조 저장
             spawned = true; // 중복 출현 방지
             instance.AddComponent<PrototypeBossChargeAttack>().Configure(this, player, body, health, behaviour, chargeInterval, chargeWarningDuration, chargeDuration, chargeSpeed, phaseTwoChargeSpeedMultiplier, damage, alignVisualWithTarget, mapBossPattern == 2); // 습지 예고 추적을 포함한 실제 돌진 구성
@@ -257,7 +257,7 @@ namespace ProjectEpsilon.Enemies // 적 영역
             instance.AddComponent<PrototypeBossBodyPush>().Configure(body, follower, bodyPushDistance, bodyPushRecoveryDuration, bodyPushGraceDuration); // 실제 보스 몸통 밀림 구성
             instance.AddComponent<PrototypeBossHazardSpawner>().Configure(player, body, health, target, hazardInterval, hazardWarningDuration, hazardDuration, hazardDamageInterval, hazardRadius, hazardDamage, mapBossPattern, this, phaseTwoHazardIntervalMultiplier); // 맵별 위험 구역과 단계별 간격 구성
             instance.AddComponent<PrototypeBossSummoner>().Configure(spawner, target, summonInterval, summonMaximum, summonRadius); // 실제 보스 잡몹 소환 구성
-        }
+        } // 함수 종료
 
         private bool TryFindSafeSpawn(Vector3 playerPosition, SnakeBodyManager body, out Vector3 position) // 실제 보스 출현 후보 검색
         { // 함수 시작
@@ -311,5 +311,5 @@ namespace ProjectEpsilon.Enemies // 적 영역
             position = default; // 안전 후보 부재 표시
             return false; // 현재 보스 출현 보류
         } // 함수 종료
-    }
-}
+    } // 형식 종료
+} // 이름 공간 종료

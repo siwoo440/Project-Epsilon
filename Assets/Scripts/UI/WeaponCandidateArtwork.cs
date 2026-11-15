@@ -2,46 +2,46 @@ using UnityEngine; // 유니티 기능
 using UnityEngine.UI; // 실제 버튼과 이미지
 
 namespace ProjectEpsilon.UI // 화면 영역
-{
+{ // 이름 공간 시작
     public sealed class WeaponCandidateArtwork : MonoBehaviour // 무기 후보 버튼 이미지
-    {
+    { // 형식 시작
         private Image image; // 실제 후보 이미지
         private Text currentLabel; // 실제 후보 문구
         private Vector2 originalOffsetMax; // 기존 문구 위쪽 여백
         private bool hasOriginalOffset; // 기존 문구 크기 저장 여부
 
         public static void Set(Button button, Text label, Sprite sprite, Color? tint = null) // 실제 후보 이미지와 속성 색상 설정
-        {
+        { // 함수 시작
             if (button == null) // 실제 버튼 확인
-            {
+            { // 조건 시작
                 return; // 버튼 없는 표시 생략
-            }
+            } // 조건 종료
             WeaponCandidateArtwork artwork = button.GetComponent<WeaponCandidateArtwork>(); // 기존 후보 표시 조회
             if (artwork == null && sprite == null) // 표시기와 이미지 부재 확인
-            {
+            { // 조건 시작
                 return; // 불필요한 표시기 생성 방지
-            }
+            } // 조건 종료
             if (artwork == null) // 실제 표시기 부재 확인
-            {
+            { // 조건 시작
                 artwork = button.gameObject.AddComponent<WeaponCandidateArtwork>(); // 실제 후보 표시기 생성
-            }
+            } // 조건 종료
             artwork.Apply(label, sprite, tint ?? Color.white); // 실제 후보와 속성 색상 반영
-        }
+        } // 함수 종료
 
         private void Apply(Text label, Sprite sprite, Color tint) // 실제 이미지와 문구 영역 갱신
-        {
+        { // 함수 시작
             if (currentLabel != label) // 실제 문구 연결 변경 확인
-            {
+            { // 조건 시작
                 RestoreLabel(); // 이전 문구 영역 복구
                 currentLabel = label; // 현재 문구 저장
                 hasOriginalOffset = currentLabel != null; // 실제 문구 존재 저장
                 if (hasOriginalOffset) // 실제 문구 확인
-                {
+                { // 조건 시작
                     originalOffsetMax = currentLabel.rectTransform.offsetMax; // 기존 위쪽 여백 보존
-                }
-            }
+                } // 조건 종료
+            } // 조건 종료
             if (sprite != null && image == null) // 실제 이미지 표시기 부재 확인
-            {
+            { // 조건 시작
                 GameObject item = new GameObject("WeaponArtwork", typeof(RectTransform), typeof(CanvasRenderer), typeof(Image)); // 실제 UI 이미지 생성
                 item.transform.SetParent(transform, false); // 실제 후보 버튼 아래 연결
                 RectTransform area = item.GetComponent<RectTransform>(); // 실제 이미지 영역
@@ -53,13 +53,13 @@ namespace ProjectEpsilon.UI // 화면 영역
                 image = item.GetComponent<Image>(); // 실제 UI 이미지 조회
                 image.raycastTarget = false; // 버튼 입력 가림 방지
                 image.preserveAspect = true; // 원본 이미지 비율 유지
-            }
+            } // 조건 종료
             if (image != null) // 실제 이미지 표시기 확인
-            {
+            { // 조건 시작
                 image.sprite = sprite; // 실제 무기 이미지 설정
                 image.color = tint; // 무기 속성별 포탑 색상 설정
                 image.gameObject.SetActive(sprite != null); // 이미지 존재 시 표시
-            }
+            } // 조건 종료
             if (sprite != null) // 실제 이미지 표시 확인
             { // 조건 시작
                 UpdateLayout(); // 카드 크기와 문구 영역 갱신
@@ -68,7 +68,7 @@ namespace ProjectEpsilon.UI // 화면 영역
             { // 대체 시작
                 RestoreLabel(); // 기존 문구 영역 복구
             } // 대체 종료
-        }
+        } // 함수 종료
         private void OnRectTransformDimensionsChange() // 실제 카드 크기 변경
         { // 함수 시작
             UpdateLayout(); // 크기별 이미지와 문구 갱신
@@ -99,11 +99,11 @@ namespace ProjectEpsilon.UI // 화면 영역
             } // 조건 종료
         } // 함수 종료
         private void RestoreLabel() // 이전 문구 영역 복구
-        {
+        { // 함수 시작
             if (currentLabel != null && hasOriginalOffset) // 실제 저장 문구 확인
-            {
+            { // 조건 시작
                 currentLabel.rectTransform.offsetMax = originalOffsetMax; // 기존 문구 위쪽 여백 복구
-            }
-        }
-    }
-}
+            } // 조건 종료
+        } // 함수 종료
+    } // 형식 종료
+} // 이름 공간 종료

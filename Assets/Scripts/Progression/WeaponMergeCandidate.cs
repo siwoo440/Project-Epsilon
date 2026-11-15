@@ -1,9 +1,9 @@
 using ProjectEpsilon.Data; // 데이터 기능 연결
 
 namespace ProjectEpsilon.Progression // 프로젝트 기능 영역
-{
+{ // 이름 공간 시작
     public readonly struct WeaponMergeCandidate // 포탑·합성 자료 구조
-    {
+    { // 형식 시작
         public WeaponData Weapon { get; } // 포탑·데이터 구성 선언
         public int CurrentGrade { get; } // 현재·등급 구성 선언
         public int ResultGrade { get; } // 결과·등급 구성 선언
@@ -25,12 +25,12 @@ namespace ProjectEpsilon.Progression // 프로젝트 기능 영역
             int firstSlotIndex, // 슬롯·순서 항목 전달
             int secondSlotIndex // 슬롯·순서 처리
         ) // 앞선 항목 종료
-        {
+        { // 함수 시작
             Weapon = weapon; // 포탑 값 설정
             CurrentGrade = currentGrade; // 현재·등급 값 설정
             ResultGrade = currentGrade + 1; // 결과·등급 값 설정
             FirstSlotIndex = firstSlotIndex; // 슬롯·순서 값 설정
             SecondSlotIndex = secondSlotIndex; // 슬롯·순서 값 설정
-        }
-    }
-}
+        } // 함수 종료
+    } // 형식 종료
+} // 이름 공간 종료

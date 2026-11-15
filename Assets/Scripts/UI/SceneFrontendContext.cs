@@ -7,15 +7,15 @@ using UnityEngine; // Unity 씬 구성
 using UnityEngine.SceneManagement; // 실제 씬 전환
 
 namespace ProjectEpsilon.UI // 실제 화면 흐름 영역
-{
+{ // 이름 공간 시작
     public enum SceneFrontendKind // 분리된 화면 종류
-    {
+    { // 형식 시작
         MainMenu, // 실제 메인 메뉴
         Preparation, // 실제 출격 준비
         Results // 실제 전투 결과
-    }
+    } // 형식 종료
     public sealed class SceneFrontendContext : MonoBehaviour // 분리 씬의 선택 데이터와 이동
-    {
+    { // 형식 시작
         public const string MainMenuPath = "Assets/Scenes/MainMenu.unity"; // 실제 메인 메뉴 경로
         public const string PreparationPath = "Assets/Scenes/Preparation.unity"; // 실제 출격 준비 경로
         public const string GamePath = "Assets/Scenes/Game.unity"; // 실제 전투 경로
@@ -40,26 +40,26 @@ namespace ProjectEpsilon.UI // 실제 화면 흐름 영역
         public CharacterData SelectedCharacter => selectedCharacter; // 실제 선택한 캐릭터 조회
         [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.SubsystemRegistration)] // 실제 플레이 세션 시작 시 초기화
         private static void InitializeSession() // 이전 플레이 세션의 정적 상태 정리
-        {
+        { // 함수 시작
             ResetFlow(); // 실제 화면 흐름 기본값 복원
-        }
+        } // 함수 종료
         private void Awake() // 실제 씬 초기화
-        {
+        { // 함수 시작
             EnsureDisplayCamera(); // 독립 화면의 실제 렌더 카메라 확인
             if (kind != SceneFrontendKind.Results) // 실제 메뉴 또는 준비 화면 확인
-            {
+            { // 조건 시작
                 Time.timeScale = 1f; // 이전 런의 정지 상태 해제
-            }
+            } // 조건 종료
             if (kind == SceneFrontendKind.Preparation) // 실제 출격 준비 화면 확인
-            {
+            { // 조건 시작
                 CharacterData previous = CharacterRunInitializer.SelectedCharacter; // 이전에 선택한 캐릭터
                 selectedCharacter = IsCharacterAvailable(previous) ? previous : GetCharacter(0); // 해금된 이전 선택 또는 기본 캐릭터
                 if (!IsMapAvailable(chosenMap)) // 이전 맵 해금 확인
-                {
+                { // 조건 시작
                     chosenMap = 0; // 기본 맵으로 복구
-                }
-            }
-        }
+                } // 조건 종료
+            } // 조건 종료
+        } // 함수 종료
 
         private void EnsureDisplayCamera() // 독립 화면의 디스플레이 카메라 보장
         { // 영역 시작
@@ -88,84 +88,84 @@ namespace ProjectEpsilon.UI // 실제 화면 흐름 영역
             } // 조건 종료
         } // 영역 종료
         public CharacterData GetCharacter(int index) // 실제 캐릭터 후보 조회
-        {
+        { // 함수 시작
             return characters != null && index >= 0 && index < characters.Length ? characters[index] : null; // 유효한 후보 반환
-        }
+        } // 함수 종료
         public PrototypeMapProfile GetMap(int index) // 실제 맵 후보 조회
-        {
+        { // 함수 시작
             return maps != null && index >= 0 && index < maps.Length ? maps[index] : null; // 유효한 맵 반환
-        }
+        } // 함수 종료
         public bool IsCharacterAvailable(CharacterData character) // 실제 캐릭터 해금 확인
-        {
+        { // 함수 시작
             MetaProgressionController meta = MetaProgressionController.Instance; // 실제 저장 관리자
             return character != null && (meta == null || meta.IsCharacterUnlocked(character.Id)); // 실제 해금 상태 반환
-        }
+        } // 함수 종료
         public bool IsMapAvailable(int index) // 실제 맵 해금 확인
-        {
+        { // 함수 시작
             MetaProgressionController meta = MetaProgressionController.Instance; // 실제 저장 관리자
             return GetMap(index) != null && (meta == null || meta.IsMapUnlocked(index)); // 실제 해금된 맵 반환
-        }
+        } // 함수 종료
         public bool SelectCharacter(int index) // 실제 준비 캐릭터 선택
-        {
+        { // 함수 시작
             CharacterData candidate = GetCharacter(index); // 실제 캐릭터 후보
             if (!IsCharacterAvailable(candidate)) // 실제 해금 상태 확인
-            {
+            { // 조건 시작
                 return false; // 잠긴 캐릭터 선택 차단
-            }
+            } // 조건 종료
             selectedCharacter = candidate; // 실제 캐릭터 선택 보관
             CharacterRunInitializer.SelectForNextRun(candidate); // 실제 전투 초기화에 전달
             return true; // 실제 선택 완료
-        }
+        } // 함수 종료
         public bool SelectMap(int index) // 실제 준비 맵 선택
-        {
+        { // 함수 시작
             if (!IsMapAvailable(index)) // 실제 맵 해금 확인
-            {
+            { // 조건 시작
                 return false; // 잠긴 맵 선택 차단
-            }
+            } // 조건 종료
             chosenMap = index; // 실제 맵 선택 보관
             return true; // 실제 선택 완료
-        }
+        } // 함수 종료
         public bool BeginRun() // 실제 선택 맵으로 출격
-        {
+        { // 함수 시작
             if (pendingStart) // 중복 출격 요청 확인
             { // 조건 시작
                 return true; // 기존 로딩 유지
             } // 조건 종료
             WeaponData[] weapons = SelectedCharacter == null || SelectedCharacter.StartingWeapons == null ? null : SelectedCharacter.StartingWeapons.Weapons; // 실제 시작 포탑 후보
             if (!Application.CanStreamedLevelBeLoaded(GamePath) || !IsCharacterAvailable(SelectedCharacter) || !IsMapAvailable(chosenMap) || weapons == null || weapons.Length != 3 || weapons[0] == null || weapons[1] == null || weapons[2] == null || weapons[0] == weapons[1] || weapons[0] == weapons[2] || weapons[1] == weapons[2]) // 실제 선택과 중복 없는 세 후보 확인
-            {
+            { // 조건 시작
                 return false; // 잘못된 출격 차단
-            }
+            } // 조건 종료
             CharacterRunInitializer.SelectForNextRun(SelectedCharacter); // 실제 선택 캐릭터 전달
             pendingStart = true; // 실제 게임 씬 적용 예약
             separateFlow = true; // 분리 씬 흐름 기록
             new GameObject("SceneLoadingRequest").AddComponent<RunSceneReloader>().Begin(null, GamePath, true, true); // 실제 로딩 화면과 비동기 씬 이동
             return true; // 실제 출격 요청 완료
-        }
+        } // 함수 종료
         public static bool TakeStart(out int map) // 전투 씬의 시작 맵 수신
-        {
+        { // 함수 시작
             map = chosenMap; // 실제 선택한 맵 전달
             if (!pendingStart) // 실제 출격 예약 확인
-            {
+            { // 조건 시작
                 return false; // 직접 게임 씬 실행 유지
-            }
+            } // 조건 종료
             pendingStart = false; // 실제 예약 중복 소비 방지
             return true; // 실제 선택 전달 완료
-        }
+        } // 함수 종료
         public static void PrepareRetry() // 실제 재도전 준비
-        {
+        { // 함수 시작
             pendingStart = true; // 이전 맵의 게임 씬 시작 예약
             separateFlow = true; // 실제 분리 씬 흐름 유지
-        }
+        } // 함수 종료
         public static void CancelPendingStart() // 저장 실패 시 출격 예약 취소
-        {
+        { // 함수 시작
             pendingStart = false; // 실제 출격 예약 제거
-        }
+        } // 함수 종료
         public static void ResetFlow() // 실제 메인 메뉴 복귀
-        {
+        { // 함수 시작
             pendingStart = false; // 이전 출격 예약 제거
             separateFlow = false; // 이전 분리 흐름 종료
             chosenMap = 0; // 기본 맵 선택 복원
-        }
-    }
-}
+        } // 함수 종료
+    } // 형식 종료
+} // 이름 공간 종료

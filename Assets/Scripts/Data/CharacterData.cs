@@ -2,20 +2,20 @@ using ProjectEpsilon.Progression; // 시작 무기 후보 데이터
 using UnityEngine; // Unity 엔진 기능 연결
 
 namespace ProjectEpsilon.Data // 프로젝트 기능 영역
-{
+{ // 이름 공간 시작
     public enum CharacterPassive // 캐릭터별 상시 패시브
-    {
+    { // 형식 시작
         BalancedRecovery, // 균형형 회복
         MobileRecovery, // 기동형 회복
         HeavyDefense, // 중장형 피해 경감
         FusionCandidates, // 합성형 후보 가중치
         HolySpecialization, // 신성 공격과 회복 강화
         DarkSpecialization // 암흑 처치 회복 강화
-    }
+    } // 형식 종료
 
     [CreateAssetMenu(fileName = "CharacterData", menuName = "Project Epsilon/Data/Character")] // 생성·파일 설정
     public sealed class CharacterData : ScriptableObject // 캐릭터·데이터 자료 구조
-    {
+    { // 형식 시작
         [Header("Identity")] // 대상 설정
         [SerializeField] private string id = "character_id"; // 필드·식별자 설정
         [SerializeField] private string displayName = "캐릭터"; // 필드·이름 설정
@@ -45,5 +45,5 @@ namespace ProjectEpsilon.Data // 프로젝트 기능 영역
         public float SecondaryMultiplier => Mathf.Max(0f, secondaryMultiplier); // 안전한 보조 효과 배율
         public float PreferredCandidateWeight => Mathf.Max(1f, preferredCandidateWeight); // 안전한 후보 가중치
         public StartingWeaponOptions StartingWeapons => startingWeapons; // 캐릭터별 시작 무기 후보
-    }
-}
+    } // 형식 종료
+} // 이름 공간 종료

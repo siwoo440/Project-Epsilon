@@ -6,24 +6,24 @@ using UnityEngine.SceneManagement; // 실제 씬 재시작
 using UnityEngine.UI; // 실제 전환 가림 화면
 
 namespace ProjectEpsilon.Core // 게임 공통 영역
-{
+{ // 이름 공간 시작
     public sealed class RunSceneReloader : MonoBehaviour // 기존 관리자 제거 후 씬 재시작
-    {
+    { // 형식 시작
         private Text progressText; // 실제 로딩 진행 글자
         private Image progressFill; // 실제 로딩 진행 막대
         private Font loadingFont; // 실제 로딩 전용 글꼴
         private bool ownsLoadingFont; // 생성한 글꼴 소유 여부
         public void Begin(GameObject oldManager, string scenePath, bool coverScreen = false, bool showLoading = false) // 실제 재시작 예약
-        {
+        { // 함수 시작
             DontDestroyOnLoad(gameObject); // 씬 변경 중 재시작 객체 유지
             if (coverScreen) // 실제 전투 씬 전환 가림 요청 확인
-            {
+            { // 조건 시작
                 CreateCover(showLoading); // 실제 메뉴 전환 전 게임 화면 가림
-            }
+            } // 조건 종료
             StartCoroutine(Reload(oldManager, scenePath, showLoading)); // 실제 비동기 재시작
-        }
+        } // 함수 종료
         private void CreateCover(bool showLoading) // 실제 씬 전환 중 불투명 화면 구성
-        {
+        { // 함수 시작
             GameObject cover = new GameObject("SceneTransitionCover", typeof(RectTransform), typeof(Canvas), typeof(CanvasScaler), typeof(Image)); // 실제 전체 화면 가림 객체
             cover.transform.SetParent(transform, false); // 실제 전환 보조 객체에 연결
             Canvas canvas = cover.GetComponent<Canvas>(); // 실제 가림 캔버스
@@ -45,7 +45,7 @@ namespace ProjectEpsilon.Core // 게임 공통 영역
                 } // 조건 종료
                 CreateLoadingContent(rect); // 실제 진행 표시 구성
             } // 조건 종료
-        }
+        } // 함수 종료
         private void CreateLoadingContent(RectTransform parent) // 실제 로딩 안내 구성
         { // 함수 시작
             loadingFont = Font.CreateDynamicFontFromOSFont(new[] { "Malgun Gothic", "Arial" }, 28); // 실제 한국어 글꼴
@@ -105,12 +105,12 @@ namespace ProjectEpsilon.Core // 게임 공통 영역
             } // 조건 종료
         } // 함수 종료
         private IEnumerator Reload(GameObject oldManager, string scenePath, bool showLoading) // 실제 관리자 교체
-        {
+        { // 함수 시작
             if (oldManager != null) // 이전 관리자 확인
-            {
+            { // 조건 시작
                 oldManager.SetActive(false); // 이전 관리자 기능 정지
                 Destroy(oldManager); // 이전 전역 관리자 제거 예약
-            }
+            } // 조건 종료
             yield return null; // 실제 전역 관리자 파괴 대기
             if (!showLoading) // 기존 씬 재시작 확인
             { // 조건 시작
@@ -146,6 +146,6 @@ namespace ProjectEpsilon.Core // 게임 공통 영역
             SetProgress(1f); // 실제 완료 상태 표시
             yield return null; // 새 씬 초기화와 완료 화면 대기
             Destroy(gameObject); // 재시작 보조 객체 제거
-        }
-    }
-}
+        } // 함수 종료
+    } // 형식 종료
+} // 이름 공간 종료

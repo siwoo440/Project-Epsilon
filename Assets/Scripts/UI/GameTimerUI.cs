@@ -1,17 +1,18 @@
-using ProjectEpsilon.Core; // 대상 기능 연결
+using ProjectEpsilon.Core; // 게임 진행 상태
 using ProjectEpsilon.Enemies; // 실제 전투 시간 참조
 using ProjectEpsilon.Progression; // 실제 전투 점수
-using UnityEngine; // Unity 엔진 기능 연결
-using UnityEngine.UI; // Unity 엔진 기능 연결
+using UnityEngine; // Unity 시간과 객체
+using UnityEngine.UI; // 타이머와 점수 글자
 
 namespace ProjectEpsilon.UI // 프로젝트 기능 영역
-{
+{ // 이름 공간 시작
     [DefaultExecutionOrder(200)] // 출현기 시간 갱신 이후 표시
     public sealed class GameTimerUI : MonoBehaviour // 게임·UI 자료 구조
-    {
-        [SerializeField] private Text timerText; // 필드·문구 설정
+    { // 형식 시작
+        [SerializeField] private Text timerText; // 시간 표시 글자
 
-        private float elapsedSeconds; // 대상 구성 선언
+        private float elapsedSeconds; // 표시할 경과 시간
+        private int renderedSeconds = -1; // 마지막으로 표시한 초
         private float displayOffset; // 표시 전용 초기화 기준
         private EarlyEnemyWaveSpawner spawner; // 실제 전투 시계
         private MetaProgressionController scoreSource; // 실제 점수 집계 관리자
@@ -19,16 +20,16 @@ namespace ProjectEpsilon.UI // 프로젝트 기능 영역
         private Text scoreGainText; // 실제 점수 증가량 문구
         private float scoreGainUntil; // 증가량 표시 종료 시각
 
-        private void Start() // 시작 기능 선언
-        {
+        private void Start() // 타이머와 점수 연결
+        { // 함수 시작
             spawner = FindFirstObjectByType<EarlyEnemyWaveSpawner>(); // 실제 출현기 조회
             CreateScoreLabels(); // 타이머 오른쪽 점수 표시 생성
             BindScore(); // 실제 점수 관리자 연결
-            Refresh(); // 갱신 기능 실행
-        }
+            Refresh(); // 현재 시간 표시
+        } // 함수 종료
 
         private void LateUpdate() // 실제 전투 시간 표시
-        {
+        { // 함수 시작
             if (scoreSource == null) // 점수 관리자 초기화 대기
             { // 조건 시작
                 BindScore(); // 실제 점수 연결 재시도
@@ -38,19 +39,19 @@ namespace ProjectEpsilon.UI // 프로젝트 기능 영역
                 scoreGainText.text = string.Empty; // 지난 증가량 숨김
             } // 조건 종료
             if (spawner != null && spawner.isActiveAndEnabled && GameManager.Instance != null) // 실제 전투 시계 확인
-            {
+            { // 조건 시작
                 elapsedSeconds = Mathf.Max(0f, spawner.ElapsedSeconds - displayOffset); // 표시 전용 초기화 반영
                 Refresh(); // 실제 시간 표시 갱신
                 return; // 독립 시계 증가 생략
-            }
+            } // 조건 종료
             if (GameManager.Instance != null && !GameManager.Instance.IsPlaying) // 게임·관리자 조건 확인
-            {
-                return; // 현재 기능 종료
-            }
+            { // 조건 시작
+                return; // 정지 중 시간 증가 생략
+            } // 조건 종료
 
             elapsedSeconds += Time.deltaTime; // 시간·변화량 값 설정
-            Refresh(); // 갱신 기능 실행
-        }
+            Refresh(); // 현재 시간 표시
+        } // 함수 종료
 
         private void CreateScoreLabels() // 현재 점수와 증가량 배치
         { // 함수 시작
@@ -111,28 +112,36 @@ namespace ProjectEpsilon.UI // 프로젝트 기능 영역
                 scoreSource.ScoreChanged -= HandleScoreChanged; // 이전 HUD 이벤트 해제
             } // 조건 종료
         } // 함수 종료
-        public void Bind(Text nextTimerText) // 연결·문구 기능 선언
-        {
-            timerText = nextTimerText; // 문구·다음 값 값 설정
-            Refresh(); // 갱신 기능 실행
-        }
+        public void Bind(Text nextTimerText) // 타이머 표시 대상 변경
+        { // 함수 시작
+            timerText = nextTimerText; // 새 타이머 글자 연결
+            renderedSeconds = -1; // 새 글자의 표시 갱신 예약
+            Refresh(); // 현재 시간 표시
+        } // 함수 종료
 
-        public void ResetTimer() // 초기화 기능 선언
-        {
+        public void ResetTimer() // 화면의 표시 시간 초기화
+        { // 함수 시작
             if (spawner != null && spawner.isActiveAndEnabled && GameManager.Instance != null) // 실제 전투 시계 확인
-            {
+            { // 조건 시작
                 displayOffset = spawner.ElapsedSeconds; // 표시만 초기화할 기준 저장
-            }
-            elapsedSeconds = 0f; // 대상 값 설정
-            Refresh(); // 갱신 기능 실행
-        }
+            } // 조건 종료
+            elapsedSeconds = 0f; // 표시 경과 시간 초기화
+            Refresh(); // 현재 시간 표시
+        } // 함수 종료
 
-        private void Refresh() // 갱신 기능 선언
-        {
-            if (timerText != null) // 문구 조건 확인
-            {
-                timerText.text = HUDTextFormatter.FormatTime(elapsedSeconds); // 문구·시간 값 설정
-            }
-        }
-    }
-}
+        private void Refresh() // 변경된 시간 글자 갱신
+        { // 함수 시작
+            if (timerText == null) // 타이머 글자 연결 확인
+            { // 조건 시작
+                return; // 표시 대상이 없으면 갱신 생략
+            } // 조건 종료
+            int currentSeconds = Mathf.Max(0, Mathf.FloorToInt(elapsedSeconds)); // 표시할 정수 초
+            if (currentSeconds == renderedSeconds) // 표시 중인 초와 비교
+            { // 조건 시작
+                return; // 같은 초의 문자열 생성 생략
+            } // 조건 종료
+            renderedSeconds = currentSeconds; // 표시한 초 저장
+            timerText.text = HUDTextFormatter.FormatTime(elapsedSeconds); // 바뀐 시간 표시
+        } // 함수 종료
+    } // 형식 종료
+} // 이름 공간 종료

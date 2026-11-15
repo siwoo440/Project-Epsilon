@@ -4,9 +4,9 @@ using ProjectEpsilon.Player; // 플레이어 체력 사용
 using UnityEngine; // Unity 기능 사용
 
 namespace ProjectEpsilon.Combat // 전투 영역
-{
+{ // 이름 공간 시작
     public sealed class WeaponAttributePlayerEffects : MonoBehaviour // 플레이어 속성 효과 관리자
-    {
+    { // 형식 시작
         [SerializeField] private SnakeHealth snakeHealth; // 공유 체력 참조
         [SerializeField] private SnakeShieldController shieldController; // 공유 보호막 참조
         [SerializeField] private WeaponAttributeEffectHooks effectHooks; // 명중 Hook 참조
@@ -25,27 +25,27 @@ namespace ProjectEpsilon.Combat // 전투 영역
         public bool IsConfigured => snakeHealth != null && shieldController != null && effectHooks != null && effectOrigin != null; // 연결 상태 반환
 
         private void OnEnable() // 활성화 처리
-        {
+        { // 함수 시작
             Subscribe(); // 보호막 종료 구독
-        }
+        } // 함수 종료
 
         private void OnDisable() // 비활성화 처리
-        {
+        { // 함수 시작
             Unsubscribe(); // 보호막 종료 구독 해제
-        }
+        } // 함수 종료
 
         public void Configure(SnakeHealth health, SnakeShieldController shield, WeaponAttributeEffectHooks hooks, Transform origin) // 참조 구성
-        {
+        { // 함수 시작
             Unsubscribe(); // 기존 구독 해제
             snakeHealth = health; // 체력 저장
             shieldController = shield; // 보호막 저장
             effectHooks = hooks; // Hook 저장
             effectOrigin = origin; // 효과 중심 저장
             Subscribe(); // 새 구독 연결
-        }
+        } // 함수 종료
 
         public void HandleHolyHit(WeaponAttributeAttackSnapshot attack) // Holy 명중 처리
-        {
+        { // 함수 시작
             if (HasRunEnded()) // 승패 확정 확인
             { // 조건 시작
                 return; // 종료 후 회복과 보호막 차단
@@ -54,28 +54,28 @@ namespace ProjectEpsilon.Combat // 전투 영역
             lastHolyAttack = attack; // 마지막 공격 저장
 
             if (lastHolyStage != attack.SynergyStage) // 단계 변경 확인
-            {
+            { // 조건 시작
                 holyHitCount = 0; // 누적 명중 초기화
                 lastHolyStage = attack.SynergyStage; // 새 단계 저장
-            }
+            } // 조건 종료
 
             holyHitCount = attack.SynergyStage >= 6 ? holyHitCount + 1 : 0; // 보호막 단계 명중 누적
 
             if (WeaponAttributeHolyRules.ShouldHeal(attack.SynergyStage, Random.value)) // 확률 회복 확인
-            {
+            { // 조건 시작
                 int healBonus = attack.Weapon == null ? 0 : attack.Weapon.GetHolyHealBonus(attack.Grade); // 실제 포탑 등급의 회복 추가량
                 snakeHealth?.Heal(WeaponAttributeHolyRules.HealAmount + healBonus); // 공유 체력 회복
-            }
+            } // 조건 종료
 
             if (shieldController != null && WeaponAttributeHolyRules.ShouldGrantShield(attack.SynergyStage, holyHitCount)) // 보호막 발동 확인
-            {
+            { // 조건 시작
                 int shieldBonus = attack.Weapon == null ? 0 : attack.Weapon.GetHolyShieldBonus(attack.Grade); // 실제 포탑 등급의 보호막 추가량
                 shieldController.Apply(WeaponAttributeHolyRules.ShieldAmount + shieldBonus, WeaponAttributeHolyRules.ShieldDuration, attack.SynergyStage, attack.DirectDamage); // 보호막 적용
-            }
-        }
+            } // 조건 종료
+        } // 함수 종료
 
         public void HandleDarkDamage(int synergyStage, float dealtDamage) // Dark 피해 흡수 처리
-        {
+        { // 함수 시작
             if (HasRunEnded()) // 실제 승패 확정 여부 확인
             { // 조건 시작
                 return; // 승패 확정 뒤 흡수 회복 차단
@@ -84,89 +84,89 @@ namespace ProjectEpsilon.Combat // 전투 영역
             int wholeHealing = Mathf.FloorToInt(darkAbsorptionRemainder); // 정수 회복량 계산
 
             if (wholeHealing <= 0) // 회복 가능량 확인
-            {
+            { // 조건 시작
                 return; // 회복 생략
-            }
+            } // 조건 종료
 
             darkAbsorptionRemainder -= wholeHealing; // 정수 누적량 차감
             snakeHealth?.Heal(wholeHealing); // 공유 체력 회복 시도
-        }
+        } // 함수 종료
 
         public void HandleDarkKill(int synergyStage, int curseStacks, Vector3 deathPosition) // Dark 처치 처리
-        {
+        { // 함수 시작
             if (HasRunEnded()) // 실제 승패 확정 여부 확인
             { // 조건 시작
                 return; // 승패 확정 뒤 처치 회복과 전파 차단
             } // 조건 종료
             if (WeaponAttributeDarkRules.ShouldHealOnKill(synergyStage, curseStacks, Random.value)) // 저주 대상 처치 회복 확인
-            {
+            { // 조건 시작
                 snakeHealth?.Heal(Mathf.CeilToInt(WeaponAttributeDarkRules.KillHealAmount * CharacterRunInitializer.DarkKillHealMultiplier)); // 암흑형 저주 처치 회복 강화
-            }
+            } // 조건 종료
 
             if (!WeaponAttributeDarkRules.ShouldSpreadCurse(synergyStage, curseStacks)) // 저주 전파 조건 확인
-            {
+            { // 조건 시작
                 return; // 전파 생략
-            }
+            } // 조건 종료
 
             WeaponTarget.VisitAllInRange(deathPosition, WeaponAttributeDarkRules.CurseSpreadRadius, target => ApplySpreadCurse(target, synergyStage)); // 주변 대상 저주 전파
-        }
+        } // 함수 종료
 
         private static void ApplySpreadCurse(WeaponTarget target, int synergyStage) // 단일 대상 저주 전파
-        {
+        { // 함수 시작
             if (HasRunEnded() || target == null || !target.IsAlive) // 승패 확정과 대상 유효성 확인
-            {
+            { // 조건 시작
                 return; // 전파 생략
-            }
+            } // 조건 종료
 
             WeaponTargetDarkCurseStatus curse = target.GetComponent<WeaponTargetDarkCurseStatus>(); // 기존 저주 조회
 
             if (curse == null) // 저주 없음 확인
-            {
+            { // 조건 시작
                 curse = target.gameObject.AddComponent<WeaponTargetDarkCurseStatus>(); // 저주 컴포넌트 추가
-            }
+            } // 조건 종료
 
             curse.Apply(synergyStage, WeaponAttributeDarkRules.CurseSpreadStacks); // 규칙 기반 저주 중첩 적용
             if (curse.IsActive) // 실제 저주 전파 성공 확인
-            {
+            { // 조건 시작
                 WeaponTargetReactionMaterials materials = target.GetComponent<WeaponTargetReactionMaterials>(); // 대상별 반응 재료 조회
                 if (materials == null) // 반응 재료 관리자 부재 확인
-                {
+                { // 조건 시작
                     materials = target.gameObject.AddComponent<WeaponTargetReactionMaterials>(); // 대상별 재료 관리자 생성
-                }
+                } // 조건 종료
                 materials.State.Record(WeaponAttribute.Dark, Time.frameCount, Time.time, curse.RemainingDuration); // 전파 저주의 최초 시점과 지속 시간 기록
-            }
-        }
+            } // 조건 종료
+        } // 함수 종료
 
         private void HandleShieldEnded(SnakeShieldEndContext context) // 보호막 종료 효과 처리
-        {
+        { // 함수 시작
             if (!CanContinueCombat() || !WeaponAttributeHolyRules.CanBurstOnShieldEnd(context.SynergyStage)) // 실제 전투와 팔 단계 종료 확인
-            {
+            { // 조건 시작
                 return; // 종료 효과 생략
-            }
+            } // 조건 종료
 
             snakeHealth?.Heal(WeaponAttributeHolyRules.HealAmount); // 소량 공유 체력 회복
             float burstDamage = WeaponAttributeHolyRules.CalculateShieldBurstDamage(context.SourceDamage, context.SynergyStage); // 폭발 피해 계산
 
             if (burstDamage <= 0f) // 유효 폭발 확인
-            {
+            { // 조건 시작
                 return; // 폭발 생략
-            }
+            } // 조건 종료
 
             Vector3 center = effectOrigin == null ? transform.position : effectOrigin.position; // 폭발 중심 계산
             WeaponTarget.VisitAllInRange(center, WeaponAttributeHolyRules.ShieldBurstRadius, target => ApplyHolyBurstTarget(target, center, burstDamage)); // 주변 대상 폭발 적용
-        }
+        } // 함수 종료
 
         private void ApplyHolyBurstTarget(WeaponTarget target, Vector3 center, float burstDamage) // 단일 Holy 폭발 처리
-        {
+        { // 함수 시작
             if (!CanContinueCombat() || target == null || !target.IsAlive) // 실제 전투와 대상 유효성 확인
-            {
+            { // 조건 시작
                 return; // 폭발 생략
-            }
+            } // 조건 종료
 
             Vector3 hitPosition = target.transform.position; // 명중 위치 저장
             target.TakeDamage(burstDamage); // 폭발 피해 적용
             effectHooks?.NotifyHit(new WeaponAttributeHitContext(lastHolyAttack, target, hitPosition)); // Holy 명중 Hook 전달
-        }
+        } // 함수 종료
 
         private static bool CanContinueCombat() // 실제 보호막 효과 진행 여부
         { // 함수 시작
@@ -180,26 +180,26 @@ namespace ProjectEpsilon.Combat // 전투 영역
         } // 함수 종료
 
         private void Subscribe() // 보호막 종료 구독
-        {
+        { // 함수 시작
             if (subscribed || shieldController == null) // 구독 가능 여부 확인
-            {
+            { // 조건 시작
                 return; // 구독 생략
-            }
+            } // 조건 종료
 
             shieldController.ShieldEnded += HandleShieldEnded; // 종료 이벤트 연결
             subscribed = true; // 구독 상태 저장
-        }
+        } // 함수 종료
 
         private void Unsubscribe() // 보호막 종료 구독 해제
-        {
+        { // 함수 시작
             if (!subscribed || shieldController == null) // 해제 가능 여부 확인
-            {
+            { // 조건 시작
                 subscribed = false; // 상태 초기화
                 return; // 해제 생략
-            }
+            } // 조건 종료
 
             shieldController.ShieldEnded -= HandleShieldEnded; // 종료 이벤트 해제
             subscribed = false; // 구독 상태 초기화
-        }
-    }
-}
+        } // 함수 종료
+    } // 형식 종료
+} // 이름 공간 종료

@@ -1,10 +1,10 @@
 using UnityEngine; // Unity 엔진 기능 연결
 
 namespace ProjectEpsilon.Data // 프로젝트 기능 영역
-{
+{ // 이름 공간 시작
     [CreateAssetMenu(fileName = "WeaponData", menuName = "Project Epsilon/Data/Weapon")] // 생성·파일 설정
     public sealed class WeaponData : ScriptableObject // 포탑·데이터 자료 구조
-    {
+    { // 형식 시작
         [Header("Identity")] // 대상 설정
         [SerializeField] private string id = "weapon_id"; // 필드·식별자 설정
         [SerializeField] private string displayName = "포탑"; // 필드·이름 설정
@@ -86,11 +86,11 @@ namespace ProjectEpsilon.Data // 프로젝트 기능 영역
         public Sprite Icon => icon != null ? icon : artwork; // 아이콘과 기존 그림 대체
         public Color ArtworkDisplayTint => Color.white; // 원본 포탑 그림 색상 유지
         public Color ArtworkTint // 속성별 공격 효과 색상
-        {
+        { // 코드 블록 시작
             get // 색상 조회
-            {
+            { // 코드 블록 시작
                 switch (attribute) // 무기 속성 확인
-                {
+                { // 조건 시작
                     case WeaponAttribute.Fire: return new Color(1f, 0.55f, 0.4f, 1f); // 화염색
                     case WeaponAttribute.Cold: return new Color(0.5f, 0.85f, 1f, 1f); // 냉기색
                     case WeaponAttribute.Electric: return new Color(1f, 0.95f, 0.45f, 1f); // 전기색
@@ -99,9 +99,9 @@ namespace ProjectEpsilon.Data // 프로젝트 기능 영역
                     case WeaponAttribute.Holy: return new Color(1f, 0.95f, 0.65f, 1f); // 신성색
                     case WeaponAttribute.Dark: return new Color(0.7f, 0.5f, 0.95f, 1f); // 암흑색
                     default: return Color.white; // 기본 물리색
-                }
-            }
-        }
+                } // 조건 종료
+            } // 코드 블록 종료
+        } // 코드 블록 종료
         public WeaponAttribute Attribute => attribute; // 포탑·속성 값 반환
         public WeaponAttackType AttackType => attackType; // 포탑·공격 값 반환
         public float BaseDamage => baseDamage; // 피해 값 반환
@@ -144,5 +144,5 @@ namespace ProjectEpsilon.Data // 프로젝트 기능 영역
         public float GradeFiveWideStrikeDamageMultiplier => Mathf.Max(0f, gradeFiveWideStrikeDamageMultiplier); // 안전한 강타 피해 배율
         public float GradeFiveBurnExplosionRadius => Mathf.Max(0f, gradeFiveBurnExplosionRadius); // 안전한 화상 폭발 반경
         public float GradeFiveBurnExplosionDamageMultiplier => Mathf.Max(0f, gradeFiveBurnExplosionDamageMultiplier); // 안전한 화상 폭발 피해 배율
-    }
-}
+    } // 형식 종료
+} // 이름 공간 종료

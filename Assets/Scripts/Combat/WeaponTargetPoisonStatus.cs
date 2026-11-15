@@ -2,10 +2,10 @@ using ProjectEpsilon.Core; // 게임 상태 사용
 using UnityEngine; // Unity 기능 사용
 
 namespace ProjectEpsilon.Combat // 전투 영역
-{
+{ // 이름 공간 시작
     [RequireComponent(typeof(WeaponTarget))] // 공격 대상 필수
     public sealed class WeaponTargetPoisonStatus : MonoBehaviour // 독 약화 상태
-    {
+    { // 형식 시작
         [SerializeField] private WeaponTarget target; // 적용 대상 참조
         [SerializeField] private int synergyStage; // 현재 독 단계
         [SerializeField] private int stackCount; // 현재 독 중첩 수
@@ -19,42 +19,42 @@ namespace ProjectEpsilon.Combat // 전투 영역
         public float IncomingDamageMultiplier => IsActive ? WeaponAttributePoisonRules.GetIncomingDamageMultiplier(synergyStage) : 1f; // 받는 피해 배율 반환
 
         private void Awake() // 초기 참조 구성
-        {
+        { // 함수 시작
             ResolveTarget(); // 대상 참조 확보
-        }
+        } // 함수 종료
 
         private void Update() // 독 지속 시간 갱신
-        {
+        { // 함수 시작
             if (GameManager.Instance != null && !GameManager.Instance.IsPlaying) // 게임 진행 상태 확인
-            {
+            { // 조건 시작
                 return; // 타이머 정지
-            }
+            } // 조건 종료
 
             if (target == null || !target.IsAlive) // 대상 생존 확인
-            {
+            { // 조건 시작
                 Destroy(this); // 상태 제거
                 return; // 갱신 중단
-            }
+            } // 조건 종료
 
             remainingDuration = Mathf.Max(0f, remainingDuration - Time.deltaTime); // 남은 시간 감소
 
             if (remainingDuration <= 0f) // 지속 종료 확인
-            {
+            { // 조건 시작
                 Destroy(this); // 상태 제거
-            }
-        }
+            } // 조건 종료
+        } // 함수 종료
 
         public bool Apply(WeaponTarget damageTarget, int incomingStage, float durationMultiplier = 1f) // 독 상태 적용
-        {
+        { // 함수 시작
             if (damageTarget == null || !damageTarget.IsAlive) // 대상 유효성 확인
-            {
+            { // 조건 시작
                 return false; // 적용 실패
-            }
+            } // 조건 종료
 
             if (!WeaponAttributePoisonRules.ShouldReplace(synergyStage, incomingStage)) // 단계 교체 규칙 확인
-            {
+            { // 조건 시작
                 return false; // 낮은 단계 거부
-            }
+            } // 조건 종료
 
             target = damageTarget; // 대상 저장
             synergyStage = WeaponAttributeSynergyRules.ResolveStage(incomingStage); // 독 단계 저장
@@ -62,21 +62,21 @@ namespace ProjectEpsilon.Combat // 전투 영역
             remainingDuration = WeaponAttributePoisonRules.NormalizeDuration(WeaponAttributePoisonRules.TemporaryDuration * Mathf.Max(1f, durationMultiplier)); // 기존 독과 등급의 지속 시간 갱신
             WeaponTargetStatusIndicators.Ensure(target); // 실제 독 지속 표시 연결
             return true; // 적용 성공
-        }
+        } // 함수 종료
 
         public void Clear() // 독 상태 해제
-        {
+        { // 함수 시작
             synergyStage = 0; // 단계 초기화
             stackCount = 0; // 중첩 초기화
             remainingDuration = 0f; // 시간 초기화
-        }
+        } // 함수 종료
 
         private void ResolveTarget() // 대상 참조 확보
-        {
+        { // 함수 시작
             if (target == null) // 대상 없음 확인
-            {
+            { // 조건 시작
                 target = GetComponent<WeaponTarget>(); // 같은 오브젝트 대상 조회
-            }
-        }
-    }
-}
+            } // 조건 종료
+        } // 함수 종료
+    } // 형식 종료
+} // 이름 공간 종료

@@ -9,11 +9,11 @@ using UnityEditor.SceneManagement; // 씬 열기
 using UnityEngine; // 유니티 기능
 
 namespace ProjectEpsilon.Editor // 편집기 영역
-{
+{ // 이름 공간 시작
     public static class ProjectEpsilonEliteRewardVerification // 엘리트 보상 검증
-    {
+    { // 형식 시작
         public static void Run() // 검증 실행
-        {
+        { // 함수 시작
             Type controller = typeof(SnakeExperience).Assembly.GetType("ProjectEpsilon.Progression.EliteRewardController"); // 보상 처리기 형식
             Require(controller != null, "엘리트 보상 처리기 누락"); // 처리기 존재 확인
             Require(controller.GetMethod("QueueReward", BindingFlags.Public | BindingFlags.Instance) != null, "처치 보상 대기열 누락"); // 보상 요청 확인
@@ -22,13 +22,13 @@ namespace ProjectEpsilon.Editor // 편집기 영역
             MethodInfo select = rules.GetMethod("Select", BindingFlags.Public | BindingFlags.Static); // 후보 추첨 조회
             Require(select != null, "후보 추첨 메서드 누락"); // 메서드 존재 확인
             bool[] eligible = new bool[] // 무기만 선택 가능한 상태
-            {
+            { // 자료 묶음 시작
                 false, false, true, false // 보상별 사용 가능 여부
-            };
+            }; // 자료 묶음 종료
             object[] arguments = new object[] // 추첨 인자 목록
-            {
+            { // 자료 묶음 시작
                 eligible, 3 // 가능 상태와 추첨값
-            };
+            }; // 자료 묶음 종료
             int[] choices = (int[])select.Invoke(null, arguments); // 후보 조합 추첨
             Require(choices.Length == 3, "보상 후보 수 오류"); // 세 후보 확인
             Require(choices[0] != choices[1] && choices[0] != choices[2] && choices[1] != choices[2], "중복 보상 후보"); // 서로 다른 후보 확인
@@ -36,10 +36,10 @@ namespace ProjectEpsilon.Editor // 편집기 영역
             VerifyDuplicateEliteDeath(); // 엘리트 중복 사망 검증
             VerifySettingsOrder(); // 설정 화면 표시 순서 검증
             Debug.Log("[Project Epsilon] Elite reward verification passed."); // 성공 기록
-        }
+        } // 함수 종료
 
         private static void VerifySettingsOrder() // 설정 화면 겹침 검증
-        {
+        { // 함수 시작
             SettingsMenuController menu = UnityEngine.Object.FindFirstObjectByType<SettingsMenuController>(); // 설정 관리자 조회
             Require(menu != null, "설정 관리자 누락"); // 설정 관리자 확인
             BindingFlags flags = BindingFlags.Instance | BindingFlags.NonPublic; // 비공개 멤버 조회 설정
@@ -47,19 +47,19 @@ namespace ProjectEpsilon.Editor // 편집기 영역
             Require(settings != null && settings.transform.parent != null, "설정 화면 연결 누락"); // 화면 및 부모 확인
             int previousIndex = settings.transform.GetSiblingIndex(); // 기존 표시 순서 저장
             try // 화면 순서 복구 보장
-            {
+            { // 조건 시작
                 typeof(SettingsMenuController).GetMethod("OpenSettings", flags).Invoke(menu, null); // 실제 설정 열기
                 Require(menu.IsOpen && settings.transform.GetSiblingIndex() == settings.transform.parent.childCount - 1, "설정 화면 최상위 표시 실패"); // 설정 화면 순서 확인
-            }
+            } // 조건 종료
             finally // 설정 화면 복구
-            {
+            { // 조건 시작
                 typeof(SettingsMenuController).GetMethod("CloseSettings", flags).Invoke(menu, null); // 설정 화면 닫기
                 settings.transform.SetSiblingIndex(previousIndex); // 원래 표시 순서 복구
-            }
-        }
+            } // 조건 종료
+        } // 함수 종료
 
         private static void VerifyDuplicateEliteDeath() // 중복 사망 보상 검증
-        {
+        { // 함수 시작
             EditorSceneManager.OpenScene("Assets/Scenes/Game.unity"); // 실제 게임 씬 열기
             EarlyEnemyWaveSpawner spawner = UnityEngine.Object.FindFirstObjectByType<EarlyEnemyWaveSpawner>(); // 출현기 조회
             EliteRewardController controller = UnityEngine.Object.FindFirstObjectByType<EliteRewardController>(); // 보상 처리기 조회
@@ -70,7 +70,7 @@ namespace ProjectEpsilon.Editor // 편집기 영역
             GameObject subject = new GameObject("EliteRewardVerificationTarget"); // 임시 엘리트 객체
             GameObject survivor = new GameObject("EliteRewardVerificationSurvivor"); // 생존 적 객체
             try // 임시 객체 정리 보장
-            {
+            { // 조건 시작
                 WeaponTarget target = subject.AddComponent<WeaponTarget>(); // 전투 대상 생성
                 List<WeaponTarget> targets = (List<WeaponTarget>)typeof(EarlyEnemyWaveSpawner).GetField("targets", flags).GetValue(spawner); // 출현 대상 목록
                 targets.Add(target); // 시험 대상 등록
@@ -82,27 +82,27 @@ namespace ProjectEpsilon.Editor // 편집기 영역
                 MethodInfo death = typeof(EarlyEnemyWaveSpawner).GetMethod("HandleEnemyDied", flags); // 사망 처리 조회
                 int previous = controller.PendingRewardCount; // 기존 보상 수
                 object[] deathArguments = new object[] // 사망 처리 인자
-                {
+                { // 자료 묶음 시작
                     target // 시험 대상
-                };
+                }; // 자료 묶음 종료
                 death.Invoke(spawner, deathArguments); // 첫 사망 처리
                 death.Invoke(spawner, deathArguments); // 중복 사망 처리
                 Require(controller.PendingRewardCount == previous + 1 && spawner.ActiveEnemies == 1, "중복 사망 보상 또는 적 수 오류"); // 단일 보상과 생존 적 수 확인
                 targets.Remove(survivorTarget); // 시험 생존 적 등록 해제
-            }
+            } // 조건 종료
             finally // 시험 객체 정리
-            {
+            { // 조건 시작
                 UnityEngine.Object.DestroyImmediate(subject); // 임시 객체 제거
                 UnityEngine.Object.DestroyImmediate(survivor); // 생존 적 객체 제거
-            }
-        }
+            } // 조건 종료
+        } // 함수 종료
 
         private static void Require(bool condition, string message) // 검증 조건
-        {
+        { // 함수 시작
             if (!condition) // 실패 확인
-            {
+            { // 조건 시작
                 throw new InvalidOperationException(message); // 실패 보고
-            }
-        }
-    }
-}
+            } // 조건 종료
+        } // 함수 종료
+    } // 형식 종료
+} // 이름 공간 종료

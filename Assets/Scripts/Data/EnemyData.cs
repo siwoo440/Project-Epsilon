@@ -1,10 +1,10 @@
 using UnityEngine; // Unity 엔진 기능 연결
 
 namespace ProjectEpsilon.Data // 프로젝트 기능 영역
-{
+{ // 이름 공간 시작
     [CreateAssetMenu(fileName = "EnemyData", menuName = "Project Epsilon/Data/Enemy")] // 생성·파일 설정
     public sealed class EnemyData : ScriptableObject // 적·데이터 자료 구조
-    {
+    { // 형식 시작
         [Header("Identity")] // 대상 설정
         [SerializeField] private string id = "enemy_id"; // 필드·식별자 설정
         [SerializeField] private string displayName = "적"; // 필드·이름 설정
@@ -21,5 +21,5 @@ namespace ProjectEpsilon.Data // 프로젝트 기능 영역
         public float ContactDamage => contactDamage; // 피해 값 반환
         public float MoveSpeed => moveSpeed; // 속도 값 반환
         public int ExperienceValue => experienceValue; // 경험치·값 값 반환
-    }
-}
+    } // 형식 종료
+} // 이름 공간 종료

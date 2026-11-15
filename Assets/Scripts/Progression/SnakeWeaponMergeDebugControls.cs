@@ -1,13 +1,13 @@
 using ProjectEpsilon.Combat; // 전투 기능 연결
-using ProjectEpsilon.Core; // 대상 기능 연결
+using ProjectEpsilon.Core; // 게임 상태와 공통 기능
 using ProjectEpsilon.Data; // 데이터 기능 연결
 using UnityEngine; // Unity 엔진 기능 연결
 using UnityEngine.InputSystem; // Unity 엔진 기능 연결
 
 namespace ProjectEpsilon.Progression // 프로젝트 기능 영역
-{
+{ // 이름 공간 시작
     public sealed class SnakeWeaponMergeDebugControls : MonoBehaviour // 포탑·합성 자료 구조
-    {
+    { // 형식 시작
         [SerializeField] private SnakeWeaponManager weaponManager; // 필드·포탑 설정
         [SerializeField] private WeaponData debugWeapon; // 필드·포탑 설정
 
@@ -15,39 +15,39 @@ namespace ProjectEpsilon.Progression // 프로젝트 기능 영역
             SnakeWeaponManager manager, // 포탑·관리자 항목 전달
             WeaponData weapon // 포탑·데이터 처리
         ) // 앞선 항목 종료
-        {
+        { // 함수 시작
             weaponManager = manager; // 포탑·관리자 값 설정
             debugWeapon = weapon; // 포탑 값 설정
-        }
+        } // 함수 종료
 
         private void Update() // 갱신 기능 선언
-        {
+        { // 함수 시작
             if (GameManager.Instance != null && // 게임·관리자 조건 확인
                 !GameManager.Instance.IsPlaying) // 게임·관리자 처리
-            {
+            { // 조건 시작
                 return; // 현재 기능 종료
-            }
+            } // 조건 종료
 
             Keyboard keyboard = // 키보드 값 설정
                 Keyboard.current; // 키보드·현재 처리
 
             if (keyboard == null || // 키보드 조건 확인
                 !keyboard.nKey.wasPressedThisFrame) // 키보드·키 처리
-            {
+            { // 조건 시작
                 return; // 현재 기능 종료
-            }
+            } // 조건 종료
 
             PrepareDebugMergePair(); // 합성 기능 실행
-        }
+        } // 함수 종료
 
         public bool PrepareDebugMergePair() // 합성 기능 선언
-        {
+        { // 함수 시작
             if (weaponManager == null || // 포탑·관리자 조건 확인
                 debugWeapon == null || // 포탑 처리
                 weaponManager.SlotCount < 2) // 포탑·관리자 처리
-            {
+            { // 조건 시작
                 return false; // 실패 결과 반환
-            }
+            } // 조건 종료
 
             bool first = // 대상 값 설정
                 weaponManager.TryEquipAt( // 포탑·관리자 호출 시작
@@ -64,6 +64,6 @@ namespace ProjectEpsilon.Progression // 프로젝트 기능 영역
                 ); // 앞선 항목 종료
 
             return first && second; // 대상 결과 반환
-        }
-    }
-}
+        } // 함수 종료
+    } // 형식 종료
+} // 이름 공간 종료

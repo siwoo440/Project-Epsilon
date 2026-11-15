@@ -3,9 +3,9 @@ using UnityEngine; // Unity 엔진 기능 연결
 using UnityEngine.InputSystem; // Unity 엔진 기능 연결
 
 namespace ProjectEpsilon.Core // 프로젝트 기능 영역
-{
+{ // 이름 공간 시작
     public sealed class InputBindingManager : MonoBehaviour // 입력·관리자 자료 구조
-    {
+    { // 형식 시작
         private const string BindingPreferencesKey = "ProjectEpsilon.InputBindings"; // 키·프로젝트 구성 선언
 
         public static InputBindingManager Instance { get; private set; } // 입력·관리자 구성 선언
@@ -24,68 +24,68 @@ namespace ProjectEpsilon.Core // 프로젝트 기능 영역
         public bool IsRebinding => rebindOperation != null; // 대상 값 반환
 
         private void Awake() // 초기화 기능 선언
-        {
+        { // 함수 시작
             if (Instance != null && Instance != this) // 인스턴스 조건 확인
-            {
+            { // 조건 시작
                 Destroy(this); // 제거 기능 실행
                 return; // 현재 기능 종료
-            }
+            } // 조건 종료
 
             Instance = this; // 인스턴스 값 설정
             CreateInputActions(); // 생성·입력 기능 실행
             LoadBindingOverrides(); // 불러오기 기능 실행
             inputActions.Enable(); // 입력·활성 기능 실행
-        }
+        } // 함수 종료
 
         private void OnDestroy() // 제거 기능 선언
-        {
+        { // 함수 시작
             if (Instance != this) // 인스턴스 조건 확인
-            {
+            { // 조건 시작
                 return; // 현재 기능 종료
-            }
+            } // 조건 종료
 
             CancelRebind(); // 취소 기능 실행
             inputActions?.Disable(); // 입력·비활성 기능 실행
 
             if (inputActions != null) // 입력 조건 확인
-            {
+            { // 조건 시작
                 Destroy(inputActions); // 제거·입력 기능 실행
-            }
+            } // 조건 종료
 
             Instance = null; // 인스턴스 값 설정
-        }
+        } // 함수 종료
 
         public string GetBindingDisplayName(RebindableInput input) // 조회·이름 기능 선언
-        {
+        { // 함수 시작
             InputAction action = GetAction(input); // 입력·동작 값 설정
 
             if (action == null || action.bindings.Count == 0) // 동작·개수 조건 확인
-            {
+            { // 조건 시작
                 return "-"; // 대상 결과 반환
-            }
+            } // 조건 종료
 
             string effectivePath = action.bindings[0].effectivePath; // 경로·동작 값 설정
 
             if (string.IsNullOrEmpty(effectivePath)) // 빈 상태·경로 조건 확인
-            {
+            { // 조건 시작
                 return "-"; // 대상 결과 반환
-            }
+            } // 조건 종료
 
             string displayName = InputControlPath.ToHumanReadableString( // 실제 키 표시 이름
                 effectivePath, // 경로 항목 전달
                 InputControlPath.HumanReadableStringOptions.OmitDevice // 입력·경로 처리
             ); // 앞선 항목 종료
             return LocalizeBindingName(displayName, effectivePath); // 실제 키 이름의 한국어 표시
-        }
+        } // 함수 종료
 
         private static string LocalizeBindingName(string value, string path) // 실제 키보드 표시 이름 정리
-        {
+        { // 함수 시작
             const string keypadPrefix = "<Keyboard>/numpad"; // 실제 숫자 키패드 경로
             if (!string.IsNullOrEmpty(path) && path.StartsWith(keypadPrefix, StringComparison.OrdinalIgnoreCase)) // 실제 숫자 키패드 확인
-            {
+            { // 조건 시작
                 string keypad = path.Substring(keypadPrefix.Length).ToLowerInvariant(); // 실제 키패드 세부 키
                 switch (keypad) // 실제 키패드 이름 확인
-                {
+                { // 조건 시작
                     case "enter": return "숫자 키패드 엔터"; // 실제 키패드 엔터
                     case "plus": return "숫자 키패드 +"; // 실제 키패드 더하기
                     case "minus": return "숫자 키패드 -"; // 실제 키패드 빼기
@@ -95,10 +95,10 @@ namespace ProjectEpsilon.Core // 프로젝트 기능 영역
                     case "comma": return "숫자 키패드 ,"; // 실제 키패드 쉼표
                     case "equals": return "숫자 키패드 ="; // 실제 키패드 등호
                     default: return "숫자 키패드 " + keypad; // 실제 키패드 숫자 보존
-                }
-            }
+                } // 조건 종료
+            } // 조건 종료
             switch (path == null ? "" : path.ToLowerInvariant()) // 실제 특수 키 경로 확인
-            {
+            { // 조건 시작
                 case "<keyboard>/altgr": return "오른쪽 알트"; // 실제 보조 알트 키
                 case "<keyboard>/leftmeta": // 실제 왼쪽 운영체제 키 별칭
                 case "<keyboard>/leftwindows": // 실제 왼쪽 윈도 키 별칭
@@ -118,9 +118,9 @@ namespace ProjectEpsilon.Core // 프로젝트 기능 영역
                 case "<keyboard>/oem3": return "특수 키 3"; // 실제 제조사 특수 키
                 case "<keyboard>/oem4": return "특수 키 4"; // 실제 제조사 특수 키
                 case "<keyboard>/oem5": return "특수 키 5"; // 실제 제조사 특수 키
-            }
+            } // 조건 종료
             switch (value) // 실제 일반 키 이름 확인
-            {
+            { // 조건 시작
                 case "Space": return "스페이스"; // 실제 스페이스 키
                 case "Spacebar": return "스페이스"; // 실제 스페이스 키 별칭
                 case "Left Arrow": return "왼쪽 방향키"; // 실제 왼쪽 방향키
@@ -162,74 +162,74 @@ namespace ProjectEpsilon.Core // 프로젝트 기능 영역
                 case "Equals": return "="; // 실제 등호 키
                 case "Backquote": return "`"; // 실제 백틱 키
                 default: return value; // 실제 문자·숫자와 기타 키 보존
-            }
-        }
+            } // 조건 종료
+        } // 함수 종료
 
         public void StartInteractiveRebind(RebindableInput input, Action<bool> completed) // 시작·입력 기능 선언
-        {
+        { // 함수 시작
             CancelRebind(); // 취소 기능 실행
 
             InputAction action = GetAction(input); // 입력·동작 값 설정
 
             if (action == null) // 동작 조건 확인
-            {
-                completed?.Invoke(false); // 대상 기능 실행
+            { // 조건 시작
+                completed?.Invoke(false); // 키 재설정 실패 알림
                 return; // 현재 기능 종료
-            }
+            } // 조건 종료
 
             bool wasEnabled = action.enabled; // 활성·동작 값 설정
 
             if (wasEnabled) // 활성 조건 확인
-            {
+            { // 조건 시작
                 action.Disable(); // 동작·비활성 기능 실행
-            }
+            } // 조건 종료
 
             rebindOperation = action // 동작 값 설정
-                .PerformInteractiveRebinding(0) // 대상 기능 실행
+                .PerformInteractiveRebinding(0) // 첫 번째 키 대화식 재설정
                 .WithControlsHavingToMatchPath("<Keyboard>/*") // 경로·키보드 기능 실행
                 .WithCancelingThrough("<Keyboard>/escape") // 키보드 기능 실행
                 .OnCancel(operation => // 취소 기능 실행
-                {
+                { // 자료 묶음 시작
                     FinishRebindOperation(operation, action, wasEnabled); // 종료·동작 기능 실행
-                    completed?.Invoke(false); // 대상 기능 실행
+                    completed?.Invoke(false); // 키 재설정 실패 알림
                 }) // 대상 처리
                 .OnComplete(operation => // 완료 기능 실행
-                {
+                { // 자료 묶음 시작
                     FinishRebindOperation(operation, action, wasEnabled); // 종료·동작 기능 실행
                     SaveBindingOverrides(); // 저장 기능 실행
-                    BindingsChanged?.Invoke(); // 대상 기능 실행
-                    completed?.Invoke(true); // 대상 기능 실행
+                    BindingsChanged?.Invoke(); // 키 설정 변경 알림
+                    completed?.Invoke(true); // 키 재설정 성공 알림
                 }); // 대상 처리
 
             rebindOperation.Start(); // 시작 기능 실행
-        }
+        } // 자료 묶음 종료
 
         public void CancelRebind() // 취소 기능 선언
-        {
+        { // 함수 시작
             if (rebindOperation == null) // 대상 조건 확인
-            {
+            { // 조건 시작
                 return; // 현재 기능 종료
-            }
+            } // 조건 종료
 
             rebindOperation.Cancel(); // 취소 기능 실행
-        }
+        } // 함수 종료
 
         public void ResetToDefaults() // 초기화 기능 선언
-        {
+        { // 함수 시작
             CancelRebind(); // 취소 기능 실행
 
             foreach (InputAction action in inputActions) // 입력·동작 항목 순회
-            {
+            { // 반복 시작
                 action.RemoveAllBindingOverrides(); // 동작·제거 기능 실행
-            }
+            } // 반복 종료
 
             PlayerPrefs.DeleteKey(BindingPreferencesKey); // 플레이어·키 기능 실행
             PlayerPrefs.Save(); // 플레이어·저장 기능 실행
-            BindingsChanged?.Invoke(); // 대상 기능 실행
-        }
+            BindingsChanged?.Invoke(); // 키 설정 변경 알림
+        } // 함수 종료
 
         private void CreateInputActions() // 생성·입력 기능 선언
-        {
+        { // 함수 시작
             inputActions = ScriptableObject.CreateInstance<InputActionAsset>(); // 입력·객체 값 설정
             InputActionMap gameplayMap = inputActions.AddActionMap("Gameplay"); // 입력·동작 값 설정
 
@@ -252,68 +252,68 @@ namespace ProjectEpsilon.Core // 프로젝트 기능 영역
                 InputActionType.Button, // 입력·동작 항목 전달
                 "<Keyboard>/space" // 기본 가속 키
             ); // 앞선 항목 종료
-        }
+        } // 함수 종료
 
         private InputAction GetAction(RebindableInput input) // 입력·동작 기능 선언
-        {
+        { // 함수 시작
             return input switch // 입력 결과 반환
-            {
+            { // 코드 블록 시작
                 RebindableInput.TurnLeft => turnLeftAction, // 입력·동작 항목 전달
                 RebindableInput.TurnRight => turnRightAction, // 입력·동작 항목 전달
                 RebindableInput.Boost => boostAction, // 입력·동작 항목 전달
                 _ => null // 대상 처리
-            };
-        }
+            }; // 코드 블록 종료
+        } // 함수 종료
 
         private void LoadBindingOverrides() // 불러오기 기능 선언
-        {
+        { // 함수 시작
             if (!PlayerPrefs.HasKey(BindingPreferencesKey)) // 플레이어·존재 여부 조건 확인
-            {
+            { // 조건 시작
                 return; // 현재 기능 종료
-            }
+            } // 조건 종료
 
             string json = PlayerPrefs.GetString(BindingPreferencesKey, string.Empty); // 플레이어·조회 값 설정
 
             if (string.IsNullOrWhiteSpace(json)) // 대상 조건 확인
-            {
+            { // 조건 시작
                 return; // 현재 기능 종료
-            }
+            } // 조건 종료
 
             try // 오류 발생 가능 작업 시작
-            {
+            { // 조건 시작
                 inputActions.LoadBindingOverridesFromJson(json); // 입력·불러오기 기능 실행
-            }
+            } // 조건 종료
             catch (Exception exception) // 대상 오류 처리
-            {
+            { // 조건 시작
                 Debug.LogWarning( // 대상 호출 시작
                     $"[Project Epsilon] 저장된 키 설정을 불러오지 못했습니다. 기본값을 사용합니다.\n{exception.Message}" // 프로젝트 처리
                 ); // 앞선 항목 종료
 
                 PlayerPrefs.DeleteKey(BindingPreferencesKey); // 플레이어·키 기능 실행
                 PlayerPrefs.Save(); // 플레이어·저장 기능 실행
-            }
-        }
+            } // 조건 종료
+        } // 함수 종료
 
         private void SaveBindingOverrides() // 저장 기능 선언
-        {
+        { // 함수 시작
             string json = inputActions.SaveBindingOverridesAsJson(); // 입력·저장 값 설정
             PlayerPrefs.SetString(BindingPreferencesKey, json); // 플레이어·설정 기능 실행
             PlayerPrefs.Save(); // 플레이어·저장 기능 실행
-        }
+        } // 함수 종료
 
         private void FinishRebindOperation( // 종료 호출 시작
             InputActionRebindingExtensions.RebindingOperation operation, // 입력·동작 항목 전달
             InputAction action, // 입력·동작 항목 전달
             bool wasEnabled // 활성 처리
         ) // 앞선 항목 종료
-        {
-            operation.Dispose(); // 대상 기능 실행
+        { // 함수 시작
+            operation.Dispose(); // 재설정 작업 자원 해제
             rebindOperation = null; // 대상 값 설정
 
             if (wasEnabled) // 활성 조건 확인
-            {
+            { // 조건 시작
                 action.Enable(); // 동작·활성 기능 실행
-            }
-        }
-    }
-}
+            } // 조건 종료
+        } // 함수 종료
+    } // 함수 종료
+} // 형식 종료

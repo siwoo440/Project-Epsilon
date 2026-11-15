@@ -1,10 +1,10 @@
 using UnityEngine; // Unity 데이터 기능
 
 namespace ProjectEpsilon.World // 맵 영역
-{
+{ // 이름 공간 시작
     [CreateAssetMenu(fileName = "PrototypeMapProfile", menuName = "Project Epsilon/Prototype Map")] // 맵 데이터 생성 메뉴
     public sealed class PrototypeMapProfile : ScriptableObject // 맵별 시험 데이터
-    {
+    { // 형식 시작
         [SerializeField] private string displayName = "평원"; // 시작 화면 맵 이름
         [SerializeField] private Sprite ground; // 맵 바닥 이미지
         [SerializeField] private Sprite selectionPreview; // 맵 선택 미리보기 이미지
@@ -173,5 +173,5 @@ namespace ProjectEpsilon.World // 맵 영역
         public float SporeActiveDuration => Mathf.Max(0f, sporeActiveDuration); // 안전한 포자 활성 시간
         public float SporeDamageInterval => Mathf.Max(0.1f, sporeDamageInterval); // 안전한 포자 피해 간격
         public int SporeDamage => Mathf.Max(0, sporeDamage); // 안전한 포자 피해량
-    }
-}
+    } // 형식 종료
+} // 이름 공간 종료

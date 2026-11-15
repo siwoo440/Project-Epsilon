@@ -1,13 +1,13 @@
 using System; // C# 기본 기능 연결
-using ProjectEpsilon.Core; // 대상 기능 연결
+using ProjectEpsilon.Core; // 게임 상태와 공통 기능
 using UnityEngine; // Unity 엔진 기능 연결
 
 namespace ProjectEpsilon.Player // 프로젝트 기능 영역
-{
+{ // 이름 공간 시작
     [DefaultExecutionOrder(-50)] // 대상 설정
     [RequireComponent(typeof(PlayerInputReader))] // 구성 요소·플레이어 설정
     public sealed class SnakeStamina : MonoBehaviour // 스태미나·행동 자료 구조
-    {
+    { // 형식 시작
         [SerializeField] private PlayerInputReader inputReader; // 필드·플레이어 설정
         [SerializeField] private float maximumStamina = 100f; // 필드·최대 설정
         [SerializeField] private float currentStamina = 100f; // 필드·현재 설정
@@ -38,50 +38,50 @@ namespace ProjectEpsilon.Player // 프로젝트 기능 영역
                 : 1f; // 대상 처리
 
         private void Awake() // 초기화 기능 선언
-        {
+        { // 함수 시작
             if (inputReader == null) // 입력 조건 확인
-            {
+            { // 조건 시작
                 inputReader = // 입력 값 설정
                     GetComponent<PlayerInputReader>(); // 조회·구성 요소 기능 실행
-            }
+            } // 조건 종료
 
-            NormalizeValues(); // 대상 기능 실행
-        }
+            NormalizeValues(); // 수치 범위 보정
+        } // 함수 종료
 
         private void Start() // 시작 기능 선언
-        {
+        { // 함수 시작
             if (Mathf.Approximately(currentStamina, maximumStamina)) // 기존 시작 최대치 확인
-            {
+            { // 조건 시작
                 currentStamina = MaximumStamina; // 영구 성장 시작 최대치 적용
-            }
+            } // 조건 종료
             NotifyStaminaChanged(); // 알림·스태미나 기능 실행
             SetBoosting(false); // 설정 기능 실행
-        }
+        } // 함수 종료
 
         private void Update() // 갱신 기능 선언
-        {
+        { // 함수 시작
             if (GameManager.Instance != null && // 게임·관리자 조건 확인
                 !GameManager.Instance.IsPlaying) // 게임·관리자 처리
-            {
+            { // 조건 시작
                 SetBoosting(false); // 설정 기능 실행
                 return; // 현재 기능 종료
-            }
+            } // 조건 종료
 
             if (boostBlocked) // 대상 조건 확인
-            {
+            { // 조건 시작
                 SetBoosting(false); // 설정 기능 실행
                 TickRecovery(); // 회복 기능 실행
                 return; // 현재 기능 종료
-            }
+            } // 조건 종료
 
             bool boostHeld = // 대상 값 설정
                 inputReader != null && // 입력 처리
                 inputReader.BoostPressed; // 입력 처리
 
             if (!boostHeld) // 대상 조건 확인
-            {
+            { // 조건 시작
                 exhaustedUntilRelease = false; // 대상 값 설정
-            }
+            } // 조건 종료
 
             bool canBoost = // 가능 여부 값 설정
                 boostHeld && // 대상 처리
@@ -89,14 +89,14 @@ namespace ProjectEpsilon.Player // 프로젝트 기능 영역
                 currentStamina > 0.0001f; // 현재·스태미나 처리
 
             if (canBoost) // 가능 여부 조건 확인
-            {
-                TickBoost(); // 대상 기능 실행
+            { // 조건 시작
+                TickBoost(); // 가속 중 스태미나 갱신
                 return; // 현재 기능 종료
-            }
+            } // 조건 종료
 
             SetBoosting(false); // 설정 기능 실행
             TickRecovery(); // 회복 기능 실행
-        }
+        } // 함수 종료
 
         public void Configure( // 구성 호출 시작
             PlayerInputReader reader, // 플레이어·입력 항목 전달
@@ -106,7 +106,7 @@ namespace ProjectEpsilon.Player // 프로젝트 기능 영역
             float recoveryRate, // 회복·비율 항목 전달
             float delay // 대상 처리
         ) // 앞선 항목 종료
-        {
+        { // 함수 시작
             inputReader = reader; // 입력 값 설정
             maximumStamina = Mathf.Max(1f, maximum); // 최대·스태미나 값 설정
             boostMultiplier = Mathf.Max(1f, multiplier); // 배율·최대 값 설정
@@ -115,11 +115,11 @@ namespace ProjectEpsilon.Player // 프로젝트 기능 영역
             recoveryDelay = Mathf.Max(0f, delay); // 회복·최대 값 설정
 
             ResetStamina(); // 초기화·스태미나 기능 실행
-        }
+        } // 함수 종료
 
         public void ResetStamina() // 초기화·스태미나 기능 선언
-        {
-            NormalizeValues(); // 대상 기능 실행
+        { // 함수 시작
+            NormalizeValues(); // 수치 범위 보정
 
             currentStamina = MaximumStamina; // 실제 영구 성장 최대치 복구
             recoveryBlockedUntil = 0f; // 회복 값 설정
@@ -128,20 +128,20 @@ namespace ProjectEpsilon.Player // 프로젝트 기능 영역
 
             SetBoosting(false); // 설정 기능 실행
             NotifyStaminaChanged(); // 알림·스태미나 기능 실행
-        }
+        } // 함수 종료
 
         public void SetBoostBlocked(bool blocked) // 설정 기능 선언
-        {
+        { // 함수 시작
             boostBlocked = blocked; // 대상 값 설정
 
             if (boostBlocked) // 대상 조건 확인
-            {
+            { // 조건 시작
                 SetBoosting(false); // 설정 기능 실행
-            }
-        }
+            } // 조건 종료
+        } // 함수 종료
 
-        private void TickBoost() // 대상 기능 선언
-        {
+        private void TickBoost() // 가속 중 스태미나 처리
+        { // 함수 시작
             SetBoosting(true); // 설정 기능 실행
 
             recoveryBlockedUntil = // 회복 값 설정
@@ -155,7 +155,7 @@ namespace ProjectEpsilon.Player // 프로젝트 기능 영역
                 Mathf.Max( // 최대 호출 시작
                     0f, // 대상 항목 전달
                     currentStamina - // 현재·스태미나 처리
-                    (drainPerSecond * // 대상 기능 실행
+                    (drainPerSecond * // 초당 스태미나 소모량
                     ProjectEpsilon.Progression.MetaModifiers.DrainMultiplier(currentStamina, MaximumStamina) * // 낮은 스태미나 소모 감소
                     Time.deltaTime) // 시간·변화량 처리
                 ); // 앞선 항목 종료
@@ -164,33 +164,33 @@ namespace ProjectEpsilon.Player // 프로젝트 기능 영역
                 previous, // 이전 값 항목 전달
                 currentStamina // 현재·스태미나 처리
             )) // 대상 처리
-            {
+            { // 조건 시작
                 NotifyStaminaChanged(); // 알림·스태미나 기능 실행
-            }
+            } // 조건 종료
 
             if (currentStamina <= 0.0001f) // 현재·스태미나 조건 확인
-            {
+            { // 조건 시작
                 currentStamina = 0f; // 현재·스태미나 값 설정
                 exhaustedUntilRelease = true; // 대상 값 설정
 
                 SetBoosting(false); // 설정 기능 실행
                 NotifyStaminaChanged(); // 알림·스태미나 기능 실행
-            }
-        }
+            } // 조건 종료
+        } // 함수 종료
 
         private void TickRecovery() // 회복 기능 선언
-        {
+        { // 함수 시작
             if (Time.time < // 시간 조건 확인
                 recoveryBlockedUntil) // 회복 처리
-            {
+            { // 조건 시작
                 return; // 현재 기능 종료
-            }
+            } // 조건 종료
 
             if (currentStamina >= MaximumStamina || // 실제 영구 성장 최대치 확인
                 recoveryPerSecond <= 0f) // 회복 처리
-            {
+            { // 조건 시작
                 return; // 현재 기능 종료
-            }
+            } // 조건 종료
 
             float previous = // 이전 값 값 설정
                 currentStamina; // 현재·스태미나 처리
@@ -207,13 +207,13 @@ namespace ProjectEpsilon.Player // 프로젝트 기능 영역
                 previous, // 이전 값 항목 전달
                 currentStamina // 현재·스태미나 처리
             )) // 대상 처리
-            {
+            { // 조건 시작
                 NotifyStaminaChanged(); // 알림·스태미나 기능 실행
-            }
-        }
+            } // 조건 종료
+        } // 함수 종료
 
-        private void NormalizeValues() // 대상 기능 선언
-        {
+        private void NormalizeValues() // 유효한 수치 범위 보정
+        { // 함수 시작
             maximumStamina = // 최대·스태미나 값 설정
                 Mathf.Max( // 최대 호출 시작
                     1f, // 대상 항목 전달
@@ -250,24 +250,24 @@ namespace ProjectEpsilon.Player // 프로젝트 기능 영역
                     0f, // 대상 항목 전달
                     recoveryDelay // 회복 처리
                 ); // 앞선 항목 종료
-        }
+        } // 함수 종료
 
         private void SetBoosting(bool value) // 설정·값 기능 선언
-        {
+        { // 함수 시작
             if (isBoosting == value) // 값 조건 확인
-            {
+            { // 조건 시작
                 return; // 현재 기능 종료
-            }
+            } // 조건 종료
 
             isBoosting = value; // 값 값 설정
 
             BoostStateChanged?.Invoke( // 상태 호출 시작
                 isBoosting // 대상 처리
             ); // 앞선 항목 종료
-        }
+        } // 함수 종료
 
         private void NotifyStaminaChanged() // 알림·스태미나 기능 선언
-        {
+        { // 함수 시작
             StaminaChanged?.Invoke( // 스태미나 호출 시작
                 Mathf.RoundToInt( // 대상 호출 시작
                     currentStamina // 현재·스태미나 처리
@@ -276,6 +276,6 @@ namespace ProjectEpsilon.Player // 프로젝트 기능 영역
                     MaximumStamina // 실제 HUD 최대치
                 ) // 앞선 항목 종료
             ); // 앞선 항목 종료
-        }
-    }
-}
+        } // 함수 종료
+    } // 형식 종료
+} // 이름 공간 종료

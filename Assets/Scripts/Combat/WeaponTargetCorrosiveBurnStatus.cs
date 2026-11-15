@@ -2,16 +2,16 @@ using ProjectEpsilon.Core; // 게임 진행 상태
 using UnityEngine; // Unity 구성 요소
 
 namespace ProjectEpsilon.Combat // 전투 영역
-{
+{ // 이름 공간 시작
     public sealed class WeaponTargetCorrosiveBurnStatus : MonoBehaviour // 반응 전용 지속 피해
-    {
+    { // 형식 시작
         private WeaponTarget target; // 실제 피해 대상
         private float remainingDuration; // 반응 남은 시간
         private float damagePerSecond; // 반응 초당 피해
         public bool IsActive => target != null && target.IsAlive && remainingDuration > 0f; // 실제 연소 지속 여부
 
         public void Apply(WeaponTarget victim, float duration, float damage) // 반응 지속 피해 갱신
-        {
+        { // 함수 시작
             target = victim; // 실제 피해 대상 저장
             remainingDuration = Mathf.Max(0f, duration); // 안전한 지속 시간 저장
             damagePerSecond = Mathf.Max(0f, damage); // 안전한 초당 피해 저장
@@ -19,22 +19,22 @@ namespace ProjectEpsilon.Combat // 전투 영역
             { // 조건 시작
                 WeaponTargetStatusIndicators.Ensure(target); // 실제 부식 연소 표시 연결
             } // 조건 종료
-        }
+        } // 함수 종료
 
         private void Update() // 반응 지속 피해 처리
-        {
+        { // 함수 시작
             if (GameManager.Instance != null && !GameManager.Instance.IsPlaying) // 전투 정지 여부 확인
-            {
+            { // 조건 시작
                 return; // 일시정지 중 갱신 방지
-            }
+            } // 조건 종료
             if (target == null || !target.IsAlive || remainingDuration <= 0f) // 대상과 남은 시간 확인
-            {
+            { // 조건 시작
                 Destroy(this); // 종료된 반응 제거
                 return; // 피해 처리 종료
-            }
+            } // 조건 종료
             float delta = Mathf.Min(Time.deltaTime, remainingDuration); // 남은 시간에 맞춘 피해 간격
             remainingDuration = Mathf.Max(0f, remainingDuration - delta); // 남은 반응 시간 감소
             target.TakeDamageOverTime(damagePerSecond * delta, true); // 반응 규칙을 유지하는 지속 피해
-        }
-    }
-}
+        } // 함수 종료
+    } // 형식 종료
+} // 이름 공간 종료

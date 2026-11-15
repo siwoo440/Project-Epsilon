@@ -11,9 +11,9 @@ using ProjectEpsilon.World; // 실제 맵 선택
 using UnityEngine; // Unity 실행 환경
 
 namespace ProjectEpsilon.Recording // 전투 기록 영역
-{
+{ // 이름 공간 시작
     public enum DamageOrigin // 실제 피해 원인
-    {
+    { // 형식 시작
         Unknown, // 확인되지 않은 피해
         EnemyMelee, // 일반 적 근접 공격
         EnemyProjectile, // 일반 적 투사체
@@ -26,10 +26,10 @@ namespace ProjectEpsilon.Recording // 전투 기록 영역
         EnemyContact, // 적 직접 충돌
         EliteCut, // 엘리트 절단
         BossCut // 최종 보스 절단
-    }
+    } // 형식 종료
     [Serializable] // JSON 저장 대상
     public sealed class RunWeaponSnapshot // 실제 몸통별 포탑 상태
-    {
+    { // 형식 시작
         public int slot; // 실제 몸통 슬롯
         public string weaponId; // 실제 포탑 식별자
         public int grade; // 실제 포탑 등급
@@ -41,10 +41,10 @@ namespace ProjectEpsilon.Recording // 전투 기록 영역
         public float baseDamage; // 실제 기본 피해
         public float attackInterval; // 실제 기본 공격 간격
         public float effectiveRange; // 실제 설정 범위
-    }
+    } // 형식 종료
     [Serializable] // JSON 저장 대상
     public sealed class RunEnemyCondition // 실제 시험 적 시작 설정
-    {
+    { // 형식 시작
         public string kind; // 실제 적 행동 종류
         public float health; // 실제 적 체력
         public int damage; // 실제 적 피해
@@ -52,10 +52,10 @@ namespace ProjectEpsilon.Recording // 전투 기록 영역
         public float attackInterval; // 실제 적 공격 간격
         public int experience; // 실제 처치 경험치
         public float firstAppearance; // 실제 첫 출현 시각
-    }
+    } // 형식 종료
     [Serializable] // JSON 저장 대상
     public sealed class RunSnapshot // 실제 시점별 전투 상태
-    {
+    { // 형식 시작
         public string reason; // 실제 표본 수집 이유
         public double seconds; // 실제 전투 경과 시간
         public int frame; // 실제 Unity 프레임
@@ -75,10 +75,10 @@ namespace ProjectEpsilon.Recording // 전투 기록 영역
         public int health; // 실제 현재 공용 체력
         public int maximumHealth; // 실제 최대 공용 체력
         public List<RunWeaponSnapshot> weapons = new List<RunWeaponSnapshot>(); // 실제 슬롯 목록
-    }
+    } // 형식 종료
     [Serializable] // JSON 저장 대상
     public sealed class RunDamageEvent // 실제 유효 피해 기록
-    {
+    { // 형식 시작
         public double seconds; // 실제 피해 시각
         public int frame; // 실제 피해 프레임
         public string origin; // 실제 피해 원인
@@ -87,18 +87,18 @@ namespace ProjectEpsilon.Recording // 전투 기록 영역
         public int bodyLoss; // 실제 직접 손실 예정 몸통
         public int healthBefore; // 실제 피해 전 체력
         public int bodiesBefore; // 실제 피해 전 몸통
-    }
+    } // 형식 종료
     [Serializable] // JSON 저장 대상
     public sealed class RunInputEvent // 실제 이동 입력 변화
-    {
+    { // 형식 시작
         public double seconds; // 실제 입력 시각
         public int frame; // 실제 입력 프레임
         public float turn; // 실제 회전 입력
         public bool boost; // 실제 가속 입력
-    }
+    } // 형식 종료
     [Serializable] // JSON 저장 대상
     public sealed class RunRecording // 실제 한 판 전투 기록
-    {
+    { // 형식 시작
         public int version = 1; // 실제 기록 형식
         public int gemAccountingVersion = 1; // 보석 생성·수집 집계 형식
         public string runId; // 실제 기록 식별자
@@ -130,9 +130,9 @@ namespace ProjectEpsilon.Recording // 전투 기록 영역
         public List<RunSnapshot> snapshots = new List<RunSnapshot>(); // 실제 전투 표본
         public List<RunDamageEvent> damages = new List<RunDamageEvent>(); // 실제 유효 피해 목록
         public List<RunInputEvent> inputs = new List<RunInputEvent>(); // 실제 이동 입력 변화
-    }
+    } // 형식 종료
     public sealed class RunTelemetry : MonoBehaviour // 선택적 로컬 전투 기록기
-    {
+    { // 형식 시작
         private const float SampleInterval = 10f; // 실제 정기 표본 간격
         private EarlyEnemyWaveSpawner wave; // 실제 전투 시계
         private MetaProgressionController meta; // 실제 처치 집계
@@ -159,26 +159,26 @@ namespace ProjectEpsilon.Recording // 전투 기록 영역
         public string LastError { get; private set; } // 실제 기록 오류
         public RunRecording Current => recording; // 실제 기록 조회
         public static bool IsRequested() // 실제 실행 옵션 확인
-        {
+        { // 함수 시작
             foreach (string arg in Environment.GetCommandLineArgs()) // 실제 실행 인수 순회
-            {
+            { // 반복 시작
                 if (arg == "-epsilonRecord") // 실제 전투 기록 옵션 확인
-                {
+                { // 조건 시작
                     return true; // 실제 기록 활성
-                }
-            }
+                } // 조건 종료
+            } // 반복 종료
             return false; // 기본 게임 기록 비활성
-        }
+        } // 함수 종료
         private void Awake() // 실제 기록기 등록
-        {
+        { // 함수 시작
             Instance = this; // 실제 현재 기록기 저장
-        }
+        } // 함수 종료
         public void BeginRun() // 실제 전투 기록 시작
-        {
+        { // 함수 시작
             if (active) // 기존 기록 진행 확인
-            {
+            { // 조건 시작
                 return; // 중복 시작 차단
-            }
+            } // 조건 종료
             wave = GetComponent<EarlyEnemyWaveSpawner>(); // 실제 같은 관리자 시계
             meta = GetComponent<MetaProgressionController>(); // 실제 같은 관리자 집계
             experience = FindFirstObjectByType<SnakeExperience>(); // 실제 경험치 조회
@@ -189,9 +189,9 @@ namespace ProjectEpsilon.Recording // 전투 기록 영역
             int seed; // 실제 실행 시드
             bool hasSeed = TryGetSeed(out seed); // 실제 시드 지정 여부
             if (hasSeed) // 실제 재현 시드 확인
-            {
+            { // 조건 시작
                 UnityEngine.Random.InitState(seed); // 실제 게임 난수 초기화
-            }
+            } // 조건 종료
             UnityEngine.Random.State randomState = UnityEngine.Random.state; // 실제 시작 난수 상태 보존
             float randomProbe = UnityEngine.Random.value; // 동일 시드 확인용 표본
             UnityEngine.Random.state = randomState; // 실제 게임 난수 순서 복원
@@ -201,7 +201,7 @@ namespace ProjectEpsilon.Recording // 전투 기록 영역
             SnakeMovement movement = FindFirstObjectByType<SnakeMovement>(); // 실제 플레이어 이동
             SnakeStamina stamina = FindFirstObjectByType<SnakeStamina>(); // 실제 스태미나 설정
             recording = new RunRecording // 실제 새 런 기록 생성
-            {
+            { // 자료 묶음 시작
                 runId = Guid.NewGuid().ToString("N"), // 실제 중복 방지 식별자
                 startedUtc = DateTime.UtcNow.ToString("O"), // 실제 UTC 시작 시간
                 unityVersion = Application.unityVersion, // 실제 Unity 버전
@@ -225,22 +225,22 @@ namespace ProjectEpsilon.Recording // 전투 기록 영역
                 mapIndex = map == null ? -1 : map.SelectedIndex, // 실제 맵 번호
                 mapName = map == null || map.SelectedProfile == null ? "" : map.SelectedProfile.DisplayName, // 실제 맵 이름
                 permanentLevels = new int[12] // 실제 영구 성장 단계
-            };
+            }; // 자료 묶음 종료
             for (int index = 0; index < recording.permanentLevels.Length; index++) // 실제 열두 성장 순회
-            {
+            { // 반복 시작
                 recording.permanentLevels[index] = meta == null || meta.Service == null ? 0 : meta.Service.GetLevel((MetaNode)index); // 실제 시작 단계 기록
-            }
+            } // 반복 종료
             IReadOnlyList<EarlyEnemySettings> recordedEnemies = wave == null ? null : wave.RecordingEnemies; // 기존 적과 추가 적 설정
             if (recordedEnemies != null) // 실제 기록 대상 확인
-            {
+            { // 조건 시작
                 foreach (EarlyEnemySettings enemy in recordedEnemies) // 실제 적 설정 순회
-                {
+                { // 반복 시작
                     if (enemy != null) // 실제 설정 존재 확인
-                    {
+                    { // 조건 시작
                         recording.enemies.Add(new RunEnemyCondition { kind = enemy.kind.ToString(), health = enemy.health, damage = enemy.damage, speedRatio = enemy.speedRatio, attackInterval = enemy.attackInterval, experience = enemy.experience, firstAppearance = enemy.firstAppearance }); // 실제 적 조건 기록
-                    }
-                }
-            }
+                    } // 조건 종료
+                } // 반복 종료
+            } // 조건 종료
             startFrame = Time.frameCount; // 실제 시작 프레임 기록
             totalExperience = 0L; // 실제 누적 경험치 초기화
             droppedGemExperience = 0L; // 실제 생성 보석 경험치 초기화
@@ -254,120 +254,120 @@ namespace ProjectEpsilon.Recording // 전투 기록 영역
             hasInput = false; // 실제 이전 입력 초기화
             active = true; // 실제 기록 시작
             if (wave != null) // 실제 적 출현기 확인
-            {
+            { // 조건 시작
                 wave.EnemyDied += OnEnemyDied; // 실제 모든 적 처치 연결
-            }
+            } // 조건 종료
             if (experience != null) // 실제 경험치 구성 확인
-            {
+            { // 조건 시작
                 experience.ExperienceGained += OnExperience; // 실제 획득 이벤트 연결
-            }
+            } // 조건 종료
             if (weapons != null) // 실제 포탑 구성 확인
-            {
+            { // 조건 시작
                 weapons.SlotsChanged += OnSlotsChanged; // 실제 포탑 변동 연결
-            }
+            } // 조건 종료
             Capture("start"); // 실제 시작 상태 기록
-        }
+        } // 함수 종료
         private static bool TryGetSeed(out int seed) // 실제 실행 시드 조회
-        {
+        { // 함수 시작
             string[] args = Environment.GetCommandLineArgs(); // 실제 실행 인수
             for (int index = 0; index + 1 < args.Length; index++) // 실제 인수 순회
-            {
+            { // 반복 시작
                 if (args[index] == "-epsilonSeed" && int.TryParse(args[index + 1], out seed)) // 실제 정수 시드 확인
-                {
+                { // 조건 시작
                     return true; // 실제 시드 적용
-                }
-            }
+                } // 조건 종료
+            } // 반복 종료
             seed = 0; // 시드 미지정 기본값
             return false; // 실제 미지정 상태
-        }
+        } // 함수 종료
         private void Update() // 실제 시간과 입력 표본
-        {
+        { // 함수 시작
             if (!active || GameManager.Instance == null || !GameManager.Instance.IsPlaying) // 실제 전투 진행 확인
-            {
+            { // 조건 시작
                 return; // 정지 중 기록 생략
-            }
+            } // 조건 종료
             double seconds = Seconds(); // 실제 전투 시계
             if (seconds >= nextSample) // 실제 정기 표본 확인
-            {
+            { // 조건 시작
                 Capture("interval"); // 실제 현재 전투 표본
                 nextSample = (Math.Floor(seconds / SampleInterval) + 1d) * SampleInterval; // 실제 다음 표본 시각
-            }
+            } // 조건 종료
             if (input != null) // 실제 이동 입력 확인
-            {
+            { // 조건 시작
                 float turn = input.TurnInput; // 실제 회전 입력
                 bool boost = input.BoostPressed; // 실제 가속 입력
                 if (!hasInput || !Mathf.Approximately(turn, lastTurn) || boost != lastBoost) // 실제 입력 변화 확인
-                {
+                { // 조건 시작
                     recording.inputs.Add(new RunInputEvent { seconds = seconds, frame = Time.frameCount - startFrame, turn = turn, boost = boost }); // 실제 입력 변화 저장
                     lastTurn = turn; // 실제 이전 회전 저장
                     lastBoost = boost; // 실제 이전 가속 저장
                     hasInput = true; // 실제 입력 기록 완료
-                }
-            }
-        }
+                } // 조건 종료
+            } // 조건 종료
+        } // 함수 종료
         private void OnEnemyDied(bool elite, bool summoned) // 실제 일반·엘리트·소환 적 처치 집계
-        {
+        { // 함수 시작
             if (!active) // 실제 기록 중 확인
-            {
+            { // 조건 시작
                 return; // 종료 후 집계 차단
-            }
+            } // 조건 종료
             totalKills = totalKills == int.MaxValue ? totalKills : totalKills + 1; // 실제 전체 적 처치 누적
             if (summoned && summonedKills < int.MaxValue) // 실제 소환 적 확인
-            {
+            { // 조건 시작
                 summonedKills++; // 실제 소환 적 처치 누적
-            }
-        }
+            } // 조건 종료
+        } // 함수 종료
         public void RecordBossKill() // 실제 최종 보스 처치 집계
-        {
+        { // 함수 시작
             if (active && bossKills == 0) // 실제 기록 중 첫 보스 확인
-            {
+            { // 조건 시작
                 bossKills = 1; // 실제 보스 처치 기록
                 totalKills = totalKills == int.MaxValue ? totalKills : totalKills + 1; // 실제 전체 처치 누적
-            }
-        }
+            } // 조건 종료
+        } // 함수 종료
         private void OnExperience(int amount) // 실제 획득 경험치 집계
-        {
+        { // 함수 시작
             if (active && amount > 0) // 실제 기록 중 획득 확인
-            {
+            { // 조건 시작
                 totalExperience = totalExperience > long.MaxValue - amount ? long.MaxValue : totalExperience + amount; // 실제 경험치 안전 누적
-            }
-        }
+            } // 조건 종료
+        } // 함수 종료
         public static void RecordGemSpawn(int amount) // 실제 생성 보석 원본 경험치 집계
-        {
+        { // 함수 시작
             RunTelemetry self = Instance; // 실제 선택적 기록기 조회
             if (self == null || !self.active || amount <= 0) // 실제 기록과 유효 수량 확인
-            {
+            { // 조건 시작
                 return; // 비활성 또는 무효 집계 차단
-            }
+            } // 조건 종료
             self.droppedGemExperience = self.droppedGemExperience > long.MaxValue - amount ? long.MaxValue : self.droppedGemExperience + amount; // 실제 생성량 안전 누적
-        }
+        } // 함수 종료
         public static void RecordGemCollection(int amount) // 실제 수집 보석 원본 경험치 집계
-        {
+        { // 함수 시작
             RunTelemetry self = Instance; // 실제 선택적 기록기 조회
             if (self == null || !self.active || amount <= 0) // 실제 기록과 유효 수량 확인
-            {
+            { // 조건 시작
                 return; // 비활성 또는 무효 집계 차단
-            }
+            } // 조건 종료
             self.collectedGemExperience = self.collectedGemExperience > long.MaxValue - amount ? long.MaxValue : self.collectedGemExperience + amount; // 실제 수집량 안전 누적
-        }
+        } // 함수 종료
         private void OnSlotsChanged() // 실제 포탑 구성 변경
-        {
+        { // 함수 시작
             Capture("loadout"); // 실제 포탑 변경 표본
-        }
+        } // 함수 종료
         private double Seconds() // 실제 전투 시간 조회
-        {
+        { // 함수 시작
             return wave == null ? 0d : wave.CurrentRunSeconds; // 실제 출현기 전투 시간
-        }
+        } // 함수 종료
         public static void RecordDamage(DamageOrigin origin, int healthDamage, int bodyLoss, int shieldDamage = 0) // 실제 유효 피해 기록
-        {
+        { // 함수 시작
             RunTelemetry self = Instance; // 실제 기록기 조회
             if (self == null || !self.active || self.recording == null) // 실제 기록 상태 확인
-            {
+            { // 조건 시작
                 return; // 기록 비활성 시 동작 유지
-            }
+            } // 조건 종료
             self.recording.lastDamageOrigin = origin.ToString(); // 실제 마지막 피해 원인
             self.recording.damages.Add(new RunDamageEvent // 실제 피해 항목 생성
-            {
+            { // 코드 블록 시작
                 seconds = self.Seconds(), // 실제 피해 시각
                 frame = Time.frameCount - self.startFrame, // 실제 피해 프레임
                 origin = origin.ToString(), // 실제 피해 원인
@@ -376,16 +376,16 @@ namespace ProjectEpsilon.Recording // 전투 기록 영역
                 bodyLoss = Mathf.Max(0, bodyLoss), // 실제 직접 몸통 손실
                 healthBefore = self.health == null ? 0 : self.health.CurrentHealth, // 실제 피해 전 체력
                 bodiesBefore = self.body == null ? 0 : self.body.CurrentBodyCount // 실제 피해 전 몸통
-            });
-        }
+            }); // 코드 블록 종료
+        } // 함수 종료
         public void Capture(string reason) // 실제 현재 상태 표본
-        {
+        { // 함수 시작
             if (!active || recording == null) // 실제 기록 상태 확인
-            {
+            { // 조건 시작
                 return; // 비활성 표본 방지
-            }
+            } // 조건 종료
             RunSnapshot sample = new RunSnapshot // 실제 전투 표본 생성
-            {
+            { // 자료 묶음 시작
                 reason = reason, // 실제 표본 수집 이유
                 seconds = Seconds(), // 실제 전투 경과 시간
                 frame = Time.frameCount - startFrame, // 실제 런 상대 프레임
@@ -404,15 +404,15 @@ namespace ProjectEpsilon.Recording // 전투 기록 영역
                 bodyLimit = body == null ? 0 : body.MaximumBodyCount, // 실제 절대 몸통 상한
                 health = health == null ? 0 : health.CurrentHealth, // 실제 현재 체력
                 maximumHealth = health == null ? 0 : health.MaximumHealth // 실제 최대 체력
-            };
+            }; // 자료 묶음 종료
             if (weapons != null) // 실제 포탑 관리자 확인
-            {
+            { // 조건 시작
                 int slotCount = body == null ? weapons.Slots.Count : Mathf.Min(body.CurrentBodyCount, weapons.Slots.Count); // 남은 몸통의 슬롯 수
                 for (int index = 0; index < slotCount; index++) // 실제 몸통 슬롯 순회
-                {
+                { // 반복 시작
                     SnakeWeaponSlot slot = weapons.Slots[index]; // 실제 현재 슬롯
                     sample.weapons.Add(new RunWeaponSnapshot // 실제 슬롯 상태 생성
-                    {
+                    { // 코드 블록 시작
                         slot = index, // 실제 몸통 슬롯 번호
                         weaponId = slot == null || slot.Weapon == null ? "" : slot.Weapon.Id, // 실제 포탑 식별자
                         grade = slot == null || slot.IsEmpty ? 0 : slot.Grade, // 실제 포탑 등급
@@ -424,58 +424,58 @@ namespace ProjectEpsilon.Recording // 전투 기록 영역
                         baseDamage = slot == null || slot.Weapon == null ? 0f : slot.Weapon.BaseDamage, // 실제 포탑 기본 피해
                         attackInterval = slot == null || slot.Weapon == null ? 0f : slot.Weapon.AttackInterval, // 실제 포탑 기본 주기
                         effectiveRange = slot == null ? 0f : slot.EffectiveRange // 실제 강화 설정 범위
-                    });
-                }
-            }
+                    }); // 코드 블록 종료
+                } // 반복 종료
+            } // 조건 종료
             recording.snapshots.Add(sample); // 실제 표본 기록
-        }
+        } // 함수 종료
         public void Finish(GameState outcome) // 실제 전투 종료 기록
-        {
+        { // 함수 시작
             if (!active || recording == null) // 실제 기록 중 확인
-            {
+            { // 조건 시작
                 return; // 중복 종료 차단
-            }
+            } // 조건 종료
             recording.outcome = outcome.ToString(); // 실제 승리 또는 패배
             Capture("end"); // 실제 마지막 상태 저장
             active = false; // 이후 중복 기록 방지
             Unsubscribe(); // 실제 이벤트 연결 해제
             try // 실제 로컬 파일 저장
-            {
+            { // 조건 시작
                 string directory = Path.Combine(Application.persistentDataPath, "CombatRecords"); // 실제 앱별 기록 폴더
                 Directory.CreateDirectory(directory); // 실제 기록 폴더 준비
                 string path = Path.Combine(directory, "run_" + recording.runId + ".json"); // 실제 고유 기록 경로
                 File.WriteAllText(path, JsonUtility.ToJson(recording, true)); // 실제 JSON 파일 저장
                 LastSavedPath = path; // 실제 저장 완료 경로 기록
                 Debug.Log("[Project Epsilon] 전투 기록 저장 완료: " + path); // 실제 로컬 저장 결과
-            }
+            } // 조건 종료
             catch (Exception error) // 실제 파일 저장 오류
-            {
+            { // 조건 시작
                 LastError = error.Message; // 실제 기록 오류 보관
                 Debug.LogError("[Project Epsilon] 전투 기록 저장 실패: " + error.Message); // 실제 기록 오류 안내
-            }
-        }
+            } // 조건 종료
+        } // 함수 종료
         private void Unsubscribe() // 실제 기록 이벤트 정리
-        {
+        { // 함수 시작
             if (wave != null) // 실제 적 출현기 확인
-            {
+            { // 조건 시작
                 wave.EnemyDied -= OnEnemyDied; // 실제 모든 적 처치 구독 해제
-            }
+            } // 조건 종료
             if (experience != null) // 실제 경험치 구성 확인
-            {
+            { // 조건 시작
                 experience.ExperienceGained -= OnExperience; // 실제 획득 구독 해제
-            }
+            } // 조건 종료
             if (weapons != null) // 실제 포탑 구성 확인
-            {
+            { // 조건 시작
                 weapons.SlotsChanged -= OnSlotsChanged; // 실제 포탑 구독 해제
-            }
-        }
+            } // 조건 종료
+        } // 함수 종료
         private void OnDestroy() // 실제 종료 정리
-        {
+        { // 함수 시작
             Unsubscribe(); // 실제 이벤트 구독 해제
             if (Instance == this) // 실제 현재 기록기 확인
-            {
+            { // 조건 시작
                 Instance = null; // 실제 전역 참조 제거
-            }
-        }
-    }
-}
+            } // 조건 종료
+        } // 함수 종료
+    } // 형식 종료
+} // 이름 공간 종료

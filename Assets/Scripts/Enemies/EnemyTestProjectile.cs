@@ -6,9 +6,9 @@ using UnityEngine; // Unity 기능
 using ProjectEpsilon.Recording; // 실제 피해 원인 기록
 
 namespace ProjectEpsilon.Enemies // 적 영역
-{
+{ // 이름 공간 시작
     public sealed class EnemyTestProjectile : MonoBehaviour // 사수 시험용 투사체
-    {
+    { // 형식 시작
         private Vector2 direction; // 이동 방향
         private float speed; // 이동 속도
         private float lifetime; // 남은 수명
@@ -22,7 +22,7 @@ namespace ProjectEpsilon.Enemies // 적 영역
         private CircleCollider2D projectileCollider; // 실제 탄 충돌 범위
         private readonly List<RaycastHit2D> pathHits = new List<RaycastHit2D>(); // 재사용 이동 경로 충돌 목록
         public void Configure(Vector2 moveDirection, float moveSpeed, float duration, int hitDamage, SnakeHealth sharedHealth, SnakeBodyManager segments, SnakeMovement head, Sprite visual, DamageOrigin damageOrigin = DamageOrigin.EnemyProjectile) // 투사체와 실제 원인 설정
-        {
+        { // 함수 시작
             direction = moveDirection.normalized; // 이동 방향 저장
             hitConsumed = false; // 재사용 투사체 명중 상태 초기화
             speed = Mathf.Max(0f, moveSpeed); // 이동 속도 저장
@@ -44,13 +44,13 @@ namespace ProjectEpsilon.Enemies // 적 영역
             movementBody.bodyType = RigidbodyType2D.Kinematic; // 물리 이동 방식
             movementBody.useFullKinematicContacts = true; // 운동학 충돌 감지
             movementBody.collisionDetectionMode = CollisionDetectionMode2D.Continuous; // 고속 충돌 감지
-        }
+        } // 함수 종료
         private void FixedUpdate() // 투사체 이동
-        {
+        { // 함수 시작
             if (GameManager.Instance == null || !GameManager.Instance.IsPlaying) // 전투 진행 여부
-            {
+            { // 조건 시작
                 return; // 이동 중단
-            }
+            } // 조건 종료
             float distance = Mathf.Min(speed * Time.fixedDeltaTime, Physics2D.maxTranslationSpeed); // 실제 물리 단계의 최대 이동 거리를 반영한 검사 거리
             ContactFilter2D filter = ContactFilter2D.noFilter; // 기존 물리 계층 검사 조건
             filter.SetLayerMask(Physics2D.GetLayerCollisionMask(gameObject.layer)); // 실제 충돌 계층 적용
@@ -73,10 +73,10 @@ namespace ProjectEpsilon.Enemies // 적 영역
             movementBody.MovePosition(movementBody.position + direction * speed * Time.fixedDeltaTime); // 기존 물리 이동과 속도 상한 유지
             lifetime -= Time.fixedDeltaTime; // 남은 수명 감소
             if (lifetime <= 0f) // 수명 종료 확인
-            {
+            { // 조건 시작
                 Destroy(gameObject); // 투사체 제거
-            }
-        }
+            } // 조건 종료
+        } // 함수 종료
         private void OnTriggerEnter2D(Collider2D other) // 투사체 명중 처리
         { // 함수 시작
             ProcessHit(other); // 기존 물리 접촉 처리 재사용
@@ -84,36 +84,36 @@ namespace ProjectEpsilon.Enemies // 적 영역
         private void ProcessHit(Collider2D other) // 이동 구간과 실제 접촉의 공통 처리
         { // 함수 시작
             if (!isActiveAndEnabled || hitConsumed || player == null || health == null) // 활성 상태와 중복 명중 확인
-            {
+            { // 조건 시작
                 return; // 명중 처리 생략
-            }
+            } // 조건 종료
             SnakeContactHazard cover = other.GetComponent<SnakeContactHazard>(); // 기존 장애물 엄폐 조회
             if (cover != null && cover.BlocksProjectiles) // 실제 엄폐 충돌 확인
-            {
+            { // 조건 시작
                 hitConsumed = true; // 같은 프레임 중복 명중 차단
                 gameObject.SetActive(false); // 지연 파괴 전 후속 접촉 차단
                 Destroy(gameObject); // 엄폐물에 막힌 적 탄 제거
                 return; // 플레이어 명중 처리 중단
-            }
+            } // 조건 종료
             SnakeSegment segment = other.GetComponent<SnakeSegment>(); // 명중 몸통 조회
             bool isHead = other.transform == player.transform; // 머리 명중 여부
             bool isBody = segment != null && body != null && segment.transform.IsChildOf(body.transform); // 몸통 명중 여부
             if (!isHead && !isBody) // 플레이어 명중 확인
-            {
+            { // 조건 시작
                 return; // 다른 충돌 무시
-            }
+            } // 조건 종료
             hitConsumed = true; // 파괴 전 중복 명중 차단
             SnakeExternalCollision resolver = player.GetComponent<SnakeExternalCollision>(); // 물리 스텝 충돌 처리기 조회
             if (resolver != null && resolver.isActiveAndEnabled) // 충돌 처리기 연결 확인
-            {
+            { // 조건 시작
                 resolver.QueueHealthDamage(health, damage, origin); // 파괴 전 대상과 피해량 값 예약
-            }
+            } // 조건 종료
             else // 충돌 처리기 부재
-            {
+            { // 조건 시작
                 Debug.LogError("[Project Epsilon] 투사체 충돌 처리기가 없어 충돌 우선순위가 보장되지 않습니다."); // 구성 누락 알림
                 health.TakeDamage(damage, origin); // 기존 즉시 피해 대체
-            }
+            } // 조건 종료
             Destroy(gameObject); // 명중 투사체 제거
-        }
-    }
-}
+        } // 함수 종료
+    } // 형식 종료
+} // 이름 공간 종료

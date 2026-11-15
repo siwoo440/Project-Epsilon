@@ -2,9 +2,9 @@ using UnityEngine; // Unity 엔진 기능 연결
 using UnityEngine.UI; // Unity 엔진 기능 연결
 
 namespace ProjectEpsilon.UI // 프로젝트 기능 영역
-{
+{ // 이름 공간 시작
     public sealed class HUDController : MonoBehaviour // 행동 자료 구조
-    {
+    { // 형식 시작
         [SerializeField] private Text healthText; // 필드·문구 설정
         [SerializeField] private Text bodyCountText; // 필드·문구 설정
         [SerializeField] private Text experienceText; // 필드·문구 설정
@@ -88,10 +88,10 @@ namespace ProjectEpsilon.UI // 프로젝트 기능 영역
         } // 함수 종료
 
         private void Start() // 시작 기능 선언
-        {
+        { // 함수 시작
             HideLegacyControlHints(); // 기존 화면의 시험 조작 안내 숨김
             ShowDebugDefaults(); // 표시 기능 실행
-        }
+        } // 함수 종료
 
         private void HideLegacyControlHints() // 기존 HUD 시험 조작 안내 제거
         { // 영역 시작
@@ -111,7 +111,7 @@ namespace ProjectEpsilon.UI // 프로젝트 기능 영역
             Text level, // 문구·레벨 항목 전달
             Text stamina // 문구·스태미나 처리
         ) // 앞선 항목 종료
-        {
+        { // 함수 시작
             healthText = health; // 체력·문구 값 설정
             bodyCountText = bodyCount; // 몸통·개수 값 설정
             experienceText = experience; // 경험치·문구 값 설정
@@ -119,74 +119,74 @@ namespace ProjectEpsilon.UI // 프로젝트 기능 영역
             staminaText = stamina; // 스태미나·문구 값 설정
 
             ShowDebugDefaults(); // 표시 기능 실행
-        }
+        } // 함수 종료
 
         public void SetHealth(int current, int maximum) // 설정·체력 기능 선언
-        {
+        { // 함수 시작
             SetBar(healthText, ref healthFill, "HealthBar", current, maximum, new Color(0.85f, 0.16f, 0.16f, 1f), -5f); // 실제 체력 글자 아래 막대 갱신
             PlaceBodyBelowHealth(); // 실제 체력 막대와 몸통 글자 간격
             if (healthText != null) // 체력·문구 조건 확인
-            {
+            { // 조건 시작
                 healthText.text = HUDTextFormatter.FormatHealth(current, maximum); // 체력·문구 값 설정
-            }
-        }
+            } // 조건 종료
+        } // 함수 종료
 
         public void SetHealth(int current, int maximum, int shield) // 보호막 포함 체력 표시
-        {
+        { // 함수 시작
             SetBar(healthText, ref healthFill, "HealthBar", current, maximum, new Color(0.85f, 0.16f, 0.16f, 1f), -5f); // 실제 체력 글자 아래 막대 갱신
             PlaceBodyBelowHealth(); // 실제 체력 막대와 몸통 글자 간격
             if (healthText != null) // 체력 Text 확인
-            {
+            { // 조건 시작
                 healthText.text = HUDTextFormatter.FormatHealth(current, maximum, shield); // 체력과 보호막 갱신
-            }
-        }
+            } // 조건 종료
+        } // 함수 종료
 
         public void SetBodyCount(int current, int maximum) // 설정·몸통 기능 선언
-        {
+        { // 함수 시작
             if (bodyCountText != null) // 몸통·개수 조건 확인
-            {
+            { // 조건 시작
                 bodyCountText.text = HUDTextFormatter.FormatBodyCount(current, maximum); // 몸통·개수 값 설정
                 PlaceBodyBelowHealth(); // 실제 체력 막대 아래 글자 배치
-            }
-        }
+            } // 조건 종료
+        } // 함수 종료
 
         public void SetBodyCount(int current, int earned, int maximum) // 몸통 현재 수와 두 상한 갱신
-        {
+        { // 함수 시작
             if (bodyCountText != null) // 몸통 텍스트 연결 확인
-            {
+            { // 조건 시작
                 bodyCountText.text = HUDTextFormatter.FormatBodyCount(current, earned, maximum); // 몸통 상태 표시
                 PlaceBodyBelowHealth(); // 실제 체력 막대 아래 글자 배치
-            }
-        }
+            } // 조건 종료
+        } // 함수 종료
 
         public void SetExperience(int current, int required) // 설정·경험치 기능 선언
-        {
+        { // 함수 시작
             SetBar(experienceText, ref experienceFill, "ExperienceBar", current, required, new Color(0.2f, 0.65f, 1f, 1f)); // 실제 경험치 막대 갱신
             if (experienceText != null) // 경험치·문구 조건 확인
-            {
+            { // 조건 시작
                 experienceText.text = HUDTextFormatter.FormatExperience(current, required); // 경험치·문구 값 설정
                 FitLevelExperienceLabels(); // 겹치는 레벨과 경험치 글자 조정
-            }
-        }
+            } // 조건 종료
+        } // 함수 종료
 
         public void SetLevel(int level) // 설정·레벨 기능 선언
-        {
+        { // 함수 시작
             if (levelText != null) // 레벨·문구 조건 확인
-            {
+            { // 조건 시작
                 levelText.text = HUDTextFormatter.FormatLevel(level); // 레벨·문구 값 설정
                 FitLevelExperienceLabels(); // 겹치는 레벨과 경험치 글자 조정
-            }
-        }
+            } // 조건 종료
+        } // 함수 종료
 
         public void SetStamina(int current, int maximum) // 설정·스태미나 기능 선언
-        {
+        { // 함수 시작
             SetBar(staminaText, ref staminaFill, "StaminaBar", current, maximum, new Color(0.25f, 0.85f, 0.35f, 1f), -5f); // 실제 스태미나 글자 아래 막대 갱신
             if (staminaText != null) // 스태미나·문구 조건 확인
-            {
+            { // 조건 시작
                 staminaText.alignment = TextAnchor.UpperLeft; // 실제 막대 위쪽 글자 정렬
                 staminaText.text = HUDTextFormatter.FormatStamina(current, maximum); // 스태미나·문구 값 설정
-            }
-        }
+            } // 조건 종료
+        } // 함수 종료
 
         private void PlaceBodyBelowHealth() // 실제 체력과 몸통 표시 간격
         { // 함수 시작
@@ -261,21 +261,21 @@ namespace ProjectEpsilon.UI // 프로젝트 기능 영역
         } // 함수 종료
 
         private static void SetBar(Text label, ref RectTransform fill, string name, int current, int maximum, Color color, float verticalOffset = 0f) // 실제 HUD 막대 구성과 비율 갱신
-        {
+        { // 함수 시작
             if (!Application.isPlaying || label == null) // 실제 실행과 글자 연결 확인
-            {
+            { // 조건 시작
                 return; // 편집 모드와 미설정 HUD 무시
-            }
+            } // 조건 종료
             if (fill != null && (fill.parent == null || fill.parent.parent != label.transform)) // 이전 글자에 연결된 막대 확인
-            {
+            { // 조건 시작
                 if (fill.parent != null) // 실제 이전 막대 확인
-                {
+                { // 조건 시작
                     Destroy(fill.parent.gameObject); // 이전 막대 제거
-                }
+                } // 조건 종료
                 fill = null; // 이전 채움 참조 초기화
-            }
+            } // 조건 종료
             if (fill == null) // 실제 막대 생성 여부 확인
-            {
+            { // 조건 시작
                 GameObject background = new GameObject(name, typeof(RectTransform), typeof(CanvasRenderer), typeof(Image)); // 실제 막대 배경 생성
                 RectTransform frame = (RectTransform)background.transform; // 실제 막대 배경 영역
                 frame.SetParent(label.transform, false); // 실제 글자 아래 연결
@@ -298,7 +298,7 @@ namespace ProjectEpsilon.UI // 프로젝트 기능 영역
                 Image fillImage = foreground.GetComponent<Image>(); // 실제 채움 이미지
                 fillImage.color = color; // 체력 또는 경험치 색상
                 fillImage.raycastTarget = false; // UI 입력 차단 방지
-            }
+            } // 조건 종료
             RectTransform existingFrame = fill.parent as RectTransform; // 실제 생성된 막대 배경
             if (existingFrame != null) // 실제 막대 배경 확인
             { // 조건 시작
@@ -307,15 +307,15 @@ namespace ProjectEpsilon.UI // 프로젝트 기능 영역
             float ratio = maximum > 0 ? Mathf.Clamp01((float)current / maximum) : 0f; // 안전한 현재 비율
             fill.anchorMax = new Vector2(ratio, 1f); // 실제 채움 너비 갱신
             fill.gameObject.SetActive(ratio > 0f); // 빈 막대 채움 숨김
-        }
+        } // 함수 종료
 
         private void ShowDebugDefaults() // 표시 기능 선언
-        {
+        { // 함수 시작
             SetHealth(100, 100); // 설정·체력 기능 실행
             SetBodyCount(3, 20); // 설정·몸통 기능 실행
             SetExperience(0, 10); // 설정·경험치 기능 실행
             SetLevel(1); // 설정·레벨 기능 실행
             SetStamina(100, 100); // 설정·스태미나 기능 실행
-        }
-    }
-}
+        } // 함수 종료
+    } // 형식 종료
+} // 이름 공간 종료

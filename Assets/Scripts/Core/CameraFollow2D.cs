@@ -1,9 +1,9 @@
 using UnityEngine; // Unity 엔진 기능 연결
 
 namespace ProjectEpsilon.Core // 프로젝트 기능 영역
-{
+{ // 이름 공간 시작
     public sealed class CameraFollow2D : MonoBehaviour // 행동 자료 구조
-    {
+    { // 형식 시작
         [SerializeField] private Transform target; // 필드·위치 설정
         [SerializeField] private float smoothTime = 0.15f; // 필드·시간 설정
 
@@ -11,17 +11,17 @@ namespace ProjectEpsilon.Core // 프로젝트 기능 영역
 
         public Transform Target => target; // 위치·대상 값 반환
 
-        public void SetTarget(Transform nextTarget) // 설정·대상 기능 선언
-        {
+        public void SetTarget(Transform nextTarget) // 카메라 추적 대상 변경
+        { // 함수 시작
             target = nextTarget; // 대상·다음 값 값 설정
-        }
+        } // 함수 종료
 
         private void LateUpdate() // 갱신 기능 선언
-        {
+        { // 함수 시작
             if (target == null) // 대상 조건 확인
-            {
+            { // 조건 시작
                 return; // 현재 기능 종료
-            }
+            } // 조건 종료
 
             Vector3 targetPosition = new Vector3( // 벡터·대상 호출 시작
                 target.position.x, // 대상·위치 항목 전달
@@ -35,6 +35,6 @@ namespace ProjectEpsilon.Core // 프로젝트 기능 영역
                 ref velocity, // 대상 항목 전달
                 smoothTime // 시간 처리
             ); // 앞선 항목 종료
-        }
-    }
-}
+        } // 함수 종료
+    } // 형식 종료
+} // 이름 공간 종료

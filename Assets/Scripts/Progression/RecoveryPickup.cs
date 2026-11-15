@@ -1,19 +1,19 @@
-using ProjectEpsilon.Core; // 대상 기능 연결
+using ProjectEpsilon.Core; // 게임 상태와 공통 기능
 using ProjectEpsilon.Player; // 플레이어 기능 연결
 using UnityEngine; // Unity 엔진 기능 연결
 
 namespace ProjectEpsilon.Progression // 프로젝트 기능 영역
-{
+{ // 이름 공간 시작
     public enum RecoveryPickupType // 회복·형식 자료 구조
-    {
+    { // 형식 시작
         Heal, // 회복 항목 전달
         BodyRepair // 몸통 처리
-    }
+    } // 형식 종료
 
     [RequireComponent(typeof(SpriteRenderer))] // 구성 요소·이미지 설정
     [DefaultExecutionOrder(10)] // 실제 자동 전진 이후 회복 아이템 처리
     public sealed class RecoveryPickup : MonoBehaviour // 회복·행동 자료 구조
-    {
+    { // 형식 시작
         [SerializeField] private Transform receiver; // 필드·위치 설정
         [SerializeField] private SnakeHealth health; // 필드·체력 설정
         [SerializeField] private SnakeBodyManager bodyManager; // 필드·몸통 설정
@@ -40,10 +40,10 @@ namespace ProjectEpsilon.Progression // 프로젝트 기능 영역
         public bool IsBodyRepair => pickupType == RecoveryPickupType.BodyRepair; // 몸통 복구 아이템 여부
 
         private void Awake() // 초기화 기능 선언
-        {
+        { // 함수 시작
             spriteRenderer = // 이미지·렌더러 값 설정
                 GetComponent<SpriteRenderer>(); // 조회·구성 요소 기능 실행
-        }
+        } // 함수 종료
 
         public void Configure( // 구성 호출 시작
             Transform target, // 위치·대상 항목 전달
@@ -53,7 +53,7 @@ namespace ProjectEpsilon.Progression // 프로젝트 기능 영역
             int amount, // 수량 항목 전달
             Sprite visual // 이미지·시각 효과 처리
         ) // 앞선 항목 종료
-        {
+        { // 함수 시작
             receiver = target; // 대상 값 설정
             receiverMovement = receiver == null ? null : receiver.GetComponent<SnakeMovement>(); // 실제 수신자의 이동 경로 연결
             health = snakeHealth; // 체력 값 설정
@@ -63,10 +63,10 @@ namespace ProjectEpsilon.Progression // 프로젝트 기능 영역
             collected = false; // 대상 값 설정
 
             if (spriteRenderer == null) // 이미지·렌더러 조건 확인
-            {
+            { // 조건 시작
                 spriteRenderer = // 이미지·렌더러 값 설정
                     GetComponent<SpriteRenderer>(); // 조회·구성 요소 기능 실행
-            }
+            } // 조건 종료
 
             if (pickupType == RecoveryPickupType.Heal && healArtwork == null) // 체력 이미지 로드 여부 확인
             { // 조건 시작
@@ -85,22 +85,22 @@ namespace ProjectEpsilon.Progression // 프로젝트 기능 영역
             float artworkWidth = spriteRenderer.sprite == null ? referenceWidth : spriteRenderer.sprite.bounds.size.x; // 실제 표시 이미지 너비
             float scale = artworkWidth > 0f ? referenceWidth * originalScale * 4f / artworkWidth : originalScale * 4f; // 기존 표시 너비의 네 배
             transform.localScale = new Vector3(scale, scale, 1f); // 비율을 유지한 아이템 표시 크기
-        }
+        } // 함수 종료
 
         private void Update() // 갱신 기능 선언
-        {
+        { // 함수 시작
             if (collected || // 대상 조건 확인
                 (!CanApply() && !CanConvertToScore())) // 회복 또는 점수 획득 가능 상태
-            {
+            { // 조건 시작
                 return; // 현재 기능 종료
-            }
+            } // 조건 종료
 
-            ResolveReceiver(); // 대상 기능 실행
+            ResolveReceiver(); // 아이템 수신 대상 연결
 
             if (receiver == null) // 대상 조건 확인
-            {
+            { // 조건 시작
                 return; // 현재 기능 종료
-            }
+            } // 조건 종료
 
             if (receiverMovement == null || receiverMovement.transform != receiver) // 실제 수신자 변경 여부 확인
             { // 조건 시작
@@ -131,10 +131,10 @@ namespace ProjectEpsilon.Progression // 프로젝트 기능 영역
 
             if (delta.sqrMagnitude <= // 변화량 조건 확인
                 collectDistanceSquared) // 거리 처리
-            {
-                Collect(); // 대상 기능 실행
+            { // 조건 시작
+                Collect(); // 접촉한 아이템 획득
                 return; // 현재 기능 종료
-            }
+            } // 조건 종료
 
             if (receiverMovement != null && receiverMovement.CrossedPositionThisFrame(transform.position, collectDistance)) // 현재 프레임 실제 자동 전진 경로의 아이템 확인
             { // 조건 시작
@@ -148,9 +148,9 @@ namespace ProjectEpsilon.Progression // 프로젝트 기능 영역
 
             if (delta.sqrMagnitude > // 변화량 조건 확인
                 attractionRangeSquared) // 범위 처리
-            {
+            { // 조건 시작
                 return; // 현재 기능 종료
-            }
+            } // 조건 종료
 
             transform.position = // 위치 값 설정
                 Vector3.MoveTowards( // 벡터 호출 시작
@@ -164,38 +164,38 @@ namespace ProjectEpsilon.Progression // 프로젝트 기능 영역
                 transform.position) // 위치 처리
                 .sqrMagnitude <= // 대상 처리
                 collectDistanceSquared) // 거리 처리
-            {
-                Collect(); // 대상 기능 실행
-            }
-        }
+            { // 조건 시작
+                Collect(); // 접촉한 아이템 획득
+            } // 조건 종료
+        } // 함수 종료
 
         private bool CanApply() // 가능 여부·적용 기능 선언
-        {
-            ResolveSystems(); // 대상 기능 실행
+        { // 함수 시작
+            ResolveSystems(); // 필요한 관리자 연결
 
             if (pickupType == // 형식 조건 확인
                 RecoveryPickupType.Heal) // 회복·형식 처리
-            {
+            { // 조건 시작
                 return // 대상 결과 반환
                     health != null && // 체력 처리
                     health.CurrentHealth < // 체력·현재 처리
                         health.MaximumHealth && // 체력·최대 처리
                     bodyManager != null && // 몸통·관리자 처리
                     bodyManager.CurrentBodyCount > 0; // 몸통·관리자 처리
-            }
+            } // 조건 종료
 
             return // 대상 결과 반환
                 (GameManager.Instance == null || !GameManager.Instance.IsFinalBossPhase) && // 보스전 별도 복구 제한
                 bodyManager != null && // 몸통·관리자 처리
                 bodyManager.MissingRepairableBodyCount > 0; // 몸통·관리자 처리
-        }
+        } // 함수 종료
 
-        private void Collect() // 대상 기능 선언
-        {
+        private void Collect() // 접촉한 아이템 획득
+        { // 함수 시작
             if (collected) // 대상 조건 확인
-            {
+            { // 조건 시작
                 return; // 현재 기능 종료
-            }
+            } // 조건 종료
 
             if (CanConvertToScore() && MetaProgressionController.Instance.TryAwardFullRecoveryPickupScore()) // 가득 찬 상태의 점수 획득
             { // 조건 시작
@@ -208,26 +208,26 @@ namespace ProjectEpsilon.Progression // 프로젝트 기능 영역
 
             if (pickupType == // 형식 조건 확인
                 RecoveryPickupType.Heal) // 회복·형식 처리
-            {
+            { // 조건 시작
                 applied = // 대상 값 설정
                     health != null && // 체력 처리
                     health.Heal(value); // 체력·회복 기능 실행
-            }
+            } // 조건 종료
             else // 다른 조건 처리
-            {
+            { // 조건 시작
                 applied = // 대상 값 설정
                     bodyManager != null && // 몸통·관리자 처리
                     bodyManager.TryRepairBody(); // 몸통·관리자 기능 실행
-            }
+            } // 조건 종료
 
             if (!applied) // 대상 조건 확인
-            {
+            { // 조건 시작
                 return; // 현재 기능 종료
-            }
+            } // 조건 종료
 
             collected = true; // 대상 값 설정
             Destroy(gameObject); // 제거·게임 기능 실행
-        }
+        } // 함수 종료
 
         private bool CanConvertToScore() // 가득 찬 상태의 점수 전환 확인
         { // 함수 시작
@@ -240,36 +240,36 @@ namespace ProjectEpsilon.Progression // 프로젝트 기능 영역
             return pickupType == RecoveryPickupType.Heal ? health.CurrentHealth >= health.MaximumHealth : bodyManager.MissingRepairableBodyCount == 0; // 실제 아이템별 가득 찬 상태
         } // 함수 종료
 
-        private void ResolveReceiver() // 대상 기능 선언
-        {
+        private void ResolveReceiver() // 회복 대상 연결
+        { // 함수 시작
             if (receiver != null) // 대상 조건 확인
-            {
+            { // 조건 시작
                 return; // 현재 기능 종료
-            }
+            } // 조건 종료
 
-            ResolveSystems(); // 대상 기능 실행
+            ResolveSystems(); // 필요한 관리자 연결
 
             if (health != null) // 체력 조건 확인
-            {
+            { // 조건 시작
                 receiver = // 대상 값 설정
                     health.transform; // 체력·위치 처리
-            }
-        }
+            } // 조건 종료
+        } // 함수 종료
 
-        private void ResolveSystems() // 대상 기능 선언
-        {
+        private void ResolveSystems() // 체력과 몸통 관리자 연결
+        { // 함수 시작
             if (health == null) // 체력 조건 확인
-            {
+            { // 조건 시작
                 health = // 체력 값 설정
                     Object.FindFirstObjectByType<SnakeHealth>(); // 객체·검색 기능 실행
-            }
+            } // 조건 종료
 
             if (bodyManager == null) // 몸통·관리자 조건 확인
-            {
+            { // 조건 시작
                 bodyManager = // 몸통·관리자 값 설정
                     Object.FindFirstObjectByType<SnakeBodyManager>(); // 객체·검색 기능 실행
-            }
-        }
+            } // 조건 종료
+        } // 함수 종료
 
         public static RecoveryPickup Spawn( // 회복·생성 호출 시작
             Vector3 position, // 벡터·위치 항목 전달
@@ -280,7 +280,7 @@ namespace ProjectEpsilon.Progression // 프로젝트 기능 영역
             int value, // 값 항목 전달
             Sprite visual // 이미지·시각 효과 처리
         ) // 앞선 항목 종료
-        {
+        { // 함수 시작
             GameObject pickupObject = // 게임·객체 값 설정
                 new GameObject( // 게임·객체 객체 생성
                     type == // 형식 처리
@@ -305,6 +305,6 @@ namespace ProjectEpsilon.Progression // 프로젝트 기능 영역
             ); // 앞선 항목 종료
 
             return pickup; // 대상 결과 반환
-        }
-    }
-}
+        } // 함수 종료
+    } // 형식 종료
+} // 이름 공간 종료

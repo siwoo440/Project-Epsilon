@@ -104,6 +104,26 @@ namespace ProjectEpsilon.Editor // 배치 시험 영역
             EarlyEnemyWaveSpawner spawner = UnityEngine.Object.FindFirstObjectByType<EarlyEnemyWaveSpawner>(); // 실제 전투 시계 조회
             GameTimerUI display = UnityEngine.Object.FindFirstObjectByType<GameTimerUI>(); // 실제 시간 표시 조회
             Require(spawner != null && display != null && DisplayField != null, "Actual scene clock fixtures missing."); // 실제 씬 구성 확인
+            UnityEngine.UI.Text timerText = (UnityEngine.UI.Text)typeof(GameTimerUI).GetField("timerText", BindingFlags.Instance | BindingFlags.NonPublic).GetValue(display); // 실제 타이머 글자
+            MethodInfo refreshMethod = typeof(GameTimerUI).GetMethod("Refresh", BindingFlags.Instance | BindingFlags.NonPublic); // 실제 타이머 갱신 함수
+            Action refresh = (Action)Delegate.CreateDelegate(typeof(Action), display, refreshMethod); // 반복 호출용 실제 갱신 연결
+            float beforeProbe = (float)DisplayField.GetValue(display); // 시험 전 표시 시간
+            DisplayField.SetValue(display, 42.25f); // 같은 초의 표시 시간 설정
+            refresh(); // 실제 타이머 갱신
+            Require(timerText.text == "00:42", "현재 초의 타이머 표시 오류"); // 실제 분과 초 표시 확인
+            refresh(); // 같은 초의 타이머 재갱신
+            Require(timerText.text == "00:42", "같은 초의 타이머 표시 오류"); // 반복 갱신 시 표시 유지 확인
+            DisplayField.SetValue(display, 43.01f); // 다음 초의 표시 시간 설정
+            refresh(); // 실제 초 변경 반영
+            Require(timerText.text == "00:43", "초 변경 시 타이머 표시 오류"); // 실제 다음 초 표시 확인
+            GameObject secondObject = new GameObject("SecondTimerText", typeof(RectTransform), typeof(UnityEngine.UI.Text)); // 실제 새 타이머 글자
+            UnityEngine.UI.Text secondText = secondObject.GetComponent<UnityEngine.UI.Text>(); // 새 표시 대상
+            display.Bind(secondText); // 같은 초에 다른 글자 연결
+            Require(secondText.text == "00:43", "같은 초의 새 타이머 연결 오류"); // 새 대상의 즉시 표시 확인
+            display.Bind(timerText); // 실제 기존 타이머 재연결
+            Destroy(secondObject); // 시험용 글자 정리
+            DisplayField.SetValue(display, beforeProbe); // 시험 전 표시 시간 복원
+            display.Bind(timerText); // 실제 타이머 연결과 표시 복원
             GetComponent<SnakeMovement>().enabled = false; // 실제 플레이어 이동 통제
             RunClockPauseProbe probe = gameObject.AddComponent<RunClockPauseProbe>(); // 실제 정지 관찰기 생성
             probe.Spawner = spawner; // 실제 전투 시계 연결
