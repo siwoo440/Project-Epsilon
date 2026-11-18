@@ -115,6 +115,7 @@ namespace ProjectEpsilon.Editor // 편집기 영역
         private readonly List<WeaponTarget> elites = new List<WeaponTarget>(); // 실제 엘리트 출현 목록
         private EarlyEnemyWaveSpawner spawner; // 실제 적 출현기
         private EliteRewardController rewards; // 실제 엘리트 보상 관리자
+        private HashSet<WeaponTarget> eliteTargets;
         private FieldInfo elapsedField; // 실제 출현 누적 시간
         private int deathEvents; // 실제 사망 이벤트 수
 
@@ -125,6 +126,7 @@ namespace ProjectEpsilon.Editor // 편집기 영역
             rewards = UnityEngine.Object.FindFirstObjectByType<EliteRewardController>(); // 실제 엘리트 보상 관리자 조회
             SnakeWeaponManager weapons = UnityEngine.Object.FindFirstObjectByType<SnakeWeaponManager>(); // 실제 무기 관리자 조회
             Require(player != null && spawner != null && rewards != null && weapons != null && GameManager.Instance.IsPlaying, "Actual external-destruction fixtures are missing."); // 실제 필수 구성 확인
+            eliteTargets = (HashSet<WeaponTarget>)typeof(EarlyEnemyWaveSpawner).GetField("eliteTargets", Fields).GetValue(spawner);
             elapsedField = typeof(EarlyEnemyWaveSpawner).GetField("elapsed", Fields); // 실제 출현 시간 조회
             Require(elapsedField != null && Elapsed() < 1.5f, "Actual spawn clock did not start near zero."); // 실제 출현 시간 초기 상태
             player.enabled = false; // 플레이어 이동 정지
@@ -152,13 +154,13 @@ namespace ProjectEpsilon.Editor // 편집기 영역
             Time.timeScale = 32f; // 실제 출현 누적 시간 가속
             Debug.Log("[EliteScheduleVerification] external destroy case: scale=32, no spawn clock injection, normal enemies retained and enemy actions disabled."); // 실제 시험 조건 기록
             float deadline = Time.realtimeSinceStartup + 120f; // 실제 시험 제한 시간
-            while (Elapsed() < 481f && Time.realtimeSinceStartup < deadline) // 실제 8분 경계 대기
+            while (Elapsed() < 515f && Time.realtimeSinceStartup < deadline) // 실제 8분 경계 대기
             {
                 Observe(); // 실제 엘리트와 일반 적 관찰
                 yield return null; // 실제 게임 프레임 진행
             }
             Observe(); // 실제 마지막 출현 관찰
-            Require(Elapsed() >= 481f && elites.Count == 1 && elites[0] != null && elites[0].IsAlive && spawner.CurrentNormalEnemyCount == 70 && spawner.ActiveEnemies == 71, "Actual eight-minute occurrence did not wait behind one surviving elite and 70 normal enemies."); // 실제 일반 적 만석과 엘리트 대기 확인
+            Require(Elapsed() >= 515f && elites.Count == 1 && elites[0] != null && elites[0].IsAlive && spawner.CurrentNormalEnemyCount == spawner.CurrentNormalEnemyLimit && spawner.ActiveEnemies == spawner.CurrentNormalEnemyCount + 1, "Actual eight-minute occurrence did not wait behind one surviving elite and a full normal wave."); // 실제 일반 적 만석과 엘리트 대기 확인
             WeaponTarget first = elites[0]; // 실제 미처치 엘리트
             first.Died += ignored => // 실제 사망 이벤트 관찰
             {
@@ -167,13 +169,13 @@ namespace ProjectEpsilon.Editor // 편집기 영역
             Destroy(first.gameObject); // 실제 Unity 외부 지연 파괴 요청
             yield return null; // 실제 파괴 완료 프레임
             Require(first == null && deathEvents == 0, "Actual externally destroyed elite did not reach Unity fake-null without a death."); // 실제 Unity 파괴 완료 확인
-            while (elites.Count < 2 && Elapsed() < 487f) // 실제 대기 회차 재개 대기
+            while (elites.Count < 2 && Elapsed() < 522f) // 실제 대기 회차 재개 대기
             {
                 Observe(); // 실제 출현 적 관찰
                 yield return null; // 실제 게임 프레임 진행
             }
             Observe(); // 실제 재출현 관찰
-            Require(elites.Count == 2 && elites[1] != null && elites[1].IsAlive && spawner.CurrentNormalEnemyCount == 70 && spawner.ActiveEnemies == 71 && rewards.PendingRewardCount == 0 && UnityEngine.Object.FindObjectsByType<ExperiencePickup>(FindObjectsSortMode.None).Length == 0, "External destruction did not release its count and deferred occurrence without rewards."); // 실제 생존 수와 무보상 재출현 확인
+            Require(elites.Count == 2 && elites[1] != null && elites[1].IsAlive && spawner.CurrentNormalEnemyCount == spawner.CurrentNormalEnemyLimit && spawner.ActiveEnemies == spawner.CurrentNormalEnemyCount + 1 && rewards.PendingRewardCount == 0 && UnityEngine.Object.FindObjectsByType<ExperiencePickup>(FindObjectsSortMode.None).Length == 0, "External destruction did not release its count and deferred occurrence without rewards."); // 실제 생존 수와 무보상 재출현 확인
             Debug.Log($"[EliteScheduleVerification] actual external destruction: first target became Unity fake-null, Died={deathEvents}, active={spawner.ActiveEnemies}, deferred elite alive, XP gems=0, rewards=0, elapsed={Elapsed():F3}."); // 실제 외부 파괴 결과
             AutomatedEliteScheduleVerification.Finish(0, "Actual externally destroyed elite released capacity and resumed one deferred occurrence without rewards."); // 실제 경계 성공 기록
         }
@@ -187,7 +189,7 @@ namespace ProjectEpsilon.Editor // 편집기 영역
                     continue; // 중복 기록 제외
                 }
                 enemy.enabled = false; // 실제 적 이동과 공격 중지
-                if (enemy.gameObject.name == "EarlyEnemy_Elite") // 실제 엘리트 종류 확인
+                if (eliteTargets.Contains(enemy.GetComponent<WeaponTarget>())) // 실제 엘리트 종류 확인
                 {
                     WeaponTarget target = enemy.GetComponent<WeaponTarget>(); // 실제 엘리트 대상 조회
                     Require(target != null && target.IsAlive, "Actual spawned elite is invalid."); // 실제 생존 대상 확인
@@ -226,6 +228,7 @@ namespace ProjectEpsilon.Editor // 편집기 영역
         private EliteRewardController rewards; // 실제 엘리트 보상 관리자
         private SnakeLevelUpController level; // 실제 레벨업 관리자
         private LevelUpPanelController panel; // 실제 공용 보상 화면
+        private HashSet<WeaponTarget> eliteTargets;
         private FieldInfo elapsedField; // 실제 출현기 경과 시간
         private FieldInfo pickupValueField; // 실제 보석 경험치 값
         private int deathEvents; // 실제 엘리트 사망 이벤트 수
@@ -236,26 +239,26 @@ namespace ProjectEpsilon.Editor // 편집기 영역
             yield return UntilElapsed(239f); // 실제 누적 시간으로 첫 경계 접근
             WeaponTarget farthest = FindFarthestNormal(); // 만석에서 가장 먼 일반 적 기록
             int countBefore = spawner.ActiveEnemies; // 실제 전체 활성 적 수
-            Require(countBefore == 40 && farthest != null, "Actual normal-enemy capacity fixture is not full before four minutes."); // 실제 일반 적 만석 확인
+            Require(countBefore == spawner.CurrentNormalEnemyLimit && farthest != null, "Actual normal-enemy capacity fixture is not full before four minutes."); // 실제 일반 적 만석 확인
             yield return UntilEliteCount(1, 245f); // 실제 4분 엘리트 출현 대기
-            Require(eliteTimes[0] >= 240f && eliteTimes[0] < 241f && spawner.CurrentNormalEnemyCount == 40 && spawner.ActiveEnemies == 41 && IsAlive(farthest), "First elite did not spawn separately while preserving all 40 normal enemies."); // 첫 엘리트와 일반 적 보존 확인
+            Require(eliteTimes[0] >= 240f && eliteTimes[0] < 241f && spawner.CurrentNormalEnemyCount >= countBefore && spawner.CurrentNormalEnemyCount <= spawner.CurrentNormalEnemyLimit && spawner.ActiveEnemies == spawner.CurrentNormalEnemyCount + 1 && IsAlive(farthest), "First elite did not spawn separately while preserving the existing normal enemies."); // 첫 엘리트와 일반 적 보존 확인
             Require(CountPickups() == 0 && rewards.PendingRewardCount == 0, "Elite arrival produced an unintended reward."); // 엘리트 출현 시 보상 부재
             Debug.Log($"[EliteScheduleVerification] first elite at {eliteTimes[0]:F3}; normal={spawner.CurrentNormalEnemyCount}, total={spawner.ActiveEnemies}; existing normals preserved."); // 실제 첫 출현 결과
-            yield return UntilElapsed(481f); // 실제 8분 경계와 대기 확인
+            yield return UntilElapsed(515f); // 실제 8분 경계와 대기 확인
             Require(spawnedElites.Count == 1 && IsAlive(spawnedElites[0]), "The eight-minute elite did not wait for the existing early elite."); // 초반 동시 한 마리와 FIFO 대기
             Debug.Log($"[EliteScheduleVerification] 8-minute occurrence deferred while first elite remains alive; elapsed={Elapsed():F3}."); // 실제 연기 상태 기록
             KillElite(spawnedElites[0], 1); // 실제 첫 엘리트 사망과 중복 처리 확인
-            yield return UntilEliteCount(2, 487f); // 대기 중 8분 엘리트 출현
-            Require(IsAlive(spawnedElites[1]) && spawnedElites.Count == 2 && spawner.CurrentNormalEnemyCount == 70 && spawner.ActiveEnemies == 71, "Deferred eight-minute elite did not spawn separately from 70 normal enemies."); // 실제 FIFO 재개 확인
+            yield return UntilEliteCount(2, 522f); // 대기 중 8분 엘리트 출현
+            Require(IsAlive(spawnedElites[1]) && spawnedElites.Count == 2 && spawner.CurrentNormalEnemyCount == spawner.CurrentNormalEnemyLimit && spawner.ActiveEnemies == spawner.CurrentNormalEnemyCount + 1, "Deferred eight-minute elite did not spawn separately from the full normal wave."); // 실제 FIFO 재개 확인
             Debug.Log($"[EliteScheduleVerification] deferred 8-minute occurrence spawned at {eliteTimes[1]:F3}; pending rewards={rewards.PendingRewardCount}."); // 지연 출현 실제 기록
             yield return UntilEliteCount(3, 725f); // 실제 12분 엘리트 출현 대기
-            Require(eliteTimes[2] >= 720f && eliteTimes[2] < 721f && IsAlive(spawnedElites[1]) && IsAlive(spawnedElites[2]) && spawner.CurrentNormalEnemyCount <= 110 && spawner.ActiveEnemies == spawner.CurrentNormalEnemyCount + 2, "Twelve-minute elites did not coexist separately from normal enemies."); // 12분 동시 두 엘리트 확인
+            Require(eliteTimes[2] >= 720f && eliteTimes[2] < 721f && IsAlive(spawnedElites[1]) && IsAlive(spawnedElites[2]) && spawner.CurrentNormalEnemyCount <= spawner.CurrentNormalEnemyLimit && spawner.ActiveEnemies == spawner.CurrentNormalEnemyCount + 2, "Twelve-minute elites did not coexist separately from normal enemies."); // 12분 동시 두 엘리트 확인
             Debug.Log($"[EliteScheduleVerification] 12-minute occurrence at {eliteTimes[2]:F3}; 8-minute and 12-minute elites alive; capacity={spawner.ActiveEnemies}."); // 실제 공존 결과 기록
             yield return UntilElapsed(961f); // 실제 16분 경계와 대기 확인
             Require(spawnedElites.Count == 3 && IsAlive(spawnedElites[1]) && IsAlive(spawnedElites[2]), "Sixteen-minute elite failed to wait for the two live elites."); // 최대 두 마리와 다음 회차 대기
             KillElite(spawnedElites[1], 2); // 실제 두 번째 엘리트 사망
             yield return UntilEliteCount(4, 967f); // 대기 중 16분 엘리트 출현
-            Require(IsAlive(spawnedElites[2]) && IsAlive(spawnedElites[3]) && spawner.CurrentNormalEnemyCount <= 125 && spawner.ActiveEnemies == spawner.CurrentNormalEnemyCount + 2, "Deferred sixteen-minute elite did not coexist with the surviving earlier elite."); // 실제 FIFO 및 기존 엘리트 보존
+            Require(IsAlive(spawnedElites[2]) && IsAlive(spawnedElites[3]) && spawner.CurrentNormalEnemyCount <= spawner.CurrentNormalEnemyLimit && spawner.ActiveEnemies == spawner.CurrentNormalEnemyCount + 2, "Deferred sixteen-minute elite did not coexist with the surviving earlier elite."); // 실제 FIFO 및 기존 엘리트 보존
             Debug.Log($"[EliteScheduleVerification] deferred 16-minute occurrence spawned at {eliteTimes[3]:F3}; surviving 12-minute elite preserved."); // 지연된 네 번째 출현 기록
             yield return UntilElapsed(Elapsed() + 3.5f); // 실제 다음 출현 간격 진행
             Require(spawnedElites.Count == 4, "An elite occurrence spawned more than once."); // 네 회차 중복 생성 방지
@@ -307,6 +310,7 @@ namespace ProjectEpsilon.Editor // 편집기 영역
             level = UnityEngine.Object.FindFirstObjectByType<SnakeLevelUpController>(); // 실제 레벨업 관리자 조회
             panel = UnityEngine.Object.FindFirstObjectByType<LevelUpPanelController>(FindObjectsInactive.Include); // 실제 보상 패널 조회
             Require(player != null && body != null && health != null && experience != null && weapons != null && spawner != null && rewards != null && level != null && panel != null && GameManager.Instance.IsPlaying, "Actual Game scene fixtures are missing."); // 실제 필수 구성 확인
+            eliteTargets = (HashSet<WeaponTarget>)typeof(EarlyEnemyWaveSpawner).GetField("eliteTargets", Fields).GetValue(spawner);
             elapsedField = typeof(EarlyEnemyWaveSpawner).GetField("elapsed", Fields); // 실제 출현 누적 시간 필드
             pickupValueField = typeof(ExperiencePickup).GetField("experienceValue", Fields); // 실제 보석 값 필드
             Require(elapsedField != null && pickupValueField != null && Elapsed() >= 0f && Elapsed() < 1.5f, "Actual spawn clock was not near its genuine game start."); // 실제 출현 시계 시작 확인
@@ -376,7 +380,7 @@ namespace ProjectEpsilon.Editor // 편집기 영역
                     continue; // 중복 관찰 방지
                 }
                 enemy.enabled = false; // 실제 적의 이동과 공격 정지
-                if (enemy.gameObject.name != "EarlyEnemy_Elite") // 실제 엘리트 종류 확인
+                if (!eliteTargets.Contains(enemy.GetComponent<WeaponTarget>())) // 실제 엘리트 종류 확인
                 {
                     continue; // 일반 적은 만석 상태로 유지
                 }
@@ -398,10 +402,10 @@ namespace ProjectEpsilon.Editor // 편집기 영역
             FieldInfo targetsField = typeof(EarlyEnemyWaveSpawner).GetField("targets", Fields); // 실제 출현기 관리 대상 필드
             Require(targetsField != null, "Actual spawner target list is unavailable."); // 실제 관리 목록 확인
             List<WeaponTarget> targets = targetsField.GetValue(spawner) as List<WeaponTarget>; // 실제 출현 순서의 대상 목록
-            Require(targets != null && targets.Count == 40, "Actual spawner target list is not at full capacity."); // 실제 관리 대상 만석 확인
+            Require(targets != null && targets.Count == spawner.CurrentNormalEnemyLimit, "Actual spawner target list is not at full capacity."); // 실제 관리 대상 만석 확인
             foreach (WeaponTarget target in targets) // 실제 출현기 순서로 대상 순회
             {
-                if (target == null || target.gameObject.name == "EarlyEnemy_Elite") // 실제 엘리트 및 제거 대상 제외
+                if (target == null || eliteTargets.Contains(target)) // 실제 엘리트 및 제거 대상 제외
                 {
                     continue; // 다음 일반 적 확인
                 }

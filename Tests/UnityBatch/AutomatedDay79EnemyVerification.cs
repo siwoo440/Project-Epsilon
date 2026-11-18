@@ -69,12 +69,23 @@ namespace ProjectEpsilon.Editor // 배치 시험 영역
             Require((float)weight.Invoke(spawner, new object[] { antlion }) > 0f && (float)weight.Invoke(spawner, new object[] { beetle }) == 0f, "15분 출현 조건 오류"); // 15분 시점 확인
             elapsed.SetValue(spawner, 1080f); // 장수풍뎅이 등장 시각
             Require((float)weight.Invoke(spawner, new object[] { beetle }) > 0f, "18분 장수풍뎅이 출현 누락"); // 18분 시점 확인
-            Require(Mathf.Abs(wave.ResolveMultiplier(1080f, true) - 1.49f) < 0.0001f && Mathf.Abs(wave.ResolveMultiplier(1080f, false) - 1.108f) < 0.0001f, "18분 구간이 기존 성장 보간을 변경"); // 기존 능력치 성장 유지 확인
-            for (int minute = 15; minute <= 20; minute++) // 기존 15~20분 성장 확인
-            { // 반복 시작
-                float progress = (minute - 15f) / 5f; // 기존 구간 진행 비율
-                Require(Mathf.Abs(wave.ResolveMultiplier(minute * 60f, true) - Mathf.Lerp(1.4f, 1.55f, progress)) < 0.0001f && Mathf.Abs(wave.ResolveMultiplier(minute * 60f, false) - Mathf.Lerp(1.09f, 1.12f, progress)) < 0.0001f, "기존 분 단위 적 성장 변경"); // 매 분의 기존 성장 유지 확인
-            } // 반복 종료
+            float previousHealth = wave.ResolveMultiplier(0f, true);
+            float previousDamage = wave.ResolveMultiplier(0f, false);
+            float previousHealthGain = 0f;
+            float previousDamageGain = 0f;
+            for (int minute = 1; minute <= 20; minute++)
+            {
+                float healthScale = wave.ResolveMultiplier(minute * 60f, true);
+                float damageScale = wave.ResolveMultiplier(minute * 60f, false);
+                float healthGain = healthScale - previousHealth;
+                float damageGain = damageScale - previousDamage;
+                Require(healthGain > previousHealthGain && damageGain > previousDamageGain, "분 단위 적 성장폭이 증가하지 않음: " + minute);
+                Require(Mathf.Approximately(healthScale, wave.ResolveMultiplier(minute * 60f + 59f, true)), "같은 분 안에서 체력 배율이 변경됨");
+                previousHealth = healthScale;
+                previousDamage = damageScale;
+                previousHealthGain = healthGain;
+                previousDamageGain = damageGain;
+            }
             MethodInfo spawn = typeof(EarlyEnemyWaveSpawner).GetMethod("SpawnAt", Private); // 실제 적 출현 경로
             WeaponTarget antlionTarget = (WeaponTarget)spawn.Invoke(spawner, new object[] { antlion, new Vector3(10f, 0f, 0f), false }); // 실제 개미귀신 출현
             EarlyEnemyBehaviour ranged = antlionTarget.GetComponent<EarlyEnemyBehaviour>(); // 실제 사격 행동
