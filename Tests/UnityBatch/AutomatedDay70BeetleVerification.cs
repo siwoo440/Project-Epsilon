@@ -135,7 +135,7 @@ namespace ProjectEpsilon.Editor // 편집기 시험 영역
             EarlyEnemyBehaviour enemy = UnityEngine.Object.FindFirstObjectByType<EarlyEnemyBehaviour>(); // 실제 생성 적
             if (!Check(wave.CurrentNormalEnemyCount == 1 && enemy != null && enemy.GetComponent<EnemyDropController>() != null && enemy.GetComponent<SpriteRenderer>().sprite == beetle.enemySprite, "Five-minute beetle or normal reward path missing.")) yield break; // 실제 출현과 일반 보상 확인
             WeaponTarget target = enemy.GetComponent<WeaponTarget>(); // 실제 적 체력
-            if (!Check(target != null && Mathf.Approximately(target.MaximumHealth, 34f), "Beetle health did not use the five-minute multiplier.")) yield break; // 시간별 체력 배율 확인
+            if (!Check(target != null && Mathf.Approximately(target.MaximumHealth, 39f), "Beetle health did not use the five-minute multiplier.")) yield break; // 시간별 체력 배율 확인
             EarlyEnemySettings runtime = typeof(EarlyEnemyBehaviour).GetField("settings", Private).GetValue(enemy) as EarlyEnemySettings; // 실제 생성 적의 복사된 능력치
             if (!Check(runtime != null && runtime.damage == 15 && Mathf.Approximately(runtime.speedRatio, 0.85f) && Mathf.Approximately(runtime.chargeWarningDuration, 0.6f), "Beetle damage, speed or warning data mismatch.")) yield break; // 시간별 공격력과 기본 속도 확인
             FieldInfo attack = typeof(EarlyEnemyBehaviour).GetField("nextAttack", Private); // 실제 다음 돌진 시간
