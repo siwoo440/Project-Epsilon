@@ -1,11 +1,13 @@
 using System; // 기본 형식
 using System.Collections; // 코루틴 형식
+using System.Collections.Generic; // 소환 적 보관 목록
 using System.Reflection; // 실제 제품 상태 조회
 using ProjectEpsilon.Combat; // 실제 공격 대상
 using ProjectEpsilon.Core; // 실제 게임 상태
 using ProjectEpsilon.Enemies; // 실제 적 출현과 투사체
 using ProjectEpsilon.Player; // 플레이어 구성
 using ProjectEpsilon.Progression; // 실제 보석과 회복 아이템
+using ProjectEpsilon.World; // 맵과 보스 설정
 using UnityEditor; // 배치 실행
 using UnityEditor.SceneManagement; // 실제 씬 열기
 using UnityEngine; // 유니티 기능
@@ -19,6 +21,7 @@ namespace ProjectEpsilon.Editor // 배치 시험 영역
         private static bool injected; // 실행기 생성 여부
         private static bool finished; // 중복 종료 방지
         private static double started; // 시험 시작 시각
+        private static bool mapConfigured; // 선택 맵 적용 여부
 
         static AutomatedBossTransitionVerification() // 도메인 재시작 처리
         {
@@ -52,6 +55,25 @@ namespace ProjectEpsilon.Editor // 배치 시험 영역
                 Finish(1, "Timed out waiting for boss transition."); // 시간 초과 실패
                 return; // 감시 종료
             }
+            if (!mapConfigured && GameManager.Instance != null && GameManager.Instance.CurrentState == GameState.Starting) // 맵 선택 가능 상태 확인
+            { // 조건 시작
+                string[] arguments = Environment.GetCommandLineArgs(); // 배치 실행 인수 조회
+                int index = Array.IndexOf(arguments, "-epsilonBossMap"); // 시험 맵 인수 위치
+                if (index >= 0) // 별도 맵 지정 확인
+                { // 조건 시작
+                    PrototypeMapSelection maps = UnityEngine.Object.FindFirstObjectByType<PrototypeMapSelection>(); // 실제 맵 선택기 조회
+                    if (maps == null) // 맵 선택기 준비 확인
+                    { // 조건 시작
+                        return; // 초기화 대기
+                    } // 조건 종료
+                    if (index + 1 >= arguments.Length || !int.TryParse(arguments[index + 1], out int mapIndex) || !maps.SelectMap(mapIndex)) // 유효한 맵 적용 확인
+                    { // 조건 시작
+                        Finish(1, "Could not configure requested boss map."); // 맵 적용 실패 기록
+                        return; // 잘못된 맵 시험 중단
+                    } // 조건 종료
+                } // 조건 종료
+                mapConfigured = true; // 시험 맵 적용 완료
+            } // 조건 종료
             if (StartingWeaponBatchHelper.HandleStartingSelection() || injected) // 시작 선택과 실행기 확인
             {
                 return; // 실제 시작 또는 결과 대기
@@ -105,15 +127,15 @@ namespace ProjectEpsilon.Editor // 배치 시험 영역
                 follower.enabled = false; // 몸통 이동 통제
             }
             SnakeSelfCollision self = GetComponent<SnakeSelfCollision>(); // 실제 자기 충돌 조회
-            SnakeExternalCollision external = GetComponent<SnakeExternalCollision>(); // 실제 외부 충돌 조회
+            SnakeInvulnerability protection = GetComponent<SnakeInvulnerability>(); // 시험 중 무적 구성 조회
             if (self != null) // 자기 충돌 확인
             {
                 self.enabled = false; // 시험 중 자기 충돌 방지
             }
-            if (external != null) // 외부 충돌 확인
-            {
-                external.enabled = false; // 시험 중 외부 충돌 방지
-            }
+            if (protection != null) // 실제 무적 구성 확인
+            { // 조건 시작
+                protection.StartInvulnerability(3600f, false); // 충돌 처리기를 유지한 시험 보호
+            } // 조건 종료
             SnakeWeaponManager weapons = UnityEngine.Object.FindFirstObjectByType<SnakeWeaponManager>(); // 실제 무기 조회
             var startingWeapon = weapons.Slots[0].Weapon; // 실제 시작 무기 보존
             foreach (SnakeWeaponSlot slot in weapons.Slots) // 실제 장착 무기 순회
@@ -122,6 +144,11 @@ namespace ProjectEpsilon.Editor // 배치 시험 영역
             }
             weapons.enabled = false; // 합성 재료 재장착 후에도 자동 공격 차단
             Time.timeScale = 32f; // 실제 게임 시간 가속
+            bool fastBoundary = Array.IndexOf(Environment.GetCommandLineArgs(), "-epsilonFastBossBoundary") >= 0; // 보스 경계 단축 시험 여부
+            if (fastBoundary) // 보스 경계 단축 시험 확인
+            { // 조건 시작
+                elapsedField.SetValue(spawner, 1190f); // 보스 직전 시각으로 시험 이동
+            } // 조건 종료
             float deadline = Time.realtimeSinceStartup + 140f; // 실제 시험 제한 시각
             while (Elapsed() < 1190f && Time.realtimeSinceStartup < deadline) // 실제 누적 경계 대기
             {
@@ -166,13 +193,29 @@ namespace ProjectEpsilon.Editor // 배치 시험 영역
             Require(encounter != null && bossProperty != null && phaseProperty != null, "Actual scene boss encounter is missing."); // 실제 보스 구성 확인
             WeaponTarget boss = bossProperty.GetValue(encounter) as WeaponTarget; // 실제 출현 보스
             Require(boss != null && boss.IsAlive && !(bool)phaseProperty.GetValue(encounter), "Actual live first-phase boss did not spawn."); // 실제 보스 생존 확인
+            PrototypeMapSelection chosenMap = UnityEngine.Object.FindFirstObjectByType<PrototypeMapSelection>(); // 실제 선택 맵 조회
+            Require(chosenMap != null && chosenMap.SelectedProfile != null && Mathf.Approximately(boss.MaximumHealth, chosenMap.SelectedProfile.BossHealth), "Boss health did not match the selected map."); // 맵 전용 보스 체력 확인
+            List<WeaponTarget> summons = new List<WeaponTarget>(); // 시험 소환 적 보관
+            int slots = 499 - spawner.ActiveEnemies; // 보스 본체를 제외한 빈자리
+            for (int index = 0; index < slots; index++) // 남은 소환 자리 순회
+            { // 반복 시작
+                WeaponTarget summon = spawner.SpawnBossSummon(distant + Vector3.right * index); // 실제 보스 소환 적 생성
+                Require(summon != null, "Boss summon could not fill an available slot."); // 남은 자리 생성 확인
+                summons.Add(summon); // 시험 소환 적 보관
+            } // 반복 종료
+            Require(spawner.ActiveEnemies == 499 && spawner.SpawnBossSummon(distant) == null, "Boss and summons exceeded the shared 500-enemy limit."); // 보스 포함 전체 상한 확인
+            foreach (WeaponTarget summon in summons) // 시험 소환 적 순회
+            { // 반복 시작
+                spawner.RemoveBossSummon(summon); // 시험 소환 적 무보상 제거
+            } // 반복 종료
+            Require(spawner.ActiveEnemies == 0, "Boss summon cleanup left active enemies."); // 소환 적 집계 정리 확인
             boss.TakeDamage(boss.MaximumHealth * 0.5f); // 실제 보스 피해 적용
             yield return null; // 실제 단계 관찰 프레임
             Require(boss.IsAlive && (bool)phaseProperty.GetValue(encounter) && GameManager.Instance.IsPlaying, "Actual surviving boss did not enter phase two without victory."); // 실제 절반 체력 단계 확인
             boss.TakeDamage(boss.MaximumHealth); // 실제 보스 치명 피해 적용
             Require(GameManager.Instance.CurrentState.ToString() == "Victory" && Time.timeScale == 0f, "Actual boss death did not trigger victory and time stop."); // 실제 보스 사망 승리 확인
             Debug.Log($"[BossTransitionVerification] elapsed={Elapsed():F3}, initial managed enemies={before}, transitions={transitions}, XP and healing preserved, body repair and enemy projectile removed, actual boss phase two and death victory."); // 실제 경계 결과 기록
-            AutomatedBossTransitionVerification.Finish(0, "Actual accelerated 0-to-1200-second transition, cleanup and forced boss victory passed."); // 실제 전체 결과
+            AutomatedBossTransitionVerification.Finish(0, fastBoundary ? "Controlled 1190-to-1200-second transition, cleanup, summon cap and forced boss victory passed." : "Actual accelerated 0-to-1200-second transition, cleanup, summon cap and forced boss victory passed."); // 실제 시험 범위와 결과
         }
 
         private float Elapsed() // 실제 출현 경과 시간

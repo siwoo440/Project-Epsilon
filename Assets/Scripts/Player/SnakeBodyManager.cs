@@ -39,6 +39,9 @@ namespace ProjectEpsilon.Player // 프로젝트 기능 영역
 
         private SnakeSegment tailSegment; // 몸통 구성 선언
         private bool initialized; // 초기화 구성 선언
+        private Sprite defaultBodySprite; // 기본 몸통 이미지 보관
+        private Sprite defaultTailSprite; // 기본 꼬리 이미지 보관
+        private bool defaultAppearanceCached; // 기본 외형 보관 여부
 
         public event Action<int, int> BodyCountChanged; // 이벤트·동작 구성 선언
         public event Action<Vector3> BodyRemoved; // 실제 몸통 손실 위치 알림
@@ -276,6 +279,28 @@ namespace ProjectEpsilon.Player // 프로젝트 기능 영역
             RefreshFollower(); // 갱신 기능 실행
             NotifyBodyCountChanged(); // 알림·몸통 기능 실행
             return removedCount; // 개수 결과 반환
+        } // 함수 종료
+
+        public void SetAppearance(Sprite segmentSprite, Sprite endSprite, Color tint) // 캐릭터별 몸통 외형 적용
+        { // 함수 시작
+            EnsureInitialized(); // 기존 몸통 초기화 확인
+            if (!defaultAppearanceCached) // 최초 기본 이미지 확인
+            { // 조건 시작
+                defaultBodySprite = bodySprite; // 기본 몸통 이미지 보관
+                defaultTailSprite = tailSprite; // 기본 꼬리 이미지 보관
+                defaultAppearanceCached = true; // 기본 외형 보관 완료
+            } // 조건 종료
+            bodySprite = segmentSprite != null ? segmentSprite : defaultBodySprite; // 선택 또는 기본 몸통 이미지
+            tailSprite = endSprite != null ? endSprite : defaultTailSprite; // 선택 또는 기본 꼬리 이미지
+            bodyColor = tint; // 기존과 새 몸통 색상
+            tailColor = tint; // 기존과 새 꼬리 색상
+            ReindexBodySegments(); // 현재 몸통 이미지와 색상 갱신
+            EnsureTail(); // 꼬리 이미지 갱신
+            SpriteRenderer tailRenderer = tailSegment == null ? null : tailSegment.GetComponent<SpriteRenderer>(); // 꼬리 표시기 조회
+            if (tailRenderer != null) // 꼬리 표시기 확인
+            { // 조건 시작
+                tailRenderer.color = tailColor; // 현재 꼬리 색상 갱신
+            } // 조건 종료
         } // 함수 종료
 
         public bool SetStartingBodyCount(int count) // 런 시작 몸통 수 설정

@@ -20,6 +20,10 @@ namespace ProjectEpsilon.Data // 프로젝트 기능 영역
         [SerializeField] private string id = "character_id"; // 필드·식별자 설정
         [SerializeField] private string displayName = "캐릭터"; // 필드·이름 설정
         [SerializeField] private Sprite portrait; // 선택 화면 초상화
+        [SerializeField] private Sprite battleHeadSprite; // 전투 머리 이미지
+        [SerializeField] private Sprite battleBodySprite; // 전투 몸통 이미지
+        [SerializeField] private Sprite battleTailSprite; // 전투 꼬리 이미지
+        [SerializeField] private Color battleTint = Color.white; // 전투 외형 색상
 
         [Header("Base Stats")] // 대상 설정
         [Min(1)] [SerializeField] private int startingBodyCount = 3; // 최소·필드 설정
@@ -36,6 +40,10 @@ namespace ProjectEpsilon.Data // 프로젝트 기능 영역
         public string Id => id; // 식별자 값 반환
         public string DisplayName => displayName; // 이름 값 반환
         public Sprite Portrait => portrait; // 실제 선택 초상화
+        public Sprite BattleHeadSprite => battleHeadSprite; // 전투 머리 이미지 조회
+        public Sprite BattleBodySprite => battleBodySprite; // 전투 몸통 이미지 조회
+        public Sprite BattleTailSprite => battleTailSprite; // 전투 꼬리 이미지 조회
+        public Color BattleTint => battleTint; // 전투 외형 색상 조회
         public int StartingBodyCount => startingBodyCount; // 몸통·개수 값 반환
         public float BodyMaxHealth => bodyMaxHealth; // 몸통·최대 값 반환
         public float MoveSpeedMultiplier => moveSpeedMultiplier; // 속도·배율 값 반환

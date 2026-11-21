@@ -167,6 +167,9 @@ namespace ProjectEpsilon.Editor // 실제 배치 시험 영역
             SnakeWeaponManager weapons = FindFirstObjectByType<SnakeWeaponManager>(); // 실제 장착 관리자
             PrototypeMapSelection maps = FindFirstObjectByType<PrototypeMapSelection>(); // 실제 적용 맵
             Require(CharacterRunInitializer.ActiveCharacter == selected && body != null && body.CurrentBodyCount == selected.StartingBodyCount && health != null && health.MaximumHealth == Mathf.RoundToInt(selected.BodyMaxHealth) && weapons != null && weapons.Slots[0].Weapon == turret && maps != null && maps.SelectedIndex == targetMap, $"Prepared data mismatch: selected={selected?.Id}, active={CharacterRunInitializer.ActiveCharacter?.Id}, body={body?.CurrentBodyCount}, hp={health?.MaximumHealth}, weapon={weapons?.Slots[0].Weapon?.Id}, expected={turret?.Id}, map={maps?.SelectedIndex}."); // 실제 선택과 능력치 전달 확인
+            VerifySkin(selected); // 전투 진입 시 선택 외형 확인
+            Require(body.TryGainBodyFromLevelUp() && body.TryRemoveBody() && body.TryRepairBody(), "Could not grow and repair selected skin."); // 실제 성장과 복구 확인
+            VerifySkin(selected); // 성장과 복구 후 외형 확인
             MetaProgressionController meta = MetaProgressionController.Instance; // 실제 전투 성과 관리자
             SceneFlowMemoryStorage storage = new SceneFlowMemoryStorage(); // 실제 저장 실패 시험 저장소
             MetaProgressionService service = new MetaProgressionService(storage); // 실제 임시 저장 서비스
@@ -193,6 +196,7 @@ namespace ProjectEpsilon.Editor // 실제 배치 시험 영역
                 yield return null; // 실제 재도전 초기화 프레임 대기
             }
             Require(SceneManager.GetActiveScene().path == SceneFrontendContext.GamePath && GameManager.Instance != null && GameManager.Instance.IsPlaying && CharacterRunInitializer.ActiveCharacter.Id == selected.Id && FindFirstObjectByType<PrototypeMapSelection>().SelectedIndex == targetMap, "Retry lost selected character or map."); // 실제 재도전 캐릭터와 맵 확인
+            VerifySkin(selected); // 재도전 후 선택 외형 확인
             GameObject bossObject = new GameObject("SceneFlowTestBoss"); // 실제 등록할 시험 보스
             WeaponTarget boss = bossObject.AddComponent<WeaponTarget>(); // 실제 공격 대상
             Require(GameManager.Instance.RegisterFinalBoss(boss), "Could not register final boss."); // 실제 보스 등록 확인
@@ -212,6 +216,25 @@ namespace ProjectEpsilon.Editor // 실제 배치 시험 영역
             Require(SceneManager.GetActiveScene().path == SceneFrontendContext.MainMenuPath && GameManager.Instance == null && Button("FrontendStartButton") != null, "Main menu return kept old game state."); // 실제 이전 전투 정리 확인
             AutomatedSceneFlowVerification.Finish(0, "Menu, controls, preparation, selected loadout, save failure, retry and main menu passed."); // 실제 전체 시험 성공
         }
+        private static void VerifySkin(CharacterData selected) // 선택 외형의 실제 표시 확인
+        { // 함수 시작
+            SnakeMovement player = FindFirstObjectByType<SnakeMovement>(); // 실제 플레이어 조회
+            SnakeBodyManager body = FindFirstObjectByType<SnakeBodyManager>(); // 실제 몸통 관리자 조회
+            SpriteRenderer head = player == null ? null : player.GetComponent<SpriteRenderer>(); // 실제 머리 표시기 조회
+            Require(head != null && head.sprite == selected.BattleHeadSprite && SameTint(head.color, selected.BattleTint), "Selected head skin was not retained."); // 선택 머리 외형 확인
+            Require(body != null && body.TailSegment != null, "Selected tail is missing."); // 선택 꼬리 존재 확인
+            SpriteRenderer tail = body.TailSegment.GetComponent<SpriteRenderer>(); // 실제 꼬리 표시기 조회
+            Require(tail != null && tail.sprite == selected.BattleTailSprite && SameTint(tail.color, selected.BattleTint), "Selected tail skin was not retained."); // 선택 꼬리 외형 확인
+            foreach (SnakeSegment segment in body.BodySegments) // 실제 몸통 순회
+            { // 반복 시작
+                SpriteRenderer part = segment == null ? null : segment.GetComponent<SpriteRenderer>(); // 몸통 표시기 조회
+                Require(part != null && part.sprite == selected.BattleBodySprite && SameTint(part.color, selected.BattleTint), "Selected body skin was not retained."); // 선택 몸통 외형 확인
+            } // 반복 종료
+        } // 함수 종료
+        private static bool SameTint(Color actual, Color expected) // 점멸 투명도와 별개로 색상 비교
+        { // 함수 시작
+            return Mathf.Approximately(actual.r, expected.r) && Mathf.Approximately(actual.g, expected.g) && Mathf.Approximately(actual.b, expected.b); // 전투 색상 비교 결과
+        } // 함수 종료
         private static Button Button(string name) // 실제 활성 버튼 조회
         {
             GameObject item = GameObject.Find(name); // 실제 화면 객체 검색

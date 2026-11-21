@@ -108,15 +108,32 @@ namespace ProjectEpsilon.Editor // 배치 시험 영역
             float[] turns = { 145f, 166.75f, 123.25f, 145f, 145f, 145f }; // 실제 기본 회전 속도
             float[] recoveries = { 10.5f, 12.5f, 10f, 10f, 10f, 10f }; // 절반으로 줄인 캐릭터별 초당 회복률
             CharacterData[] profiles = new CharacterData[names.Length]; // 실제 캐릭터 데이터 목록
+            var colors = new System.Collections.Generic.HashSet<Color>(); // 캐릭터별 색상 구분 확인
             for (int index = 0; index < names.Length; index++) // 실제 여섯 캐릭터 순회
             {
                 CharacterData data = AssetDatabase.LoadAssetAtPath<CharacterData>("Assets/Data/Characters/Prototype" + names[index] + ".asset"); // 실제 캐릭터 데이터
                 profiles[index] = data; // 실제 캐릭터 보관
                 Require(data != null && (bool)apply.Invoke(initializer, new object[] { data }), "Character was not applied: " + names[index]); // 실제 시작 적용 확인
+                SerializedObject skin = new SerializedObject(data); // 실제 캐릭터 외형 데이터 조회
+                SerializedProperty headSprite = skin.FindProperty("battleHeadSprite"); // 머리 스프라이트 설정 조회
+                SerializedProperty bodySprite = skin.FindProperty("battleBodySprite"); // 몸통 스프라이트 설정 조회
+                SerializedProperty tailSprite = skin.FindProperty("battleTailSprite"); // 꼬리 스프라이트 설정 조회
+                SerializedProperty tint = skin.FindProperty("battleTint"); // 캐릭터별 전투 색상 조회
+                Require(headSprite != null && bodySprite != null && tailSprite != null && tint != null, "Character battle skin fields are missing: " + names[index]); // 외형 필드 누락 검출
+                Require(headSprite.objectReferenceValue != null && bodySprite.objectReferenceValue != null && tailSprite.objectReferenceValue != null && colors.Add(tint.colorValue), "Character battle skin is missing or indistinguishable: " + names[index]); // 이미지와 고유 색상 확인
+                SpriteRenderer head = initializer.GetComponent<SpriteRenderer>(); // 실제 머리 표시기 조회
+                Require(head != null && head.sprite == headSprite.objectReferenceValue as Sprite && head.color == tint.colorValue, "Head skin mismatch: " + names[index]); // 실제 머리 외형 확인
+                Require(body.TailSegment.GetComponent<SpriteRenderer>().sprite == tailSprite.objectReferenceValue as Sprite && body.TailSegment.GetComponent<SpriteRenderer>().color == tint.colorValue, "Tail skin mismatch: " + names[index]); // 실제 꼬리 외형 확인
+                Require(body.BodySegments[0].GetComponent<SpriteRenderer>().sprite == bodySprite.objectReferenceValue as Sprite && body.BodySegments[0].GetComponent<SpriteRenderer>().color == tint.colorValue, "Initial body skin mismatch: " + names[index]); // 시작 몸통 외형 확인
+                Require(body.TryGainBodyFromLevelUp(), "Could not grow body: " + names[index]); // 성장 몸통 생성 확인
+                Require(body.BodySegments[body.CurrentBodyCount - 1].GetComponent<SpriteRenderer>().color == tint.colorValue, "Grown body skin mismatch: " + names[index]); // 성장 몸통 색상 확인
+                Require(body.TryRemoveBody() && body.TryRepairBody(), "Could not repair body: " + names[index]); // 몸통 손실과 복구 확인
+                Require(body.BodySegments[body.CurrentBodyCount - 1].GetComponent<SpriteRenderer>().sprite == bodySprite.objectReferenceValue as Sprite && body.BodySegments[body.CurrentBodyCount - 1].GetComponent<SpriteRenderer>().color == tint.colorValue, "Repaired body skin mismatch: " + names[index]); // 복구 몸통 외형 확인
+                Require((bool)apply.Invoke(initializer, new object[] { data }), "Character reset failed: " + names[index]); // 이후 능력치 시험 시작 상태 복원
                 Require(body.CurrentBodyCount == data.StartingBodyCount && body.EarnedBodyCount == data.StartingBodyCount && body.MaximumBodyCount == 20 && weapons.SlotCount == data.StartingBodyCount, "Character body or slots mismatch: " + names[index]); // 실제 몸통과 슬롯 확인
                 Require(health.MaximumHealth == (int)data.BodyMaxHealth && health.CurrentHealth == (int)data.BodyMaxHealth, "Character HP mismatch: " + names[index]); // 실제 시작 체력 확인
                 Require(Mathf.Abs(movement.MoveSpeed - speed[index]) < 0.01f && Mathf.Abs(movement.TurnSpeed - turns[index]) < 0.01f && Mathf.Abs((float)recovery.GetValue(stamina) - recoveries[index]) < 0.01f, "Character movement or stamina mismatch: " + names[index]); // 실제 이동과 회복 확인
-                Require(optionsField.GetValue(selection) == data.StartingWeapons && selection.IsSelecting, "Character starting choices did not refresh: " + names[index]); // 실제 선택 화면 후보 확인
+                Require((StartingWeaponOptions)optionsField.GetValue(selection) == data.StartingWeapons && selection.IsSelecting, "Character starting choices did not refresh: " + names[index]); // 실제 선택 화면 후보 확인
             }
             CharacterData heavy = profiles[2]; // 실제 중장형 데이터
             Require((bool)apply.Invoke(initializer, new object[] { heavy }), "Heavy profile could not be reapplied."); // 중장형 실제 적용

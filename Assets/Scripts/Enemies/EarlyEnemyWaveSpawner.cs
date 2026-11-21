@@ -59,7 +59,7 @@ namespace ProjectEpsilon.Enemies // 적 영역
     [DefaultExecutionOrder(100)] // 카메라 이동 이후 실행
     public sealed class EarlyEnemyWaveSpawner : MonoBehaviour // 초반 적 출현기
     { // 형식 시작
-        private const int MaximumConcurrentEnemies = 500;
+        private const int MaximumConcurrentEnemies = 500; // 전체 적 동시 상한
         [SerializeField] private float spawnInterval = 1.5f; // 임시 출현 간격
         [SerializeField] private int maximumEnemies = 40; // 동시 적 상한
         [SerializeField] private float spawnDistance = 9f; // 출현 거리
@@ -131,8 +131,8 @@ namespace ProjectEpsilon.Enemies // 적 영역
         private SnakeBodyManager body; // 플레이어 몸통 참조
         private SnakeHealth health; // 공용 체력 참조
         private EnemyWaveSettings waveSettings; // 시간별 출현 데이터
-        private int sampledMinute = -1;
-        private EnemyWavePacing? minutePacing;
+        private int sampledMinute = -1; // 마지막 보간 분
+        private EnemyWavePacing? minutePacing; // 현재 분 보간 결과
         private float nextSpawn; // 다음 출현 시각
         private int activeEnemies; // 생존 적 수
         private sealed class EnemyScaleRecord // 개별 적의 원본과 실행 설정
@@ -179,32 +179,31 @@ namespace ProjectEpsilon.Enemies // 적 영역
         } // 속성 종료
         public int ActiveEnemies => activeEnemies; // 생존 적 수 조회
         public int CurrentNormalEnemyCount => Mathf.Max(0, activeEnemies - eliteTargets.Count - bossSummonTargets.Count + eliteSummonTargets.Count); // 엘리트 소환 적을 포함한 일반 적 수
-        private EnemyWavePacing? CurrentPacing
-        {
-            get
-            {
-                int minute = Mathf.FloorToInt(Mathf.Max(0f, elapsed) / 60f);
-                if (minute != sampledMinute)
-                {
-                    minutePacing = waveSettings?.SampleMinute(minute);
-                    sampledMinute = minute;
-                }
-                return minutePacing;
-            }
-        }
-        // 보스 본체는 별도로 생성되므로 보스전에는 한 자리를 남긴다.
-        private bool HasSpawnCapacity => activeEnemies < MaximumConcurrentEnemies - (hasEnteredBossTransition ? 1 : 0);
-        public float CurrentSpawnInterval => Mathf.Max(0.1f, CurrentPacing?.SpawnInterval ?? spawnInterval);
-        public int CurrentNormalEnemyLimit => Mathf.Clamp(CurrentPacing?.NormalEnemyLimit ?? maximumEnemies, 1, MaximumConcurrentEnemies);
-        public float CurrentNormalHealthMultiplier => CurrentPacing?.HealthMultiplier ?? 1f;
-        public float CurrentNormalDamageMultiplier => CurrentPacing?.DamageMultiplier ?? 1f;
+        private EnemyWavePacing? CurrentPacing // 현재 분의 출현 설정
+        { // 속성 시작
+            get // 현재 설정 조회
+            { // 조회 시작
+                int minute = Mathf.FloorToInt(Mathf.Max(0f, elapsed) / 60f); // 경과한 분 계산
+                if (minute != sampledMinute) // 새 분 진입 확인
+                { // 조건 시작
+                    minutePacing = waveSettings?.SampleMinute(minute); // 새 분의 설정 계산
+                    sampledMinute = minute; // 계산한 분 보관
+                } // 조건 종료
+                return minutePacing; // 현재 출현 설정 반환
+            } // 조회 종료
+        } // 속성 종료
+        private bool HasSpawnCapacity => activeEnemies < MaximumConcurrentEnemies - (hasEnteredBossTransition ? 1 : 0); // 보스 포함 전체 빈자리 확인
+        public float CurrentSpawnInterval => Mathf.Max(0.1f, CurrentPacing?.SpawnInterval ?? spawnInterval); // 현재 적 출현 간격
+        public int CurrentNormalEnemyLimit => Mathf.Clamp(CurrentPacing?.NormalEnemyLimit ?? maximumEnemies, 1, MaximumConcurrentEnemies); // 현재 일반 적 상한
+        public float CurrentNormalHealthMultiplier => CurrentPacing?.HealthMultiplier ?? 1f; // 현재 적 체력 배율
+        public float CurrentNormalDamageMultiplier => CurrentPacing?.DamageMultiplier ?? 1f; // 현재 적 공격력 배율
         private EnemyWaveStage CurrentStage => waveSettings == null ? null : waveSettings.Resolve(elapsed); // 현재 시간의 출현 구간
         public float ElapsedSeconds => elapsed; // 실제 전투 경과 시간 조회
         public double CurrentRunSeconds => elapsed + (GameManager.Instance != null && (GameManager.Instance.IsPlaying || GameManager.Instance.IsPaused) ? Math.Max(0d, Time.timeAsDouble - previousClockTime) : 0d); // 종료 프레임을 포함한 전투 시간
         public bool HasEnteredBossTransition => hasEnteredBossTransition; // 최종 보스 전환 상태 조회
         private void OnEnable() // 출현기 활성 시간 초기화
         { // 함수 시작
-            sampledMinute = -1;
+            sampledMinute = -1; // 기존 보간 결과 초기화
             waveSettings = Resources.Load<EnemyWaveSettings>("EnemyWaveSettings"); // 공용 출현 데이터 불러오기
             previousClockTime = Time.timeAsDouble; // 비활성 구간 제외 기준
         } // 함수 종료
@@ -432,10 +431,10 @@ namespace ProjectEpsilon.Enemies // 적 영역
         } // 함수 종료
         private WeaponTarget SpawnAt(EarlyEnemySettings setting, Vector3 position, bool bossSummon) // 기존 적 생성 구조 재사용
         { // 함수 시작
-            if (!HasSpawnCapacity)
-            {
-                return null;
-            }
+            if (!HasSpawnCapacity) // 전체 빈자리 확인
+            { // 조건 시작
+                return null; // 상한 초과 생성 차단
+            } // 조건 종료
             EarlyEnemySettings source = setting; // 원본 적 능력치 보존
             setting = ScaleNormalEnemy(source); // 모든 일반 적과 엘리트의 능력치 복사
             bool elite = setting.kind == EarlyEnemyKind.Elite || setting.isEnhancedElite; // 전용 또는 일반 강화형 엘리트 확인
@@ -498,8 +497,8 @@ namespace ProjectEpsilon.Enemies // 적 영역
                 return; // 중복 갱신 생략
             } // 조건 종료
             lastScalingMinute = minute; // 갱신 분 기록
-            float healthMultiplier = CurrentNormalHealthMultiplier;
-            float damageMultiplier = CurrentNormalDamageMultiplier;
+            float healthMultiplier = CurrentNormalHealthMultiplier; // 현재 체력 배율 보관
+            float damageMultiplier = CurrentNormalDamageMultiplier; // 현재 공격력 배율 보관
             foreach (WeaponTarget target in targets) // 관리 중인 생존 적 순회
             { // 반복 시작
                 if (target == null || !target.IsAlive || !enemyScales.TryGetValue(target, out EnemyScaleRecord record)) // 유효한 생존 적 확인

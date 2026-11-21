@@ -11,6 +11,8 @@ namespace ProjectEpsilon.Player // 플레이어 영역
     { // 형식 시작
         [SerializeField] private CharacterData defaultCharacter; // 기본 균형형 데이터
         [SerializeField] private CharacterData[] availableCharacters; // 시작 화면 캐릭터 목록
+        private Sprite defaultHeadSprite; // 기본 머리 이미지 보관
+        private bool defaultHeadCached; // 기본 머리 이미지 보관 여부
         public int CharacterCount => availableCharacters == null ? 0 : availableCharacters.Length; // 실제 선택 캐릭터 수
         public CharacterData GetCharacter(int index) // 실제 선택 캐릭터 조회
         { // 함수 시작
@@ -95,6 +97,18 @@ namespace ProjectEpsilon.Player // 플레이어 영역
                 return false; // 불완전한 씬 구성 차단
             } // 조건 종료
             ActiveCharacter = data; // 실제 런 패시브와 이동 배율 적용
+            SpriteRenderer head = GetComponent<SpriteRenderer>(); // 실제 머리 표시기 조회
+            if (head != null) // 머리 표시기 확인
+            { // 조건 시작
+                if (!defaultHeadCached) // 최초 기본 이미지 확인
+                { // 조건 시작
+                    defaultHeadSprite = head.sprite; // 기본 머리 이미지 보관
+                    defaultHeadCached = true; // 기본 이미지 보관 완료
+                } // 조건 종료
+                head.sprite = data.BattleHeadSprite != null ? data.BattleHeadSprite : defaultHeadSprite; // 선택 머리 또는 기본 이미지 적용
+                head.color = data.BattleTint; // 선택 캐릭터 색상 적용
+            } // 조건 종료
+            body.SetAppearance(data.BattleBodySprite, data.BattleTailSprite, data.BattleTint); // 몸통과 꼬리 외형 적용
             body.SetStartingBodyCount(data.StartingBodyCount); // 실제 시작 몸통과 성장 최대 적용
             health.SetStartingMaximumHealth(Mathf.RoundToInt(data.BodyMaxHealth * MetaModifiers.HealthMultiplier)); // 캐릭터와 영구 성장의 공용 체력
             weapons.ClearStartingLoadout(); // 이전 시작 무기 제거

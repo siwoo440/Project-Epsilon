@@ -18,6 +18,7 @@ namespace ProjectEpsilon.Editor // 실제 배치 시험 영역
         private const string ActiveKey = "EpsilonEnemyWaveStagesVerification"; // 실제 시험 진행 표식
         private static bool injected; // 실제 실행기 생성 여부
         private static double started; // 실제 시험 시작 시각
+        private static bool diagnosed; // 시험 대기 상태 기록 여부
 
         static AutomatedEnemyWaveStagesVerification() // 실제 도메인 재시작 처리
         {
@@ -51,6 +52,16 @@ namespace ProjectEpsilon.Editor // 실제 배치 시험 영역
                 Finish(1, "Timed out."); // 시간 초과 기록
                 return; // 추가 처리 차단
             }
+            if (!diagnosed && EditorApplication.timeSinceStartup - started > 5d) // 초기화 지연 진단 시점
+            { // 조건 시작
+                diagnosed = true; // 중복 진단 방지
+                var selection = UnityEngine.Object.FindFirstObjectByType<ProjectEpsilon.Progression.StartingWeaponSelection>(); // 시작 선택기 조회
+                var frontend = ProjectEpsilon.UI.RunFrontendController.Instance; // 시작 화면 조회
+                var panel = UnityEngine.Object.FindFirstObjectByType<ProjectEpsilon.UI.LevelUpPanelController>(FindObjectsInactive.Include); // 포탑 선택 화면 조회
+                var field = typeof(ProjectEpsilon.UI.LevelUpPanelController).GetField("candidateButton01", BindingFlags.Instance | BindingFlags.NonPublic); // 첫 후보 버튼 필드 조회
+                var button = field == null || panel == null ? null : field.GetValue(panel) as UnityEngine.UI.Button; // 실제 첫 후보 버튼 조회
+                Debug.Log($"[EnemyWaveStartDiagnostic] state={GameManager.Instance?.CurrentState}, frontend={frontend?.Stage}, selecting={selection?.IsSelecting}, button={button != null}, active={button?.IsActive()}, interactable={button?.interactable}, injected={injected}, time={Time.time:F2}"); // 실제 시작 상태 기록
+            } // 조건 종료
             if (StartingWeaponBatchHelper.HandleStartingSelection() || injected) // 실제 시작 선택과 실행 여부 확인
             {
                 return; // 실제 전투와 시험 결과 대기
@@ -100,6 +111,27 @@ namespace ProjectEpsilon.Editor // 실제 배치 시험 영역
             int[] limits = { 40, 88, 100, 196, 220, 332, 360, 500, 500, 500 }; // 실제 일반 적 최대 상한
             float[] health = { 1f, 1.233544f, 1.3f, 1.686579f, 1.8f, 2.341027f, 2.5f, 3.1f, 3.340659f, 3.6f }; // 실제 체력 배율
             float[] damage = { 1f, 1.047719f, 1.06f, 1.123531f, 1.14f, 1.219322f, 1.24f, 1.32f, 1.359412f, 1.4f }; // 실제 공격 배율
+            EnemyWaveSettings wave = data as EnemyWaveSettings; // 실제 웨이브 설정 조회
+            Require(wave != null, "Actual wave settings have an unexpected type."); // 실제 설정 형식 확인
+            EnemyWavePacing? firstMinute = wave.SampleMinute(0); // 시작 분의 실제 설정
+            Require(firstMinute.HasValue, "Starting wave pacing is missing."); // 시작 설정 존재 확인
+            float previousHealth = firstMinute.Value.HealthMultiplier; // 이전 분 체력 배율
+            float previousDamage = firstMinute.Value.DamageMultiplier; // 이전 분 공격력 배율
+            float previousHealthGain = 0f; // 이전 분 체력 증가폭
+            float previousDamageGain = 0f; // 이전 분 공격력 증가폭
+            for (int minute = 1; minute <= 20; minute++) // 모든 경과 분 순회
+            { // 반복 시작
+                EnemyWavePacing? sample = wave.SampleMinute(minute); // 실제 분별 설정 조회
+                Require(sample.HasValue, "Missing minute pacing: " + minute); // 분별 설정 존재 확인
+                float healthGain = sample.Value.HealthMultiplier - previousHealth; // 현재 분 체력 증가폭
+                float damageGain = sample.Value.DamageMultiplier - previousDamage; // 현재 분 공격력 증가폭
+                Require(healthGain > 0f && damageGain > 0f && healthGain + 0.0001f >= previousHealthGain && damageGain + 0.0001f >= previousDamageGain, "Enemy growth did not accelerate at minute " + minute); // 매분 상승과 증가폭 확인
+                previousHealth = sample.Value.HealthMultiplier; // 현재 체력 배율 저장
+                previousDamage = sample.Value.DamageMultiplier; // 현재 공격력 배율 저장
+                previousHealthGain = healthGain; // 현재 체력 증가폭 저장
+                previousDamageGain = damageGain; // 현재 공격력 증가폭 저장
+            } // 반복 종료
+            Require(Mathf.CeilToInt(25f * wave.SampleMinute(19).Value.HealthMultiplier) == 84, "Minute 19 soldier health should be 84."); // 병정개미 기준 체력 확인
             for (int index = 0; index < times.Length; index++) // 실제 구간 경계 순회
             {
                 elapsed.SetValue(spawner, times[index]); // 실제 경계 시각 통제
@@ -140,9 +172,40 @@ namespace ProjectEpsilon.Editor // 실제 배치 시험 영역
             elapsed.SetValue(spawner, 120f); // 다음 분 경계 이동
             refresh.Invoke(spawner, null); // 사망 이후 재갱신
             Require(!normal.IsAlive && Mathf.Approximately(enemies[0].health, 25f) && enemies[0].damage == 10, "Scaling revived a dead enemy or changed base data."); // 사망 상태와 원본 보존 확인
+            Debug.Log("[EnemyWaveCheckpoint] 분별 성장과 체력 비율 확인 완료"); // 성장 검증 도달 기록
             yield return null; // 실제 제거 프레임 대기
             elapsed.SetValue(spawner, 1080f);
+            Debug.Log("[EnemyWaveCheckpoint] 500마리 생성 시작"); // 대량 생성 시작 기록
             VerifySharedCapacity(spawner);
+            Debug.Log($"[EnemyWaveCheckpoint] 500마리와 정예 대기 확인 완료: {spawner.ActiveEnemies}"); // 상한 검증 완료 기록
+            SnakeInvulnerability protection = GetComponent<SnakeInvulnerability>(); // 스트레스 시험용 무적 조회
+            if (protection != null) // 무적 구성 확인
+            { // 조건 시작
+                protection.StartInvulnerability(120f, false); // 측정 중 체력 손실 방지
+            } // 조건 종료
+            const int sampleCount = 30; // 실제 프레임 표본 수
+            double[] frameMilliseconds = new double[sampleCount]; // 실제 프레임 간격 보관
+            int minimumEnemies = spawner.ActiveEnemies; // 측정 중 최소 적 수
+            int maximumEnemies = spawner.ActiveEnemies; // 측정 중 최대 적 수
+            double previous = Time.realtimeSinceStartupAsDouble; // 첫 실시간 기준
+            for (int frame = 0; frame < sampleCount; frame++) // 실제 프레임 측정 반복
+            { // 반복 시작
+                yield return null; // 실제 적 행동 프레임 진행
+                double current = Time.realtimeSinceStartupAsDouble; // 현재 실시간 조회
+                frameMilliseconds[frame] = (current - previous) * 1000d; // 프레임 간격 밀리초 기록
+                previous = current; // 다음 프레임 기준 갱신
+                minimumEnemies = Mathf.Min(minimumEnemies, spawner.ActiveEnemies); // 실제 최소 적 수 갱신
+                maximumEnemies = Mathf.Max(maximumEnemies, spawner.ActiveEnemies); // 실제 최대 적 수 갱신
+                if ((frame + 1) % 15 == 0) // 측정 진행 상태 확인
+                { // 조건 시작
+                    Debug.Log($"[EnemyWaveCheckpoint] 측정 프레임 {frame + 1}/{sampleCount}, 상태={GameManager.Instance?.CurrentState}"); // 장시간 측정 진행 기록
+                } // 조건 종료
+            } // 반복 종료
+            Array.Sort(frameMilliseconds); // 프레임 간격 백분위 정렬
+            Require(maximumEnemies <= 500, "The actual stress scenario exceeded 500 enemies."); // 측정 중 전체 상한 확인
+            double median = (frameMilliseconds[(sampleCount - 1) / 2] + frameMilliseconds[sampleCount / 2]) / 2d; // 짝수 표본 중앙값
+            double percentile95 = frameMilliseconds[Mathf.CeilToInt(sampleCount * 0.95f) - 1]; // 최근접 순위 95백분위
+            Debug.Log($"[Enemy500FrameSample] frames={sampleCount}, enemies={minimumEnemies}-{maximumEnemies}, p50={median:F2}ms, p95={percentile95:F2}ms, graphics=headless, weapons=disabled, player=stationary"); // 비대화형 프레임 측정 결과
             AutomatedEnemyWaveStagesVerification.Finish(0, "Actual adjustable wave boundaries, spawn settings, minute scaling and retroactive elite health passed."); // 실제 전체 성공 기록
         }
 
@@ -154,7 +217,9 @@ namespace ProjectEpsilon.Editor // 실제 배치 시험 영역
             int remaining = 499 - spawner.ActiveEnemies;
             for (int index = 0; index < remaining; index++)
             {
-                Require(spawner.SpawnMapChaser(position) != null, "Map wave could not reach the late-game limit.");
+                float angle = index * Mathf.PI * 2f / Mathf.Max(1, remaining); // 실제 적 분산 각도
+                Vector3 spread = new Vector3(Mathf.Cos(angle), Mathf.Sin(angle), 0f) * 10f; // 플레이어 주변 분산 위치
+                Require(spawner.SpawnMapChaser(spawner.transform.position + spread) != null, "Map wave could not reach the late-game limit."); // 분산된 실제 적 생성 확인
             }
             WeaponTarget last = spawner.SpawnEliteSummon(position);
             Require(last != null && spawner.ActiveEnemies == 500, "The last shared slot was unavailable.");

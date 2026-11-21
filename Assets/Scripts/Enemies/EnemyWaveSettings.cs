@@ -19,31 +19,30 @@ namespace ProjectEpsilon.Enemies // 적 출현 영역
         } // 함수 종료
     } // 형식 종료
 
-    public readonly struct EnemyWavePacing
-    {
-        public readonly float SpawnInterval;
-        public readonly int NormalEnemyLimit;
-        public readonly float HealthMultiplier;
-        public readonly float DamageMultiplier;
+    public readonly struct EnemyWavePacing // 분별 출현 설정
+    { // 형식 시작
+        public readonly float SpawnInterval; // 일반 적 출현 간격
+        public readonly int NormalEnemyLimit; // 일반 적 동시 상한
+        public readonly float HealthMultiplier; // 적 체력 배율
+        public readonly float DamageMultiplier; // 적 공격력 배율
 
-        internal EnemyWavePacing(EnemyWaveStage from, EnemyWaveStage to, float progress)
-        {
-            SpawnInterval = Mathf.Lerp(from.spawnInterval, to.spawnInterval, progress);
-            NormalEnemyLimit = Mathf.RoundToInt(Mathf.Lerp(from.normalEnemyLimit, to.normalEnemyLimit, progress));
-            HealthMultiplier = InterpolateMultiplier(from.healthMultiplier, to.healthMultiplier, progress);
-            DamageMultiplier = InterpolateMultiplier(from.damageMultiplier, to.damageMultiplier, progress);
-        }
+        internal EnemyWavePacing(EnemyWaveStage from, EnemyWaveStage to, float progress) // 기준 사이 출현 설정 생성
+        { // 생성자 시작
+            SpawnInterval = Mathf.Lerp(from.spawnInterval, to.spawnInterval, progress); // 출현 간격 보간
+            NormalEnemyLimit = Mathf.RoundToInt(Mathf.Lerp(from.normalEnemyLimit, to.normalEnemyLimit, progress)); // 일반 적 상한 보간
+            HealthMultiplier = InterpolateMultiplier(from.healthMultiplier, to.healthMultiplier, progress); // 체력 배율 보간
+            DamageMultiplier = InterpolateMultiplier(from.damageMultiplier, to.damageMultiplier, progress); // 공격력 배율 보간
+        } // 생성자 종료
 
-        private static float InterpolateMultiplier(float from, float to, float progress)
-        {
-            // 두 기준 배율 사이에 같은 비율의 성장을 매분 적용한다.
-            if (from > 0f && to > 0f)
-            {
-                return from * Mathf.Pow(to / from, progress);
-            }
-            return Mathf.Max(0f, Mathf.Lerp(from, to, progress));
-        }
-    }
+        private static float InterpolateMultiplier(float from, float to, float progress) // 구간 내 성장 배율 계산
+        { // 함수 시작
+            if (from > 0f && to > 0f) // 양수 배율 확인
+            { // 조건 시작
+                return from * Mathf.Pow(to / from, progress); // 구간별 비율 성장
+            } // 조건 종료
+            return Mathf.Max(0f, Mathf.Lerp(from, to, progress)); // 안전한 대체 배율
+        } // 함수 종료
+    } // 형식 종료
 
     [CreateAssetMenu(menuName = "Project Epsilon/Enemy Wave Settings")] // 출현 데이터 생성 메뉴
     public sealed class EnemyWaveSettings : ScriptableObject // 조정 가능한 출현 구간 데이터
@@ -68,33 +67,33 @@ namespace ProjectEpsilon.Enemies // 적 출현 영역
 
         public float ResolveMultiplier(float elapsed, bool health) // 분 단위 능력치 배율
         { // 함수 시작
-            EnemyWavePacing? pacing = SampleMinute(Mathf.FloorToInt(elapsed / 60f));
-            return health ? pacing?.HealthMultiplier ?? 1f : pacing?.DamageMultiplier ?? 1f;
-        }
+            EnemyWavePacing? pacing = SampleMinute(Mathf.FloorToInt(elapsed / 60f)); // 경과한 분의 설정 조회
+            return health ? pacing?.HealthMultiplier ?? 1f : pacing?.DamageMultiplier ?? 1f; // 선택한 능력치 배율 반환
+        } // 함수 종료
 
-        public EnemyWavePacing? SampleMinute(int minute)
-        {
-            float time = Mathf.Max(0, minute) * 60f;
-            EnemyWaveStage previous = Resolve(time);
-            if (previous == null)
-            {
-                return null;
-            }
-            EnemyWaveStage next = null;
-            foreach (EnemyWaveStage stage in stages)
-            {
-                if (stage != null && stage.startTime > time && (next == null || stage.startTime < next.startTime))
-                {
-                    next = stage;
-                }
-            }
-            if (next == null)
-            {
-                return new EnemyWavePacing(previous, previous, 0f);
-            }
-            float progress = Mathf.InverseLerp(previous.startTime, next.startTime, time);
-            return new EnemyWavePacing(previous, next, progress);
-        }
+        public EnemyWavePacing? SampleMinute(int minute) // 지정한 분의 출현 설정 조회
+        { // 함수 시작
+            float time = Mathf.Max(0, minute) * 60f; // 분 단위 기준 시각
+            EnemyWaveStage previous = Resolve(time); // 이전 기준 설정 조회
+            if (previous == null) // 기준 설정 존재 확인
+            { // 조건 시작
+                return null; // 기준 없는 설정 반환
+            } // 조건 종료
+            EnemyWaveStage next = null; // 다음 기준 초기화
+            foreach (EnemyWaveStage stage in stages) // 모든 기준 구간 순회
+            { // 반복 시작
+                if (stage != null && stage.startTime > time && (next == null || stage.startTime < next.startTime)) // 가장 가까운 다음 구간 확인
+                { // 조건 시작
+                    next = stage; // 다음 기준 보관
+                } // 조건 종료
+            } // 반복 종료
+            if (next == null) // 마지막 기준 도달 확인
+            { // 조건 시작
+                return new EnemyWavePacing(previous, previous, 0f); // 마지막 설정 유지
+            } // 조건 종료
+            float progress = Mathf.InverseLerp(previous.startTime, next.startTime, time); // 두 기준 사이 진행 비율
+            return new EnemyWavePacing(previous, next, progress); // 보간한 출현 설정 반환
+        } // 함수 종료
 
         public EnemyWaveStage Resolve(float elapsed) // 현재 시간에 해당하는 출현 구간
         { // 함수 시작

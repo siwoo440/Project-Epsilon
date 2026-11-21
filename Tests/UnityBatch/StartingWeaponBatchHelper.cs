@@ -10,12 +10,22 @@ namespace ProjectEpsilon.Editor // 배치 시험 영역
     {
         public static bool HandleStartingSelection(int index = 0) // 시작 무기 버튼 자동 선택
         {
+            RunFrontendController frontend = RunFrontendController.Instance; // 실제 전용 시작 화면
+            if (frontend != null && frontend.Stage == FrontendStage.Tutorial) // 첫 플레이 안내 확인
+            { // 조건 시작
+                GameObject skipObject = GameObject.Find("FrontendTutorialSkipButton"); // 실제 안내 건너뛰기 조회
+                Button skip = skipObject == null ? null : skipObject.GetComponent<Button>(); // 안내 버튼 구성 조회
+                if (skip != null && skip.IsActive() && skip.interactable) // 실제 버튼 사용 가능 확인
+                { // 조건 시작
+                    skip.onClick.Invoke(); // 실제 안내 종료와 전투 복귀
+                } // 조건 종료
+                return true; // 안내 처리 후 다음 프레임 대기
+            } // 조건 종료
             GameManager game = GameManager.Instance; // 현재 게임 관리자
             if (game == null || game.CurrentState != GameState.Starting) // 시작 상태 확인
             {
                 return false; // 일반 배치 진행
             }
-            RunFrontendController frontend = RunFrontendController.Instance; // 실제 전용 시작 화면
             if (frontend != null && frontend.Stage != FrontendStage.Weapons) // 실제 출격 단계 확인
             {
                 string name = frontend.Stage == FrontendStage.Main ? "FrontendStartButton" : frontend.Stage == FrontendStage.Characters ? "FrontendCharactersNextButton" : frontend.Stage == FrontendStage.Maps ? "FrontendMapsNextButton" : null; // 실제 다음 단계 버튼
