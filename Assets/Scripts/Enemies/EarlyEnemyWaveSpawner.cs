@@ -429,6 +429,15 @@ namespace ProjectEpsilon.Enemies // 적 영역
             target.gameObject.SetActive(false); // 지연 파괴 전 접촉 차단
             Destroy(target.gameObject); // 사망 이벤트 없는 제거
         } // 함수 종료
+        internal static void AssignEnemyContactLayer(GameObject enemy) // 피해와 공격에 사용할 적 레이어 연결
+        { // 함수 시작
+            int layer = LayerMask.NameToLayer("EnemyContact"); // 메인 스레드의 적 충돌 레이어 조회
+            if (layer >= 0) // 프로젝트 레이어가 등록된 상태 확인
+            { // 조건 시작
+                enemy.layer = layer; // 적끼리만 충돌하지 않는 레이어 적용
+            } // 조건 종료
+        } // 함수 종료
+
         private WeaponTarget SpawnAt(EarlyEnemySettings setting, Vector3 position, bool bossSummon) // 기존 적 생성 구조 재사용
         { // 함수 시작
             if (!HasSpawnCapacity) // 전체 빈자리 확인
@@ -439,6 +448,7 @@ namespace ProjectEpsilon.Enemies // 적 영역
             setting = ScaleNormalEnemy(source); // 모든 일반 적과 엘리트의 능력치 복사
             bool elite = setting.kind == EarlyEnemyKind.Elite || setting.isEnhancedElite; // 전용 또는 일반 강화형 엘리트 확인
             GameObject enemy = new GameObject("EarlyEnemy_" + setting.kind); // 적 오브젝트 생성
+            AssignEnemyContactLayer(enemy); // 일반 적·정예·소환 적의 충돌 설정
             enemy.transform.position = position; // 실제 출현 위치
             SpriteRenderer renderer = enemy.AddComponent<SpriteRenderer>(); // 적 렌더러 생성
             renderer.sprite = setting.enemySprite != null ? setting.enemySprite : visual; // 종류별 이미지 또는 기존 대체 이미지

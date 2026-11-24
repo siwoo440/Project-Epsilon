@@ -2,6 +2,7 @@ using System; // 실제 예외 형식
 using System.Collections.Generic;
 using System.Collections; // 실제 시험 코루틴
 using System.Reflection; // 실제 출현기 내부 조회
+using Unity.Profiling; // Unity Profiler 물리 구간 측정
 using ProjectEpsilon.Combat; // 실제 적 전투 대상
 using ProjectEpsilon.Core; // 실제 게임 상태
 using ProjectEpsilon.Enemies; // 실제 적과 출현기
@@ -178,6 +179,12 @@ namespace ProjectEpsilon.Editor // 실제 배치 시험 영역
             Debug.Log("[EnemyWaveCheckpoint] 500마리 생성 시작"); // 대량 생성 시작 기록
             VerifySharedCapacity(spawner);
             Debug.Log($"[EnemyWaveCheckpoint] 500마리와 정예 대기 확인 완료: {spawner.ActiveEnemies}"); // 상한 검증 완료 기록
+            if (Array.IndexOf(Environment.GetCommandLineArgs(), "-epsilonPhysicsProfile") >= 0) // 동일 조건의 물리 비교 시험 여부
+            { // 조건 시작
+                yield return ProfileEnemyContacts(); // 실제 적 충돌을 켜고 끈 고정 스텝 비교
+                AutomatedEnemyWaveStagesVerification.Finish(0, "Actual wave boundaries, shared cap, and controlled Unity physics profiling passed."); // 물리 비교 검증 종료
+                yield break; // 별도 프레임 시험 생략
+            } // 조건 종료
             SnakeInvulnerability protection = GetComponent<SnakeInvulnerability>(); // 스트레스 시험용 무적 조회
             if (protection != null) // 무적 구성 확인
             { // 조건 시작
@@ -205,9 +212,81 @@ namespace ProjectEpsilon.Editor // 실제 배치 시험 영역
             Require(maximumEnemies <= 500, "The actual stress scenario exceeded 500 enemies."); // 측정 중 전체 상한 확인
             double median = (frameMilliseconds[(sampleCount - 1) / 2] + frameMilliseconds[sampleCount / 2]) / 2d; // 짝수 표본 중앙값
             double percentile95 = frameMilliseconds[Mathf.CeilToInt(sampleCount * 0.95f) - 1]; // 최근접 순위 95백분위
-            Debug.Log($"[Enemy500FrameSample] frames={sampleCount}, enemies={minimumEnemies}-{maximumEnemies}, p50={median:F2}ms, p95={percentile95:F2}ms, graphics=headless, weapons=disabled, player=stationary"); // 비대화형 프레임 측정 결과
+            Debug.Log($"[Enemy500FrameSample] frames={sampleCount}, enemies={minimumEnemies}-{maximumEnemies}, p50={median:F2}ms, p95={percentile95:F2}ms, graphics={SystemInfo.graphicsDeviceType}, weapons=disabled, player=stationary"); // 비대화형 프레임과 실제 그래픽 장치 기록
             AutomatedEnemyWaveStagesVerification.Finish(0, "Actual adjustable wave boundaries, spawn settings, minute scaling and retroactive elite health passed."); // 실제 전체 성공 기록
         }
+
+        private static IEnumerator ProfileEnemyContacts() // 밀집한 적 500마리의 물리 비용 비교
+        { // 함수 시작
+            int enemyLayer = LayerMask.NameToLayer("EnemyContact"); // 정식 적 전용 레이어 조회
+            bool hasProjectLayer = enemyLayer >= 0; // 프로젝트 레이어 등록 확인
+            if (!hasProjectLayer) // 기존 프로젝트의 시험 준비
+            { // 조건 시작
+                enemyLayer = 8; // 미사용 시험 레이어
+            } // 조건 종료
+            EarlyEnemyBehaviour[] enemies = UnityEngine.Object.FindObjectsByType<EarlyEnemyBehaviour>(FindObjectsSortMode.None); // 실제 생성된 모든 적
+            Require(enemies.Length == 500, "Profile requires exactly 500 active enemy behaviours."); // 물리 시험 대상 숫자 확인
+            bool originalIgnore = Physics2D.GetIgnoreLayerCollision(enemyLayer, enemyLayer); // 원래 레이어 설정 저장
+            if (hasProjectLayer) // 최적화 코드가 반영된 프로젝트 확인
+            { // 조건 시작
+                Require(originalIgnore, "Enemy-to-enemy collision should be disabled in project settings."); // 제품 설정 적용 여부 확인
+            } // 조건 종료
+            var simulationMode = Physics2D.simulationMode; // 원래 물리 실행 방식 저장
+            Physics2D.simulationMode = SimulationMode2D.Script; // 고정 횟수의 수동 물리 실행
+            try // 임시 물리 설정 복구 범위
+            { // 처리 시작
+                for (int index = 0; index < enemies.Length; index++) // 적별 동일 배치 준비
+                { // 반복 시작
+                    GameObject enemy = enemies[index].gameObject; // 실제 적 객체
+                    Require(!hasProjectLayer || enemy.layer == enemyLayer, "A spawned enemy did not use the configured contact layer."); // 일반 적과 정예의 제품 레이어 확인
+                    enemy.layer = enemyLayer; // 두 조건 모두 같은 충돌 레이어 사용
+                    enemy.transform.position = new Vector3(20f + index % 25 * 0.08f, 20f + index / 25 * 0.08f); // 플레이어와 떨어진 밀집 위치
+                    enemies[index].enabled = false; // 고정 위치로 물리만 비교
+                } // 반복 종료
+                Physics2D.SyncTransforms(); // 동일한 좌표를 물리에 반영
+                double baseline = 0d; // 적끼리 접촉할 때의 측정값
+                double filtered = 0d; // 적끼리 접촉을 끈 측정값
+                var marker = new ProfilerMarker("ProjectEpsilon.EnemyContactPhysics"); // Unity Profiler 물리 구간 표식
+                for (int pass = 0; pass < 2; pass++) // 두 충돌 조건 순회
+                { // 반복 시작
+                    Physics2D.IgnoreLayerCollision(enemyLayer, enemyLayer, pass == 1); // 이번 조건의 적끼리 충돌 선택
+                    for (int warmup = 0; warmup < 4; warmup++) // 물리 접촉 캐시 준비
+                    { // 반복 시작
+                        Physics2D.Simulate(0.02f); // 표본 전 안정화 스텝
+                    } // 반복 종료
+                    using (var recorder = ProfilerRecorder.StartNew(ProfilerCategory.Scripts, "ProjectEpsilon.EnemyContactPhysics", 4)) // 실제 물리 스텝 Profiler 기록
+                    { // 기록 시작
+                        const int steps = 20; // 조건별 고정 물리 스텝 수
+                        var watch = System.Diagnostics.Stopwatch.StartNew(); // 동일 구간의 실시간 보조 측정
+                        using (marker.Auto()) // 물리 스텝만 프로파일링
+                        { // 측정 시작
+                            for (int step = 0; step < steps; step++) // 동일 스텝 수 반복
+                            { // 반복 시작
+                                Require(Physics2D.Simulate(0.02f), "The physics simulation did not execute."); // 실제 고정 물리 스텝 실행
+                            } // 반복 종료
+                        } // 측정 종료
+                        double milliseconds = watch.Elapsed.TotalMilliseconds / steps; // 한 물리 스텝의 평균 실제 경과 시간
+                        yield return null; // Profiler 프레임 집계 완료 대기
+                        double profilerMilliseconds = recorder.Valid ? recorder.LastValue / (1_000_000d * steps) : 0d; // Profiler 나노초를 스텝당 밀리초로 변환
+                        Debug.Log($"[EnemyContactPhysics] enemies=500 contacts={(pass == 0 ? "enabled" : "disabled")} steps={steps} wallStepMs={milliseconds:F3} profilerStepMs={profilerMilliseconds:F3}"); // 물리 스텝 비교 결과
+                        if (pass == 0) // 원본 충돌 조건 확인
+                        { // 조건 시작
+                            baseline = milliseconds; // 접촉 허용 측정값 기록
+                        } // 조건 종료
+                        else // 접촉 필터 조건
+                        { // 분기 시작
+                            filtered = milliseconds; // 접촉 차단 측정값 기록
+                        } // 분기 종료
+                    } // 기록 종료
+                } // 반복 종료
+                Require(filtered < baseline, "Filtering enemy contacts did not reduce the dense physics step cost."); // 밀집 물리 비용 감소 확인
+            } // 처리 종료
+            finally // 시험 설정 원복
+            { // 처리 시작
+                Physics2D.IgnoreLayerCollision(enemyLayer, enemyLayer, originalIgnore); // 원래 적끼리 충돌 설정 복원
+                Physics2D.simulationMode = simulationMode; // 원래 물리 실행 방식 복원
+            } // 처리 종료
+        } // 함수 종료
 
         private static void VerifySharedCapacity(EarlyEnemyWaveSpawner spawner)
         {

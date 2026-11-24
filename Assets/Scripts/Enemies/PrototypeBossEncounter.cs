@@ -209,6 +209,7 @@ namespace ProjectEpsilon.Enemies // 적 영역
             SpriteRenderer source = player.GetComponentInChildren<SpriteRenderer>(); // 플레이어 스프라이트 조회
             Sprite sprite = bossVisual != null ? bossVisual : source == null ? null : source.sprite; // 지정 이미지 또는 기존 대체 이미지
             GameObject instance = new GameObject("PrototypeFinalBoss"); // 실제 보스 객체 생성
+            EarlyEnemyWaveSpawner.AssignEnemyContactLayer(instance); // 보스와 소환 적끼리 접촉 제외
             instance.transform.position = spawnPosition; // 실제 안전 출현 위치
             instance.transform.localScale = Vector3.one * 2.8f; // 시험용 보스 두 배 크기
             SpriteRenderer renderer = instance.AddComponent<SpriteRenderer>(); // 실제 보스 렌더러
