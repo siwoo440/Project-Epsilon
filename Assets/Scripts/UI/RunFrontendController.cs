@@ -13,7 +13,7 @@ namespace ProjectEpsilon.UI // 실제 메뉴 영역
 { // 이름 공간 시작
     public enum FrontendStage // 실제 화면 단계
     { // 형식 시작
-        Main, Characters, Maps, Weapons, Playing, Paused, Settings, Results, Tutorial // 실제 메뉴 흐름
+        Main, Characters, Maps, Weapons, Playing, Paused, Settings, Results, Tutorial, TurretCatalog // 실제 메뉴 흐름
     } // 형식 종료
     [DefaultExecutionOrder(300)] // 기존 시작 데이터 이후 화면 구성
     public sealed class RunFrontendController : MonoBehaviour // 실제 메뉴와 런 흐름
@@ -37,6 +37,8 @@ namespace ProjectEpsilon.UI // 실제 메뉴 영역
         private bool tutorialAutoChecked; // 첫 안내 자동 확인 여부
         private bool tutorialOwnsPause; // 안내가 시작한 일시정지 여부
         private int tutorialPage; // 현재 안내 단계
+        private WeaponAttribute catalogAttribute; // 현재 도감 속성
+        private WeaponData catalogWeapon; // 현재 도감 포탑
         public static RunFrontendController Instance { get; private set; } // 실제 메뉴 관리자
         public FrontendStage Stage { get; private set; } // 실제 현재 단계
         public Font DisplayFont => font; // 실제 화면의 한글 우선 글꼴
@@ -138,6 +140,11 @@ namespace ProjectEpsilon.UI // 실제 메뉴 영역
             bool growthOpen = MetaProgressionController.Instance != null && MetaProgressionController.Instance.Menu != null && MetaProgressionController.Instance.Menu.IsOpen; // 실제 성장 화면 상태
             canvas.enabled = !inputOpen; // 기존 설정 화면 표시 우선
             group.blocksRaycasts = !inputOpen && !growthOpen; // 실제 화면 입력 우선권
+            if (Stage == FrontendStage.TurretCatalog && Keyboard.current != null && Keyboard.current.escapeKey.wasPressedThisFrame) // 도감 키보드 복귀 입력
+            { // 조건 시작
+                Show(FrontendStage.Main); // 메인 메뉴 복귀
+                return; // 같은 프레임의 추가 화면 처리 생략
+            } // 조건 종료
             if (Stage == FrontendStage.Tutorial && !inputOpen && Keyboard.current != null && Keyboard.current.escapeKey.wasPressedThisFrame) // 안내 취소 입력 확인
             { // 조건 시작
                 FinishTutorial(); // 안내 종료와 이전 화면 복귀
@@ -231,6 +238,7 @@ namespace ProjectEpsilon.UI // 실제 메뉴 영역
                 case FrontendStage.Settings: BuildSettings(); break; // 실제 설정 구성
                 case FrontendStage.Results: BuildResults(); break; // 실제 결과 구성
                 case FrontendStage.Tutorial: BuildTutorial(); break; // 첫 플레이 안내 구성
+                case FrontendStage.TurretCatalog: BuildTurretCatalog(); break; // 속성별 포탑 도감 구성
             } // 조건 종료
         } // 함수 종료
         private static void CreateContentFrame(Transform parent, Vector2 size) // 공통 정보 화면 배경
@@ -291,13 +299,79 @@ namespace ProjectEpsilon.UI // 실제 메뉴 영역
             Button growth = CreateButton(panel, "FrontendGrowthButton", "영구 성장", new Vector2(500f, 35f), new Vector2(460f, 86f), () => MetaProgressionController.Instance?.Menu?.Open()); // 실제 성장 메뉴 진입
             growth.interactable = MetaProgressionController.Instance != null && MetaProgressionController.Instance.Service != null && MetaProgressionController.Instance.Service.FinishedFirstRun && MetaProgressionController.Instance.Service.IsAvailable; // 실제 첫 런 해금 확인
             CreateButton(panel, "FrontendSettingsButton", "설정", new Vector2(500f, -70f), new Vector2(460f, 86f), () => OpenSettings(FrontendStage.Main)); // 실제 설정 진입
-            CreateButton(panel, "FrontendQuitButton", "종료", new Vector2(500f, -175f), new Vector2(460f, 86f), Application.Quit); // 실제 게임 종료
+            bool hasCatalog = sceneContext?.TurretCatalog != null; // 메인 메뉴의 도감 목록 연결 여부
+            if (hasCatalog) // 도감 목록 연결 확인
+            { // 조건 시작
+                CreateButton(panel, "FrontendTurretCatalogButton", "포탑 도감", new Vector2(500f, -175f), new Vector2(460f, 86f), () => Show(FrontendStage.TurretCatalog)); // 메인 메뉴의 도감 진입
+            } // 조건 종료
+            CreateButton(panel, "FrontendQuitButton", "종료", new Vector2(500f, hasCatalog ? -280f : -175f), new Vector2(460f, 86f), Application.Quit); // 도감 배치에 맞춘 종료 버튼
             MetaProgressionController meta = MetaProgressionController.Instance; // 실제 성장 저장 관리자
             if (meta == null || meta.Service == null || !meta.Service.IsAvailable) // 성장 저장 오류 확인
             { // 조건 시작
-                Label(panel, "FrontendGrowthError", "성장 저장을 사용할 수 없습니다", new Vector2(500f, -300f), new Vector2(800f, 55f), 26); // 저장 오류 안내 유지
+                Label(panel, "FrontendGrowthError", "성장 저장을 사용할 수 없습니다", new Vector2(500f, -365f), new Vector2(800f, 55f), 26); // 저장 오류 안내 유지
             } // 조건 종료
         } // 함수 종료
+        private void BuildTurretCatalog() // 속성별 포탑 목록과 등급 상세 구성
+        { // 함수 시작
+            Title("포탑 도감", string.Empty); // 도감 제목
+            var pool = sceneContext.TurretCatalog; // 기존 레벨업 보상 데이터
+            catalogWeapon ??= FindCatalogWeapon(pool, catalogAttribute); // 처음 열 때 첫 포탑 선택
+            for (int index = 0; index < 8; index++) // 전체 속성 탭 순회
+            { // 반복 시작
+                WeaponAttribute selected = (WeaponAttribute)index; // 탭이 선택할 속성
+                string label = WeaponDisplayNames.Attribute(selected); // 해당 속성의 한국어 이름
+                Button tab = CreateButton(panel, "FrontendCatalogAttribute" + index, label, new Vector2(-700f + index * 200f, 320f), new Vector2(174f, 60f), () => SelectCatalogAttribute(pool, selected)); // 속성 필터 버튼
+                tab.interactable = selected != catalogAttribute; // 현재 선택된 속성 표시
+            } // 반복 종료
+            int row = 0; // 속성 안의 포탑 위치
+            foreach (WeaponRewardEntry entry in pool.Entries) // 실제 보상 포탑 순회
+            { // 반복 시작
+                WeaponData weapon = entry?.Weapon; // 해당 보상 포탑
+                if (weapon == null || weapon.Attribute != catalogAttribute) // 현재 선택 속성 확인
+                { // 조건 시작
+                    continue; // 다른 속성 제외
+                } // 조건 종료
+                Button item = CreateButton(panel, "FrontendCatalogTurret" + row, weapon.DisplayName, new Vector2(-505f, 215f - row * 91f), new Vector2(520f, 72f), () => SelectCatalogWeapon(weapon)); // 실제 포탑 선택 버튼
+                item.interactable = weapon != catalogWeapon; // 선택한 포탑 표시
+                row++; // 다음 목록 위치
+            } // 반복 종료
+            if (catalogWeapon != null) // 선택 포탑 확인
+            { // 조건 시작
+                Preview(panel, "FrontendCatalogIcon", catalogWeapon.Icon, new Vector2(275f, 175f), new Vector2(150f, 150f)); // 선택 포탑 아이콘
+                string stats = $"{catalogWeapon.DisplayName}\n{WeaponDisplayNames.AttackType(catalogWeapon.AttackType)} · 피해 {catalogWeapon.BaseDamage:0.##} · 주기 {catalogWeapon.AttackInterval:0.##}초"; // 선택한 포탑의 기본 정보
+                Label(panel, "FrontendCatalogStats", stats, new Vector2(275f, 30f), new Vector2(900f, 105f), 28); // 공격 방식과 기본 수치
+                string effects = $"★3  {TurretCatalogText.Describe(catalogWeapon, 3)}\n\n★5  {TurretCatalogText.Describe(catalogWeapon, 5)}"; // 실제 등급 효과 수치
+                Text description = Label(panel, "FrontendCatalogEffects", effects, new Vector2(275f, -195f), new Vector2(900f, 280f), 26); // 선택한 포탑의 효과
+                description.resizeTextForBestFit = true; // 긴 효과 문구의 자동 맞춤
+                description.resizeTextMinSize = 18; // 효과의 최소 글자 크기
+            } // 조건 종료
+            CreateButton(panel, "FrontendCatalogBack", "뒤로", new Vector2(-660f, -415f), new Vector2(265f, 70f), () => Show(FrontendStage.Main)); // 메인 메뉴 복귀
+        } // 함수 종료
+
+        private void SelectCatalogAttribute(WeaponRewardPool pool, WeaponAttribute attribute) // 속성 필터 변경
+        { // 함수 시작
+            catalogAttribute = attribute; // 선택한 속성 적용
+            SelectCatalogWeapon(FindCatalogWeapon(pool, attribute)); // 새 목록의 첫 포탑 표시
+        } // 함수 종료
+
+        private void SelectCatalogWeapon(WeaponData weapon) // 선택 포탑 상세 표시
+        { // 함수 시작
+            catalogWeapon = weapon; // 도감 선택 포탑 저장
+            Show(FrontendStage.TurretCatalog); // 선택 상태와 상세 갱신
+        } // 함수 종료
+
+        private static WeaponData FindCatalogWeapon(WeaponRewardPool pool, WeaponAttribute attribute) // 속성의 첫 포탑 조회
+        { // 함수 시작
+            foreach (WeaponRewardEntry entry in pool.Entries) // 실제 보상 포탑 순회
+            { // 반복 시작
+                if (entry?.Weapon != null && entry.Weapon.Attribute == attribute) // 속성이 일치하는 포탑 확인
+                { // 조건 시작
+                    return entry.Weapon; // 해당 속성의 첫 포탑 반환
+                } // 조건 종료
+            } // 반복 종료
+            return null; // 해당 속성 목록이 비어 있음
+        } // 함수 종료
+
         private void GoToPreparation() // 실제 출격 준비 화면 이동
         { // 함수 시작
             if (sceneContext != null && sceneContext.Kind == SceneFrontendKind.MainMenu) // 실제 독립 메인 메뉴 확인

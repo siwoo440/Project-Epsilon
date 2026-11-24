@@ -25,6 +25,7 @@ namespace ProjectEpsilon.UI // 실제 화면 흐름 영역
         [SerializeField] private PrototypeMapProfile[] maps; // 실제 선택 맵
         [SerializeField] private Sprite headSprite; // 실제 머리 미리보기
         [SerializeField] private Sprite bodySprite; // 실제 몸통 미리보기
+        [SerializeField] private WeaponRewardPool turretCatalog; // 메인 메뉴 도감의 보상 포탑 목록
         private static bool pendingStart; // 실제 전투 시작 예약
         private static bool separateFlow; // 분리 씬 출격 여부
         private static int chosenMap; // 실제 선택한 맵 번호
@@ -35,6 +36,7 @@ namespace ProjectEpsilon.UI // 실제 화면 흐름 영역
         public int SelectedMap => chosenMap; // 실제 선택한 맵 번호
         public Sprite HeadSprite => headSprite; // 실제 머리 이미지
         public Sprite BodySprite => bodySprite; // 실제 몸통 이미지
+        public WeaponRewardPool TurretCatalog => turretCatalog; // 도감에 사용하는 실제 보상 목록
         public static bool UsesSeparateScenes => separateFlow; // 실제 분리 씬 출격 여부
         public static bool HasPendingStart => pendingStart; // 실제 준비 화면의 출격 예약 여부
         public CharacterData SelectedCharacter => selectedCharacter; // 실제 선택한 캐릭터 조회
