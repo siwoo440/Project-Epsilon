@@ -456,9 +456,12 @@ namespace ProjectEpsilon.UI // 실제 메뉴 영역
                 CreateButton(card.transform, "FrontendMapButton" + index, label, new Vector2(0f, -150f), new Vector2(400f, 90f), () => SelectMap(selected)); // 카드 아래쪽 맵 선택 버튼
             } // 반복 종료
             PrototypeMapProfile current = sceneContext == null ? maps.SelectedProfile : sceneContext.GetMap(selectedMap); // 실제 선택된 맵
+            CharacterData recordCharacter = sceneContext == null ? CharacterRunInitializer.ActiveCharacter : sceneContext.SelectedCharacter; // 맵을 선택 중인 캐릭터
+            int best = MetaProgressionController.Instance?.Service?.GetPersonalBest(selectedMap, recordCharacter?.Id) ?? 0; // 선택 조합의 저장 최고점
             if (current != null) // 실제 맵 정보 확인
             { // 조건 시작
-                Label(panel, "FrontendMapDetails", $"{current.DisplayName}\n보스 체력 {current.BossHealth:0}   장애물 {current.ObstacleChance:P0}\n특수 지역 {current.SpecialZoneChance:P0}", new Vector2(0f, -330f), new Vector2(1100f, 75f), 22); // 카드 아래 맵과 위험 정보
+                string record = best > 0 ? $"   {recordCharacter.DisplayName} 최고점 {best:N0}" : string.Empty; // 기록이 있는 조합만 표시
+                Label(panel, "FrontendMapDetails", $"{current.DisplayName}{record}\n보스 체력 {current.BossHealth:0}   장애물 {current.ObstacleChance:P0}\n특수 지역 {current.SpecialZoneChance:P0}", new Vector2(0f, -330f), new Vector2(1100f, 75f), 22); // 카드 아래 맵과 최고점 정보
             } // 조건 종료
             CreateButton(panel, "FrontendMapsBackButton", "뒤로", new Vector2(-520f, -445f), new Vector2(260f, 75f), () => Show(FrontendStage.Characters)); // 실제 캐릭터 선택 복귀
             CreateButton(panel, "FrontendMapsNextButton", "출격", new Vector2(520f, -445f), new Vector2(360f, 75f), BeginSelectedMap); // 선택 맵에 출격
@@ -703,6 +706,12 @@ namespace ProjectEpsilon.UI // 실제 메뉴 영역
                 totalLabel.resizeTextForBestFit = true; // 좁은 영역의 총점 잘림 방지
                 totalLabel.resizeTextMinSize = 38; // 총점 최소 글자 크기
                 totalLabel.resizeTextMaxSize = scoreLabel.fontSize * 2; // 항목의 두 배 글자 크기
+                int best = meta.LastRunPersonalBest; // 방금 종료한 조합의 저장 최고점
+                if (best > 0) // 저장된 최고점 존재 확인
+                { // 조건 시작
+                    Text record = Label(panel, "FrontendPersonalBest", $"개인 최고점  {best:N0}", new Vector2(370f, -150f), new Vector2(760f, 42f), 28); // 총점 아래 기록 표시
+                    record.alignment = TextAnchor.MiddleLeft; // 총점과 왼쪽 정렬
+                } // 조건 종료
             } // 조건 종료
             CreateButton(panel, "FrontendRetryButton", "재도전", new Vector2(-260f, -300f), new Vector2(430f, 90f), Retry); // 실제 재도전
             CreateButton(panel, "FrontendResultMainButton", "메인 메뉴", new Vector2(260f, -300f), new Vector2(430f, 90f), ReturnToMain); // 실제 주 메뉴 복귀

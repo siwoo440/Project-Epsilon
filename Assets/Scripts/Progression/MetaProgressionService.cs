@@ -55,6 +55,14 @@ namespace ProjectEpsilon.Progression // 영구 성장 영역
             } // 조건 종료
         } // 함수 종료
     } // 형식 종료
+    [Serializable] // 최고 기록 직렬화
+    public sealed class PersonalBestScore // 맵과 캐릭터의 최고 점수
+    { // 형식 시작
+        public int mapIndex; // 맵 번호
+        public string characterId; // 캐릭터 고유 식별자
+        public int score; // 확정된 승리 점수
+    } // 형식 종료
+
     [Serializable] // 실제 저장 형식
     public sealed class MetaSaveData // 저장할 메타 진행
     { // 형식 시작
@@ -66,6 +74,7 @@ namespace ProjectEpsilon.Progression // 영구 성장 영역
         public int turretAttributeMask; // 속성별 시험 포탑 해금 비트
         public int[] levels = new int[12]; // 열두 성장 노드
         public List<string> rewardedRuns = new List<string>(); // 중복 보상 방지 런 식별자
+        public List<PersonalBestScore> personalBests = new List<PersonalBestScore>(); // 맵과 캐릭터별 승리 최고점
     } // 형식 종료
     public sealed class MetaProgressionService // 저장과 성장 규칙 서비스
     { // 형식 시작
@@ -102,6 +111,7 @@ namespace ProjectEpsilon.Progression // 영구 성장 영역
                     Debug.LogError("[Project Epsilon] 메타 저장 형식이 올바르지 않아 원본을 보존합니다."); // 손상 저장 알림
                     return; // 손상 데이터 덮어쓰기 방지
                 } // 조건 종료
+                loaded.personalBests ??= new List<PersonalBestScore>(); // 이전 저장의 빈 기록 초기화
                 data = loaded; // 검증된 저장 적용
                 IsAvailable = true; // 실제 사용 가능 상태
             } // 조건 종료
@@ -124,6 +134,17 @@ namespace ProjectEpsilon.Progression // 영구 성장 영역
                     return false; // 잘못된 단계 거부
                 } // 조건 종료
             } // 반복 종료
+            if (saved.personalBests != null) // 이전 저장의 선택 항목 확인
+            { // 조건 시작
+                var combinations = new HashSet<(int, string)>(); // 최고점 조합 중복 검사
+                foreach (PersonalBestScore entry in saved.personalBests) // 저장된 점수 순회
+                { // 반복 시작
+                    if (entry == null || entry.mapIndex < 0 || entry.mapIndex >= 3 || string.IsNullOrWhiteSpace(entry.characterId) || entry.score <= 0 || entry.score > 100000 || !combinations.Add((entry.mapIndex, entry.characterId))) // 저장된 조합과 점수 범위 확인
+                    { // 조건 시작
+                        return false; // 손상된 최고점 저장 거부
+                    } // 조건 종료
+                } // 반복 종료
+            } // 조건 종료
             return (saved.mapMask & 1) != 0; // 기본 평원 해금 확인
         } // 함수 종료
         private MetaSaveData Copy() // 트랜잭션용 진행 복사
@@ -221,7 +242,15 @@ namespace ProjectEpsilon.Progression // 영구 성장 영역
             next.turretAttributeMask |= 1 << attribute; // 실제 속성 해금 기록
             return Commit(next); // 저장 성공 시 확정
         } // 함수 종료
-        public bool TryCompleteRun(string runId, double seconds, int kills, int elites, bool bossDefeated, int mapIndex) // 실제 런 보상 확정
+        public int GetPersonalBest(int mapIndex, string characterId) // 동일 맵과 캐릭터의 최고점 조회
+        { // 함수 시작
+            return FindPersonalBest(data, mapIndex, characterId)?.score ?? 0; // 해당 조합의 점수 또는 미기록
+        } // 함수 종료
+        private static PersonalBestScore FindPersonalBest(MetaSaveData save, int mapIndex, string characterId) // 저장 안의 동일 조합 검색
+        { // 함수 시작
+            return save?.personalBests?.Find(entry => entry.mapIndex == mapIndex && entry.characterId == characterId); // 맵과 캐릭터가 일치하는 기록
+        } // 함수 종료
+        public bool TryCompleteRun(string runId, double seconds, int kills, int elites, bool bossDefeated, int mapIndex, string characterId = null, int finalScore = 0) // 런 보상과 승리 최고점 확정
         { // 함수 시작
             if (!IsAvailable || string.IsNullOrEmpty(runId) || double.IsNaN(seconds) || double.IsInfinity(seconds) || seconds < 0d || kills < 0 || elites < 0 || mapIndex < 0 || mapIndex >= 3) // 실제 성과 유효성 확인
             { // 조건 시작
@@ -238,6 +267,18 @@ namespace ProjectEpsilon.Progression // 영구 성장 영역
             next.cores = (int)Math.Min(int.MaxValue, next.cores + total); // 안전한 코어 지급
             next.finishedFirstRun = true; // 첫 런 완료 기록
             next.rewardedRuns.Add(runId); // 중복 지급 방지 기록
+            if (bossDefeated && finalScore > 0 && finalScore <= 100000 && !string.IsNullOrWhiteSpace(characterId)) // 유효한 승리 점수 확인
+            { // 조건 시작
+                PersonalBestScore best = FindPersonalBest(next, mapIndex, characterId); // 동일 조합의 기존 기록
+                if (best == null) // 첫 승리 기록 확인
+                { // 조건 시작
+                    next.personalBests.Add(new PersonalBestScore { mapIndex = mapIndex, characterId = characterId, score = finalScore }); // 해당 조합의 첫 최고점 저장
+                } // 조건 종료
+                else if (finalScore > best.score) // 기존 기록 초과 확인
+                { // 조건 시작
+                    best.score = finalScore; // 새 최고점 적용
+                } // 조건 종료
+            } // 조건 종료
             if (bossDefeated && mapIndex == 0) // 평원 보스 처치 확인
             { // 조건 시작
                 next.mapMask |= 1 << 1; // 실제 폐허 맵 해금

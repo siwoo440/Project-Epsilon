@@ -46,12 +46,14 @@ namespace ProjectEpsilon.Progression // 영구 성장 영역
         private double pendingSeconds; // 저장 대기 생존 시간
         private bool pendingBoss; // 저장 대기 보스 처치
         private int pendingMap; // 저장 대기 맵 번호
+        private string pendingCharacterId; // 저장 대기 캐릭터 식별자
         public static MetaProgressionController Instance { get; private set; } // 현재 실제 관리자
         public MetaProgressionService Service { get; private set; } // 실제 메타 진행 서비스
         public MetaProgressionMenu Menu { get; private set; } // 실제 시작 성장 메뉴
         public bool HasPendingSave => pending; // 저장 실패 재시도 상태
         private int hadTurretAttributes; // 런 시작 포탑 속성 해금
         public double LastRunSeconds => pendingSeconds; // 실제 종료 생존 시간
+        public int LastRunPersonalBest => Service?.GetPersonalBest(pendingMap, pendingCharacterId) ?? 0; // 마지막 전투 조합의 저장 최고점
         public string LastUnlockNotice { get; private set; } // 실제 새 해금 요약
         public int LastAward { get; private set; } // 마지막 실제 코어 지급량
         public int Kills => kills; // 실제 적 처치 수
@@ -243,12 +245,13 @@ namespace ProjectEpsilon.Progression // 영구 성장 영역
                 pendingBoss = bossDefeated; // 실제 최종 보스 처치
                 PrototypeMapSelection map = GetComponent<PrototypeMapSelection>(); // 실제 선택 맵
                 pendingMap = map == null ? 0 : map.SelectedIndex; // 실제 맵 번호
+                pendingCharacterId = CharacterRunInitializer.ActiveCharacter?.Id; // 씬 종료 전 캐릭터 식별자 보관
                 FinalizeScore(bossDefeated); // 최초 종료 시 점수 한 번 확정
                 UnbindScoreExperience(); // 종료 후 경험치 집계 중지
                 pending = true; // 실패해도 같은 성과 보존
             } // 조건 종료
             int before = Service.Cores; // 저장 전 실제 코어
-            if (!Service.TryCompleteRun(runId, pendingSeconds, kills, elites, pendingBoss, pendingMap)) // 실제 저장과 중복 방지 확인
+            if (!Service.TryCompleteRun(runId, pendingSeconds, kills, elites, pendingBoss, pendingMap, pendingCharacterId, CurrentScore)) // 최고점과 보상의 동시 저장 확인
             { // 조건 시작
                 Debug.LogError("[Project Epsilon] 런 보상을 저장하지 못했습니다. 재시도 전 기록을 유지합니다."); // 저장 실패 알림
                 return false; // 저장 전 종료 확정 차단
