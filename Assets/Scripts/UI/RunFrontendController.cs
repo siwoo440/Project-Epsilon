@@ -741,7 +741,7 @@ namespace ProjectEpsilon.UI // 실제 메뉴 영역
             volume.interactable = shake.interactable = resolution.interactable = mode.interactable = options.IsAvailable; // 실제 저장 오류 시 변경 차단
             CreateButton(panel, "FrontendInputSettingsButton", "키 설정", new Vector2(0f, -150f), new Vector2(500f, 80f), () => inputSettings?.OpenSettings()); // 실제 기존 키 설정 열기
             CreateButton(panel, "FrontendSettingsBackButton", "뒤로", new Vector2(0f, -280f), new Vector2(320f, 80f), () => Show(settingsReturn)); // 실제 이전 메뉴 복귀
-            Label(panel, "FrontendShakeNote", "흔들림 설정은 저장되며 화면 효과는 아직 적용되지 않았습니다.", new Vector2(0f, -350f), new Vector2(1200f, 40f), 20); // 실제 흔들림 구현 상태
+            Label(panel, "FrontendShakeNote", "피격과 보스 등장 시 화면 흔들림을 조절합니다. 0%에서 꺼집니다.", new Vector2(0f, -350f), new Vector2(1200f, 40f), 20); // 실제 흔들림 기능 안내
             Label(panel, "FrontendDebugHelp", "전투 중 시험 조작\nN: 합성 재료  |  E: 합성  |  P: 피해  |  [: 몸통 손실\nH: 회복 보석  |  J: 복구 보석  |  Shift+3 / Shift+5: 포탑 등급", new Vector2(0f, -445f), new Vector2(1500f, 105f), 22); // 설정 화면의 실제 시험 조작 안내
         } // 함수 종료
         private void ChangeOptions(int volume, int shake, int resolution, bool fullscreen) // 실제 화면 설정 변경

@@ -83,9 +83,13 @@ namespace ProjectEpsilon.Editor // 배치 시험 영역
             Require(Count(names, "Attack") == 1 && Mathf.Approximately(AudioListener.volume, 0.25f), "공격음 중복 제한 또는 전체 음량 연결 실패"); // 반복과 전체 음량 확인
             Require(health.TakeDamage(1), "실제 체력 피해 실패"); // 실제 피격 적용
             Require(Count(names, "Hit") == 1, "실제 피격음 누락"); // 실제 피격 이벤트 확인
+            CameraFollow2D camera = Camera.main == null ? null : Camera.main.GetComponent<CameraFollow2D>(); // 실제 전투 카메라 조회
+            FieldInfo shakeDuration = typeof(CameraFollow2D).GetField("shakeDuration", Private); // 피격 흔들림 요청 시간 조회
+            Require(camera != null && shakeDuration != null && (float)shakeDuration.GetValue(camera) > 0f, "피격 뒤 카메라 흔들림 요청 누락"); // 실제 전투 카메라에 전달된 요청 확인
             Require(body.TryRemoveBody() && Count(names, "BodyLoss") == 1, "실제 몸통 손실음 누락"); // 실제 몸통 손실 확인
             Require(weapons.TryEquipAt(0, weapon, 1) && weapons.TryEquipAt(1, weapon, 1) && weapons.TryMergeSlots(0, 1), "실제 포탑 합성 실패"); // 실제 합성 적용
             Require(Count(names, "Merge") == 1, "실제 합성음 누락"); // 실제 합성 이벤트 확인
+            Require(GameObject.Find("TurretMergeVfx") != null, "합성된 슬롯 표시 누락"); // 실제 합성 이미지 객체 확인
             EarlyEnemySettings[] settings = (EarlyEnemySettings[])typeof(EarlyEnemyWaveSpawner).GetField("enemies", Private).GetValue(spawner); // 실제 적 설정
             MethodInfo spawn = typeof(EarlyEnemyWaveSpawner).GetMethod("SpawnAt", Private); // 실제 적 출현 경로
             Require(spawn.Invoke(spawner, new object[] { settings[3], Vector3.one * 40f, false }) != null && Count(names, "Elite") == 1, "실제 엘리트 출현음 누락"); // 실제 엘리트 출현 확인
