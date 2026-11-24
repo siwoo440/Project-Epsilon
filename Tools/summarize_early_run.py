@@ -7,6 +7,7 @@ from collections import Counter  # 피해 원인 집계
 from pathlib import Path  # 로그 파일 경로
 
 MARKER = "[NaturalCombatVerification] RECORD "  # 실제 5분 기록 구분자
+STATE = re.compile(r"^\[NaturalCombatVerification\] time=([\d.]+) .*?body=(\d+) hp=(\d+) .*?gems=(\d+) enemies=(\d+)")  # 주기 상태 구분자와 관찰값
 
 
 def gem_collection_summary(record, sample):  # 실제 보석 원본 경험치 수집률 계산
@@ -33,8 +34,16 @@ def print_gem_collection(record, sample, label):  # 실제 표본의 보석 수�
 
 
 def summarize(path):  # 자연 전투 로그 요약
-    lines = Path(path).read_text(encoding="utf-8-sig", errors="replace").splitlines()  # 실제 로그 읽기
-    entries = [line.partition(MARKER)[2] for line in lines if MARKER in line]  # 완료된 5분 기록 검색
+    entries = []  # 완료된 전투의 JSON 기록
+    observed = []  # 주기적으로 출력한 동시 적 상태
+    with Path(path).open(encoding="utf-8-sig", errors="replace") as log:  # 대용량 배치 로그를 한 줄씩 읽기
+        for line in log:  # 실제 로그 순회
+            if line.startswith(MARKER):  # 완료된 전투의 JSON 줄 확인
+                entries.append(line[len(MARKER):])  # 실제 JSON 기록 보존
+            elif line.startswith("[NaturalCombatVerification] time="):  # 전투 주기 상태 줄 확인
+                state = STATE.search(line)  # 시간과 동시 적 수 파싱
+                if state:  # 유효한 상태 표본 확인
+                    observed.append(state)  # 통계에 사용할 표본만 보존
     if len(entries) != 1:  # 실제 완료 기록 개수 확인
         raise ValueError("완료된 5분 기록이 정확히 하나가 아님")  # 미완료 로그 차단
     record = json.loads(entries[0])  # 실제 기록 복원
@@ -63,9 +72,7 @@ def summarize(path):  # 자연 전투 로그 요약
         print(f"  15분: 시간={final['seconds']:.1f}초 레벨={final['level']} 획득XP={final['totalExperience']} 처치={final['kills']} 몸통={final['currentBodies']} 체력={final['health']} 포탑={equipped}")  # 실제 15분 상태 출력
         print(f"  10~15분 변화: 레벨={final['level'] - later['level']:+} 획득XP={final['totalExperience'] - later['totalExperience']:+} 처치={final['kills'] - later['kills']:+} 몸통={final['currentBodies'] - later['currentBodies']:+}")  # 실제 구간 변화 출력
         print_gem_collection(record, final, "15분")  # 실제 15분 원본 보석 수집률
-        pattern = re.compile(r"^\[NaturalCombatVerification\] time=([\d.]+) .*?body=(\d+) hp=(\d+) .*?gems=(\d+) enemies=(\d+)")  # 실제 주기 상태 문구
-        observed = [pattern.search(line) for line in lines if line.startswith("[NaturalCombatVerification] time=")]  # 실제 상태 로그 검색
-        window = [match for match in observed if match and 600 <= float(match.group(1)) <= 901]  # 실제 10~15분 상태 표본
+        window = [match for match in observed if 600 <= float(match.group(1)) <= 901]  # 실제 10~15분 상태 표본
         if window:  # 실제 상태 표본 존재 확인
             enemies = [int(match.group(5)) for match in window]  # 실제 동시 적 수
             gems = [int(match.group(4)) for match in window]  # 실제 씬 전체 미수집 보석 수
@@ -83,7 +90,7 @@ def summarize(path):  # 자연 전투 로그 요약
         print(f"  15~20분 변화: 레벨={end['level'] - final['level']:+} 획득XP={end['totalExperience'] - final['totalExperience']:+} 처치={end['kills'] - final['kills']:+} 몸통={end['currentBodies'] - final['currentBodies']:+}")  # 실제 구간 변화 출력
         print(f"  15~20분 엘리트 처치={end.get('elites', 0) - final.get('elites', 0)}")  # 실제 구간 엘리트 처치 수 출력
         print_gem_collection(record, end, "20분")  # 실제 20분 원본 보석 수집률
-        window = [match for match in observed if match and 900 <= float(match.group(1)) <= 1201]  # 실제 15~20분 상태 표본
+        window = [match for match in observed if 900 <= float(match.group(1)) <= 1201]  # 실제 15~20분 상태 표본
         if window:  # 실제 상태 표본 존재 확인
             enemies = [int(match.group(5)) for match in window]  # 실제 동시 적 수
             gems = [int(match.group(4)) for match in window]  # 실제 씬 전체 미수집 보석 수
@@ -112,6 +119,16 @@ def summarize(path):  # 자연 전투 로그 요약
     damages = record.get("damages", [])  # 실제 피해 목록
     causes = Counter(item.get("origin", "Unknown") for item in damages)  # 원인별 피해 횟수
     print(f"  피해 원인={dict(causes)} 체력피해={sum(item.get('healthDamage', 0) for item in damages)} 보호막흡수={sum(item.get('shieldDamage', 0) for item in damages)} 직접몸통손실={sum(item.get('bodyLoss', 0) for item in damages)}")  # 실제 피해 합계 출력
+    for start, end in ((0, 300), (300, 600), (600, 900), (900, 1200)):  # 다섯 분 단위의 피해 구간
+        if samples[-1]["seconds"] < end:  # 도달하지 못한 구간 확인
+            break  # 불완전 구간 제외
+        segment_health = Counter()  # 현재 구간의 원인별 체력 피해
+        segment_body_loss = 0  # 현재 구간의 직접 몸통 손실
+        for event in damages:  # 실제 피해의 발생 시각 분류
+            if start <= event.get("seconds", -1) < end:  # 현재 구간에 포함된 피해 확인
+                segment_health[event.get("origin", "Unknown")] += event.get("healthDamage", 0)  # 원인별 공용 체력 피해 합산
+                segment_body_loss += event.get("bodyLoss", 0)  # 몸통 직접 손실 합산
+        print(f"  {start // 60}~{end // 60}분 피해: {dict(segment_health.most_common())}, 직접 몸통 손실={segment_body_loss}")  # 시간대별 피해 집중 지점 출력
 
 
 def main():  # 명령행 진입점
