@@ -2661,10 +2661,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::ProjectEpsilon.Progression.SnakeExperience
   currentLevel: 1
   currentExperience: 0
-  baseRequiredExperience: 52
+  baseRequiredExperience: 18
   pickupSettings: {fileID: 11400000, guid: b0b29ea343f14edab708ce4970812294, type: 2}
-  experienceGrowthMultiplier: 1.062
-  introductoryRequirements: 0a0000000e00000018000000
+  experienceGrowthMultiplier: 1.13
+  introductoryRequirements: 0a0000000c0000000f000000
   levelUpPending: 0
 --- !u!114 &587332125
 MonoBehaviour:

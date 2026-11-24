@@ -14,7 +14,7 @@ def validate_full_run(text):  # 실제 배치 기록의 전체 승리 조건 확
     lines = text.splitlines()  # 실제 로그 행 분리
     if "-epsilonFightBoss" not in lines or "-epsilonRecord" not in lines:  # 실제 보스전과 기록 옵션 확인
         raise ValueError("보스전 또는 기록 실행 옵션이 없음")  # 실행 조건 누락
-    if any("[SurvivalMilestonesVerification]" in line or "AutomatedSurvivalMilestonesVerification.Run" in line for line in lines):  # 알려진 강제 시간 통제 시험 확인
+    if "-epsilonFixedCapture" in lines or any("[SurvivalMilestonesVerification]" in line or "AutomatedSurvivalMilestonesVerification.Run" in line for line in lines):  # 알려진 강제 시간 통제 시험 확인
         raise ValueError("시간과 보스 피해를 통제한 시험은 자연 전투가 아님")  # 통제 결과 제외
     successes = [line for line in lines if line.startswith(SUCCESS_MARKER)]  # 실제 결과 화면까지의 성공 기록
     if len(successes) != 1:  # 실제 성공 기록 개수 확인

@@ -92,11 +92,11 @@ public static class Program // 검증 실행기
             return 1; // 실패 종료
         }
         var releaseCurve = new SnakeExperience(); // 출시 시험용 성장 객체
-        releaseCurve.Configure(52, 1.062f); // 도입부 이후 기본 곡선 설정
+        releaseCurve.Configure(18, 1.13f); // 도입부 이후 기본 곡선 설정
         FieldInfo introductory = typeof(SnakeExperience).GetField("introductoryRequirements", BindingFlags.NonPublic | BindingFlags.Instance); // Unity 씬이 채우는 필드
-        introductory.SetValue(releaseCurve, new[] { 10, 14, 24 }); // 씬의 도입부 요구량 재현
+        introductory.SetValue(releaseCurve, new[] { 10, 12, 15 }); // 씬의 도입부 요구량 재현
         releaseCurve.CopyIntroductoryRequirements()[0] = 1; // 기록용 사본 변경
-        int[] releaseRequirements = { 10, 14, 24, 52, 55 }; // 도입부에서 증가 곡선으로 넘어가는 요구량
+        int[] releaseRequirements = { 10, 12, 15, 18, 20 }; // 도입부에서 증가 곡선으로 넘어가는 요구량
         foreach (int expectedRequirement in releaseRequirements) // 순서대로 모든 경계 확인
         { // 요구량 반복 시작
             if (releaseCurve.RequiredExperience != expectedRequirement) // 현재 레벨의 요구량 검증

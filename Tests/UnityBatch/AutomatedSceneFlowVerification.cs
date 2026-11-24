@@ -91,13 +91,15 @@ namespace ProjectEpsilon.Editor // 실제 배치 시험 영역
         {
             bool swampScenario = Array.IndexOf(Environment.GetCommandLineArgs(), "-epsilonSwampScenario") >= 0; // 실제 습지와 기동형 시험 여부
             int targetMap = swampScenario ? 2 : 1; // 실제 시험할 맵 번호
-            Require(Application.productName == "Project-Epsilon-SceneFlow-Isolated", "User save profile is not isolated."); // 실제 사용자 저장 격리 확인
+            Require(Application.productName.EndsWith("-Isolated", StringComparison.Ordinal), "User save profile is not isolated."); // 실제 사용자 저장 격리 확인
             yield return null; // 실제 메뉴 초기화 대기
             PlayerPrefs.DeleteKey("ProjectEpsilon.MetaProgress.v1"); // 실제 격리 프로필의 이전 시험 저장 제거
             PlayerPrefs.Save(); // 실제 격리 저장 초기화 반영
             MetaProgressionController menuMeta = MetaProgressionController.Instance; // 실제 메뉴 진행 관리자
             typeof(MetaProgressionController).GetProperty("Service").SetValue(menuMeta, new MetaProgressionService(new PlayerPrefsMetaStorage("ProjectEpsilon.MetaProgress.v1"))); // 실제 초기 저장 서비스 재연결
             Require(SceneManager.GetActiveScene().path == SceneFrontendContext.MainMenuPath && Button("FrontendStartButton") != null, "Main menu did not initialize."); // 실제 메인 메뉴 확인
+            VerifyPersonalBests(); // 최고점 저장 규칙 확인
+            VerifyTurretCatalog(); // 메인 메뉴의 48종 도감 확인
             InputSystemUIInputModule module = EventSystem.current == null ? null : EventSystem.current.GetComponent<InputSystemUIInputModule>(); // 실제 UI 입력 모듈
             Require(module != null && module.actionsAsset != null, "Main menu input actions missing."); // 실제 UI 입력 구성 확인
             Button("FrontendSettingsButton").onClick.Invoke(); // 실제 메뉴 설정 열기
@@ -208,6 +210,8 @@ namespace ProjectEpsilon.Editor // 실제 배치 시험 영역
             Require(title != null && title.text == "승리" && MetaProgressionController.Instance.Service.IsMapUnlocked(2) == !swampScenario, "Victory result or boss unlock was lost."); // 실제 승리 표시와 다음 맵 해금 확인
             Text scoreDetails = GameObject.Find("FrontendScoreDetails")?.GetComponent<Text>(); // 실제 분리 결과 씬의 점수 상세
             Text scoreTotal = GameObject.Find("FrontendTotalScore")?.GetComponent<Text>(); // 실제 분리 결과 씬의 총점
+            Text record = GameObject.Find("FrontendPersonalBest")?.GetComponent<Text>(); // 실제 저장 최고점
+            Require(record != null && MetaProgressionController.Instance.LastRunPersonalBest == MetaProgressionController.Instance.CurrentScore, "Victory best score was not saved or shown."); // 승리 저장과 결과 화면의 최고점 확인
             Require(scoreDetails != null && scoreDetails.text.Contains("보스 처치") && !scoreDetails.text.Contains("총점") && scoreTotal != null && scoreTotal.text.Contains("총점"), "Victory score details or total missing in results scene."); // 실제 씬 전환 후 점수 항목과 독립 총점 확인
             Button("FrontendResultMainButton").onClick.Invoke(); // 실제 메인 메뉴 복귀
             yield return null; // 실제 종료 관리자 제거 대기
@@ -216,6 +220,51 @@ namespace ProjectEpsilon.Editor // 실제 배치 시험 영역
             Require(SceneManager.GetActiveScene().path == SceneFrontendContext.MainMenuPath && GameManager.Instance == null && Button("FrontendStartButton") != null, "Main menu return kept old game state."); // 실제 이전 전투 정리 확인
             AutomatedSceneFlowVerification.Finish(0, "Menu, controls, preparation, selected loadout, save failure, retry and main menu passed."); // 실제 전체 시험 성공
         }
+        private static void VerifyPersonalBests() // 기존 저장과 저장 실패의 최고점 검증
+        { // 함수 시작
+            var storage = new SceneFlowMemoryStorage(); // 사용자 저장과 분리된 시험 저장소
+            var service = new MetaProgressionService(storage); // 실제 진행 저장 서비스
+            Require(service.TryCompleteRun("first", 1200d, 100, 4, true, 0, "heavy", 70000), "Initial best was not stored."); // 첫 승리 최고점 기록
+            Require(service.TryCompleteRun("lower", 1200d, 100, 4, true, 0, "heavy", 60000), "Lower score run was not saved."); // 낮은 점수의 런은 별도 저장
+            Require(service.TryCompleteRun("loss", 100d, 0, 0, false, 0, "heavy", 90000), "Defeat run was not saved."); // 패배 기록의 점수 제외
+            Require(service.TryCompleteRun("other", 1200d, 100, 4, true, 1, "heavy", 71000), "Second map score was not stored."); // 다른 맵 점수 독립 저장
+            Require(service.TryCompleteRun("mobile", 1200d, 100, 4, true, 0, "mobile", 72000), "Second character score was not stored."); // 다른 캐릭터 점수 독립 저장
+            storage.FailWrite = true; // 저장 실패 조건 준비
+            Require(!service.TryCompleteRun("retry", 1200d, 100, 4, true, 0, "heavy", 80000) && service.GetPersonalBest(0, "heavy") == 70000, "Failed save overwrote a personal best."); // 저장 실패 시 이전 점수 유지
+            storage.FailWrite = false; // 저장 성공 조건 복구
+            Require(service.TryCompleteRun("retry", 1200d, 100, 4, true, 0, "heavy", 80000), "Personal best retry failed."); // 같은 런의 저장 재시도
+            var reloaded = new MetaProgressionService(storage); // 저장된 실제 JSON 다시 읽기
+            Require(reloaded.GetPersonalBest(0, "heavy") == 80000 && reloaded.GetPersonalBest(1, "heavy") == 71000 && reloaded.GetPersonalBest(0, "mobile") == 72000 && reloaded.GetPersonalBest(2, "mobile") == 0, "Personal best was lost or mixed across profiles."); // 맵과 캐릭터별 최고점 분리 확인
+        } // 함수 종료
+
+        private static void VerifyTurretCatalog() // 메뉴의 포탑 목록과 상세 확인
+        { // 함수 시작
+            Button("FrontendTurretCatalogButton").onClick.Invoke(); // 실제 포탑 도감 열기
+            for (int index = 0; index < 8; index++) // 모든 속성 탭 확인
+            { // 반복 시작
+                Button tab = Button("FrontendCatalogAttribute" + index); // 현재 속성 탭 조회
+                Require(tab != null, "Turret catalog attribute tab missing."); // 실제 탭 존재 확인
+                if (tab.interactable) // 선택하지 않은 탭 확인
+                { // 조건 시작
+                    tab.onClick.Invoke(); // 해당 속성 포탑 표시
+                } // 조건 종료
+                Require(Button("FrontendCatalogTurret5") != null && Button("FrontendCatalogTurret6") == null, "Catalog attribute does not contain exactly six turrets."); // 각 속성의 여섯 포탑 확인
+                for (int turretIndex = 0; turretIndex < 6; turretIndex++) // 해당 속성의 모든 포탑 상세 확인
+                { // 반복 시작
+                    Button turret = Button("FrontendCatalogTurret" + turretIndex); // 실제 포탑 버튼 조회
+                    Require(turret != null, "Catalog turret button missing."); // 포탑 버튼이 표시되는지 확인
+                    if (turret.interactable) // 아직 선택하지 않은 포탑 확인
+                    { // 조건 시작
+                        turret.onClick.Invoke(); // 해당 포탑 상세 열기
+                    } // 조건 종료
+                    Text effects = GameObject.Find("FrontendCatalogEffects")?.GetComponent<Text>(); // 실제 등급 표시 확인
+                    Require(effects != null && effects.text.Contains("★3") && effects.text.Contains("★5"), "Catalog grade details missing."); // 모든 포탑의 등급 상세 확인
+                } // 반복 종료
+            } // 반복 종료
+            Button("FrontendCatalogBack").onClick.Invoke(); // 실제 메인 메뉴 복귀
+            Require(Button("FrontendStartButton") != null, "Catalog did not return to menu."); // 시작 버튼 복귀 확인
+        } // 함수 종료
+
         private static void VerifySkin(CharacterData selected) // 선택 외형의 실제 표시 확인
         { // 함수 시작
             SnakeMovement player = FindFirstObjectByType<SnakeMovement>(); // 실제 플레이어 조회

@@ -24,6 +24,10 @@ class FullRunEvidenceTests(unittest.TestCase):  # 전체 전투 기록 경계 �
         self.prefix += "[SurvivalMilestonesVerification] Controlled clock jumps\n"  # 실제 시간 통제 표식 추가
         with self.assertRaises(ValueError):  # 자연 전투 결과 거부 확인
             validate_full_run(self.log())  # 통제 기록 판별
+        self.setUp()  # 고정 프레임 검증을 위한 독립 기록 복원
+        self.prefix += "-epsilonFixedCapture\n"  # 고정 프레임 간격 옵션 기록
+        with self.assertRaises(ValueError):  # 고정 프레임 실측을 정상 시간 증거에서 제외
+            validate_full_run(self.log())  # 고정 프레임 결과 판별
 
     def test_boss_kill_is_required(self):  # 실제 보스 처치 필요 확인
         self.record["snapshots"][-1]["bossKills"] = 0  # 보스 처치 기록 제거

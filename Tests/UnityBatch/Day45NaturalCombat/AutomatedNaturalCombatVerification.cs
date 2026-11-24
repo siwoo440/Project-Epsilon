@@ -176,6 +176,11 @@ namespace ProjectEpsilon.Editor // 편집기 영역
                         string[] arguments = Environment.GetCommandLineArgs(); // 실제 배치 인수
                         automaticMergeRequested = Array.IndexOf(arguments, "-epsilonAutoMerge") >= 0; // 자동 합성 시험 옵션 확인
                         bossFightRequested = Array.IndexOf(arguments, "-epsilonFightBoss") >= 0; // 보스전 연속 관찰 옵션 확인
+                        if (Array.IndexOf(arguments, "-epsilonFixedCapture") >= 0) // 고정 프레임 간격의 통합 재현 시험 확인
+                        { // 통제 시험 범위 시작
+                            Time.captureFramerate = 50; // 렌더 프레임당 게임 시간 0.02초 적용
+                            Debug.Log("[NaturalCombatVerification] controlled fixed capture: 50 frames/game-second."); // 실제 시간과 구분되는 시험 조건 기록
+                        } // 통제 시험 범위 종료
                         for (int index = 0; index + 1 < arguments.Length; index++) // 실제 배치 인수 순회
                         {
                             if (arguments[index] == "-epsilonSeed" && int.TryParse(arguments[index + 1], out int requestedSeed)) // 요청된 시드 확인
