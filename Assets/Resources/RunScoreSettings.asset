@@ -12,6 +12,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d09cae42df1741a8b7baf3b58e7419d8, type: 3}
   m_Name: RunScoreSettings
   m_EditorClassIdentifier: Assembly-CSharp::ProjectEpsilon.Progression.RunScoreSettings
-  experienceTarget: 0
-  normalKillTarget: 0
+  experienceTarget: 2000
+  normalKillTarget: 1600
   fullRecoveryPickupScore: 100

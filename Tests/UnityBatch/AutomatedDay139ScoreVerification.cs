@@ -56,18 +56,19 @@ namespace ProjectEpsilon.Editor // 배치 시험 영역
             ProjectEpsilon.Progression.SnakeExperience experience = ProjectEpsilon.Progression.SnakeExperience.Current; // 실제 경험치 관리자
             Require(meta != null && experience != null, "점수 또는 경험치 관리자 누락"); // 실제 관리자 확인
             ProjectEpsilon.Progression.RunScoreSettings settings = Resources.Load<ProjectEpsilon.Progression.RunScoreSettings>("RunScoreSettings"); // 실제 점수 설정
-            Require(settings != null && settings.ExperienceTarget == 0 && settings.NormalKillTarget == 0, "미정 점수 기준 확인 실패"); // 미정 기준 유지 확인
+            Require(settings != null && settings.ExperienceTarget == 2000 && settings.NormalKillTarget == 1600, "출시 시험 점수 기준이 다릅니다."); // 적용한 경험치와 처치 만점 기준
             experience.Configure(1000000, 1f); // 시험 중 레벨업 방지
             experience.AddExperience(25); // 실제 경험치 획득
             MethodInfo enemyDied = meta.GetType().GetMethod("HandleEnemyDied", Private); // 실제 처치 이벤트 처리기
             enemyDied.Invoke(meta, new object[] { false }); // 일반 적 처치 처리
-            Require(meta.TotalExperience >= 25 && meta.CurrentScore == 0, "미정 기준에서 점수 반영"); // 경험치 집계와 미정 점수 확인
+            int baseScore = (int)Math.Floor(meta.TotalExperience * 10d) + 6; // 경험치 1당 10점과 첫 일반 적 6점
+            Require(meta.TotalExperience >= 25 && meta.ExperienceScore > 0 && meta.NormalKillScore == 6 && meta.CurrentScore == baseScore, "초반 경험치와 일반 적 처치가 점수에 반영되지 않았습니다."); // 실제 누적 점수 활성 확인
             enemyDied.Invoke(meta, new object[] { true }); // 엘리트 처치 처리
-            Require(meta.CurrentScore == 2500, "엘리트 점수 오류"); // 엘리트 점수 확인
+            Require(meta.CurrentScore == baseScore + 2500, "엘리트 점수 오류"); // 기존 점수에 엘리트 점수 추가
             Text score = GameObject.Find("CurrentScoreText").GetComponent<Text>(); // 실제 현재 점수 글자
             Text gain = GameObject.Find("ScoreGainText").GetComponent<Text>(); // 실제 증가량 글자
-            Require(score.text.Contains("2,500") && gain.text.Contains("2,500"), "점수 또는 증가량 표시 오류"); // 실제 HUD 반영 확인
-            Require(meta.TryAwardFullRecoveryPickupScore() && meta.PickupScore == 100 && meta.CurrentScore == 2600 && gain.text.Contains("100"), "아이템 보너스 또는 증가량 표시 오류"); // 실제 보너스와 HUD 표시 확인
+            Require(score.text.Contains((baseScore + 2500).ToString("N0")) && gain.text.Contains("2,500"), "점수 또는 증가량 표시 오류"); // 현재 점수와 엘리트 증가량 표시
+            Require(meta.TryAwardFullRecoveryPickupScore() && meta.PickupScore == 100 && meta.CurrentScore == baseScore + 2600 && gain.text.Contains("100"), "아이템 보너스 또는 증가량 표시 오류"); // 실제 보너스와 HUD 표시 확인
             typeof(ProjectEpsilon.Progression.RunScoreSettings).GetField("experienceTarget", Private).SetValue(settings, 1000); // 시험용 경험치 기준 설정
             typeof(ProjectEpsilon.Progression.RunScoreSettings).GetField("normalKillTarget", Private).SetValue(settings, 100); // 시험용 일반 처치 기준 설정
             experience.AddExperience(25); // 실제 경험치 획득과 기준 반영
