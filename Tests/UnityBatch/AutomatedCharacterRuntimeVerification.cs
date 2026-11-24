@@ -5,6 +5,7 @@ using ProjectEpsilon.Core; // 실제 게임 상태
 using ProjectEpsilon.Data; // 실제 캐릭터 데이터
 using ProjectEpsilon.Player; // 실제 플레이어 구성
 using ProjectEpsilon.Progression; // 실제 시작 후보와 무기 풀
+using ProjectEpsilon.UI; // 실제 출격 화면
 using UnityEditor; // 유니티 배치 실행
 using UnityEditor.SceneManagement; // 실제 씬 열기
 using UnityEngine; // 유니티 기능
@@ -26,7 +27,7 @@ namespace ProjectEpsilon.Editor // 배치 시험 영역
         }
         public static void Run() // 실제 씬 시험 진입
         {
-            EditorSceneManager.OpenScene("Assets/Scenes/Game.unity"); // 실제 씬 열기
+            EditorSceneManager.OpenScene(SceneFrontendContext.MainMenuPath); // 메인 메뉴에서 실제 출격 흐름 사용
             SessionState.SetBool(Key, true); // 시험 진행 기록
             EditorApplication.update -= Tick; // 중복 감시 제거
             EditorApplication.update += Tick; // 플레이 감시 연결
@@ -47,6 +48,12 @@ namespace ProjectEpsilon.Editor // 배치 시험 영역
                 Finish(1, "Timed out."); // 시간 초과 실패
                 return; // 시험 중단
             }
+            FrontendStage? stage = RunFrontendController.Instance?.Stage; // 실제 출격 화면 단계
+            if (stage == FrontendStage.Main || stage == FrontendStage.Characters || stage == FrontendStage.Maps) // 게임에 들어가기 전 메뉴 단계 확인
+            { // 메뉴 조건 시작
+                StartingWeaponBatchHelper.HandleStartingSelection(); // 실제 메뉴 버튼으로 기본 캐릭터와 평원 출격
+                return; // 씬 변경을 기다린 뒤 시작 포탑 시험 연결
+            } // 메뉴 조건 종료
             StartingWeaponSelection selection = UnityEngine.Object.FindFirstObjectByType<StartingWeaponSelection>(); // 실제 시작 선택기
             if (injected || selection == null || !selection.IsSelecting || GameManager.Instance == null || GameManager.Instance.CurrentState != GameState.Starting) // 시작 상태와 실행 여부 확인
             {
