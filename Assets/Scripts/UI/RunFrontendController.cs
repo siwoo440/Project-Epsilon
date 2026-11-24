@@ -42,6 +42,7 @@ namespace ProjectEpsilon.UI // 실제 메뉴 영역
         public static RunFrontendController Instance { get; private set; } // 실제 메뉴 관리자
         public FrontendStage Stage { get; private set; } // 실제 현재 단계
         public Font DisplayFont => font; // 실제 화면의 한글 우선 글꼴
+        public float ScreenShakeStrength => options != null && options.IsAvailable ? options.Shake / 100f : 0f; // 저장 설정의 화면 흔들림 배율
         public bool IsMainMenu => Stage == FrontendStage.Main; // 실제 주 메뉴 여부
         public bool AllowsStartingWeaponSelection => Stage == FrontendStage.Weapons; // 실제 포탑 선택 허용
         private void Awake() // 실제 관리자 등록

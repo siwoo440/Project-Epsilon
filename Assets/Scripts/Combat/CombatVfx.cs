@@ -64,6 +64,10 @@ namespace ProjectEpsilon.Combat // 전투 시각 영역
         { // 함수 시작
             return Spawn("PlayerBodyBreakVfx", GetSprite(14), position, 0.65f, 0.4f, 22, true, Color.white); // 실제 손실 위치 표시
         } // 함수 종료
+        public static GameObject SpawnTurretMerge(WeaponAttribute attribute, Vector3 position) // 합성 성공 슬롯 강조
+        { // 함수 시작
+            return Spawn("TurretMergeVfx", GetAttributeSprite(attribute), position, 0.7f, 0.32f, 24, true, Color.white); // 기존 시각 효과와 표시 상한 재사용
+        } // 함수 종료
         private static Sprite GetSprite(int index) // 실제 아틀라스 셀 조회
         { // 함수 시작
             if (sprites == null) // 실제 스프라이트 준비 확인

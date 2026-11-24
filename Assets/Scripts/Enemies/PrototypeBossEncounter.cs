@@ -252,6 +252,7 @@ namespace ProjectEpsilon.Enemies // 적 영역
             } // 조건 종료
             boss = target; // 실제 보스 참조 저장
             spawned = true; // 중복 출현 방지
+            Camera.main?.GetComponent<CameraFollow2D>()?.PlayShake(0.32f, 0.16f); // 보스 등록 직후 카메라 반응
             instance.AddComponent<PrototypeBossChargeAttack>().Configure(this, player, body, health, behaviour, chargeInterval, chargeWarningDuration, chargeDuration, chargeSpeed, phaseTwoChargeSpeedMultiplier, damage, alignVisualWithTarget, mapBossPattern == 2); // 습지 예고 추적을 포함한 실제 돌진 구성
             SnakeBodyFollower follower = body.GetComponent<SnakeBodyFollower>(); // 실제 몸통 경로 추적기 조회
             instance.AddComponent<PrototypeBossBodyPush>().Configure(body, follower, bodyPushDistance, bodyPushRecoveryDuration, bodyPushGraceDuration); // 실제 보스 몸통 밀림 구성

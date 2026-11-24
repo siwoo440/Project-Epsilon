@@ -1,5 +1,6 @@
 using System.Collections.Generic; // 실제 뱀 이미지 색상 보관
 using ProjectEpsilon.Combat; // 실제 전투 시각 효과
+using ProjectEpsilon.Core; // 카메라 추적과 흔들림
 using UnityEngine; // Unity 이미지와 객체
 using UnityEngine.SceneManagement; // 실제 씬 전환
 namespace ProjectEpsilon.Player // 플레이어 시각 영역
@@ -132,6 +133,7 @@ namespace ProjectEpsilon.Player // 플레이어 시각 영역
         private void OnDamage() // 실제 공용 체력 피해
         { // 함수 시작
             BeginBlink(); // 실제 체력 또는 보호막 피격 점멸
+            Camera.main?.GetComponent<CameraFollow2D>()?.PlayShake(0.16f, 0.09f); // 피격의 짧은 카메라 반응
         } // 함수 종료
         private void OnBodyRemoved(Vector3 position) // 실제 몸통 손실 위치
         { // 함수 시작

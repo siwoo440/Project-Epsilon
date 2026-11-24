@@ -834,6 +834,10 @@ namespace ProjectEpsilon.Combat // 프로젝트 기능 영역
                     ? transform.position // 위치 처리
                     : slot.Origin.position; // 슬롯·발사 위치 처리
 
+            if (trigger == WeaponGradeEffectTrigger.Merged) // 합성이 실제로 성공했는지 확인
+            { // 조건 시작
+                CombatVfx.SpawnTurretMerge(slot.Weapon.Attribute, origin); // 합성된 몸통 슬롯 강조
+            } // 조건 종료
             gradeEffectHooks.Notify( // 등급·효과 호출 시작
                 new WeaponGradeEffectContext( // 포탑·등급 객체 생성
                     slot.Weapon, // 슬롯·포탑 항목 전달
