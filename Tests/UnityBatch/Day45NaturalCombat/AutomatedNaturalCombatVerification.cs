@@ -3,6 +3,7 @@ using System.Collections.Generic; // 처치 대상 기록
 using System.Reflection; // 선택 UI 상태 조회
 using ProjectEpsilon.Combat; // 무기 및 전투 대상
 using ProjectEpsilon.Core; // 게임 상태
+using ProjectEpsilon.Data; // 포탑 속성과 캐릭터 데이터
 using ProjectEpsilon.Enemies; // 적 행동
 using ProjectEpsilon.Player; // 플레이어 상태
 using ProjectEpsilon.Progression; // 성장 및 보상
@@ -37,6 +38,12 @@ namespace ProjectEpsilon.Editor // 편집기 영역
         private static float nextInputReport; // 다음 입력 진단 시각
         private static int nextKeys; // 다음 가상 입력
         private static double startWallTime; // 실제 시작 시간
+        private static double startupWallTime; // 메뉴 진입 시작 시각
+        private static int characterIndex; // 시험 캐릭터 번호
+        private static int mapIndex; // 시험 맵 번호
+        private static bool characterSelected; // 캐릭터 버튼 실행 여부
+        private static bool mapSelected; // 맵 버튼 실행 여부
+        private static WeaponAttribute? preferredAttribute; // 비교할 포탑 속성
         private static bool leftObserved; // 왼쪽 입력 확인
         private static bool rightObserved; // 오른쪽 입력 확인
         private static bool boostObserved; // 가속 입력 확인
@@ -101,7 +108,14 @@ namespace ProjectEpsilon.Editor // 편집기 영역
 
         public static void Run() // 배치 진입점
         {
-            EditorSceneManager.OpenScene("Assets/Scenes/Game.unity"); // 실제 게임 씬 열기
+            if (!Application.productName.EndsWith("-Isolated", StringComparison.Ordinal)) // 사용자 저장 분리 확인
+            { // 조건 시작
+                Debug.LogError("[NaturalCombatVerification] Isolated save profile required."); // 시험 설정 누락 기록
+                EditorApplication.Exit(1); // 실제 저장을 열기 전 종료
+                return; // 시험 시작 중단
+            } // 조건 종료
+            EditorSceneManager.OpenScene(SceneFrontendContext.MainMenuPath); // 실제 메인 메뉴 씬 열기
+            SessionState.SetString(ActiveKey + "Startup", EditorApplication.timeSinceStartup.ToString("R", System.Globalization.CultureInfo.InvariantCulture)); // 도메인 전환 전 시각 보관
             SessionState.SetBool(ActiveKey, true); // 검증 시작 기록
             EditorApplication.update -= Tick; // 중복 연결 해제
             EditorApplication.update += Tick; // 검증 갱신 연결
@@ -117,6 +131,34 @@ namespace ProjectEpsilon.Editor // 편집기 영역
             try // 검증 오류 처리
             {
                 GameManager game = GameManager.Instance; // 현재 시작 상태 조회
+                if (startupWallTime <= 0d) // 도메인 전환 후 시작 시각 확인
+                { // 조건 시작
+                    startupWallTime = double.Parse(SessionState.GetString(ActiveKey + "Startup", "0"), System.Globalization.CultureInfo.InvariantCulture); // 시작 시각 복원
+                    characterIndex = ReadSelectionIndex("-epsilonCharacter", 6); // 지정한 캐릭터 해석
+                    mapIndex = ReadSelectionIndex("-epsilonMap", 3); // 지정한 맵 해석
+                    preferredAttribute = ReadPreferredAttribute(); // 속성 비교 옵션 해석
+                } // 조건 종료
+                if (!startingChoiceObserved && EditorApplication.timeSinceStartup - startupWallTime > 90d) // 메뉴부터 출격까지 대기 제한
+                { // 조건 시작
+                    Fail($"Starting flow timed out at {RunFrontendController.Instance?.Stage}, state={game?.CurrentState}."); // 지연 화면과 상태 기록
+                    return; // 추가 초기화 대기 중단
+                } // 조건 종료
+                RunFrontendController frontend = RunFrontendController.Instance; // 실제 시작 화면 조회
+                if (frontend != null && frontend.Stage == FrontendStage.Characters && !characterSelected) // 준비 화면 캐릭터 선택 확인
+                { // 조건 시작
+                    characterSelected = ClickFrontendButton("FrontendCharacterButton" + characterIndex); // 실제 캐릭터 버튼 실행
+                    return; // 선택한 데이터 적용 대기
+                } // 조건 종료
+                if (frontend != null && frontend.Stage == FrontendStage.Maps && !mapSelected) // 준비 화면 맵 선택 확인
+                { // 조건 시작
+                    mapSelected = ClickFrontendButton("FrontendMapButton" + mapIndex); // 실제 맵 버튼 실행
+                    return; // 선택한 맵 적용 대기
+                } // 조건 종료
+                if (frontend != null && (frontend.Stage == FrontendStage.Main || frontend.Stage == FrontendStage.Characters || frontend.Stage == FrontendStage.Maps || frontend.Stage == FrontendStage.Tutorial)) // 메뉴 이동과 첫 안내 확인
+                { // 조건 시작
+                    StartingWeaponBatchHelper.HandleStartingSelection(); // 실제 버튼으로 메뉴 이동 또는 안내 닫기
+                    return; // 다음 화면 초기화 대기
+                } // 조건 종료
                 if (bossFightRequested && game != null && game.CurrentState == GameState.Victory) // 실제 보스전 승리 확인
                 {
                     ObserveBossVictory(game); // 실제 결과 화면과 승리 기록 확인
@@ -127,12 +169,6 @@ namespace ProjectEpsilon.Editor // 편집기 영역
                     if (!Mathf.Approximately(Time.timeScale, 0f)) // 시작 전 정지 확인
                     {
                         throw new InvalidOperationException("Starting selection did not freeze game time."); // 시작 시간 오류
-                    }
-                    RunFrontendController frontend = RunFrontendController.Instance; // 실제 시작 화면
-                    if (frontend != null && frontend.Stage != FrontendStage.Weapons) // 포탑 선택 이전 단계 확인
-                    {
-                        StartingWeaponBatchHelper.HandleStartingSelection(); // 실제 메뉴 버튼으로 출격 단계 이동
-                        return; // 다음 시작 단계 대기
                     }
                     if (!randomSeedInitialized) // 최초 시작 상태 확인
                     {
@@ -172,15 +208,20 @@ namespace ProjectEpsilon.Editor // 편집기 영역
                     if (game.IsPlaying) // 버튼 선택 완료 확인
                     {
                         SnakeWeaponManager weapons = UnityEngine.Object.FindFirstObjectByType<SnakeWeaponManager>(); // 실제 장착 관리자
-                        if (options == null || options.Weapons == null || options.Weapons.Length <= startingOptionIndex || options.Weapons[startingOptionIndex] == null || (startingOptionIndex == 1 && options.Weapons[startingOptionIndex].Id != "debug_needle") || weapons == null || weapons.Slots.Count == 0 || weapons.Slots[0].Weapon != options.Weapons[startingOptionIndex] || weapons.OccupiedSlotCount != 1) // 지정된 후보와 기존 기본 후보의 실제 장착 확인
+                        if (options == null || options.Weapons == null || options.Weapons.Length <= startingOptionIndex || options.Weapons[startingOptionIndex] == null || weapons == null || weapons.Slots.Count == 0 || weapons.Slots[0].Weapon != options.Weapons[startingOptionIndex] || weapons.OccupiedSlotCount != 1) // 지정된 후보의 실제 장착 확인
                         {
                             throw new InvalidOperationException("Requested starting weapon button did not equip exactly one turret."); // 시작 장착 오류
                         }
                         startingChoiceObserved = true; // 시작 선택 검증 기록
+                        startWallTime = EditorApplication.timeSinceStartup; // 실제 전투 시작 시각 기록
                         Debug.Log($"[NaturalCombatVerification] starting button={startingOptionIndex + 1} weapon={weapons.Slots[0].Weapon.DisplayName} grade={weapons.Slots[0].Grade} occupied={weapons.OccupiedSlotCount} range={weapons.Slots[0].EffectiveRange:F2} scale={Time.timeScale:F1}"); // 실제 버튼 선택 결과 기록
                     }
                     return; // 다음 갱신부터 전투 관찰
                 }
+                if (game == null) // 메뉴와 전투 사이의 로딩 확인
+                { // 조건 시작
+                    return; // 실제 전투 시작 시각 기록 대기
+                } // 조건 종료
                 if (game != null && game.IsPlaying && !startingChoiceObserved) // 시작 버튼 선택 누락 확인
                 {
                     throw new InvalidOperationException("Game started without observing the starting weapon button."); // 선택 누락 오류
@@ -235,7 +276,7 @@ namespace ProjectEpsilon.Editor // 편집기 영역
                 keyboard = InputSystem.AddDevice<Keyboard>(); // 가상 키보드 생성
                 Debug.Log("[NaturalCombatVerification] Virtual Keyboard A/D/Space; in-memory focus settings; natural spawns; no invulnerability, stat, XP, or time-scale changes; automatic UI choices."); // 시험 조건 기록
             }
-            float elapsed = (float)typeof(EarlyEnemyWaveSpawner).GetField("elapsed", PrivateInstance).GetValue(spawner); // 전투 경과 시간
+            float elapsed = spawner.ElapsedSeconds; // 전투 경과 시간
             if (bossFightRequested && game.IsFinalBossPhase) // 실제 보스전 진행 확인
             {
                 PrototypeBossEncounter bossEncounter = UnityEngine.Object.FindFirstObjectByType<PrototypeBossEncounter>(); // 실제 보스 출현기 조회
@@ -245,12 +286,12 @@ namespace ProjectEpsilon.Editor // 편집기 영역
             if (!checkedStart && elapsed >= 0.25f) // 첫 물리 갱신 이후 확인
             {
                 checkedStart = true; // 시작 검증 기록
-                if (body.CurrentBodyCount != 3) // 기획 시작 몸통 확인
+                if (body.CurrentBodyCount != body.StartingBodyCount) // 기획 시작 몸통 확인
                 {
-                    Fail($"initial body={body.CurrentBodyCount}, expected 3"); // 시작 손실 기록
+                    Fail($"initial body={body.CurrentBodyCount}, expected {body.StartingBodyCount}"); // 시작 손실 기록
                     return; // 추가 처리 중단
                 }
-                Debug.Log("[NaturalCombatVerification] Starting three bodies retained after physics."); // 시작 상태 기록
+                Debug.Log("[NaturalCombatVerification] Starting bodies retained after physics."); // 시작 상태 기록
             }
             EarlyEnemyBehaviour[] enemies = UnityEngine.Object.FindObjectsByType<EarlyEnemyBehaviour>(FindObjectsSortMode.None); // 현재 적 목록
             ObserveEnemies(enemies); // 출현 종류 기록
@@ -279,13 +320,19 @@ namespace ProjectEpsilon.Editor // 편집기 영역
             if (level != null && level.IsPresentingLevelUp) // 레벨업 선택 상태
             {
                 SetKeys(0); // 이동 입력 해제
+                int beforeLevel = experience.CurrentLevel; // 연속 보상 전 표시 레벨
                 bool replacement = (bool)typeof(SnakeLevelUpController).GetField("selectingReplacement", PrivateInstance).GetValue(level); // 교체 선택 단계 확인
-                ClickLevelButton(replacement ? 1 : 0); // 첫 후보 또는 교체 확정
-                levelSelections++; // 선택 횟수 증가
+                bool rewardAction = (bool)typeof(SnakeLevelUpController).GetField("selectingRewardAction", PrivateInstance).GetValue(level); // 보상 설치 또는 합성 단계 확인
+                ClickLevelButton(replacement ? 1 : rewardAction ? 0 : ChooseLevelCandidate(level)); // 지정 속성의 후보 또는 설치 절차 선택
+                if (!level.IsPresentingLevelUp || experience.CurrentLevel != beforeLevel) // 현재 보상 완료 또는 다음 레벨 진입 확인
+                { // 조건 시작
+                    levelSelections++; // 완료된 보상 한 번 집계
+                } // 조건 종료
             }
             else if (elite != null && elite.IsPresentingReward) // 엘리트 보상 선택 상태
             {
                 SetKeys(0); // 이동 입력 해제
+                int beforeRewards = elite.PendingRewardCount; // 클릭 이전의 대기 보상 수
                 bool replacement = (bool)typeof(EliteRewardController).GetField("selectingReplacement", PrivateInstance).GetValue(elite); // 교체 선택 단계 확인
                 if (replacement) // 무기 교체 단계
                 {
@@ -295,19 +342,19 @@ namespace ProjectEpsilon.Editor // 편집기 영역
                 {
                     ClickFirstAvailableLevelButton(); // 활성 보상 선택
                 }
-                eliteSelections++; // 선택 횟수 증가
+                if (elite.PendingRewardCount < beforeRewards) // 실제 보상 소비 확인
+                { // 조건 시작
+                    eliteSelections++; // 완료된 보상 한 번 집계
+                } // 조건 종료
             }
             else if (merge != null && merge.IsMergeOpen) // 보상 합성 화면 상태
             {
                 SetKeys(0); // 이동 입력 해제
                 ClickFirstAvailableMergeButton(); // 첫 합성 또는 강화 선택
             }
-            else if (game.IsPlaying && mergeReady && TryStartAutomaticMerge(merge)) // 실제 자동 합성 진입
+            else if (game.IsPlaying && mergeReady && TryRecordedMerge(merge)) // 실제 자동 합성 진입
             {
                 SetKeys(0); // 합성 중 가상 이동 입력 해제
-                pilotMergeOpen = true; // 자동 조종기의 합성 진행 기록
-                pilotMergeAttempts++; // 실제 합성 시작 횟수 증가
-                Debug.Log($"[NaturalCombatVerification] automatic merge started time={elapsed:F2} attempt={pilotMergeAttempts}."); // 실제 자동 합성 진입 기록
             }
             else if (game.IsPlaying) // 일반 플레이 상태
             {
@@ -402,6 +449,7 @@ namespace ProjectEpsilon.Editor // 편집기 영역
                 if (telemetry != null && telemetry.Current != null) // 실제 기록 활성 확인
                 {
                     telemetry.Capture("five_minutes"); // 실제 5분 상태 표본
+                    Debug.Log("[NaturalCombatVerification] MILESTONE " + JsonUtility.ToJson(telemetry.Current)); // 실행 중 확인 가능한 5분 기록
                 }
                 fiveMinuteCaptured = true; // 실제 5분 표본 중복 방지
             }
@@ -423,12 +471,16 @@ namespace ProjectEpsilon.Editor // 편집기 영역
                 }
                 fifteenMinuteCaptured = true; // 실제 15분 표본 중복 방지
             }
+            if (EditorApplication.timeSinceStartup - startWallTime > targetSurvivalSeconds * 2d + 180d) // 일시정지와 보스 대기를 포함한 제한
+            { // 조건 시작
+                Fail($"timed out at {elapsed:F1} seconds; state={game.CurrentState}."); // 지연 시각과 상태 기록
+                return; // 제한을 넘긴 시험 종료
+            } // 조건 종료
             if (elapsed >= targetSurvivalSeconds && game.IsPlaying && (merge == null || !merge.IsMergeOpen)) // 실제 전투 재개 및 목표 생존 시간 확인
             {
                 if (targetSurvivalSeconds >= 1200f && (!spawner.HasEnteredBossTransition || !game.IsFinalBossPhase)) // 실제 20분 보스 전환 확인
                 {
-                    Fail("Twenty-minute survival reached without the final boss transition."); // 보스 전환 누락 기록
-                    return; // 성공 처리 중단
+                    return; // 안전한 보스 출현 대기
                 }
                 RunTelemetry telemetry = RunTelemetry.Instance; // 선택적 실제 전투 기록기
                 if (!twentyMinuteCaptured && targetSurvivalSeconds >= 1200f) // 실제 20분 표본 중복 확인
@@ -465,11 +517,73 @@ namespace ProjectEpsilon.Editor // 편집기 영역
                 Finish(0); // 성공 종료
                 return; // 추가 처리 중단
             }
-            if (EditorApplication.timeSinceStartup - startWallTime > targetSurvivalSeconds * 2d + 180d) // 병렬 시험을 포함한 실제 시간 제한 확인
-            {
-                Fail($"timed out at {elapsed:F1} seconds"); // 시간 초과 기록
-            }
         }
+
+        private static int ReadSelectionIndex(string option, int count) // 번호 범위를 확인하는 시험 옵션
+        { // 함수 시작
+            string[] arguments = Environment.GetCommandLineArgs(); // 실제 실행 인수 조회
+            int index = Array.IndexOf(arguments, option); // 지정한 옵션 위치
+            if (index < 0) // 옵션 생략 확인
+            { // 조건 시작
+                return 0; // 기본 캐릭터 또는 평원
+            } // 조건 종료
+            if (index + 1 >= arguments.Length || !int.TryParse(arguments[index + 1], out int selection) || selection < 0 || selection >= count) // 유효 범위 확인
+            { // 조건 시작
+                throw new ArgumentException($"Invalid {option}; expected 0 through {count - 1}."); // 잘못된 시험 번호 알림
+            } // 조건 종료
+            return selection; // 시험 캐릭터 또는 맵 번호
+        } // 함수 종료
+
+        private static WeaponAttribute? ReadPreferredAttribute() // 비교용 희망 속성 해석
+        { // 함수 시작
+            string[] arguments = Environment.GetCommandLineArgs(); // 실제 실행 인수 조회
+            int index = Array.IndexOf(arguments, "-epsilonAttribute"); // 선택한 속성 인수 위치
+            if (index < 0) // 비교 옵션 생략 확인
+            { // 조건 시작
+                return null; // 기존 첫 후보 선택
+            } // 조건 종료
+            if (index + 1 >= arguments.Length || !Enum.TryParse(arguments[index + 1], true, out WeaponAttribute attribute) || !Enum.IsDefined(typeof(WeaponAttribute), attribute)) // 지원되는 여덟 속성 확인
+            { // 조건 시작
+                throw new ArgumentException("Invalid -epsilonAttribute."); // 무효 시험 조건 기록
+            } // 조건 종료
+            return attribute; // 지정한 희망 속성
+        } // 함수 종료
+
+        private static int ChooseLevelCandidate(SnakeLevelUpController level) // 희망 속성의 실제 제안 후보 선택
+        { // 함수 시작
+            if (!preferredAttribute.HasValue) // 비교 옵션 확인
+            { // 조건 시작
+                return 0; // 기존 첫 후보 선택
+            } // 조건 종료
+            var candidates = typeof(SnakeLevelUpController).GetField("currentCandidates", PrivateInstance).GetValue(level) as List<WeaponRewardCandidate>; // 화면의 실제 제안 후보
+            if (candidates == null) // 실제 후보 구성 확인
+            { // 조건 시작
+                return 0; // 첫 후보로 진행
+            } // 조건 종료
+            int bestIndex = 0; // 조건을 만족하는 후보의 기본 번호
+            int bestGrade = 0; // 지금까지 확인한 가장 높은 등급
+            for (int index = 0; index < candidates.Count; index++) // 실제 제안 후보 순회
+            { // 반복 시작
+                WeaponRewardCandidate candidate = candidates[index]; // 현재 후보 데이터 조회
+                if (candidate.IsValid && candidate.Weapon.Attribute == preferredAttribute && candidate.Grade > bestGrade) // 희망 속성 중 가장 높은 등급 확인
+                { // 조건 시작
+                    bestIndex = index; // 선택할 실제 버튼 번호
+                    bestGrade = candidate.Grade; // 비교용 최고 등급 갱신
+                } // 조건 종료
+            } // 반복 종료
+            return bestIndex; // 가장 높은 희망 속성 후보 또는 첫 후보
+        } // 함수 종료
+
+        private static bool ClickFrontendButton(string name) // 실제 준비 화면 버튼 실행
+        { // 함수 시작
+            Button button = GameObject.Find(name)?.GetComponent<Button>(); // 표시 중인 버튼 조회
+            if (button == null || !button.IsActive() || !button.interactable) // 실제 버튼 사용 가능 상태 확인
+            { // 조건 시작
+                return false; // 버튼 준비 대기
+            } // 조건 종료
+            button.onClick.Invoke(); // 실제 선택 이벤트 실행
+            return true; // 선택 이벤트 전달 완료
+        } // 함수 종료
 
         private static void ObserveBossVictory(GameManager game) // 실제 보스전 승리와 결과 화면 확인
         {
@@ -1016,6 +1130,17 @@ namespace ProjectEpsilon.Editor // 편집기 영역
             return merge != null && !merge.IsMergeOpen && merge.HasMergeCandidates() && merge.OpenMergePanel(); // 실제 합성 가능 상태와 진입 결과
         }
 
+        private static bool TryRecordedMerge(SnakeWeaponMergeController merge) // 즉시 합성 시도와 결과 집계
+        { // 함수 시작
+            pilotMergeOpen = true; // 동기 완료 이벤트에 앞선 시도 기록
+            pilotMergeAttempts++; // 합성 시도 횟수 집계
+            if (TryStartAutomaticMerge(merge)) // 실제 합성 실행
+            { // 조건 시작
+                return true; // 합성 성공 결과 반환
+            } // 조건 종료
+            pilotMergeOpen = false; // 실패한 시도 상태 정리
+            return false; // 합성 실패 결과 반환
+        } // 함수 종료
         private static void HandlePilotMergeClosed(bool completed) // 실제 자동 합성 종료 기록
         {
             if (!pilotMergeOpen) // 자동 조종기가 연 합성 확인

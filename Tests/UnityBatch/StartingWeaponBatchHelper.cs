@@ -21,12 +21,7 @@ namespace ProjectEpsilon.Editor // 배치 시험 영역
                 } // 조건 종료
                 return true; // 안내 처리 후 다음 프레임 대기
             } // 조건 종료
-            GameManager game = GameManager.Instance; // 현재 게임 관리자
-            if (game == null || game.CurrentState != GameState.Starting) // 시작 상태 확인
-            {
-                return false; // 일반 배치 진행
-            }
-            if (frontend != null && frontend.Stage != FrontendStage.Weapons) // 실제 출격 단계 확인
+            if (frontend != null && (frontend.Stage == FrontendStage.Main || frontend.Stage == FrontendStage.Characters || frontend.Stage == FrontendStage.Maps)) // 분리 메뉴와 출격 단계 확인
             {
                 string name = frontend.Stage == FrontendStage.Main ? "FrontendStartButton" : frontend.Stage == FrontendStage.Characters ? "FrontendCharactersNextButton" : frontend.Stage == FrontendStage.Maps ? "FrontendMapsNextButton" : null; // 실제 다음 단계 버튼
                 GameObject next = string.IsNullOrEmpty(name) ? null : GameObject.Find(name); // 실제 다음 단계 조회
@@ -37,6 +32,11 @@ namespace ProjectEpsilon.Editor // 배치 시험 영역
                 }
                 return true; // 실제 화면 전환 대기
             }
+            GameManager game = GameManager.Instance; // 현재 게임 관리자
+            if (game == null || game.CurrentState != GameState.Starting) // 시작 상태 확인
+            { // 조건 시작
+                return false; // 일반 배치 진행
+            } // 조건 종료
             StartingWeaponSelection selection = Object.FindFirstObjectByType<StartingWeaponSelection>(); // 시작 선택기 검색
             if (selection == null || !selection.IsSelecting) // 선택 화면 준비 확인
             {
