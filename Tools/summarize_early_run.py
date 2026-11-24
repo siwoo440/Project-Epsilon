@@ -97,6 +97,18 @@ def summarize(path):  # 자연 전투 로그 요약
         if available:  # 실제 표본 존재 확인
             sample = min(available, key=lambda item: abs(item["seconds"] - seconds))  # 가장 가까운 표본
             print(f"  {sample['seconds']:.1f}초: 레벨={sample['level']} 누적XP={sample['totalExperience']} 처치={sample['kills']} 몸통={sample['currentBodies']} 체력={sample['health']}")  # 실제 시점 출력
+    for sample in (last, ten[0] if ten else None, fifteen[0] if fifteen else None, twenty[0] if twenty else None):  # 도달한 구간의 장비 비교
+        if sample is None:  # 아직 도달하지 않은 구간 확인
+            continue  # 누락 구간 생략
+        weapons = [weapon for weapon in sample.get("weapons", []) if weapon.get("weaponId")]  # 실제 장착 포탑만 수집
+        grades = Counter(weapon.get("grade") or 0 for weapon in weapons)  # 등급별 장착 수
+        attributes = Counter(weapon.get("attribute") or "미기록" for weapon in weapons)  # 속성별 장착 수
+        elapsed = sample["seconds"] / 60  # 표본 시각의 분 단위 표시
+        print(f"  {elapsed:.1f}분 장착 등급={dict(sorted(grades.items()))} 속성={dict(sorted(attributes.items()))}")  # 합성과 속성 비교용 분포
+    grade_five = next((sample for sample in samples if any(weapon.get("weaponId") and weapon.get("grade") == 5 for weapon in sample.get("weapons", []))), None)  # 처음 기록한 5등급 표본
+    merge_count = sum(sample.get("reason") == "automatic_merge" for sample in samples)  # 실제 완료된 자동 합성 기록 개수
+    first_five = f"{grade_five['seconds']:.1f}초" if grade_five else "관찰 안 됨"  # 5등급 첫 관찰 결과
+    print(f"  자동 합성 완료 {merge_count}회, 첫 ★5 장착: {first_five}")  # 실제 합성 비교 결과
     damages = record.get("damages", [])  # 실제 피해 목록
     causes = Counter(item.get("origin", "Unknown") for item in damages)  # 원인별 피해 횟수
     print(f"  피해 원인={dict(causes)} 체력피해={sum(item.get('healthDamage', 0) for item in damages)} 보호막흡수={sum(item.get('shieldDamage', 0) for item in damages)} 직접몸통손실={sum(item.get('bodyLoss', 0) for item in damages)}")  # 실제 피해 합계 출력
