@@ -117,6 +117,7 @@ namespace ProjectEpsilon.Recording // 전투 기록 영역
         public float maximumStamina; // 실제 시작 최대 스태미나
         public int experienceBaseRequirement; // 실제 기본 경험치 요구량
         public float experienceGrowthMultiplier; // 실제 경험치 증가율
+        public int[] introductoryExperienceRequirements; // 실제 도입부 경험치 요구량
         public float obstacleChance; // 실제 맵 장애물 확률
         public float specialZoneChance; // 실제 맵 특수 지역 확률
         public List<RunEnemyCondition> enemies = new List<RunEnemyCondition>(); // 실제 시험 적 설정
@@ -218,6 +219,7 @@ namespace ProjectEpsilon.Recording // 전투 기록 영역
                 maximumStamina = stamina == null ? 0f : stamina.MaximumStamina, // 실제 시작 최대 스태미나
                 experienceBaseRequirement = experience == null ? 0 : experience.BaseRequirement, // 실제 기본 경험치 요구량
                 experienceGrowthMultiplier = experience == null ? 0f : experience.GrowthMultiplier, // 실제 경험치 증가율
+                introductoryExperienceRequirements = experience?.CopyIntroductoryRequirements(), // 실제 초기 경험치 요구량
                 obstacleChance = profile == null ? 0f : profile.ObstacleChance, // 실제 맵 장애물 확률
                 specialZoneChance = profile == null ? 0f : profile.SpecialZoneChance, // 실제 맵 특수 지역 확률
                 targetFrameRate = Application.targetFrameRate, // 실제 목표 프레임

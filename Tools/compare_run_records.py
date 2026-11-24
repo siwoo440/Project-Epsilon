@@ -35,6 +35,8 @@ def condition_differences(left, right):  # 실제 시작 조건 비교
     differences = [key for key in CONDITION_FIELDS if left[key] != right[key]]  # 실제 다른 설정 목록
     if not left["seedProvided"] or not right["seedProvided"]:  # 실제 시드 지정 확인
         differences.append("명시적 난수 시드 없음")  # 재현 불가능 조건 표시
+    if (left.get("introductoryExperienceRequirements") or []) != (right.get("introductoryExperienceRequirements") or []):  # 도입부 성장 설정 비교
+        differences.append("introductoryExperienceRequirements")  # 다른 도입부 요구량 기록
     first_left = left["snapshots"][0]  # 첫 기록의 실제 시작 상태
     first_right = right["snapshots"][0]  # 둘째 기록의 실제 시작 상태
     for key in ("level", "currentExperience", "currentBodies", "earnedBodies", "bodyLimit", "health", "maximumHealth", "weapons"):  # 실제 초기 성장과 장비 순회

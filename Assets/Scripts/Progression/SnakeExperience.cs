@@ -10,6 +10,7 @@ namespace ProjectEpsilon.Progression // 프로젝트 기능 영역
         [SerializeField] private int currentExperience; // 필드·현재 설정
         [SerializeField] private int baseRequiredExperience = 10; // 필드·경험치 설정
         [SerializeField] private float experienceGrowthMultiplier = 1.12f; // 필드·경험치 설정
+        [SerializeField] private int[] introductoryRequirements; // 첫 성장에 사용하는 고정 요구량
         [SerializeField] private bool levelUpPending; // 필드·레벨 설정
         [SerializeField] private ExperiencePickupSettings pickupSettings; // 보석 흡수 설정
         private decimal zoneExperienceBonusRemainder; // 지역 경험치 소수 보너스
@@ -23,6 +24,10 @@ namespace ProjectEpsilon.Progression // 프로젝트 기능 영역
 
         public int BaseRequirement => baseRequiredExperience; // 실제 경험치 기본 요구량
         public float GrowthMultiplier => experienceGrowthMultiplier; // 실제 경험치 요구량 증가율
+        public int[] CopyIntroductoryRequirements() // 전투 기록용 도입부 성장 설정 복사
+        { // 함수 시작
+            return introductoryRequirements == null ? Array.Empty<int>() : (int[])introductoryRequirements.Clone(); // 실제 설정을 수정할 수 없는 복사본
+        } // 함수 종료
         public int CurrentLevel => currentLevel; // 현재·레벨 값 반환
         public int CurrentExperience => currentExperience; // 현재·경험치 값 반환
         public ExperiencePickupSettings PickupSettings => pickupSettings; // 새 보석의 흡수 설정
@@ -31,12 +36,19 @@ namespace ProjectEpsilon.Progression // 프로젝트 기능 영역
         { // 함수 시작
             pickupSettings = settings; // 흡수 설정 저장
         } // 함수 종료
-        public int RequiredExperience => // 경험치 값 반환
-            CalculateRequiredExperience( // 계산·경험치 호출 시작
-                baseRequiredExperience, // 경험치 항목 전달
-                experienceGrowthMultiplier, // 경험치·배율 항목 전달
-                currentLevel // 현재·레벨 처리
-            ); // 앞선 항목 종료
+        public int RequiredExperience // 현재 성장에 필요한 경험치
+        { // 속성 시작
+            get // 현재 레벨 요구량 조회
+            { // 조회 시작
+                int level = Mathf.Max(1, currentLevel); // 유효 레벨 확인
+                int introCount = introductoryRequirements?.Length ?? 0; // 도입부의 고정 성장 횟수
+                if (level <= introCount) // 고정 요구량을 적용할 레벨 확인
+                { // 조건 시작
+                    return Mathf.Max(1, introductoryRequirements[level - 1]); // 지정한 초기 요구량
+                } // 조건 종료
+                return CalculateRequiredExperience(baseRequiredExperience, experienceGrowthMultiplier, level - introCount); // 도입부 이후의 성장 곡선
+            } // 조회 종료
+        } // 속성 종료
 
         // Day09 코드와의 호환용 별칭이다.
         public int PreviewRequiredExperience => RequiredExperience; // 경험치 값 반환
@@ -72,6 +84,7 @@ namespace ProjectEpsilon.Progression // 프로젝트 기능 영역
         { // 함수 시작
             baseRequiredExperience = Mathf.Max(1, baseRequirement); // 경험치·최대 값 설정
             experienceGrowthMultiplier = Mathf.Max(1f, growthMultiplier); // 경험치·배율 값 설정
+            introductoryRequirements = null; // 명시적 재설정 시 기본 곡선 사용
 
             NormalizeValues(); // 수치 범위 보정
             NotifyLevelChanged(); // 알림·레벨 기능 실행
