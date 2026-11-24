@@ -7,10 +7,12 @@ using ProjectEpsilon.Core; // 실제 게임 상태
 using ProjectEpsilon.Enemies; // 실제 적 출현과 투사체
 using ProjectEpsilon.Player; // 플레이어 구성
 using ProjectEpsilon.Progression; // 실제 보석과 회복 아이템
+using ProjectEpsilon.UI; // 실제 출격 메뉴
 using ProjectEpsilon.World; // 맵과 보스 설정
 using UnityEditor; // 배치 실행
 using UnityEditor.SceneManagement; // 실제 씬 열기
 using UnityEngine; // 유니티 기능
+using UnityEngine.UI; // 실제 맵 버튼
 
 namespace ProjectEpsilon.Editor // 배치 시험 영역
 {
@@ -33,7 +35,8 @@ namespace ProjectEpsilon.Editor // 배치 시험 영역
 
         public static void Run() // Unity 배치 진입점
         {
-            EditorSceneManager.OpenScene("Assets/Scenes/Game.unity"); // 실제 게임 씬 열기
+            bool useMapMenu = Array.IndexOf(Environment.GetCommandLineArgs(), "-epsilonBossMap") >= 0; // 맵 선택 인수 확인
+            EditorSceneManager.OpenScene(useMapMenu ? SceneFrontendContext.MainMenuPath : SceneFrontendContext.GamePath); // 청크 생성 전 출격 맵 선택 경로
             SessionState.SetBool(ActiveKey, true); // 시험 진행 표식
             EditorApplication.update -= Tick; // 기존 감시 제거
             EditorApplication.update += Tick; // 플레이 시작 감시
@@ -55,22 +58,26 @@ namespace ProjectEpsilon.Editor // 배치 시험 영역
                 Finish(1, "Timed out waiting for boss transition."); // 시간 초과 실패
                 return; // 감시 종료
             }
-            if (!mapConfigured && GameManager.Instance != null && GameManager.Instance.CurrentState == GameState.Starting) // 맵 선택 가능 상태 확인
+            if (!mapConfigured && RunFrontendController.Instance?.Stage == FrontendStage.Maps) // 로딩 전 실제 맵 선택 화면 확인
             { // 조건 시작
                 string[] arguments = Environment.GetCommandLineArgs(); // 배치 실행 인수 조회
                 int index = Array.IndexOf(arguments, "-epsilonBossMap"); // 시험 맵 인수 위치
-                if (index >= 0) // 별도 맵 지정 확인
+                if (index < 0 || index + 1 >= arguments.Length || !int.TryParse(arguments[index + 1], out int mapIndex) || mapIndex < 0 || mapIndex > 2) // 유효한 시험 맵 검증
                 { // 조건 시작
-                    PrototypeMapSelection maps = UnityEngine.Object.FindFirstObjectByType<PrototypeMapSelection>(); // 실제 맵 선택기 조회
-                    if (maps == null) // 맵 선택기 준비 확인
-                    { // 조건 시작
-                        return; // 초기화 대기
-                    } // 조건 종료
-                    if (index + 1 >= arguments.Length || !int.TryParse(arguments[index + 1], out int mapIndex) || !maps.SelectMap(mapIndex)) // 유효한 맵 적용 확인
-                    { // 조건 시작
-                        Finish(1, "Could not configure requested boss map."); // 맵 적용 실패 기록
-                        return; // 잘못된 맵 시험 중단
-                    } // 조건 종료
+                    Finish(1, "Invalid requested boss map."); // 맵 인수 오류 기록
+                    return; // 잘못된 맵 시험 중단
+                } // 조건 종료
+                Button button = GameObject.Find("FrontendMapButton" + mapIndex)?.GetComponent<Button>(); // 지정 맵의 실제 선택 버튼
+                SceneFrontendContext context = UnityEngine.Object.FindFirstObjectByType<SceneFrontendContext>(); // 실제 준비 씬의 선택 상태
+                if (button == null || context == null) // 선택 화면 생성 대기
+                { // 조건 시작
+                    return; // 다음 프레임에서 선택 재시도
+                } // 조건 종료
+                button.onClick.Invoke(); // 청크 생성 전 실제 맵 선택
+                if (context.SelectedMap != mapIndex) // 제품 선택 결과 확인
+                { // 조건 시작
+                    Finish(1, "Could not select the requested boss map in Preparation."); // 맵 선택 실패 기록
+                    return; // 잘못된 맵에서 실행 방지
                 } // 조건 종료
                 mapConfigured = true; // 시험 맵 적용 완료
             } // 조건 종료
