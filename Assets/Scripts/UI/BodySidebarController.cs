@@ -313,7 +313,7 @@ namespace ProjectEpsilon.UI // 실제 전투 화면 영역
                 { // 반복 시작
                     int threshold = (index + 1) * 2; // 실제 단계 활성 조건
                     string effect = StageEffect(attribute, threshold); // 실제 구현된 단계별 효과
-                    stageLabels[index].text = threshold + "개  " + (string.IsNullOrEmpty(effect) ? "추가 효과 미구현" : effect); // 실제 단계별 효과 설명
+                    stageLabels[index].text = threshold + "개  " + (string.IsNullOrEmpty(effect) ? "이전 효과 유지" : effect); // 추가 강화와 이전 효과 구분
                     stageLabels[index].color = stage >= threshold && !string.IsNullOrEmpty(effect) ? Color.white : inactiveColor; // 실제 활성 효과만 흰색 표시
                 } // 반복 종료
                 return; // 조합 화면 갱신 생략
@@ -437,15 +437,16 @@ namespace ProjectEpsilon.UI // 실제 전투 화면 영역
                     } // 조건 종료
                     if (stage == 4) // 실제 단계 조건
                     { // 조건 시작
-                        return "명중 시 15% 확률로 체력 1 회복"; // 신성 명중 회복
+                        return "명중 시 " + Number(WeaponAttributeHolyRules.HealChance * 100f) + "% 확률로 기본 체력 " + WeaponAttributeHolyRules.HealAmount + " 회복"; // 실제 신성 명중 회복 수치
                     } // 조건 종료
                     if (stage == 6) // 실제 단계 조건
                     { // 조건 시작
-                        return "5회 명중마다 기본 보호막 15 · 3초"; // 신성 보호막 기본값
+                        return WeaponAttributeHolyRules.ShieldHitInterval + "회 명중마다 기본 보호막 " + WeaponAttributeHolyRules.ShieldAmount + " · " + Number(WeaponAttributeHolyRules.ShieldDuration) + "초"; // 실제 보호막 기본값
                     } // 조건 종료
                     if (stage == 8) // 실제 단계 조건
                     { // 조건 시작
-                        return "보호막 종료 시 회복과 주변 피해"; // 신성 보호막 종료 효과
+                        float burstPercent = WeaponAttributeHolyRules.CalculateShieldBurstDamage(100f, stage); // 공격 피해 기준 폭발 비율
+                        return "보호막 종료 시 기본 체력 " + WeaponAttributeHolyRules.HealAmount + " 회복\n반경 " + Number(WeaponAttributeHolyRules.ShieldBurstRadius) + " · 보호막 발동 공격 피해의 " + Number(burstPercent) + "%"; // 실제 보호막 종료 수치
                     } // 조건 종료
                     break; // 추가 효과 부재
                 case WeaponAttribute.Dark: // 실제 암흑 시너지
