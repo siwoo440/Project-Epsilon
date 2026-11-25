@@ -20,8 +20,8 @@ namespace ProjectEpsilon.Player // 플레이어 영역
         } // 함수 종료
         public static CharacterData SelectedCharacter { get; private set; } // 다음 런 선택 캐릭터
         public static CharacterData ActiveCharacter { get; private set; } // 현재 런 적용 캐릭터
-        public static float MoveSpeedMultiplier => ActiveCharacter == null ? 1f : Mathf.Clamp(ActiveCharacter.MoveSpeedMultiplier, 0.9f, 1.1f); // 안전한 캐릭터 이동 배율
-        public static float TurnSpeedMultiplier => ActiveCharacter == null ? 1f : Mathf.Clamp(ActiveCharacter.TurnPowerMultiplier, 0.85f, 1.15f); // 안전한 캐릭터 회전 배율
+        public static float MoveSpeedMultiplier => ActiveCharacter == null ? 1f : ActiveCharacter.EffectiveMoveSpeedMultiplier; // 캐릭터 전투 이동 배율
+        public static float TurnSpeedMultiplier => ActiveCharacter == null ? 1f : ActiveCharacter.EffectiveTurnPowerMultiplier; // 캐릭터 전투 회전 배율
         public static float StaminaRecoveryMultiplier => ActiveCharacter != null && (ActiveCharacter.Passive == CharacterPassive.BalancedRecovery || ActiveCharacter.Passive == CharacterPassive.MobileRecovery) ? ActiveCharacter.PassiveMultiplier : 1f; // 회복형 캐릭터 스태미나 배율
         public static float DamageReceivedMultiplier => ActiveCharacter != null && ActiveCharacter.Passive == CharacterPassive.HeavyDefense ? ActiveCharacter.PassiveMultiplier : 1f; // 중장형 받는 피해 배율
         public static float HealingMultiplier => ActiveCharacter != null && ActiveCharacter.Passive == CharacterPassive.HolySpecialization ? ActiveCharacter.PassiveMultiplier : 1f; // 신성형 회복 효율 배율

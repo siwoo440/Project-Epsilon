@@ -48,6 +48,8 @@ namespace ProjectEpsilon.Data // 프로젝트 기능 영역
         public float BodyMaxHealth => bodyMaxHealth; // 몸통·최대 값 반환
         public float MoveSpeedMultiplier => moveSpeedMultiplier; // 속도·배율 값 반환
         public float TurnPowerMultiplier => turnPowerMultiplier; // 배율 값 반환
+        public float EffectiveMoveSpeedMultiplier => Mathf.Clamp(moveSpeedMultiplier, 0.9f, 1.1f); // 전투와 프리뷰의 이동 배율
+        public float EffectiveTurnPowerMultiplier => Mathf.Clamp(turnPowerMultiplier, 0.85f, 1.15f); // 전투와 프리뷰의 회전 배율
         public CharacterPassive Passive => passive; // 상시 패시브 종류
         public float PassiveMultiplier => Mathf.Max(0f, passiveMultiplier); // 안전한 주 효과 배율
         public float SecondaryMultiplier => Mathf.Max(0f, secondaryMultiplier); // 안전한 보조 효과 배율

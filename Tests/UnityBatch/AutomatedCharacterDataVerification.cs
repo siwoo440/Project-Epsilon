@@ -32,6 +32,21 @@ namespace ProjectEpsilon.Editor // 배치 시험 영역
                     Require(options.Weapons[0] != null && options.Weapons[1] != null && options.Weapons[2] != null && options.Weapons[0] != options.Weapons[1] && options.Weapons[0] != options.Weapons[2] && options.Weapons[1] != options.Weapons[2], "Character starting options invalid: " + names[index]); // 실제 무기와 중복 확인
                     Require(passiveProperty.GetValue(data) != null && passives.Add(data.Passive), "Character passive missing or duplicated: " + names[index]); // 실제 패시브 종류와 중복 확인
                 }
+
+                CharacterData trial = ScriptableObject.CreateInstance<CharacterData>(); // 원본 에셋과 분리한 시험 데이터
+                try // 배율 상하한 검증
+                {
+                    SerializedObject serializedTrial = new SerializedObject(trial); // 인스펙터 저장값 접근
+                    serializedTrial.FindProperty("moveSpeedMultiplier").floatValue = 1.5f; // 최대치 초과 설정
+                    serializedTrial.FindProperty("turnPowerMultiplier").floatValue = 0.5f; // 최소치 미만 설정
+                    serializedTrial.ApplyModifiedPropertiesWithoutUndo(); // 시험 설정 반영
+                    Require(Mathf.Approximately(trial.EffectiveMoveSpeedMultiplier, 1.1f) && Mathf.Approximately(trial.EffectiveTurnPowerMultiplier, 0.85f), "Character preview and combat multipliers exceeded the supported range."); // 표시와 전투의 유효 배율 검증
+                }
+                finally // 시험 데이터 정리
+                {
+                    UnityEngine.Object.DestroyImmediate(trial); // 임시 캐릭터 제거
+                }
+
                 Debug.Log("[CharacterDataVerification] PASS: Six character stats and distinct starting weapon choices."); // 전체 성공 기록
                 EditorApplication.Exit(0); // 성공 종료 코드
             }

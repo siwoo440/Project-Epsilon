@@ -414,7 +414,7 @@ namespace ProjectEpsilon.UI // 실제 메뉴 영역
             if (active != null) // 실제 캐릭터 확인
             { // 조건 시작
                 string weapons = active.StartingWeapons == null || active.StartingWeapons.Weapons == null ? "-" : string.Join("  /  ", Array.ConvertAll(active.StartingWeapons.Weapons, item => item == null ? "-" : item.DisplayName)); // 실제 세 포탑 후보
-                string info = $"{active.DisplayName}\n몸통 {active.StartingBodyCount}   체력 {active.BodyMaxHealth:0}\n이동 ×{active.MoveSpeedMultiplier:0.00}   회전 ×{active.TurnPowerMultiplier:0.00}\n특성: {DescribePassive(active)}\n시작 포탑: {weapons}"; // 실제 캐릭터 능력과 후보
+                string info = $"{active.DisplayName}\n몸통 {active.StartingBodyCount}   체력 {active.BodyMaxHealth:0}\n이동 ×{active.EffectiveMoveSpeedMultiplier:0.00}   회전 ×{active.EffectiveTurnPowerMultiplier:0.00}\n특성: {DescribePassive(active)}\n시작 포탑: {weapons}"; // 실제 캐릭터 능력과 후보
                 GameObject detailsFrame = new GameObject("FrontendCharacterDetailsFrame", typeof(RectTransform), typeof(Image)); // 캐릭터 정보 배경
                 RectTransform detailsRect = (RectTransform)detailsFrame.transform; // 캐릭터 정보 배경 위치
                 detailsRect.SetParent(panel, false); // 선택 화면에 정보 배경 연결
