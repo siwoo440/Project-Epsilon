@@ -128,9 +128,12 @@ namespace ProjectEpsilon.Player // 프로젝트 기능 영역
                 return false; // 실패 결과 반환
             } // 조건 종료
 
-            long healthCapacity = currentHealth + (long)(bodyManager.CurrentBodyCount - 1) * maximumHealth; // 실제 남은 전체 몸통 체력
+            int healthBefore = currentHealth; // 피해 전 공용 체력
+            int bodiesBefore = bodyManager.CurrentBodyCount; // 피해 전 몸통 수
+            long healthCapacity = healthBefore + (long)(bodiesBefore - 1) * maximumHealth; // 실제 남은 전체 몸통 체력
             int appliedDamage = (int)Math.Min(remainingDamage, healthCapacity); // 초과 피해를 제외한 실제 체력 손실
-            RunTelemetry.RecordDamage(origin, appliedDamage, 0, absorbedDamage); // 보호막 이후 실제 체력 피해 기록
+            int lostBodies = 0; // 이번 피해로 사라진 몸통 수
+            bool depleted = false; // 기록 이후 패배 알림 여부
 
             while (remainingDamage > 0 && // 남은 값·피해 반복 조건
                 bodyManager.CurrentBodyCount > 0) // 몸통·관리자 처리
@@ -154,12 +157,13 @@ namespace ProjectEpsilon.Player // 프로젝트 기능 영역
 
                 int removed = // 대상 값 설정
                     bodyManager.RemoveBodies(1); // 몸통·관리자 기능 실행
+                lostBodies += removed; // 실제 제거된 몸통 누적
 
                 if (removed <= 0 || // 대상 조건 확인
                     bodyManager.CurrentBodyCount <= 0) // 몸통·관리자 처리
                 { // 조건 시작
                     SetHealth(0); // 설정·체력 기능 실행
-                    BodyDepleted?.Invoke(); // 몸통 기능 실행
+                    depleted = true; // 마지막 피해 기록 전 패배 알림 보류
                     break; // 반복 또는 분기 종료
                 } // 조건 종료
 
@@ -168,6 +172,11 @@ namespace ProjectEpsilon.Player // 프로젝트 기능 영역
                 ); // 앞선 항목 종료
             } // 반복 종료
 
+            RunTelemetry.RecordDamage(origin, appliedDamage, lostBodies, absorbedDamage, healthBefore, bodiesBefore); // 전투 종료 전에 체력과 몸통 손실 기록
+            if (depleted) // 모든 몸통 소진 확인
+            {
+                BodyDepleted?.Invoke(); // 마지막 피해 저장 뒤 패배 알림
+            }
             shieldController?.CompleteDamageResolution(); // 체력 처리 뒤 보호막 종료 완료
             DamageApplied?.Invoke(); // 실제 체력 피해 처리 알림
             return true; // 성공 결과 반환

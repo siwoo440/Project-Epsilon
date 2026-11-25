@@ -60,6 +60,7 @@ namespace ProjectEpsilon.Enemies // 적 영역
     public sealed class EarlyEnemyWaveSpawner : MonoBehaviour // 초반 적 출현기
     { // 형식 시작
         private const int MaximumConcurrentEnemies = 500; // 전체 적 동시 상한
+        internal const string EnemyContactLayerName = "EnemyContact"; // 적 접촉 계층 이름
         [SerializeField] private float spawnInterval = 1.5f; // 임시 출현 간격
         [SerializeField] private int maximumEnemies = 40; // 동시 적 상한
         [SerializeField] private float spawnDistance = 9f; // 출현 거리
@@ -431,7 +432,7 @@ namespace ProjectEpsilon.Enemies // 적 영역
         } // 함수 종료
         internal static void AssignEnemyContactLayer(GameObject enemy) // 피해와 공격에 사용할 적 레이어 연결
         { // 함수 시작
-            int layer = LayerMask.NameToLayer("EnemyContact"); // 메인 스레드의 적 충돌 레이어 조회
+            int layer = LayerMask.NameToLayer(EnemyContactLayerName); // 메인 스레드의 적 충돌 레이어 조회
             if (layer >= 0) // 프로젝트 레이어가 등록된 상태 확인
             { // 조건 시작
                 enemy.layer = layer; // 적끼리만 충돌하지 않는 레이어 적용

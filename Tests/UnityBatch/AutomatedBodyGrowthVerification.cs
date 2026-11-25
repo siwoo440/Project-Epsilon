@@ -5,6 +5,7 @@ using ProjectEpsilon.Core; // 게임 상태
 using ProjectEpsilon.Enemies; // 적 출현 제어
 using ProjectEpsilon.Player; // 플레이어 이동 제어
 using ProjectEpsilon.Progression; // 실제 경험치와 보석
+using ProjectEpsilon.Recording; // 전투 피해 기록
 using UnityEditor; // 배치 실행
 using UnityEditor.SceneManagement; // 실제 씬 열기
 using UnityEngine; // 유니티 기능
@@ -122,8 +123,16 @@ namespace ProjectEpsilon.Editor // 편집기 영역
             {
                 Require(body.TryGainBodyFromLevelUp(), "Could not prepare six earned bodies."); // 실제 몸통 성장 메서드
             }
-            Require(health.TakeDamage(health.MaximumHealth * 2 + 23), "Could not prepare controlled health and body loss."); // 실제 초과 피해 적용
+            RunRecording recording = RunTelemetry.Instance?.Current; // 선택적 전투 기록 조회
+            Require(!RunTelemetry.IsRequested() || recording != null, "The requested telemetry did not start."); // 요청한 전투 기록의 시작 확인
+            int maximum = health.MaximumHealth; // 시작 공용 체력 보존
+            Require(health.TakeDamage(maximum * 2 + 23, DamageOrigin.EnemyProjectile), "Could not prepare controlled health and body loss."); // 실제 투사체 초과 피해 적용
             Require(body.CurrentBodyCount == 4 && body.EarnedBodyCount == 6 && health.CurrentHealth == health.MaximumHealth - 23, "Controlled loss did not preserve earned maximum."); // 현재 및 성장 최대 구분
+            if (recording != null) // 전투 기록 시험 옵션 확인
+            {
+                RunDamageEvent shot = recording.damages[recording.damages.Count - 1]; // 마지막 투사체 피해 항목
+                Require(shot.origin == nameof(DamageOrigin.EnemyProjectile) && shot.healthDamage == maximum * 2 + 23 && shot.bodyLoss == 2 && shot.healthBefore == maximum && shot.bodiesBefore == 6, "Projectile overflow telemetry omitted lost bodies or pre-hit state."); // 체력과 몸통 손실의 출처 확인
+            }
             LogState("before lost-body level"); // 실제 수치와 HUD 기록
             yield return CollectExperience(10); // 실제 보석 수집과 레벨업
             RequireGrowth(2, 5, 7, health.MaximumHealth - 23); // 손실 뒤 현재와 성장 최대 동시 증가
@@ -159,6 +168,13 @@ namespace ProjectEpsilon.Editor // 편집기 영역
             LogState("consecutive level three"); // 셋째 보상 수치 기록
             CompleteReward(); // 실제 후보 버튼으로 마지막 보상 완료
             Require(!experience.IsLevelUpPending && !level.IsPresentingLevelUp && GameManager.Instance.IsPlaying && Mathf.Approximately(Time.timeScale, 1f), "Consecutive rewards did not finish and resume exactly once."); // 최종 대기 해제와 재개 확인
+            if (recording != null) // 기록 활성 시 패배 직전 피해 확인
+            {
+                int bodiesBefore = body.CurrentBodyCount; // 패배 전 생존 몸통 수
+                Require(health.TakeDamage(bodiesBefore * maximum + 100, DamageOrigin.EnemyMelee), "Lethal damage did not apply."); // 실제 모든 생명 소진과 초과 피해
+                RunDamageEvent lethal = recording.damages[recording.damages.Count - 1]; // 패배 전 저장된 마지막 피해
+                Require(recording.outcome == nameof(GameState.Defeated) && lethal.origin == nameof(DamageOrigin.EnemyMelee) && lethal.healthDamage == bodiesBefore * maximum && lethal.bodyLoss == bodiesBefore && lethal.bodiesBefore == bodiesBefore, "Defeat finished before recording the actual lethal body loss."); // 초과 피해 한도와 종료 기록 순서 확인
+            }
             AutomatedBodyGrowthVerification.Finish(0, "Actual gem collection, reward UI and consecutive levels preserved body and health rules under controlled conditions."); // 전체 시험 성공
         }
 

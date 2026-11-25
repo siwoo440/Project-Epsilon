@@ -84,7 +84,7 @@ namespace ProjectEpsilon.Recording // 전투 기록 영역
         public string origin; // 실제 피해 원인
         public int healthDamage; // 보호막 이후 실제 체력 피해량
         public int shieldDamage; // 실제 보호막 흡수 피해량
-        public int bodyLoss; // 실제 직접 손실 예정 몸통
+        public int bodyLoss; // 이번 피해로 제거된 몸통 수
         public int healthBefore; // 실제 피해 전 체력
         public int bodiesBefore; // 실제 피해 전 몸통
     } // 형식 종료
@@ -101,6 +101,7 @@ namespace ProjectEpsilon.Recording // 전투 기록 영역
     { // 형식 시작
         public int version = 1; // 실제 기록 형식
         public int gemAccountingVersion = 1; // 보석 생성·수집 집계 형식
+        public int bodyLossAccountingVersion = 1; // 직접 손실과 체력 소진 손실의 기록 형식
         public string runId; // 실제 기록 식별자
         public string startedUtc; // 실제 시작 UTC 시각
         public string unityVersion; // 실제 Unity 버전
@@ -108,6 +109,8 @@ namespace ProjectEpsilon.Recording // 전투 기록 영역
         public bool seedProvided; // 명시적 난수 시드 여부
         public int seed; // 실제 지정 난수 시드
         public float fixedDeltaTime; // 실제 고정 물리 간격
+        public int captureFramerate; // 프레임 간격 강제 여부와 속도
+        public string enemyContactMode; // 적 계층의 상호 접촉 설정
         public float randomProbe; // 난수 상태를 바꾸지 않은 시드 확인값
         public float spawnInterval; // 실제 일반 적 출현 간격
         public int enemyLimit; // 실제 동시 일반 적 상한
@@ -201,6 +204,7 @@ namespace ProjectEpsilon.Recording // 전투 기록 영역
             PrototypeMapProfile profile = map == null ? null : map.SelectedProfile; // 실제 선택 맵 설정
             SnakeMovement movement = FindFirstObjectByType<SnakeMovement>(); // 실제 플레이어 이동
             SnakeStamina stamina = FindFirstObjectByType<SnakeStamina>(); // 실제 스태미나 설정
+            int enemyLayer = LayerMask.NameToLayer(EarlyEnemyWaveSpawner.EnemyContactLayerName); // 적끼리 접촉할 계층 조회
             recording = new RunRecording // 실제 새 런 기록 생성
             { // 자료 묶음 시작
                 runId = Guid.NewGuid().ToString("N"), // 실제 중복 방지 식별자
@@ -210,6 +214,8 @@ namespace ProjectEpsilon.Recording // 전투 기록 영역
                 seedProvided = hasSeed, // 실제 난수 시드 존재
                 seed = seed, // 실제 지정 시드
                 fixedDeltaTime = Time.fixedDeltaTime, // 실제 고정 물리 간격
+                captureFramerate = Time.captureFramerate, // 정상 시간과 고정 프레임 구분 값
+                enemyContactMode = enemyLayer < 0 ? "LayerMissing" : Physics2D.GetIgnoreLayerCollision(enemyLayer, enemyLayer) ? "Filtered" : "Enabled", // 실행 시 물리 설정
                 randomProbe = randomProbe, // 실제 시작 난수 확인값
                 spawnInterval = wave == null ? 0f : wave.RecordingSpawnInterval, // 실제 적 출현 간격
                 enemyLimit = wave == null ? 0 : wave.RecordingEnemyLimit, // 실제 적 출현 상한
@@ -360,7 +366,7 @@ namespace ProjectEpsilon.Recording // 전투 기록 영역
         { // 함수 시작
             return wave == null ? 0d : wave.CurrentRunSeconds; // 실제 출현기 전투 시간
         } // 함수 종료
-        public static void RecordDamage(DamageOrigin origin, int healthDamage, int bodyLoss, int shieldDamage = 0) // 실제 유효 피해 기록
+        public static void RecordDamage(DamageOrigin origin, int healthDamage, int bodyLoss, int shieldDamage = 0, int? healthBefore = null, int? bodiesBefore = null) // 실제 유효 피해 기록
         { // 함수 시작
             RunTelemetry self = Instance; // 실제 기록기 조회
             if (self == null || !self.active || self.recording == null) // 실제 기록 상태 확인
@@ -375,9 +381,9 @@ namespace ProjectEpsilon.Recording // 전투 기록 영역
                 origin = origin.ToString(), // 실제 피해 원인
                 healthDamage = Mathf.Max(0, healthDamage), // 실제 체력 피해
                 shieldDamage = Mathf.Max(0, shieldDamage), // 실제 보호막 흡수 피해
-                bodyLoss = Mathf.Max(0, bodyLoss), // 실제 직접 몸통 손실
-                healthBefore = self.health == null ? 0 : self.health.CurrentHealth, // 실제 피해 전 체력
-                bodiesBefore = self.body == null ? 0 : self.body.CurrentBodyCount // 실제 피해 전 몸통
+                bodyLoss = Mathf.Max(0, bodyLoss), // 실제 제거된 몸통 수
+                healthBefore = healthBefore ?? (self.health == null ? 0 : self.health.CurrentHealth), // 피해 전 공용 체력
+                bodiesBefore = bodiesBefore ?? (self.body == null ? 0 : self.body.CurrentBodyCount) // 피해 전 몸통 수
             }); // 코드 블록 종료
         } // 함수 종료
         public void Capture(string reason) // 실제 현재 상태 표본

@@ -118,17 +118,25 @@ def summarize(path):  # 자연 전투 로그 요약
     print(f"  자동 합성 완료 {merge_count}회, 첫 ★5 장착: {first_five}")  # 실제 합성 비교 결과
     damages = record.get("damages", [])  # 실제 피해 목록
     causes = Counter(item.get("origin", "Unknown") for item in damages)  # 원인별 피해 횟수
-    print(f"  피해 원인={dict(causes)} 체력피해={sum(item.get('healthDamage', 0) for item in damages)} 보호막흡수={sum(item.get('shieldDamage', 0) for item in damages)} 직접몸통손실={sum(item.get('bodyLoss', 0) for item in damages)}")  # 실제 피해 합계 출력
+    body_loss_label = "몸통 손실" if record.get("bodyLossAccountingVersion") == 1 else "기존 직접 몸통 손실"  # 이전 기록의 집계 범위 구분
+    print(f"  피해 원인={dict(causes)} 체력피해={sum(item.get('healthDamage', 0) for item in damages)} 보호막흡수={sum(item.get('shieldDamage', 0) for item in damages)} {body_loss_label}={sum(item.get('bodyLoss', 0) for item in damages)}")  # 실제 피해 합계 출력
+    print(f"  종료: {record.get('outcome', '미기록')} 게임 시간 {samples[-1]['seconds']:.1f}초, 마지막 피해 {record.get('lastDamageOrigin', '미기록')}")  # 정상 종료와 조기 패배 구분
     for start, end in ((0, 300), (300, 600), (600, 900), (900, 1200)):  # 다섯 분 단위의 피해 구간
-        if samples[-1]["seconds"] < end:  # 도달하지 못한 구간 확인
-            break  # 불완전 구간 제외
+        observed_end = min(end, samples[-1]["seconds"])  # 패배로 짧아진 마지막 구간 종료 시각
+        if observed_end <= start:  # 관찰하지 못한 구간 확인
+            break  # 이후 구간 생략
         segment_health = Counter()  # 현재 구간의 원인별 체력 피해
-        segment_body_loss = 0  # 현재 구간의 직접 몸통 손실
+        segment_body_loss = Counter()  # 현재 구간의 원인별 몸통 손실
         for event in damages:  # 실제 피해의 발생 시각 분류
-            if start <= event.get("seconds", -1) < end:  # 현재 구간에 포함된 피해 확인
-                segment_health[event.get("origin", "Unknown")] += event.get("healthDamage", 0)  # 원인별 공용 체력 피해 합산
-                segment_body_loss += event.get("bodyLoss", 0)  # 몸통 직접 손실 합산
-        print(f"  {start // 60}~{end // 60}분 피해: {dict(segment_health.most_common())}, 직접 몸통 손실={segment_body_loss}")  # 시간대별 피해 집중 지점 출력
+            seconds = event.get("seconds", -1)  # 실제 피해 시각
+            if start <= seconds < end and seconds <= observed_end:  # 현재 구간과 패배 직전 피해 포함 확인
+                origin = event.get("origin", "Unknown")  # 피해 출처
+                segment_health[origin] += event.get("healthDamage", 0)  # 원인별 공용 체력 피해 합산
+                segment_body_loss[origin] += event.get("bodyLoss", 0)  # 원인별 몸통 손실 합산
+        health_by_origin = dict((origin, total) for origin, total in segment_health.most_common() if total > 0)  # 피해가 있는 출처만 표시
+        body_by_origin = dict((origin, total) for origin, total in segment_body_loss.most_common() if total > 0)  # 손실이 있는 출처만 표시
+        finish = f"{end // 60}분" if observed_end == end else f"{observed_end:.1f}초(부분)"  # 관찰 종료 시각 표시
+        print(f"  {start // 60}분~{finish} 피해: {health_by_origin}, {body_loss_label}={body_by_origin}")  # 시간대별 피해 집중 지점 출력
 
 
 def main():  # 명령행 진입점
