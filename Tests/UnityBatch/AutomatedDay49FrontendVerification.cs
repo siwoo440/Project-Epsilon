@@ -86,8 +86,6 @@ namespace ProjectEpsilon.Editor // 배치 시험 영역
             MetaProgressionController meta = MetaProgressionController.Instance; // 실제 진행 관리자
             typeof(MetaProgressionController).GetProperty("Service").SetValue(meta, new MetaProgressionService(new PlayerPrefsMetaStorage("ProjectEpsilon.MetaProgress.v1"))); // 실제 격리 저장 재연결
             RunFrontendController frontend = RunFrontendController.Instance; // 실제 전용 화면
-            CanvasScaler scaler = GameObject.Find("RunFrontendCanvas").GetComponent<CanvasScaler>(); // 실제 메뉴 해상도 조정기
-            Require(scaler.screenMatchMode == CanvasScaler.ScreenMatchMode.Expand, "Menu canvas can crop fixed-position controls."); // 비표준 화면의 메뉴 잘림 방지
             typeof(RunFrontendController).GetField("options", BindingFlags.Instance | BindingFlags.NonPublic).SetValue(frontend, new FrontendOptions()); // 실제 격리 설정 재연결
             CharacterRunInitializer characters = FindFirstObjectByType<CharacterRunInitializer>(); // 실제 캐릭터 선택기
             PrototypeMapSelection maps = FindFirstObjectByType<PrototypeMapSelection>(); // 실제 맵 선택기
@@ -108,8 +106,6 @@ namespace ProjectEpsilon.Editor // 배치 시험 영역
             FrontendOptions loaded = new FrontendOptions(); // 실제 설정 재로드
             Require(loaded.IsAvailable && loaded.Volume == 0 && loaded.Shake == 0 && loaded.ResolutionIndex == 0 && loaded.Fullscreen != originalFullscreen && Mathf.Approximately(AudioListener.volume, 0f), $"Settings failed: volume={loaded.Volume}, shake={loaded.Shake}, resolution={loaded.ResolutionIndex}, fullscreen={loaded.Fullscreen}, initial={originalFullscreen}, audio={AudioListener.volume}."); // 실제 설정 저장 확인
             Click("FrontendInputSettingsButton"); // 실제 기존 입력 설정 열기
-            CanvasScaler inputScaler = GameObject.Find("StandaloneInputCanvas").GetComponent<CanvasScaler>(); // 실제 키 설정 해상도 조정기
-            Require(inputScaler.screenMatchMode == CanvasScaler.ScreenMatchMode.Expand, "Input settings can crop fixed-position controls."); // 키 설정과 메뉴의 배율 일치
             SettingsMenuController inputSettings = FindFirstObjectByType<SettingsMenuController>(); // 실제 입력 설정
             Require(inputSettings != null && inputSettings.IsOpen, "Existing input settings did not open."); // 실제 입력 설정 연결 확인
             inputSettings.CloseSettings(); // 실제 기존 설정 닫기

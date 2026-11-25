@@ -98,6 +98,8 @@ namespace ProjectEpsilon.Editor // 실제 배치 시험 영역
             MetaProgressionController menuMeta = MetaProgressionController.Instance; // 실제 메뉴 진행 관리자
             typeof(MetaProgressionController).GetProperty("Service").SetValue(menuMeta, new MetaProgressionService(new PlayerPrefsMetaStorage("ProjectEpsilon.MetaProgress.v1"))); // 실제 초기 저장 서비스 재연결
             Require(SceneManager.GetActiveScene().path == SceneFrontendContext.MainMenuPath && Button("FrontendStartButton") != null, "Main menu did not initialize."); // 실제 메인 메뉴 확인
+            CanvasScaler menuScaler = GameObject.Find("RunFrontendCanvas")?.GetComponent<CanvasScaler>(); // 분리된 메인 메뉴의 배율 설정
+            Require(menuScaler != null && menuScaler.referenceResolution == new Vector2(1920f, 1080f) && menuScaler.screenMatchMode == CanvasScaler.ScreenMatchMode.Expand, "Menu canvas can crop fixed-position controls."); // 메뉴 기준 해상도와 잘림 방지 검증
             VerifyPersonalBests(); // 최고점 저장 규칙 확인
             VerifyTurretCatalog(); // 메인 메뉴의 48종 도감 확인
             InputSystemUIInputModule module = EventSystem.current == null ? null : EventSystem.current.GetComponent<InputSystemUIInputModule>(); // 실제 UI 입력 모듈
@@ -108,6 +110,8 @@ namespace ProjectEpsilon.Editor // 실제 배치 시험 영역
             yield return null; // 실제 키 설정 표시 대기
             SettingsMenuController settings = FindFirstObjectByType<SettingsMenuController>(); // 실제 기존 키 설정기
             Require(settings != null && settings.IsOpen && Button("InputClose") != null, "Standalone input settings did not open."); // 실제 메뉴 키 설정 확인
+            CanvasScaler inputScaler = GameObject.Find("StandaloneInputCanvas")?.GetComponent<CanvasScaler>(); // 분리된 키 설정의 배율 설정
+            Require(inputScaler != null && inputScaler.referenceResolution == menuScaler.referenceResolution && inputScaler.screenMatchMode == menuScaler.screenMatchMode, "Input settings can crop fixed-position controls."); // 메뉴와 키 설정의 동일 배율 검증
             Button("InputClose").onClick.Invoke(); // 실제 키 설정 닫기
             yield return null; // 실제 입력 복귀 대기
             Button("FrontendSettingsBackButton").onClick.Invoke(); // 실제 메인 메뉴 복귀
