@@ -11,6 +11,7 @@ namespace ProjectEpsilon.Enemies // 적 출현 영역
         public int normalEnemyLimit = 40; // 일반 적 최대 수
         public float healthMultiplier = 1f; // 일반 적 체력 배율
         public float damageMultiplier = 1f; // 일반 적 피해 배율
+        [Min(1f)] public float normalRangedAttackIntervalMultiplier = 1f; // 일반 원거리 적의 발사 간격 배율
         [Tooltip("순서: 병정개미, 사마귀, 말벌, 엘리트(0), 쇠똥구리, 노린재, 잠자리, 개미귀신, 장수풍뎅이")] public float[] spawnWeights; // 적 행동 종류별 출현 가중치
         public float GetSpawnWeight(EarlyEnemyKind kind) // 현재 구간의 적별 가중치
         { // 함수 시작
@@ -25,6 +26,7 @@ namespace ProjectEpsilon.Enemies // 적 출현 영역
         public readonly int NormalEnemyLimit; // 일반 적 동시 상한
         public readonly float HealthMultiplier; // 적 체력 배율
         public readonly float DamageMultiplier; // 적 공격력 배율
+        public readonly float NormalRangedAttackIntervalMultiplier; // 현재 구간의 일반 원거리 발사 간격 배율
 
         internal EnemyWavePacing(EnemyWaveStage from, EnemyWaveStage to, float progress) // 기준 사이 출현 설정 생성
         { // 생성자 시작
@@ -32,6 +34,7 @@ namespace ProjectEpsilon.Enemies // 적 출현 영역
             NormalEnemyLimit = Mathf.RoundToInt(Mathf.Lerp(from.normalEnemyLimit, to.normalEnemyLimit, progress)); // 일반 적 상한 보간
             HealthMultiplier = InterpolateMultiplier(from.healthMultiplier, to.healthMultiplier, progress); // 체력 배율 보간
             DamageMultiplier = InterpolateMultiplier(from.damageMultiplier, to.damageMultiplier, progress); // 공격력 배율 보간
+            NormalRangedAttackIntervalMultiplier = Mathf.Max(1f, from.normalRangedAttackIntervalMultiplier); // 후반 시작 전 이전 구간 사격 유지
         } // 생성자 종료
 
         private static float InterpolateMultiplier(float from, float to, float progress) // 구간 내 성장 배율 계산

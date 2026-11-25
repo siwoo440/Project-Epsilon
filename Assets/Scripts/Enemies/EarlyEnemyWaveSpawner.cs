@@ -198,6 +198,7 @@ namespace ProjectEpsilon.Enemies // 적 영역
         public int CurrentNormalEnemyLimit => Mathf.Clamp(CurrentPacing?.NormalEnemyLimit ?? maximumEnemies, 1, MaximumConcurrentEnemies); // 현재 일반 적 상한
         public float CurrentNormalHealthMultiplier => CurrentPacing?.HealthMultiplier ?? 1f; // 현재 적 체력 배율
         public float CurrentNormalDamageMultiplier => CurrentPacing?.DamageMultiplier ?? 1f; // 현재 적 공격력 배율
+        public float CurrentNormalRangedAttackIntervalMultiplier => CurrentPacing?.NormalRangedAttackIntervalMultiplier ?? 1f; // 현재 일반 원거리 발사 간격 배율
         private EnemyWaveStage CurrentStage => waveSettings == null ? null : waveSettings.Resolve(elapsed); // 현재 시간의 출현 구간
         public float ElapsedSeconds => elapsed; // 실제 전투 경과 시간 조회
         public double CurrentRunSeconds => elapsed + (GameManager.Instance != null && (GameManager.Instance.IsPlaying || GameManager.Instance.IsPaused) ? Math.Max(0d, Time.timeAsDouble - previousClockTime) : 0d); // 종료 프레임을 포함한 전투 시간
@@ -510,6 +511,7 @@ namespace ProjectEpsilon.Enemies // 적 영역
             lastScalingMinute = minute; // 갱신 분 기록
             float healthMultiplier = CurrentNormalHealthMultiplier; // 현재 체력 배율 보관
             float damageMultiplier = CurrentNormalDamageMultiplier; // 현재 공격력 배율 보관
+            float rangedIntervalMultiplier = CurrentNormalRangedAttackIntervalMultiplier; // 현재 구간 사격 배율 보관
             foreach (WeaponTarget target in targets) // 관리 중인 생존 적 순회
             { // 반복 시작
                 if (target == null || !target.IsAlive || !enemyScales.TryGetValue(target, out EnemyScaleRecord record)) // 유효한 생존 적 확인
@@ -518,12 +520,20 @@ namespace ProjectEpsilon.Enemies // 적 영역
                 } // 조건 종료
                 record.runtime.health = Mathf.Ceil(record.source.health * healthMultiplier); // 원본 기준 최대 체력 갱신
                 record.runtime.damage = Mathf.CeilToInt(record.source.damage * damageMultiplier); // 원본 기준 공격력 갱신
+                record.runtime.attackInterval = ResolveAttackInterval(record.source, rangedIntervalMultiplier); // 이후 시작할 다음 사격 주기에 적용
                 target.SetMaximumHealthPreservingRatio(record.runtime.health); // 기존 체력 비율 유지
             } // 반복 종료
         } // 함수 종료
         private EarlyEnemySettings ScaleNormalEnemy(EarlyEnemySettings source) // 일반 적 능력치 복사와 구간 배율 적용
         { // 함수 시작
-            return CopyEnemySettings(source, CurrentNormalHealthMultiplier, CurrentNormalDamageMultiplier); // 실제 구간 배율을 적용한 설정
+            EarlyEnemySettings runtime = CopyEnemySettings(source, CurrentNormalHealthMultiplier, CurrentNormalDamageMultiplier); // 실제 구간 배율을 적용한 설정
+            runtime.attackInterval = ResolveAttackInterval(source, CurrentNormalRangedAttackIntervalMultiplier); // 신규 일반 원거리 적의 사격 간격
+            return runtime; // 원본과 분리한 출현 설정
+        } // 함수 종료
+        private static float ResolveAttackInterval(EarlyEnemySettings source, float rangedIntervalMultiplier) // 일반 원거리 적의 발사 간격 계산
+        {
+            bool normalRanged = !source.isEnhancedElite && (source.kind == EarlyEnemyKind.Shooter || source.kind == EarlyEnemyKind.Turret); // 일반 말벌과 개미귀신 판별
+            return source.attackInterval * (normalRanged ? rangedIntervalMultiplier : 1f); // 전용 공격 주기와 조정된 사격 간격
         } // 함수 종료
         private static EarlyEnemySettings CopyEnemySettings(EarlyEnemySettings source, float healthMultiplier, float damageMultiplier) // 원본과 분리된 적 설정 복사
         { // 함수 시작

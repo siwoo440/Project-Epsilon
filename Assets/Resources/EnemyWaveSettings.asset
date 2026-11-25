@@ -63,6 +63,7 @@ MonoBehaviour:
     normalEnemyLimit: 360
     healthMultiplier: 2.5
     damageMultiplier: 1.24
+    normalRangedAttackIntervalMultiplier: 1.15
     spawnWeights:
     - 24
     - 21
@@ -78,6 +79,7 @@ MonoBehaviour:
     normalEnemyLimit: 500
     healthMultiplier: 3.1
     damageMultiplier: 1.32
+    normalRangedAttackIntervalMultiplier: 1.25
     spawnWeights:
     - 16
     - 21
@@ -93,6 +95,7 @@ MonoBehaviour:
     normalEnemyLimit: 500
     healthMultiplier: 3.6
     damageMultiplier: 1.4
+    normalRangedAttackIntervalMultiplier: 1.25
     spawnWeights:
     - 27
     - 19

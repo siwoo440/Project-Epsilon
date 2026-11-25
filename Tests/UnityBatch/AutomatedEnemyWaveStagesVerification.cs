@@ -112,6 +112,7 @@ namespace ProjectEpsilon.Editor // 실제 배치 시험 영역
             int[] limits = { 40, 88, 100, 196, 220, 332, 360, 500, 500, 500 }; // 실제 일반 적 최대 상한
             float[] health = { 1f, 1.233544f, 1.3f, 1.686579f, 1.8f, 2.341027f, 2.5f, 3.1f, 3.340659f, 3.6f }; // 실제 체력 배율
             float[] damage = { 1f, 1.047719f, 1.06f, 1.123531f, 1.14f, 1.219322f, 1.24f, 1.32f, 1.359412f, 1.4f }; // 실제 공격 배율
+            float[] rangedCadence = { 1f, 1f, 1f, 1f, 1f, 1f, 1.15f, 1.25f, 1.25f, 1.25f }; // 구간별 일반 원거리 사격 간격
             EnemyWaveSettings wave = data as EnemyWaveSettings; // 실제 웨이브 설정 조회
             Require(wave != null, "Actual wave settings have an unexpected type."); // 실제 설정 형식 확인
             EnemyWavePacing? firstMinute = wave.SampleMinute(0); // 시작 분의 실제 설정
@@ -138,6 +139,7 @@ namespace ProjectEpsilon.Editor // 실제 배치 시험 영역
                 elapsed.SetValue(spawner, times[index]); // 실제 경계 시각 통제
                 Require(Mathf.Abs(ReadFloat(spawner, "CurrentSpawnInterval") - intervals[index]) < 0.001f && ReadInt(spawner, "CurrentNormalEnemyLimit") == limits[index], "Spawn interval or cap mismatch at " + times[index]); // 실제 구간별 간격과 상한 확인
                 Require(Mathf.Abs(ReadFloat(spawner, "CurrentNormalHealthMultiplier") - health[index]) < 0.001f && Mathf.Abs(ReadFloat(spawner, "CurrentNormalDamageMultiplier") - damage[index]) < 0.001f, "Enemy multipliers mismatch at " + times[index]); // 실제 구간별 배율 확인
+                Require(Mathf.Approximately(ReadFloat(spawner, "CurrentNormalRangedAttackIntervalMultiplier"), rangedCadence[index]), "Ranged attack interval changed outside its configured stage."); // 초반 유지와 후반 배율 확인
                 WeaponTarget target = spawn.Invoke(spawner, new object[] { enemies[0], new Vector3(100f + index * 3f, 100f, 0f), false }) as WeaponTarget; // 실제 일반 적 생성
                 Require(target != null && Mathf.Approximately(target.MaximumHealth, Mathf.Ceil(enemies[0].health * health[index])), "Actual spawned enemy health mismatch at " + times[index]); // 실제 체력 배율과 올림 확인
                 FieldInfo behaviourSettings = typeof(EarlyEnemyBehaviour).GetField("settings", Private); // 실제 생성 적 행동 설정
@@ -173,6 +175,20 @@ namespace ProjectEpsilon.Editor // 실제 배치 시험 영역
             elapsed.SetValue(spawner, 120f); // 다음 분 경계 이동
             refresh.Invoke(spawner, null); // 사망 이후 재갱신
             Require(!normal.IsAlive && Mathf.Approximately(enemies[0].health, 25f) && enemies[0].damage == 10, "Scaling revived a dead enemy or changed base data."); // 사망 상태와 원본 보존 확인
+            elapsed.SetValue(spawner, 899f); // 후반 경계 직전의 기존 원거리 적
+            WeaponTarget shooter = spawn.Invoke(spawner, new object[] { enemies[2], new Vector3(170f, 100f, 0f), false }) as WeaponTarget; // 실제 말벌 생성
+            Require(shooter != null, "Could not spawn the ranged cadence fixture."); // 시험 적 생성 확인
+            var shooterRuntime = (EarlyEnemySettings)typeof(EarlyEnemyBehaviour).GetField("settings", Private).GetValue(shooter.GetComponent<EarlyEnemyBehaviour>()); // 기존 말벌의 실제 설정
+            float baseInterval = enemies[2].attackInterval; // 원본 사격 간격
+            Require(Mathf.Approximately(shooterRuntime.attackInterval, baseInterval), "Pre-15-minute firing cadence was modified."); // 15분 이전 사격 확인
+            elapsed.SetValue(spawner, 900f); // 사격 조정 적용 경계
+            refresh.Invoke(spawner, null); // 기존 말벌의 다음 공격 주기 갱신
+            var initialCadence = Mathf.Approximately(shooterRuntime.attackInterval, baseInterval * 1.15f); // 15분 소급 간격 확인
+            elapsed.SetValue(spawner, 1080f); // 두 번째 후반 사격 조정 경계
+            refresh.Invoke(spawner, null); // 기존 원거리 적의 다음 공격 주기 갱신
+            Require(initialCadence && Mathf.Approximately(shooterRuntime.attackInterval, baseInterval * 1.25f) && enemies[2].attackInterval == baseInterval, "Ranged cadence did not update from the existing enemy's base interval."); // 누적 배율과 원본 오염 방지
+            shooter.gameObject.SetActive(false); // 상한 시험 전에 사격 중지
+            Destroy(shooter.gameObject); // 원거리 시험 대상 제거
             Debug.Log("[EnemyWaveCheckpoint] 분별 성장과 체력 비율 확인 완료"); // 성장 검증 도달 기록
             yield return null; // 실제 제거 프레임 대기
             elapsed.SetValue(spawner, 1080f);
