@@ -1,4 +1,5 @@
 using ProjectEpsilon.Core; // 실제 게임 상태
+using ProjectEpsilon.Enemies; // 적 접촉 레이어 확인
 using ProjectEpsilon.Player; // 실제 뱀과 충돌 처리
 using ProjectEpsilon.Recording; // 실제 피해 원인
 using ProjectEpsilon.UI; // 기존 위험 예고 화면
@@ -22,6 +23,7 @@ namespace ProjectEpsilon.World // 맵 영역
         private SpriteRenderer[] swarmRenderers; // 실제 황충 그림 목록
         private readonly Collider2D[] locustOverlaps = new Collider2D[256]; // 황충 접촉 결과 재사용
         private readonly RaycastHit2D[] locustHits = new RaycastHit2D[256]; // 황충 이동 충돌 결과 재사용
+        private ContactFilter2D locustContactFilter; // 일반 적을 제외한 황충 접촉 검색
         private static readonly Vector2[] LocustCenters = // 원본 그림의 개별 황충 중심
         { // 중심 목록 시작
             new Vector2(388f, 130f), new Vector2(231f, 279f), new Vector2(514f, 330f), // 첫 황충 줄
@@ -58,6 +60,12 @@ namespace ProjectEpsilon.World // 맵 영역
             health = player == null ? null : player.GetComponent<SnakeHealth>(); // 실제 공용 체력
             resolver = player == null ? null : player.GetComponent<SnakeExternalCollision>(); // 실제 충돌 처리기
             hud = FindFirstObjectByType<HUDController>(); // 실제 전투 화면
+            locustContactFilter.useTriggers = true; // 머리와 몸통의 트리거 포함
+            int enemyLayer = LayerMask.NameToLayer(EarlyEnemyWaveSpawner.EnemyContactLayerName); // 전투의 공통 적 레이어 조회
+            if (enemyLayer >= 0) // 공통 적 레이어 등록 여부
+            {
+                locustContactFilter.SetLayerMask(~(1 << enemyLayer)); // 적 충돌체가 뱀 검색 공간을 차지하지 않도록 제외
+            }
         } // 함수 종료
 
         private void Update() // 실제 전투 중 위험 진행
@@ -437,7 +445,7 @@ namespace ProjectEpsilon.World // 맵 영역
                     float y = (0.5f - pixel.y / 2172f) * bounds.size.y; // 원본 위쪽 기준 황충 위치
                     Vector3 end = renderer.transform.TransformPoint(bounds.center + new Vector3(x, y, 0f)); // 현재 그림의 실제 황충 위치
                     Vector3 start = end - movement; // 이전 물리 스텝의 황충 위치
-                    int overlapCount = Physics2D.OverlapCircleNonAlloc(start, radius, locustOverlaps); // 이전 위치의 실제 접촉
+                    int overlapCount = Physics2D.OverlapCircle(start, radius, locustContactFilter, locustOverlaps); // 이전 위치의 적 제외 접촉
                     for (int index = 0; index < overlapCount; index++) // 이전 접촉 순회
                     { // 반복 시작
                         if (IsPlayerContact(locustOverlaps[index])) // 실제 뱀 접촉 확인
@@ -451,7 +459,7 @@ namespace ProjectEpsilon.World // 맵 영역
                     { // 조건 시작
                         continue; // 이동 경로 검사 생략
                     } // 조건 종료
-                    int hitCount = Physics2D.CircleCastNonAlloc(start, radius, movement / distance, locustHits, distance); // 빠른 이동 중 실제 벌레 충돌
+                    int hitCount = Physics2D.CircleCast(start, radius, movement / distance, locustContactFilter, locustHits, distance); // 빠른 이동 중 적 제외 접촉
                     for (int index = 0; index < hitCount; index++) // 실제 이동 충돌 순회
                     { // 반복 시작
                         if (IsPlayerContact(locustHits[index].collider)) // 실제 뱀 접촉 확인

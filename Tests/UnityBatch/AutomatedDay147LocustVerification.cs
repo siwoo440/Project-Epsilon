@@ -146,9 +146,19 @@ namespace ProjectEpsilon.Editor // 배치 시험 영역
             query.Invoke(events, new object[] { swarm.position, swarm.position }); // 정지한 황충 사이의 접촉 검사
             Require(!(bool)Get(events, "damageQueued"), "벌레가 없는 경고 구역에 피해 예약"); // 실제 빈 공간 무피해 확인
             player.transform.position = Center(renderers[0], centers[0]); // 실제 황충 몸체에 머리 배치
+            int enemyLayer = LayerMask.NameToLayer("EnemyContact"); // 런의 공통 적 레이어 조회
+            Require(enemyLayer >= 0, "황충 검증용 적 레이어 누락"); // 적 충돌 계층 설정 확인
+            GameObject crowd = new GameObject("LocustCollisionCrowd"); // 검색 배열보다 큰 적 밀집 모형
+            crowd.layer = enemyLayer; // 자연 출현 적과 같은 레이어
+            crowd.transform.position = player.transform.position; // 황충과 머리 접촉 지점의 적 밀집
+            for (int index = 0; index < 300; index++) // 검색 배열 용량을 넘는 적 충돌체 생성
+            {
+                crowd.AddComponent<CircleCollider2D>().isTrigger = true; // 적의 트리거 설정 복제
+            }
             Physics2D.SyncTransforms(); // 실제 충돌 위치 반영
             query.Invoke(events, new object[] { swarm.position, swarm.position }); // 실제 벌레 몸체 접촉 검사
-            Require((bool)Get(events, "damageQueued"), "실제 황충 몸체의 피해 누락"); // 실제 벌레 충돌 확인
+            Require((bool)Get(events, "damageQueued"), "적 충돌체가 밀집했을 때 황충 접촉 피해 누락"); // 적 밀집 속 뱀 접촉 확인
+            Destroy(crowd); // 시험용 충돌체 정리
             int beforeDamage = health.CurrentHealth; // 실제 충돌 전 체력
             player.transform.position = original + Vector3.up * 60f; // 이후 대열의 시험 간섭 방지
             Physics2D.SyncTransforms(); // 실제 머리 위치 반영
