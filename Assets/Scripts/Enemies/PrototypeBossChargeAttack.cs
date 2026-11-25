@@ -37,6 +37,7 @@ namespace ProjectEpsilon.Enemies // 적 영역
         private bool previousMovementEnabled; // 기존 행동 활성 상태
         private bool alignVisualWithCharge; // 예고한 방향으로 이미지 회전
         private bool trackWarningTarget; // 예고 중 움직이는 머리 추적 여부
+        private float BaseChargeSpeed => chargeSpeed * (cutAttack ? phaseTwoSpeedMultiplier : 1f) * EnemyMovementRules.SpeedMultiplier; // 예고와 돌진의 공통 기준 속도
         public bool IsWarning => warningActive; // 실제 예고 상태 조회
         public bool IsCharging => charging; // 실제 돌진 상태 조회
 
@@ -97,8 +98,7 @@ namespace ProjectEpsilon.Enemies // 적 영역
                 return; // 완료 프레임 이동 생략
             } // 조건 종료
             float statusMultiplier = statuses == null ? 1f : statuses.CurrentMovementMultiplier; // 실제 상태 이동 배율
-            float speed = Mathf.Max(0.1f, chargeSpeed) * (cutAttack ? Mathf.Max(1f, phaseTwoSpeedMultiplier) : 1f) * EnemyMovementRules.SpeedMultiplier; // 전체 적 이동 배율을 적용한 돌진 속도
-            physicsBody.MovePosition(physicsBody.position + direction * speed * statusMultiplier * Time.fixedDeltaTime); // 예고한 방향의 실제 물리 이동
+            physicsBody.MovePosition(physicsBody.position + direction * BaseChargeSpeed * statusMultiplier * Time.fixedDeltaTime); // 예고한 방향의 실제 물리 이동
         } // 함수 종료
 
         private void RefreshWarningTarget() // 예고 중 실제 머리 방향 갱신
@@ -112,12 +112,7 @@ namespace ProjectEpsilon.Enemies // 적 영역
             { // 영역 시작
                 physicsBody.MoveRotation(Mathf.Atan2(direction.y, direction.x) * Mathf.Rad2Deg - 90f); // 실제 예고 방향으로 이미지 회전
             } // 영역 종료
-            if (warning != null) // 실제 예고선 확인
-            { // 영역 시작
-                float distance = Mathf.Max(0.1f, chargeSpeed) * Mathf.Max(0.1f, chargeDuration) * (cutAttack ? Mathf.Max(1f, phaseTwoSpeedMultiplier) : 1f) * EnemyMovementRules.SpeedMultiplier; // 실제 돌진 거리와 속도 배율
-                warning.SetPosition(0, transform.position); // 실제 예고 시작 위치
-                warning.SetPosition(1, transform.position + (Vector3)(direction * distance)); // 실제 추적 방향 예고 끝
-            } // 영역 종료
+            UpdateWarningPath(); // 추적 방향의 예고 범위 갱신
         } // 영역 종료
 
         private void BeginWarning() // 실제 돌진 방향 예고
@@ -141,22 +136,29 @@ namespace ProjectEpsilon.Enemies // 적 영역
                 warning = gameObject.AddComponent<LineRenderer>(); // 실제 예고선 생성
                 warningMaterial = new Material(Shader.Find("Sprites/Default")); // 시험용 예고 재질
                 warning.material = warningMaterial; // 실제 예고 재질 연결
-                warning.startColor = cutAttack ? Color.magenta : Color.red; // 첫 예고 색상
-                warning.endColor = warning.startColor; // 끝 예고 색상
-                warning.startWidth = 0.18f; // 예고선 시작 두께 임시값
-                warning.endWidth = 0.18f; // 예고선 끝 두께 임시값
                 warning.sortingOrder = 40; // 포탑과 적 위 예고 순서
                 warning.positionCount = 2; // 실제 예고선 좌표 수
             } // 조건 종료
-            warning.startColor = cutAttack ? Color.magenta : Color.red; // 단계별 실제 예고 색상
-            warning.endColor = warning.startColor; // 실제 예고 끝 색상
-            float distance = Mathf.Max(0.1f, chargeSpeed) * Mathf.Max(0.1f, chargeDuration) * (cutAttack ? Mathf.Max(1f, phaseTwoSpeedMultiplier) : 1f) * EnemyMovementRules.SpeedMultiplier; // 실제 절반 속도를 반영한 예고 거리
-            warning.SetPosition(0, transform.position); // 실제 예고 시작점
-            warning.SetPosition(1, transform.position + (Vector3)(direction * distance)); // 실제 예고 종료점
+            Color warningColor = cutAttack ? Color.magenta : Color.red; // 단계별 위험 색상
+            warningColor.a = 0.45f; // 포탑과 바닥이 보이는 투명도
+            warning.startColor = warningColor; // 시작 위험 색상
+            warning.endColor = warningColor; // 끝 위험 색상
+            CircleCollider2D contact = GetComponent<CircleCollider2D>(); // 돌진 접촉 범위 조회
+            float width = contact == null ? 0.18f : contact.bounds.size.x; // 실제 보스 충돌체 지름
+            warning.startWidth = width; // 예고 시작 폭
+            warning.endWidth = width; // 예고 끝 폭
+            UpdateWarningPath(); // 첫 돌진 경로 적용
             warning.enabled = true; // 실제 예고선 표시
             warningActive = true; // 실제 예고 단계 시작
             phaseEndsAt = Time.time + Mathf.Max(0.1f, warningDuration); // 실제 예고 종료 시각
         } // 함수 종료
+
+        private void UpdateWarningPath() // 직선 돌진의 최대 범위 표시
+        {
+            float distance = BaseChargeSpeed * chargeDuration; // 감속 해제 가능성을 포함한 최대 이동 거리
+            warning.SetPosition(0, transform.position); // 돌진 중심 시작 좌표
+            warning.SetPosition(1, transform.position + (Vector3)(direction * distance)); // 돌진 중심 끝 좌표
+        }
 
         private void FinishCharge() // 실제 돌진 종료
         { // 함수 시작
