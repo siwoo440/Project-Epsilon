@@ -1,5 +1,6 @@
 using System; // 이벤트 형식 사용
 using System.Collections.Generic; // 대상 목록 사용
+using Unity.Profiling; // 실제 전투 탐색의 Profiler 표식
 using UnityEngine; // Unity 기능 사용
 
 namespace ProjectEpsilon.Combat // 전투 영역
@@ -8,6 +9,7 @@ namespace ProjectEpsilon.Combat // 전투 영역
     { // 형식 시작
         private static readonly List<WeaponTarget> ActiveTargets = new List<WeaponTarget>(); // 활성 대상 목록
         private static readonly Stack<List<WeaponTarget>> RangeSnapshots = new Stack<List<WeaponTarget>>(); // 중첩 범위 공격용 재사용 목록
+        private static readonly ProfilerMarker ClosestTargetMarker = new ProfilerMarker("ProjectEpsilon.Turret.FindClosest"); // 포탑 최근접 탐색 비용 측정
 
         [SerializeField] private float maximumHealth = 30f; // 최대 체력
         [SerializeField] private float currentHealth = 30f; // 현재 체력
@@ -173,6 +175,7 @@ namespace ProjectEpsilon.Combat // 전투 영역
 
         public static WeaponTarget FindClosest(Vector3 origin, float maximumRange, WeaponTarget excluded, WeaponTarget secondExcluded) // 두 제외 대상을 고려한 탐색
         { // 함수 시작
+            using var scope = ClosestTargetMarker.Auto(); // 탐색 범위의 CPU 표본
             float safeRange = Mathf.Max(0f, maximumRange); // 탐색 범위 정규화
             float bestDistanceSquared = safeRange * safeRange; // 최대 거리 제곱 저장
             WeaponTarget closest = null; // 최근접 대상 초기화

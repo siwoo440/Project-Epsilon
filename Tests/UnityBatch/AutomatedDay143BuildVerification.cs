@@ -18,20 +18,21 @@ namespace ProjectEpsilon.Editor // バッチ検証領域
                 { // 条件開始
                     throw new InvalidOperationException("有効な四つの開始シーンが不正"); // 誤った試験ビルド防止
                 } // 条件終了
-                string folder = Path.GetFullPath(Path.Combine(Application.dataPath, "..", "..", "Day143Build")); // 元プロジェクト外の試験フォルダ
+                bool performance = Array.IndexOf(Environment.GetCommandLineArgs(), "-epsilonPerformanceBuild") >= 0; // 성능 측정 빌드 옵션
+                string folder = Path.GetFullPath(Path.Combine(Application.dataPath, "..", "..", performance ? "Day178Build" : "Day143Build")); // 기존 아이콘 빌드와 분리된 출력 폴더
                 Directory.CreateDirectory(folder); // 試験ビルド保存先
-                string executable = Path.Combine(folder, "Project-Epsilon-IconTest.exe"); // 実際の試験実行ファイル
+                string executable = Path.Combine(folder, performance ? "Project-Epsilon-Performance.exe" : "Project-Epsilon-IconTest.exe"); // 빌드 종류별 실행 파일
                 BuildPlayerOptions options = new BuildPlayerOptions(); // 実際のビルド設定
                 options.scenes = scenes; // 実際の四つのシーン
                 options.locationPathName = executable; // 実際の出力先
                 options.target = BuildTarget.StandaloneWindows64; // 実際のWindows対象
-                options.options = BuildOptions.None; // 一般向けビルド形式
+                options.options = performance ? BuildOptions.Development : BuildOptions.None; // 성능 검증 시 Profiler 연결 가능 빌드
                 BuildReport report = BuildPipeline.BuildPlayer(options); // 実際のWindows試験ビルド
                 if (report.summary.result != BuildResult.Succeeded || !File.Exists(executable)) // 実際の出力確認
                 { // 条件開始
                     throw new InvalidOperationException("ビルド失敗: " + report.summary.result); // 実際の失敗通知
                 } // 条件終了
-                Debug.Log("[Day143Build] PASS: " + executable); // 実際の成功と出力先
+                Debug.Log((performance ? "[Day178Build]" : "[Day143Build]") + " PASS: " + executable); // 실제 성공과 출력 경로
                 EditorApplication.Exit(0); // 成功終了
             } // 処理終了
             catch (Exception error) // 実際の試験失敗
