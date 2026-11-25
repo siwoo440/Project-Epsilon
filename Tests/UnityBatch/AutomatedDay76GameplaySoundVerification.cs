@@ -60,6 +60,9 @@ namespace ProjectEpsilon.Editor // 배치 시험 영역
             Require(type != null, "전투 효과음 제어기 누락"); // 실제 구현 존재 확인
             Component component = GameManager.Instance.GetComponent(type); // 실제 전투 관리자 연결
             Require(component != null && component.GetComponent<AudioSource>() != null, "효과음 재생기 누락"); // 실제 재생기 확인
+            AudioSource attackVoice = type.GetField("attackSource", Private)?.GetValue(component) as AudioSource; // 반복 공격음의 실제 재생기
+            AudioSource importantVoice = type.GetField("source", Private)?.GetValue(component) as AudioSource; // 중요 알림의 실제 재생기
+            Require(attackVoice != null && importantVoice != null && attackVoice.priority > importantVoice.priority, "전투 중요 알림의 오디오 우선순위 누락"); // 동시 사용 시 주요 효과음 우선 확인
             UnityEngine.Object bank = Resources.Load("Audio/GameplaySoundSettings"); // 실제 효과음 설정
             Require(bank != null, "조정 가능한 효과음 설정 누락"); // 실제 설정 데이터 확인
             EventInfo played = type.GetEvent("SoundPlayed"); // 실제 효과음 재생 알림

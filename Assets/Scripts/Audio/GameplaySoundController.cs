@@ -15,6 +15,7 @@ namespace ProjectEpsilon.Audio // 게임 소리 영역
         private readonly Dictionary<string, float> nextAllowed = new Dictionary<string, float>(); // 종류별 다음 재생 시각
         private GameplaySoundSettings settings; // 실제 효과음 데이터
         private AudioSource source; // 공용 효과음 재생기
+        private AudioSource attackSource; // 반복 공격음 전용 재생기
         private WeaponGradeEffectHooks weapons; // 실제 포탑 이벤트
         private SnakeHealth health; // 실제 공용 체력
         private SnakeBodyManager body; // 실제 몸통 관리자
@@ -27,12 +28,19 @@ namespace ProjectEpsilon.Audio // 게임 소리 영역
         private void Start() // 실제 효과음 구성
         { // 함수 시작
             settings = Resources.Load<GameplaySoundSettings>("Audio/GameplaySoundSettings"); // 조정 가능한 음원 설정
-            source = gameObject.AddComponent<AudioSource>(); // 전투 효과음 재생기
-            source.playOnAwake = false; // 자동 재생 방지
-            source.spatialBlend = 0f; // 화면 전체에 같은 음량
+            source = CreateSource(64); // 피격·성장·보스 알림 우선 재생기
+            attackSource = CreateSource(160); // 반복 공격음 후순위 재생기
             initialized = true; // 실제 초기화 완료
             Bind(); // 기존 전투 이벤트 연결
         } // 함수 종료
+        private AudioSource CreateSource(int priority) // 전투 효과음 공통 출력 설정
+        {
+            AudioSource voice = gameObject.AddComponent<AudioSource>(); // 독립 효과음 재생기
+            voice.playOnAwake = false; // 자동 재생 방지
+            voice.spatialBlend = 0f; // 화면 전체에 같은 음량
+            voice.priority = priority; // 동시 재생 시 유지 우선순위
+            return voice; // 설정한 효과음 재생기
+        }
         private void OnEnable() // 재활성화 처리
         { // 함수 시작
             SceneManager.sceneLoaded += OnSceneLoaded; // 씬 전환 구독
@@ -49,6 +57,10 @@ namespace ProjectEpsilon.Audio // 게임 소리 영역
             { // 조건 시작
                 source.Stop(); // 재생 중인 효과음 중지
             } // 조건 종료
+            if (attackSource != null) // 공격음 재생기 존재 확인
+            {
+                attackSource.Stop(); // 재생 중인 반복 공격음 정지
+            }
         } // 함수 종료
         private void OnSceneLoaded(Scene scene, LoadSceneMode mode) // 씬별 전투 구성 교체
         { // 함수 시작
@@ -177,7 +189,8 @@ namespace ProjectEpsilon.Audio // 게임 소리 영역
         } // 함수 종료
         private void Play(string name, GameplaySoundCue cue) // 효과음 재생과 반복 제한
         { // 함수 시작
-            if (!isActiveAndEnabled || source == null || cue == null || cue.Clip == null || cue.Volume <= 0f) // 재생 가능 상태 확인
+            AudioSource voice = name == "Attack" ? attackSource : source; // 공격음과 중요 효과음의 우선순위 분리
+            if (!isActiveAndEnabled || voice == null || cue == null || cue.Clip == null || cue.Volume <= 0f) // 재생 가능 상태 확인
             { // 조건 시작
                 return; // 재생 불가 상태 생략
             } // 조건 종료
@@ -186,7 +199,7 @@ namespace ProjectEpsilon.Audio // 게임 소리 영역
                 return; // 과도한 중복 재생 방지
             } // 조건 종료
             nextAllowed[name] = Time.unscaledTime + cue.MinimumInterval; // 다음 재생 가능 시각
-            source.PlayOneShot(cue.Clip, cue.Volume); // 기존 전체 음량이 적용되는 효과음
+            voice.PlayOneShot(cue.Clip, cue.Volume); // 기존 전체 음량이 적용되는 효과음
             SoundPlayed?.Invoke(name); // 실제 재생 요청 알림
         } // 함수 종료
     } // 제어기 종료
