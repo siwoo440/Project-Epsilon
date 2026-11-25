@@ -97,6 +97,19 @@ namespace ProjectEpsilon.Combat // 프로젝트 기능 영역
             } // 조건 종료
         } // 함수 종료
 
+        public void CopyWeaponFrom(SnakeWeaponSlot source) // 몸통 이동 시 기존 무기 상태 복사
+        {
+            weapon = source.weapon; // 현재 포탑
+            grade = source.grade; // 현재 등급
+            damageUpgrades = source.damageUpgrades; // 공격력 강화 이력
+            speedUpgrades = source.speedUpgrades; // 공격 속도 강화 이력
+            rangeUpgrades = source.rangeUpgrades; // 사거리 강화 이력
+            nextAttackTime = source.nextAttackTime; // 다음 공격 가능 시각
+            meleeAttackCount = source.meleeAttackCount; // 주기 강타 진행도
+            periodicAttackCount = source.periodicAttackCount; // 주기 피해 진행도
+            lastPeriodicMultiplier = source.lastPeriodicMultiplier; // 최근 공격의 피해 배율
+        }
+
         public bool IsReady(float currentTime) // 현재·시간 기능 선언
         { // 함수 시작
             return weapon != null && currentTime >= nextAttackTime; // 포탑·현재 결과 반환

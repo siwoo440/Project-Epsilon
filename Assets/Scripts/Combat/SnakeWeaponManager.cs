@@ -380,7 +380,7 @@ namespace ProjectEpsilon.Combat // 프로젝트 기능 영역
             int damageBonus = inheritEquipped ? first.DamageUpgrades : 0; // 계승 공격력 강화
             int speedBonus = inheritEquipped ? first.SpeedUpgrades : 0; // 계승 공격 속도 강화
             int rangeBonus = inheritEquipped ? first.RangeUpgrades : 0; // 계승 사거리 강화
-            List<WeaponLoadoutEntry> remaining = new List<WeaponLoadoutEntry>(); // 남은 무기 목록
+            int remainingCount = 0; // 재료를 제외한 장착 포탑 수
             for (int index = 0; index < slots.Count; index++) // 모든 슬롯 순회
             { // 반복 시작
                 if (index == firstSlotIndex || index == secondSlotIndex) // 합성 재료 위치 확인
@@ -392,21 +392,19 @@ namespace ProjectEpsilon.Combat // 프로젝트 기능 영역
                 { // 조건 시작
                     continue; // 빈 슬롯 제외
                 } // 조건 종료
-                remaining.Add(new WeaponLoadoutEntry(slot.Weapon, slot.Grade, slot.DamageUpgrades, slot.SpeedUpgrades, slot.RangeUpgrades)); // 나머지 무기와 강화 보존
+                slots[remainingCount].CopyWeaponFrom(slot); // 아직 읽지 않은 슬롯 앞에 포탑 상태 압축
+                remainingCount++; // 보존 포탑 수 증가
             } // 반복 종료
-            for (int index = 0; index < slots.Count; index++) // 슬롯 초기화 순회
-            { // 반복 시작
-                slots[index].Clear(); // 기존 장착 정보 제거
-            } // 반복 종료
+            for (int index = remainingCount; index > 0; index--) // 첫 슬롯을 비우기 위한 역순 이동
+            {
+                slots[index].CopyWeaponFrom(slots[index - 1]); // 기존 공격 대기와 횟수 유지
+            }
+            for (int index = remainingCount + 1; index < slots.Count; index++) // 남은 빈 슬롯 순회
+            {
+                slots[index].Clear(); // 소비한 재료의 장착 정보 제거
+            }
             slots[0].Equip(resultWeapon, resultGrade, damageBonus, speedBonus, rangeBonus); // 합성 무기와 계승 강화 장착
             slots[0].ApplyUpgrade(upgrade); // 선택한 공통 강화 적용
-            int writeIndex = 1; // 나머지 무기 배치 위치
-            for (int index = 0; index < remaining.Count && writeIndex < slots.Count; index++) // 보존 무기 순회
-            { // 반복 시작
-                WeaponLoadoutEntry entry = remaining[index]; // 보존 무기 조회
-                slots[writeIndex].Equip(entry.Weapon, entry.Grade, entry.DamageUpgrades, entry.SpeedUpgrades, entry.RangeUpgrades); // 무기와 강화 복원
-                writeIndex++; // 다음 슬롯 이동
-            } // 반복 종료
             NotifyGradeEffect(slots[0], WeaponGradeEffectTrigger.Merged); // 합성 등급 효과 알림
             SlotsChanged?.Invoke(); // 무기 및 시너지 갱신 알림
             return true; // 합성 성공
@@ -909,13 +907,7 @@ namespace ProjectEpsilon.Combat // 프로젝트 기능 영역
                 return; // 현재 기능 종료
             } // 조건 종료
 
-            destination.Equip( // 대상 호출 시작
-                source.Weapon, // 원본·포탑 항목 전달
-                source.Grade, // 원본·등급 항목 전달
-                source.DamageUpgrades, // 공격력 강화 복사
-                source.SpeedUpgrades, // 공격 속도 강화 복사
-                source.RangeUpgrades // 사거리 강화 복사
-            ); // 앞선 항목 종료
+            destination.CopyWeaponFrom(source); // 몸통 위치만 바뀐 포탑의 공격 진행 유지
         } // 함수 종료
 
         private static SnakeWeaponSlot FindSlot( // 포탑·슬롯 호출 시작
@@ -969,28 +961,5 @@ namespace ProjectEpsilon.Combat // 프로젝트 기능 영역
             subscribed = false; // 대상 값 설정
         } // 함수 종료
 
-        private readonly struct WeaponLoadoutEntry // 포탑 자료 구조
-        { // 형식 시작
-            public WeaponData Weapon { get; } // 포탑·데이터 구성 선언
-            public int Grade { get; } // 등급·조회 구성 선언
-            public int DamageUpgrades { get; } // 공격력 강화 횟수
-            public int SpeedUpgrades { get; } // 공격 속도 강화 횟수
-            public int RangeUpgrades { get; } // 사거리 강화 횟수
-
-            public WeaponLoadoutEntry( // 포탑 호출 시작
-                WeaponData weapon, // 포탑·데이터 항목 전달
-                int grade, // 등급 항목 전달
-                int damage, // 공격력 강화 횟수
-                int speed, // 공격 속도 강화 횟수
-                int range // 사거리 강화 횟수
-            ) // 앞선 항목 종료
-            { // 함수 시작
-                Weapon = weapon; // 포탑 값 설정
-                Grade = grade; // 등급 값 설정
-                DamageUpgrades = damage; // 공격력 강화 저장
-                SpeedUpgrades = speed; // 공격 속도 강화 저장
-                RangeUpgrades = range; // 사거리 강화 저장
-            } // 함수 종료
-        } // 형식 종료
     } // 형식 종료
 } // 이름 공간 종료

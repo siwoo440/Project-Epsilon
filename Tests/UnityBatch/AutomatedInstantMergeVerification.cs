@@ -147,6 +147,15 @@ namespace ProjectEpsilon.Editor // 편집기 시험 영역
             secondButton.onClick.Invoke(); // 실제 보상 즉시 합성
             if (!Check(!merge.IsMergeOpen && weapons.Slots[0].Weapon == reward.Weapon && weapons.Slots[0].Grade == reward.Grade + 1 && weapons.Slots[0].DamageUpgrades == 2, "Level reward merge result incorrect.")) yield break; // 보상 합성과 기존 강화 확인
             if (!Check(experience.CurrentLevel == 3 && experience.IsLevelUpPending && level.IsPresentingLevelUp && GameManager.Instance.IsPaused, "Immediate merge did not advance to the next queued level.")) yield break; // 다음 레벨업의 정지와 대기 확인
+            foreach (SnakeWeaponSlot slot in weapons.Slots) // 공격 대기 검사용 슬롯 준비
+            {
+                slot.Clear(); // 이전 보상 포탑 제거
+            }
+            if (!Check(weapons.SlotCount >= 3 && weapons.TryEquipAt(0, weapon, 1) && weapons.TryEquipAt(1, weapon, 1) && weapons.TryEquipAt(2, weapon, 2), "Missing cooldown preservation fixtures.")) yield break; // 합성에 쓰지 않는 포탑 설치
+            float attackTime = Time.time + 10f; // 비교용 마지막 발사 시각
+            weapons.Slots[2].StartCooldown(attackTime); // 남은 포탑의 공격 대기 예약
+            bool merged = weapons.TryMergeSlots(0, 1); // 두 재료로만 즉시 합성
+            if (!Check(merged && weapons.Slots[1].Weapon == weapon && weapons.Slots[1].Grade == 2 && !weapons.Slots[1].IsReady(attackTime), "A surviving turret lost its cooldown during merge.")) yield break; // 위치가 바뀐 포탑의 공격 대기 유지 검증
             AutomatedInstantMergeVerification.Finish(true, "Immediate merge, synergy, elite reward and consecutive level reward flow passed."); // 전체 시험 성공
         } // 코루틴 종료
         private static bool Check(bool condition, string message) // 시험 조건 확인
