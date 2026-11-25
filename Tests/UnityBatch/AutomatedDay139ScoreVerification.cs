@@ -92,6 +92,10 @@ namespace ProjectEpsilon.Editor // 배치 시험 영역
             health.ResetHealth(); // 실제 체력 만점 구성
             Require(meta.TryAwardFullRecoveryPickupScore(), "최종 상한 시험 아이템 보너스 실패"); // 실제 아이템 보너스 지급
             Require(meta.CompleteRun(true) && meta.CurrentScore == 100000 && meta.PickupScore == 0, "최종 점수 상한 또는 보너스 조정 오류"); // 총점 상한과 상세 합계 확인
+            MethodInfo fraction = typeof(ProjectEpsilon.Progression.MetaProgressionController).GetMethod("FractionScore", BindingFlags.Static | BindingFlags.NonPublic); // 실제 점수 계산 접근
+            Require(fraction != null && (int)fraction.Invoke(null, new object[] { 43L, 2000, 20000 }) == 430, "경험치 점수의 정수 경계 오류"); // 경험치 43의 정확한 점수
+            Require((int)fraction.Invoke(null, new object[] { 228L, 1600, 10000 }) == 1425, "일반 적 점수의 정수 경계 오류"); // 일반 적 228마리의 정확한 점수
+            Require((int)fraction.Invoke(null, new object[] { long.MaxValue, 2000, 20000 }) == 20000, "경험치 점수 상한 오류"); // 긴 전투의 누적값 상한
             meta.BeginRun(); // 패배 점수 시험 초기화
             Require(meta.CompleteRun(false) && !meta.ScoreFinalized && meta.CurrentScore == 0, "패배에 승리 점수 반영"); // 패배 승리 보너스 제외 확인
         } // 함수 종료

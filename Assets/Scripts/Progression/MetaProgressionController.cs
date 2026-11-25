@@ -164,13 +164,17 @@ namespace ProjectEpsilon.Progression // 영구 성장 영역
             totalExperience = totalExperience > long.MaxValue - amount ? long.MaxValue : totalExperience + amount; // 안전한 경험치 누적
             RefreshLiveScore(); // 실제 획득 점수 갱신
         } // 함수 종료
-        private static int FractionScore(long value, long target, int maximum) // 기준 대비 점수 계산
+        private static int FractionScore(long value, int target, int maximum) // 기준 대비 점수 계산
         { // 함수 시작
             if (target <= 0 || value <= 0) // 미정 기준 또는 무득점 확인
             { // 조건 시작
                 return 0; // 미정 항목 점수 제외
             } // 조건 종료
-            return (int)Math.Floor(Math.Min(1d, (double)value / target) * maximum); // 상한이 있는 비율 점수
+            if (value >= target) // 값이 매우 커도 곱셈 없이 만점 처리
+            {
+                return maximum; // 항목별 만점
+            }
+            return (int)(value * maximum / target); // 오차 없는 정수 나눗셈과 내림
         } // 함수 종료
         private void SetScore(int value) // 점수 표시와 증가량 알림
         { // 함수 시작
