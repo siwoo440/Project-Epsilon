@@ -61,6 +61,8 @@ namespace ProjectEpsilon.Editor // 배치 시험 영역
             float flyerSpeed = (float)frequency.GetValue(flyer); // 실제 비행 적 움직임 속도
             float armoredSpeed = (float)frequency.GetValue(armored); // 실제 장갑 적 움직임 속도
             Require(flyerSpeed > chaserSpeed && armoredSpeed < chaserSpeed, "적 행동 유형별 움직임 차이 누락"); // 실제 유형별 움직임 구분
+            FieldInfo phase = typeof(EnemyVisualMotion).GetField("movementPhase", Private); // 적별 모션 시작점 조회
+            Require(phase != null && !Mathf.Approximately((float)phase.GetValue(chaser), (float)phase.GetValue(flyer)), "적별 이동 모션 시작점이 동일함"); // 다른 출현 위치의 시각 타이밍 분산 확인
             Vector3 rootScale = flyer.transform.localScale; // 실제 비행 적 충돌체 크기
             Quaternion rootRotation = flyer.transform.rotation; // 실제 비행 적 충돌체 방향
             flyer.PlayAttack(); // 실제 비행 적 공격 표시

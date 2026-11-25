@@ -15,6 +15,7 @@ namespace ProjectEpsilon.Enemies // 적 시각 영역
         private SpriteRenderer original; // 기존 색상과 이미지 기준
         private SpriteRenderer artwork; // 충돌체와 분리된 실제 표시
         private Vector3 previousPosition; // 이전 위치
+        private float movementPhase; // 초기 지형 위치에 따른 모션 시작점
         private float movingUntil; // 이동 표시 유지 시각
         private float attackUntil; // 공격 표시 종료 시각
         private bool originalVisible; // 기존 표시 활성 상태
@@ -87,6 +88,7 @@ namespace ProjectEpsilon.Enemies // 적 시각 영역
             artwork.sortingOrder = original.sortingOrder; // 기존 표시 순서 유지
             artwork.maskInteraction = original.maskInteraction; // 기존 마스크 설정 유지
             previousPosition = transform.position; // 최초 실제 위치
+            movementPhase = Mathf.Repeat(previousPosition.x + previousPosition.y * 1.37f, 2f * Mathf.PI); // 인접 적의 움직임 타이밍 분산
             SyncArtwork(); // 기존 이미지와 색상 연결
         } // 함수 종료
         private void OnEnable() // 실제 모션과 사망 이벤트 연결
@@ -132,10 +134,11 @@ namespace ProjectEpsilon.Enemies // 적 시각 영역
                 movingUntil = Time.time + 0.15f; // 이동 표시 유지 시각
             } // 조건 종료
             previousPosition = transform.position; // 다음 이동 확인 위치
-            float movement = Time.time < movingUntil ? Mathf.Sin(Time.time * movementFrequency) * movementAmount : 0f; // 실제 이동 표시 진폭
+            float movementWave = Time.time < movingUntil ? Mathf.Sin(Time.time * movementFrequency + movementPhase) : 0f; // 크기와 회전에 공유하는 개별 모션 진행
+            float movement = movementWave * movementAmount; // 실제 이동 표시 진폭
             float attack = Time.time < attackUntil ? Mathf.Clamp01((attackUntil - Time.time) / Mathf.Max(0.01f, attackDuration)) * attackAmount : 0f; // 실제 공격 표시 진폭
             artwork.transform.localScale = new Vector3(1f + movement - attack * 0.5f, 1f - movement + attack, 1f); // 충돌체와 독립된 이미지 크기
-            float tilt = Time.time < movingUntil ? Mathf.Sin(Time.time * movementFrequency) * movementTilt : 0f; // 실제 유형별 이동 기울기
+            float tilt = movementWave * movementTilt; // 실제 유형별 이동 기울기
             artwork.transform.localRotation = Quaternion.Euler(0f, 0f, tilt); // 충돌체와 독립된 이미지 방향
         } // 함수 종료
         private void SyncArtwork() // 기존 표시 상태 동기화
