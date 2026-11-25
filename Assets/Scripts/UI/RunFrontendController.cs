@@ -80,7 +80,7 @@ namespace ProjectEpsilon.UI // 실제 메뉴 영역
             CanvasScaler scaler = canvasObject.GetComponent<CanvasScaler>(); // 실제 크기 조정기
             scaler.uiScaleMode = CanvasScaler.ScaleMode.ScaleWithScreenSize; // 해상도별 크기 조정
             scaler.referenceResolution = new Vector2(1920f, 1080f); // 실제 기준 해상도
-            scaler.matchWidthOrHeight = 0.5f; // 가로와 세로 균형
+            scaler.screenMatchMode = CanvasScaler.ScreenMatchMode.Expand; // 기준 가로와 세로가 화면에 모두 들어오는 배율
             group = canvasObject.GetComponent<CanvasGroup>(); // 실제 입력 차단기
             GameObject panelObject = new GameObject("FrontendPanel", typeof(RectTransform), typeof(Image)); // 실제 단계 배경
             panelObject.transform.SetParent(canvasObject.transform, false); // 실제 캔버스에 배경 연결
@@ -599,6 +599,7 @@ namespace ProjectEpsilon.UI // 실제 메뉴 영역
             CanvasScaler settingsScaler = settingsRoot.GetComponent<CanvasScaler>(); // 실제 해상도 조정기
             settingsScaler.uiScaleMode = CanvasScaler.ScaleMode.ScaleWithScreenSize; // 실제 화면 크기 대응
             settingsScaler.referenceResolution = new Vector2(1920f, 1080f); // 실제 기준 해상도
+            settingsScaler.screenMatchMode = CanvasScaler.ScreenMatchMode.Expand; // 넓거나 좁은 화면의 하단 버튼 보호
             GameObject background = new GameObject("StandaloneInputPanel", typeof(RectTransform), typeof(Image)); // 실제 키 설정 배경
             background.transform.SetParent(settingsRoot.transform, false); // 실제 캔버스 연결
             RectTransform rect = background.GetComponent<RectTransform>(); // 실제 키 설정 영역
